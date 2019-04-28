@@ -1,0 +1,76 @@
+=====================================================
+EQUIVALENCIA DE DADOS SQL SERVER / VB.NET
+=====================================================
+TINYINT  : BYTE
+SMALLINT : INT(16)
+INT		 : INT(32) | INTEGER
+BIGINT   : INT(64) | LONG
+
+
+BIGINT
+-2^63 (-9.223.372.036.854.775.808) a 2^63-1 (9.223.372.036.854.775.807)
+8 bytes
+
+INT
+-2^31 (-2.147.483.648) a 2^31-1 (2.147.483.647)
+4 bytes
+
+SMALLINT
+-2^15 (-32,768) a 2^15-1 (32,767)
+2 bytes
+
+TINYINT
+0 a 255
+1 byte
+
+
+=====================================================
+' ALTERA A COR DO HEADER DO LISTBOX BETTERLISTVIEW
+=====================================================
+Private Sub lstFormas_DrawColumnHeader(sender As Object, eventArgs As BetterListViewDrawColumnHeaderEventArgs) Handles lstFormas.DrawColumnHeader
+    '
+    If eventArgs.ColumnHeaderBounds.BoundsOuter.Width > 0 AndAlso
+        eventArgs.ColumnHeaderBounds.BoundsOuter.Height > 0 Then
+        ' Pode Colocar: AndAlso eventArgs.ColumnHeader.Index = 1 AndAlso
+        '
+        Dim brush As Brush = New LinearGradientBrush(eventArgs.ColumnHeaderBounds.BoundsOuter, Color.Transparent, Color.FromArgb(100, Color.LightSlateGray), LinearGradientMode.Vertical)
+        Dim p As Pen = New Pen(Color.SlateGray, 2)
+        '
+        eventArgs.Graphics.FillRectangle(brush, eventArgs.ColumnHeaderBounds.BoundsOuter)
+        '
+        eventArgs.Graphics.DrawLine(p, eventArgs.ColumnHeaderBounds.BoundsOuter.X, 'x1
+                                    eventArgs.ColumnHeaderBounds.BoundsOuter.Height, 'y1
+                                    eventArgs.ColumnHeaderBounds.BoundsOuter.Width + eventArgs.ColumnHeaderBounds.BoundsOuter.X, 'x2
+                                    eventArgs.ColumnHeaderBounds.BoundsOuter.Height) 'y2
+        brush.Dispose()
+        p.Dispose()
+    End If
+    '
+End Sub
+'
+===========================================================
+'--- ALTERAR A COR DE FUNDO DO HEADER DO DATAGRIDVIEW
+===========================================================
+Private Sub dgvListagem_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles dgvListagem.CellPainting
+    If e.RowIndex = -1 Then
+        '--- PRETO
+        'Dim c1 As Color = Color.FromArgb(255, 54, 54, 54)
+        'Dim c2 As Color = Color.FromArgb(255, 62, 62, 62)
+        'Dim c3 As Color = Color.FromArgb(255, 98, 98, 98)
+        '
+        '--- AZUL
+        Dim c1 As Color = Color.FromArgb(255, 143, 154, 168)
+        Dim c2 As Color = Color.FromArgb(255, 100, 113, 130)
+        Dim c3 As Color = Color.FromArgb(255, 74, 84, 96)
+        '
+        Dim br As LinearGradientBrush = New LinearGradientBrush(e.CellBounds, c1, c3, 90, True)
+        Dim cb As ColorBlend = New ColorBlend()
+        '
+        cb.Positions = {0, CSng(0.5), 1}
+        cb.Colors = {c1, c2, c3}
+        br.InterpolationColors = cb
+        e.Graphics.FillRectangle(br, e.CellBounds)
+        e.PaintContent(e.ClipBounds)
+        e.Handled = True
+    End If
+End Sub

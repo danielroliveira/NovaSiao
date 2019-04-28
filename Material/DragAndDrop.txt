@@ -1,0 +1,46 @@
+
+    Private indexOfItemUnderMouseToDrag As Integer
+
+    
+	Private Sub dgvListagem_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvListagem.MouseDown
+		If e.Button = MouseButtons.Left Then
+
+            ' Determines which item was selected.
+            Dim hit As DataGridView.HitTestInfo = dgvListagem.HitTest(e.X, e.Y)
+
+            If Not hit.Type = DataGridViewHitTestType.Cell Then Exit Sub
+
+            indexOfItemUnderMouseToDrag = hit.RowIndex
+
+            ' seleciona o ROW
+            dgvListagem.CurrentCell = dgvListagem.Rows(hit.RowIndex).Cells(1)
+            dgvListagem.Rows(hit.RowIndex).Selected = True
+
+        End If
+        '
+    End Sub
+
+
+	Private Sub dgvListagem_MouseMove(sender As Object, e As MouseEventArgs) Handles dgvListagem.MouseMove
+        If ((e.Button And MouseButtons.Left) = MouseButtons.Left) Then
+
+            ' Proceed with the drag-and-drop, passing in the list item.                    
+            dgvListagem.DoDragDrop(dgvListagem.Rows(indexOfItemUnderMouseToDrag), DragDropEffects.Copy)
+
+        End If
+    End Sub
+
+
+	Private Sub ListView1_DragDrop(sender As Object, e As DragEventArgs) Handles ListView1.DragDrop
+
+        Dim r As DataGridViewRow = e.Data.GetData(GetType(DataGridViewRow))
+        Dim res As clReserva = r.DataBoundItem
+
+		ListView1.Items.Add(res.Produto)
+
+    End Sub
+
+
+    Private Sub ListView1_DragOver(sender As Object, e As DragEventArgs) Handles ListView1.DragOver
+		e.Effect = DragDropEffects.Copy
+	End Sub

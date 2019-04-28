@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<Configuracao>
+  <ValoresPadrao>
+    <DataPadrao>22/02/2017</DataPadrao>
+    <FilialPadrao>21</FilialPadrao>
+    <FilialDescricao>Nova Sião</FilialDescricao>
+    <ContaPadrao>1</ContaPadrao>
+    <ContaDescricao>Caixa Geral</ContaDescricao>
+    <Cidade>Juiz de Fora</Cidade>
+    <UF>MG</UF>
+    <Naturalidade>Juiz de Fora - MG</Naturalidade>
+    <MensagemInicial />
+    <IDProdutoTipoPadrao />
+    <ProdutoTipoPadrao />
+    <IDProdutoSubTipoPadrao />
+    <ProdutoSubTipoPadrao />
+    <TaxaPermanencia>3,00</TaxaPermanencia>
+  </ValoresPadrao>
+  <DadosEmpresa>
+    <RazaoSocial>Livraria Evangélica Nova Sião LTDA</RazaoSocial>
+    <NomeFantasia>Nova Sião</NomeFantasia>
+    <CNPJ>01.458.388/0001-31</CNPJ>
+    <InscricaoSocial>367.984.721-0080</InscricaoSocial>
+    <TelefonePrincipal>(32)  3232-7230</TelefonePrincipal>
+    <TelefoneGerencia>(32)  3212-7248</TelefoneGerencia>
+    <ContatoGerencia>Rachel</ContatoGerencia>
+    <TelefoneFinanceiro>(32)  3212-7248</TelefoneFinanceiro>
+    <ContatoFinanceiro>Dany</ContatoFinanceiro>
+  </DadosEmpresa>
+  <ArquivoLogo>
+    <ArquivoLogoMono>D:\VB Projetos\NovaSiao\Material\LogoNovaSiao_Mono.png</ArquivoLogoMono>
+    <ArquivoLogoColor>D:\VB Projetos\NovaSiao\Material\LogoNovaSiao_Color.png</ArquivoLogoColor>
+    <BackupDir />
+  </ArquivoLogo>
+  <ServidorDados>
+    <StringConexao />
+    <ControlaBackup>True</ControlaBackup>
+  </ServidorDados>
+  <MensagemPedido>
+    <MensagemPedidoItem>Mensagem1</MensagemPedidoItem>
+    <MensagemPedidoItem>Mensagem2</MensagemPedidoItem>
+    <MensagemPedidoItem>Mensagem3</MensagemPedidoItem>
+  </MensagemPedido>
+</Configuracao>

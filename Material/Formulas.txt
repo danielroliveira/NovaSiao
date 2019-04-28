@@ -1,0 +1,208 @@
+'
+'---------------------------------------------------------------------------------------
+'--- BLOQUEIA PRESS A TECLA (+)
+'---------------------------------------------------------------------------------------
+Private Sub me_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
+    '
+    If e.KeyChar = "+" Then
+        '--- cria uma lista de controles que serao impedidos de receber '+'
+        Dim controlesBloqueados As String() = {
+            "txtRGProduto",
+            "txtProdutoTipo",
+            "txtDesconto"
+        }
+        '
+        If controlesBloqueados.Contains(ActiveControl.Name) Then
+            e.Handled = True
+        End If
+        '
+    End If
+    '
+End Sub
+
+'
+'---------------------------------------------------------------------------------------
+'--- EXECUTAR A FUNCAO DO BOTAO QUANDO PRESSIONA A TECLA (+) NO CONTROLE
+'--- ACIONA ATALHO TECLA (+) E (DEL) | IMPEDE INSERIR TEXTO NOS CONTROLES
+'---------------------------------------------------------------------------------------
+Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) _
+    Handles txtRGProduto.KeyDown,
+            txtProdutoTipo.KeyDown,
+            txtProdutoSubTipo.KeyDown
+
+    '
+    Dim ctr As Control = DirectCast(sender, Control)
+    '
+    If e.KeyCode = Keys.Add Then
+        e.Handled = True
+        '
+        Select Case ctr.Name
+            Case "txtRGProduto"
+                btnProcuraRG_Click(New Object, New EventArgs)
+            Case "txtProdutoTipo"
+                ProcurarEscolherTipo(sender)
+            Case "txtProdutoSubTipo"
+                ProcurarEscolherTipo(sender)
+            Case "txtProdutoCategoria"
+                ProcurarEscolherTipo(sender)
+        End Select
+        '
+    ElseIf e.KeyCode = Keys.Delete Then
+        e.Handled = True
+        Select Case ctr.Name
+            Case "txtProdutoTipo"
+                If Not IsNothing(_produto.IDProdutoTipo) Then Sit = FlagEstado.Alterado
+                txtProdutoTipo.Clear()
+                _produto.IDProdutoTipo = Nothing
+            Case "txtProdutoSubTipo"
+                If Not IsNothing(_produto.IDProdutoSubTipo) Then Sit = FlagEstado.Alterado
+                txtProdutoSubTipo.Clear()
+                _produto.IDProdutoSubTipo = Nothing
+        End Select
+        '
+    Else
+        '--- cria uma lista de controles que serão bloqueados de alteracao
+        Dim controlesBloqueados As New List(Of String)
+        controlesBloqueados.AddRange({"txtProdutoTipo", "txtProdutoSubTipo", "txtProdutoCategoria"})
+        '
+        If controlesBloqueados.Contains(ctr.Name) Then
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
+    End If
+    '
+End Sub
+
+'
+'---------------------------------------------------------------------------------------
+' ADD HANDLER EVENTO KEYDOWN DOS CONTROLES COM VTAB
+'---------------------------------------------------------------------------------------
+Private Sub HandlerKeyDownControl()
+    '
+    '--- Tipos de Controles
+    Dim myTypes As Type() = {GetType(TextBox),
+                                GetType(ComboBox),
+                                GetType(MaskedTextBox),
+                                GetType(Controles.Text_Monetario)}
+    '
+    '--- para cada TabPage no tabPrincipal
+    For Each t As vTabPage In tabPrincipal.TabPages
+        '
+        '--- para cada Controle no TabPage
+        For Each c As Control In t.Controls '--- se o controle for textbox então
+            '
+
+            If myTypes.Contains(c.GetType) Then
+                AddHandler c.KeyDown, AddressOf txtControl_KeyDown
+            End If
+            '
+        Next
+        '
+    Next
+    '
+End Sub
+
+'
+'---------------------------------------------------------------------------------------
+'--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
+'---------------------------------------------------------------------------------------
+Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) _
+	Handles txtProduto.KeyDown, txtRGProduto.KeyDown, txtPVenda.KeyDown
+    '
+    If e.KeyCode = Keys.Enter Then
+        e.SuppressKeyPress = True
+        SendKeys.Send("{Tab}")
+    End If
+    '
+End Sub
+
+'
+'------------------------------------------------------------------------------------------
+' FAZ A TECLA ESC FECHAR O FORM
+'------------------------------------------------------------------------------------------
+Private Sub Me_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+    If e.KeyCode = Keys.Escape Then
+        e.Handled = True
+        '
+        btnCancelar_Click(New Object, New EventArgs)
+    End If
+End Sub
+
+'
+'------------------------------------------------------------------------------------------
+'--- QUANDO A TECLA CIMA E BAIXO NAVEGA ENTRE OS ITENS DA LISTAGEM
+'------------------------------------------------------------------------------------------
+Private Sub Me_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        '
+    If e.KeyCode = Keys.Up Then
+        e.Handled = True
+        '
+        If lstItens.Items.Count > 0 Then
+            If lstItens.SelectedItems.Count > 0 Then
+                Dim i As Integer = lstItens.SelectedItems(0).Index
+                '
+                lstItens.Items(i).Selected = False
+                '
+                If i = 0 Then
+                    i = lstItens.Items.Count
+                End If
+                '
+                lstItens.Items(i - 1).Selected = True
+                lstItens.EnsureVisible(i - 1)
+            Else
+                lstItens.Items(0).Selected = True
+                lstItens.EnsureVisible(0)
+            End If
+        End If
+        '
+    ElseIf e.KeyCode = Keys.Down Then
+        e.Handled = True
+        '
+        If lstItens.Items.Count > 0 Then
+            If lstItens.SelectedItems.Count > 0 Then
+                Dim i As Integer = lstItens.SelectedItems(0).Index
+                '
+                lstItens.Items(i).Selected = False
+                '
+                If i = lstItens.Items.Count - 1 Then
+                    i = -1
+                End If
+                '
+                lstItens.Items(i + 1).Selected = True
+                lstItens.EnsureVisible(i + 1)
+            Else
+                lstItens.Items(0).Selected = True
+            End If
+        End If
+        '
+    End If
+End Sub
+
+
+'
+'---------------------------------------------------------------------------------------
+' DIGITAR SOMENTE NUMEROS NO CONTROLE
+'---------------------------------------------------------------------------------------
+	If Not Char.IsNumber(e.KeyChar) And Not e.KeyChar = vbBack Then
+		e.Handled = True
+	End If
+
+'
+'---------------------------------------------------------------------------------------
+' CRIA UM ARQUIVO XSD A PARTIR DE UM XML
+'---------------------------------------------------------------------------------------
+    Dim ds As DataSet = New DataSet()
+    ds.ReadXml(xmlCaminhoCompleto, XmlReadMode.InferTypedSchema)
+    ds.WriteXmlSchema(pasta & "\teste.xsd")
+
+'
+'---------------------------------------------------------------------------------------
+' REDESENHA A BORDER DO FORM
+'---------------------------------------------------------------------------------------
+	Dim rect As New Rectangle(0, 0, Me.ClientSize.Width - 1, Me.ClientSize.Height - 1)
+	Dim pen As New Pen(Color.SlateGray, 3)
+	'
+	Me.Refresh()
+	Me.CreateGraphics.DrawRectangle(pen, rect)
+	'
+	TipoPagamento = value

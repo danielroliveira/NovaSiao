@@ -1,0 +1,79 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NovaSiao", "NovaSiao\NovaSiao.vbproj", "{6B17CE77-9DF0-4AC1-A37D-AABE6D44B53E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5FF68B5B-A2AD-4997-8F9F-968C9F7EE0F1} = {5FF68B5B-A2AD-4997-8F9F-968C9F7EE0F1}
+		{8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3} = {8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3}
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CamadaBLL", "CamadaBLL\CamadaBLL.vbproj", "{5FF68B5B-A2AD-4997-8F9F-968C9F7EE0F1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3} = {8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3}
+		{09F990FD-5B03-412E-BF5B-8990F6E9DD4C} = {09F990FD-5B03-412E-BF5B-8990F6E9DD4C}
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CamadaDTO", "CamadaDTO\CamadaDTO.vbproj", "{8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "CamadaDAL", "CamadaDAL\CamadaDAL.vbproj", "{09F990FD-5B03-412E-BF5B-8990F6E9DD4C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3} = {8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3}
+	EndProjectSection
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Controles", "Controles\Controles.vbproj", "{4A161F97-5F79-46F8-BE84-F779829A3F10}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Material", "Material", "{C75CF875-BD09-49F3-82FF-255ACF69ABC6}"
+	ProjectSection(SolutionItems) = preProject
+		Colors.txt = Colors.txt
+		Material\DragAndDrop.txt = Material\DragAndDrop.txt
+		ENUM_List.txt = ENUM_List.txt
+		Material\Formulas.txt = Material\Formulas.txt
+		Material\LogoNovaSiao_Color.png = Material\LogoNovaSiao_Color.png
+		Material\LogoNovaSiao_Mono.png = Material\LogoNovaSiao_Mono.png
+		Material\Mapping.txt = Material\Mapping.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Controls", "Controls", "{76E82ED2-A021-48AE-B151-91DCB348D19A}"
+	ProjectSection(SolutionItems) = preProject
+		Material\Controls\CheckedButton_OnOff.dll = Material\Controls\CheckedButton_OnOff.dll
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B17CE77-9DF0-4AC1-A37D-AABE6D44B53E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B17CE77-9DF0-4AC1-A37D-AABE6D44B53E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B17CE77-9DF0-4AC1-A37D-AABE6D44B53E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B17CE77-9DF0-4AC1-A37D-AABE6D44B53E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FF68B5B-A2AD-4997-8F9F-968C9F7EE0F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FF68B5B-A2AD-4997-8F9F-968C9F7EE0F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FF68B5B-A2AD-4997-8F9F-968C9F7EE0F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FF68B5B-A2AD-4997-8F9F-968C9F7EE0F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ED012B5-DECB-48B0-8B0B-7EE4F825B4C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09F990FD-5B03-412E-BF5B-8990F6E9DD4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09F990FD-5B03-412E-BF5B-8990F6E9DD4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09F990FD-5B03-412E-BF5B-8990F6E9DD4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09F990FD-5B03-412E-BF5B-8990F6E9DD4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A161F97-5F79-46F8-BE84-F779829A3F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A161F97-5F79-46F8-BE84-F779829A3F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A161F97-5F79-46F8-BE84-F779829A3F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A161F97-5F79-46F8-BE84-F779829A3F10}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{76E82ED2-A021-48AE-B151-91DCB348D19A} = {C75CF875-BD09-49F3-82FF-255ACF69ABC6}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CFFD0AAE-5F84-43DE-AED2-847CCBFB057C}
+	EndGlobalSection
+EndGlobal
