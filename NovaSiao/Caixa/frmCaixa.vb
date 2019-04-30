@@ -648,7 +648,7 @@ Public Class frmCaixa
         End If
         '
         '--- Inicia AcessoDados
-        Dim tranBLL As New TransactionControlBLL
+        Dim tranBLL As New AcessoControlBLL
         Dim dbTran As Object = tranBLL.GetNewAcessoWithTransaction()
         '
         Try

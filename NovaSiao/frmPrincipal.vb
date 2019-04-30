@@ -56,12 +56,32 @@ Public Class frmPrincipal
     '========================================================================================================
     Private Sub frmPrincipal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         '
+        '--- INICIA APLICACAO COM O MENU DESABILITADO
+        SContainerPrincipal.Enabled = False
+        '
+        ' VERIFICA SE EXISTE CONFIG DO CAMINHO DO BD
+        '----------------------------------------------------------------
+        Dim acessoBLL As New AcessoControlBLL
+        '
+        Dim TestAcesso As String = acessoBLL.GetConString
+        '
+        If String.IsNullOrEmpty(TestAcesso) Then
+            Dim fcString As New frmConnString
+            '
+            fcString.ShowDialog()
+            '
+            If fcString.DialogResult = DialogResult.Cancel Then
+                Application.Exit()
+                Exit Sub
+            End If
+            '
+        End If
+        '
         ' ABRE E VERIFICA O LOGIN DO USUARIO
         '----------------------------------------------------------------
         Dim frmLog As New frmLogin
         Dim contaInicial As New clConta
 
-        SContainerPrincipal.Enabled = False
         frmLog.ShowDialog()
 
         If frmLog.DialogResult = DialogResult.No Then

@@ -1513,7 +1513,7 @@ Public Class frmVendaPrazo
             '
             '--- INICIA A TRANSACAO NO BD
             '----------------------------------------------------------------------------------------
-            Dim tranBLL As New TransactionControlBLL
+            Dim tranBLL As New AcessoControlBLL
             Dim dbTran As Object = tranBLL.GetNewAcessoWithTransaction
             '
             '--- SALVA O ARECEBER PARCELAS NO BD

@@ -678,7 +678,7 @@ Public Class frmVendaVista
         '
         '--- altera a data da venda e salva no BD
         Dim tranBLL As New TransacaoBLL
-        Dim tc As New TransactionControlBLL
+        Dim tc As New AcessoControlBLL
         Dim dBtran As Object = tc.GetNewAcessoWithTransaction
         '
         Try
@@ -1191,7 +1191,7 @@ Public Class frmVendaVista
             End If
             '
             '--- CREATE NEW ACESSO WITH TRANSACTION
-            Dim tBLL As New TransactionControlBLL
+            Dim tBLL As New AcessoControlBLL
             '
             Dim myDBTran As Object = tBLL.GetNewAcessoWithTransaction
             '

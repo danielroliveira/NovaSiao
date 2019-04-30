@@ -4,18 +4,29 @@ Imports System.Xml
 Imports CamadaBLL
 '
 Public Class frmLogin
-    Private tentativa As Byte
     Private Logado As Boolean
-    Private SQL As New SQLControl
+    Dim db As New AcessoControlBLL
     Private Fantasia As String = ""
+    '
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        Logado = False
+        txtApelido.Focus()
+        '
+    End Sub
     '
     Private Sub frmLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         '
         ' ler o arquivo de imagem da LOGO e captar o nome fantasia
         If File.Exists(Application.StartupPath & "\ConfigFiles\Config.xml") Then
+            '
             Dim myXML As New XmlDocument
             Dim myLogoArq As String
-
+            '
             Try
                 '
                 myXML.Load(Application.StartupPath & "\ConfigFiles\Config.xml")
@@ -30,11 +41,6 @@ Public Class frmLogin
             End Try
         End If
         '
-        ' Definir variáveis
-        tentativa = 0
-        Logado = False
-        txtApelido.Focus()
-        '
     End Sub
     '
     ' BOTÃO CONFIRMAR | OK
@@ -43,82 +49,56 @@ Public Class frmLogin
         If VerificaCampos() = False Then Exit Sub
         '
         Try
-            Me.Cursor = Cursors.WaitCursor
-            SQL.AddParam("@UsuarioApelido", txtApelido.Text)
-            SQL.AddParam("@UsuarioSenha", txtSenha.Text)
-            SQL.ExecQuery("SELECT TOP 1 * " &
-                          "FROM tblUsuario " &
-                          "WHERE UsuarioApelido = @UsuarioApelido;")
+            Cursor = Cursors.WaitCursor
             '
-            If SQL.HasException Then
-                Cursor = Cursors.Arrow
-                MessageBox.Show("Não é possível conectar ao Banco de Dados SQL..." & vbNewLine &
-                                "Verique a conexão com o servidor e tente novamente..." & vbNewLine &
-                                SQL.Exception,
-                                "Erro na Conexão", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                Logado = False
+            UsuarioAtual = db.GetNewLoginAcesso(txtApelido.Text, txtSenha.Text)
+            '
+            If Not IsNothing(UsuarioAtual) Then
+                '
+                Logado = True
+                '
+                ' Bem-vindo
+                MessageBox.Show("Seja Bem-Vindo: " & txtApelido.Text.ToUpper & vbNewLine & vbNewLine &
+                                "Acesso: " & CType(UsuarioAtual.UsuarioAcesso, CamadaDTO.EnumAcessoTipo).ToString.ToUpper,
+                                Fantasia, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Me.DialogResult = DialogResult.Yes
                 Me.Close()
-                Exit Sub
+            Else
+                '
+                Select Case db.TentativasAcesso
+                    Case = 1
+                        MessageBox.Show("Usuário ou Senha estão incorretas!" & vbCrLf &
+                                        "Tente novamente..." & vbCrLf &
+                                        "PRIMEIRA TENTATIVA, você pode tentar mais DUAS vezes", "Senha e/ou Usuário Incorreto",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        txtApelido.Focus()
+                    Case = 2
+                        MessageBox.Show("Usuário ou Senha estão incorretas!" & vbCrLf &
+                                        "Tente novamente..." & vbCrLf &
+                                        "SEGUNDA TENTATIVA, você pode tentar mais UMA vezes", "Senha e/ou Usuário Incorreto",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        txtApelido.Focus()
+                    Case = 3
+                        MessageBox.Show("Usuário ou Senha estão incorretas!" & vbCrLf &
+                                        "TERCEIRA TENTATIVA, a aplicação será encerrada...", "Erro de Senha e Usuário",
+                                        MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                        Logado = False
+                        Me.Close()
+                        Exit Sub
+                End Select
+                '
             End If
             '
         Catch ex As Exception
-            Throw ex
+            MessageBox.Show("Não é possível conectar ao Banco de Dados SQL..." & vbNewLine &
+                            "Verique a conexão com o servidor e tente novamente..." & vbNewLine &
+                            ex.Message,
+                            "Erro na Conexão", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            Logado = False
+            Me.Close()
+            Exit Sub
         Finally
             Cursor = Cursors.Arrow
-        End Try
-        '
-        Try
-            If SQL.RecordCount > 0 Then ' encotrou o registro do usuário
-                '
-                Dim r As DataRow = SQL.DBDT.Rows(0)
-                '
-                If txtSenha.Text = r("UsuarioSenha") Then ' compara a senha do usuário
-                    '
-                    UsuarioAtual = New CamadaDTO.clUsuario With {
-                        .IdUser = r("IdUser"),
-                        .UsuarioAcesso = r("UsuarioAcesso"),
-                        .UsuarioApelido = r("UsuarioApelido")
-                        }
-                    Logado = True
-                    '
-                    ' Bem-vindo
-                    MessageBox.Show("Seja Bem-Vindo: " & txtApelido.Text.ToUpper & vbNewLine & vbNewLine &
-                                    "Acesso: " & CType(r("UsuarioAcesso"), CamadaDTO.EnumAcessoTipo).ToString.ToUpper,
-                                    Fantasia, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    Me.DialogResult = DialogResult.Yes
-                    Me.Close()
-                    SQL = Nothing
-                    Exit Sub
-                    '
-                End If
-                '
-            End If
-            '
-            tentativa += 1
-            '
-            Select Case tentativa
-                Case = 1
-                    MessageBox.Show("Usuário ou Senha estão incorretas!" & vbCrLf &
-                                    "Tente novamente..." & vbCrLf &
-                                    "PRIMEIRA TENTATIVA de 3", "Senha e/ou Usuário Incorreto",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    txtApelido.Focus()
-                Case = 2
-                    MessageBox.Show("Usuário ou Senha estão incorretas!" & vbCrLf &
-                                    "Tente novamente..." & vbCrLf &
-                                    "SEGUNDA TENTATIVA de 3", "Senha e/ou Usuário Incorreto",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    txtApelido.Focus()
-                Case = 3
-                    MessageBox.Show("Usuário ou Senha estão incorretas!" & vbCrLf &
-                                    "TERCEIRA TENTATIVA a aplicação será encerrada...", "Erro de Senha e Usuário",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                    Logado = False
-                    Me.Close()
-                    Exit Sub
-            End Select
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
         End Try
         '
     End Sub

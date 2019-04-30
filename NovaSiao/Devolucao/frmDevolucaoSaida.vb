@@ -1339,7 +1339,7 @@ Public Class frmDevolucaoSaida
             '
             '--- INICIA A TRANSACAO NO BD
             '----------------------------------------------------------------------------------------
-            Dim tranBLL As New TransactionControlBLL
+            Dim tranBLL As New AcessoControlBLL
             Dim dbTran As Object = tranBLL.GetNewAcessoWithTransaction
             '
             '--- SALVA O ARECEBER NO BD

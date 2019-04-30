@@ -241,7 +241,7 @@ Public Class frmSimplesQuitar
         '
         '--- CRIA uma BD Transaction
         '--------------------------------------------------------------------------------------------------------
-        Dim tBLL As New TransactionControlBLL
+        Dim tBLL As New AcessoControlBLL
         Dim dbTran As Object = tBLL.GetNewAcessoWithTransaction
         '
         '--- EFETUA o RECEBIMENTO DA FILIAL ORIGEM
@@ -307,7 +307,7 @@ Public Class frmSimplesQuitar
         '
         '--- CRIA uma BD Transaction
         '--------------------------------------------------------------------------------------------------------
-        Dim tBLL As New TransactionControlBLL
+        Dim tBLL As New AcessoControlBLL
         Dim dbTran As Object = tBLL.GetNewAcessoWithTransaction
         '
         '--- EFETUA o PAGAMENTO DA FILIAL ORIGEM
@@ -427,7 +427,7 @@ Public Class frmSimplesQuitar
         '
         '--- CRIA uma BD Transaction
         '==============================================================
-        Dim tBLL As New TransactionControlBLL
+        Dim tBLL As New AcessoControlBLL
         Dim dbTran As Object = tBLL.GetNewAcessoWithTransaction
         '
         '--- Execute PAGAMENTO | RECEBIMENTO

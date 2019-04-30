@@ -30,7 +30,16 @@ Public Class AcessoDados
         Dim retorno As New String("")
         '
         Try
-            retorno = My.MySettings.Default.ConexaoString
+            Dim connFile As String = My.MySettings.Default.ConexaoStringFile
+            Dim connName As String = My.MySettings.Default.ConexaoStringName
+            Dim getConn As New GetConnection
+            '
+            retorno = getConn.LoadConnectionString(connFile, connName)
+            '
+            If String.IsNullOrEmpty(retorno.Trim) Then
+                Throw New Exception("Arquivo de Conexão Database inválido...")
+            End If
+            '
         Catch ex As Exception
             Throw ex
         End Try
@@ -61,17 +70,25 @@ Public Class AcessoDados
     '-------------------------------------------------------------------------------------------------------
     Private Function Connect() As Boolean
         '
-        Dim connstr As String
+        Dim connstr As String = ""
         Dim bln As Boolean
         '
         If conn Is Nothing Then
-            connstr = GetConnectionString()
-            If connstr <> String.Empty Then
-                bln = True
-                conn = New SqlConnection(connstr)
-            Else
-                bln = False
-            End If
+            '
+            Try
+                connstr = GetConnectionString()
+                '
+                If connstr <> String.Empty Then
+                    conn = New SqlConnection(connstr)
+                    bln = True
+                Else
+                    bln = False
+                End If
+                '
+            Catch ex As Exception
+                Throw ex
+            End Try
+            '
         End If
         '
         If conn.State = ConnectionState.Closed Then

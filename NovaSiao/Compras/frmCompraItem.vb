@@ -310,7 +310,7 @@ Public Class frmCompraItem
                 lblSubTotal.DataBindings("text").ReadValue()
                 lblTotal.DataBindings("text").ReadValue()
                 '
-                abrirDialog()
+                'abrirDialog()
                 '
             End If
             '

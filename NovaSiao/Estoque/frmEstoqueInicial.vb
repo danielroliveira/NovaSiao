@@ -493,7 +493,7 @@ Public Class frmEstoqueInicial
         Dim AjusteAtual As clEstoqueAjuste = Nothing
         '
         '--- GET new Transaction
-        Dim T As New TransactionControlBLL
+        Dim T As New AcessoControlBLL
         Dim dbTran As Object = T.GetNewAcessoWithTransaction
         '
         '--- VERIFICA AJUSTE ATUAL

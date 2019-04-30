@@ -54,7 +54,7 @@
             '--- calcula o desconto
             propDesconto = Math.Round(100 * (propValor - vlInserido) / propValor, 4)
             Return True
-        ElseIf vlInserido > propValor Then
+        Else ' vlInserido > propValor
             '--- retorna o novo preço aumentado
             propValor = vlInserido
             propDesconto = 0

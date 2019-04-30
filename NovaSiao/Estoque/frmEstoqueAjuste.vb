@@ -825,7 +825,7 @@ Public Class frmEstoqueAjuste
         '--- create a new Transaction
         '----------------------------------------------------------------------------------
         Dim eBLL As New EstoqueAjusteBLL
-        Dim tBLL As New TransactionControlBLL
+        Dim tBLL As New AcessoControlBLL
         Dim dbTran As Object = tBLL.GetNewAcessoWithTransaction
         '
         '--- Save the new Ajuste

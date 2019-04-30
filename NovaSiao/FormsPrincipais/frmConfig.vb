@@ -69,7 +69,7 @@ Public Class frmConfig
         VerficaBloqueioDataConta()
         '
         '--- Get Connection String
-        Dim bBLL As New BackupBLL
+        Dim bBLL As New AcessoControlBLL
         txtStringConexao.Text = bBLL.GetConString
         '
         '--- Add Handlers

@@ -54,65 +54,27 @@ Namespace My
             End Get
         End Property
         
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.ConnectionString),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=SERVERNOTE\SQLPADRAO;Initial Catalog=NovaSiao;Persist Security Info=T"& _ 
-            "rue;User ID=sa;Password=123456")>  _
-        Public ReadOnly Property TesteConnectionString() As String
-            Get
-                Return CType(Me("TesteConnectionString"),String)
-            End Get
-        End Property
-        
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
-        Public Property ConexaoString() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("E:\Desktop\ConfigDB.xml")>  _
+        Public Property ConexaoStringFile() As String
             Get
-                Return CType(Me("ConexaoString"),String)
+                Return CType(Me("ConexaoStringFile"),String)
             End Get
             Set
-                Me("ConexaoString") = value
+                Me("ConexaoStringFile") = value
             End Set
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=SERVERNOTE\SQLPADRAO;Initial Catalog=NovaSiao;Persist Security Info=T"& _ 
-            "rue;User ID=sa;Password=123456")>  _
-        Public Property StringNote() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("Teste")>  _
+        Public Property ConexaoStringName() As String
             Get
-                Return CType(Me("StringNote"),String)
+                Return CType(Me("ConexaoStringName"),String)
             End Get
             Set
-                Me("StringNote") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\Dados\NovaSia"& _ 
-            "o.mdf;Integrated Security=True;Connect Timeout=30")>  _
-        Public Property StringLocal() As String
-            Get
-                Return CType(Me("StringLocal"),String)
-            End Get
-            Set
-                Me("StringLocal") = value
-            End Set
-        End Property
-        
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=VTSERVER\SQLPADRAO;Initial Catalog=NovaSiao;Persist Security Info=Tru"& _ 
-            "e;User ID=sa;Password=123456")>  _
-        Public Property StringDesktop() As String
-            Get
-                Return CType(Me("StringDesktop"),String)
-            End Get
-            Set
-                Me("StringDesktop") = value
+                Me("ConexaoStringName") = value
             End Set
         End Property
     End Class

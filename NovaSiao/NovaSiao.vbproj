@@ -499,6 +499,12 @@
     <Compile Include="FormsPrincipais\frmConfig.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FormsPrincipais\frmConnString.Designer.vb">
+      <DependentUpon>frmConnString.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormsPrincipais\frmConnString.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormsPrincipais\frmContaDataPadrao.designer.vb">
       <DependentUpon>frmContaDataPadrao.vb</DependentUpon>
     </Compile>
@@ -984,6 +990,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormsPrincipais\frmConfig.resx">
       <DependentUpon>frmConfig.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsPrincipais\frmConnString.resx">
+      <DependentUpon>frmConnString.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormsPrincipais\frmContaDataPadrao.resx">
       <DependentUpon>frmContaDataPadrao.vb</DependentUpon>
