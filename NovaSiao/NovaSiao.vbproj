@@ -523,6 +523,12 @@
     <Compile Include="FormsPrincipais\frmLogin.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FormsPrincipais\frmUserAuthorization.Designer.vb">
+      <DependentUpon>frmUserAuthorization.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormsPrincipais\frmUserAuthorization.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Modals\DialogModal.vb" />
     <Compile Include="Modals\frmDialog.Designer.vb">
       <DependentUpon>frmDialog.vb</DependentUpon>
@@ -1003,6 +1009,12 @@
     <EmbeddedResource Include="FormsPrincipais\frmLogin.resx">
       <DependentUpon>frmLogin.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormsPrincipais\frmUserAuthorization.resx">
+      <DependentUpon>frmUserAuthorization.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Modals\frmDialog.resx">
+      <DependentUpon>frmDialog.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modals\SplashScreen.resx">
       <DependentUpon>SplashScreen.vb</DependentUpon>
     </EmbeddedResource>
@@ -1299,6 +1311,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="NovaSiao_ico_256px.ico" />
+    <None Include="Resources\icon_warning.png" />
+    <None Include="Resources\icon_information.png" />
+    <None Include="Resources\icon_exclamation.png" />
+    <None Include="Resources\icon_question.png" />
     <None Include="Resources\Estoque_24px.png" />
     <None Include="Resources\EstoqueEntradas_24px.png" />
     <None Include="Resources\delete_24px.png" />

@@ -159,9 +159,10 @@ Public Class frmCompraItem
             Dim ItemProduto As clTransacaoItem = itemBLL.TransacaoItem_Get_New(txtRGProduto.Text, _IDFilial)
             '
             If String.IsNullOrEmpty(ItemProduto.Produto) Then
-                MessageBox.Show("Registro de Produto não encontrado..." & vbNewLine &
-                                "Favor digitar um Registro válido.", "Reg. Inválido",
-                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                AbrirDialog("Registro de Produto não encontrado..." & vbNewLine &
+                            "Favor digitar um Registro válido.", "Reg. Inválido",
+                            frmDialog.DialogType.OK,
+                            frmDialog.DialogIcon.Exclamation)
                 '
                 BindItem.CancelEdit()
                 Return False
@@ -266,6 +267,29 @@ Public Class frmCompraItem
         End If
         '
     End Sub
+
+    '
+    '---------------------------------------------------------------------------------------
+    '--- BLOQUEIA PRESS A TECLA (+)
+    '---------------------------------------------------------------------------------------
+    Private Sub me_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
+        '
+        If e.KeyChar = "+" Then
+            '--- cria uma lista de controles que serao impedidos de receber '+'
+            Dim controlesBloqueados As String() = {
+            "txtRGProduto",
+            "txtDesconto"
+            }
+            '
+            If controlesBloqueados.Contains(ActiveControl.Name) Then
+                e.Handled = True
+            End If
+            '
+        End If
+        '
+    End Sub
+
+
     '
     '
     '--- PRESS ESC TO CLOSE | PRESS ADD TO OPEN FIND FORM | PRESS N TO NEW PRODUTO
@@ -293,15 +317,13 @@ Public Class frmCompraItem
             ElseIf ActiveControl Is txtDesconto Then '--- txtDesconto
                 '
                 '--- abre o form de Procura de Produto
-                Dim fDesc As New frmProdutoValorDesconto(_clItem.PVenda * _clItem.Quantidade, _clItem.Desconto, Me)
+                Dim fDesc As New frmProdutoValorDesconto(_clItem.PCompra * _clItem.Quantidade, _clItem.Desconto, Me)
                 fDesc.ShowDialog()
                 '
                 '--- verifica se retornou algum valor
                 If fDesc.DialogResult = vbCancel Then Exit Sub
                 '
                 '--- se retornou entao preenche o desconto ou aumenta o valor
-                Dim precoAumentou As Boolean = fDesc.propValor > _clItem.Preco
-
                 _clItem.Desconto = fDesc.propDesconto
                 _clItem.Preco = Math.Round(fDesc.propValor / If(_clItem.Quantidade = 0, 1, _clItem.Quantidade), 4)
                 '
@@ -310,7 +332,21 @@ Public Class frmCompraItem
                 lblSubTotal.DataBindings("text").ReadValue()
                 lblTotal.DataBindings("text").ReadValue()
                 '
-                'abrirDialog()
+                If _clItem.Preco > _clItem.PCompra Then
+                    '
+                    If AbrirDialog("O preço do produto informado é maior do preço original." &
+                                   vbNewLine &
+                                   "Você deseja aumentar o preço do produto?",
+                                   "Preço de Compra Alterado",
+                                   frmDialog.DialogType.SIM_NAO,
+                                   frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                        '--- Change preco in BD
+                        ChangeProdutoPreco()
+                        _clItem.PCompra = _clItem.Preco
+                        '
+                    End If
+                    '
+                End If
                 '
             End If
             '
@@ -331,6 +367,54 @@ Public Class frmCompraItem
         '
     End Sub
     '
+    Private Sub ChangeProdutoPreco()
+        '
+        Dim pBLL As New ProdutoBLL
+        '
+        Using pBLL
+            '
+            Try
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
+                pBLL.ProdutoAlterarPrecoDescontoCompra(_clItem.IDProduto, _clItem.Preco, Nothing)
+                '
+            Catch ex As Exception
+                MessageBox.Show("Uma exceção ocorreu ao Salvar o Preço do Produto..." & vbNewLine &
+                                ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Finally
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+            End Try
+            '
+        End Using
+        '
+    End Sub
+    '
+    Private Sub ChangeProdutoDesconto()
+        '
+        Dim pBLL As New ProdutoBLL
+        '
+        Using pBLL
+            '
+            Try
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
+                pBLL.ProdutoAlterarPrecoDescontoCompra(_clItem.IDProduto, Nothing, _clItem.Desconto)
+                '
+            Catch ex As Exception
+                MessageBox.Show("Uma exceção ocorreu ao Salvar o Desconto do Produto..." & vbNewLine &
+                                ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Finally
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+            End Try
+            '
+        End Using
+        '
+    End Sub
+    '
 #End Region '/ OUTRAS FUNCOES
     '
 #Region "BUTONS FUNCTION"
@@ -342,6 +426,9 @@ Public Class frmCompraItem
         '
         '--- VERIFICA ESTOQUE
         If Not VerificaEstoque() Then Return
+        '
+        '--- VERIFICA ESTOQUE
+        VerificaDescontoAlteracao()
         '
         '--- RETORNA O OBJETO PARA O FORMULARIO ORIGEM
         _clItem.EndEdit()
@@ -363,28 +450,28 @@ Public Class frmCompraItem
         End If
         '
         If IsNothing(_clItem.Produto) OrElse String.IsNullOrEmpty(_clItem.Produto) Then
-            MessageBox.Show("O produto ainda não foi especificado...",
-                            "Produto Incompleto",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information)
+            AbrirDialog("O produto ainda não foi especificado...",
+                        "Produto Incompleto",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
             txtRGProduto.Focus()
             Return False
         End If
         '
         If _clItem.Quantidade <= 0 Then
-            MessageBox.Show("Necessário especificar a quantidade MAIOR que Zero...",
-                            "Produto Quantidade",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information)
+            AbrirDialog("Necessário especificar a quantidade MAIOR que Zero...",
+                        "Produto Quantidade",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
             txtQuantidade.Focus()
             Return False
         End If
         '
         If _clItem.Desconto < 0 Then
-            MessageBox.Show("O DESCONTO não pode ser MENOR que Zero...",
-                            "Produto Desconto",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information)
+            AbrirDialog("O DESCONTO não pode ser MENOR que Zero...",
+                        "Produto Desconto",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
             txtDesconto.Focus()
             Return False
         End If
@@ -426,12 +513,13 @@ Public Class frmCompraItem
                 '
                 If estAnterior + _clItem.Estoque < 0 Then
                     '
-                    MessageBox.Show("Essa quantidade fará com que o estoque fique NEGATIVO..." &
-                                    vbNewLine & vbNewLine &
-                                    "Favor Inserir uma quantidade igual ou maior que: " &
-                                    Format(estAnterior, "00"),
-                                    "Estoque Negativo",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                    AbrirDialog("Essa quantidade fará com que o estoque fique NEGATIVO..." &
+                                vbNewLine & vbNewLine &
+                                "Favor Inserir uma quantidade igual ou maior que: " &
+                                Format(estAnterior, "00"),
+                                "Estoque Negativo",
+                                frmDialog.DialogType.OK,
+                                frmDialog.DialogIcon.Exclamation)
                     '
                     txtQuantidade.Focus()
                     txtQuantidade.SelectAll()
@@ -450,6 +538,28 @@ Public Class frmCompraItem
         Return True
         '
     End Function
+    '
+    Private Sub VerificaDescontoAlteracao()
+        '
+        txtDesconto.DataBindings("text").WriteValue()
+        '
+        If _clItem.DescontoCompra <> _clItem.Desconto Then
+            '
+            If AbrirDialog("O Desconto de Compra do produto informado foi alterado." &
+                           vbNewLine &
+                           "Você deseja salvar o novo Desconto de Compra do produto?",
+                           "Descontro de Compra Alterado",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                '--- Change preco in BD
+                ChangeProdutoDesconto()
+                _clItem.DescontoCompra = _clItem.Desconto
+                '
+            End If
+            '
+        End If
+        '
+    End Sub
     '
 #End Region '/ BUTONS FUNCTION
     '

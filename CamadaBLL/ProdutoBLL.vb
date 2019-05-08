@@ -716,6 +716,53 @@ Public Class ProdutoBLL
         '
     End Function
     '
+    '---------------------------------------------------------------------------------------------------------
+    ' ALTERA O PRECO DE COMPRA E/OU DESCONTO DE COMPRA DO PRODUTO INFORMADO
+    '---------------------------------------------------------------------------------------------------------
+    Public Function ProdutoAlterarPrecoDescontoCompra(IDProduto As Integer,
+                                                      Optional newPrecoCompra? As Double = Nothing,
+                                                      Optional newDescontoCompra? As Double = Nothing) As Object
+        '
+        Dim db As New AcessoDados
+        Dim myQuery As String = "UPDATE tblProduto SET "
+        '
+        db.LimparParametros()
+        '
+        If Not IsNothing(newPrecoCompra) AndAlso Not IsNothing(newDescontoCompra) Then
+            '
+            db.AdicionarParametros("@PrecoCompra", newPrecoCompra)
+            db.AdicionarParametros("@DescontoCompra", newDescontoCompra)
+            '
+            myQuery += "PCompra = @PrecoCompra" &
+                       ", DescontoCompra = @DescontoCompra"
+            '
+        ElseIf IsNothing(newDescontoCompra) Then
+            '
+            db.AdicionarParametros("@PrecoCompra", newPrecoCompra)
+            '
+            myQuery += "PCompra = @PrecoCompra"
+            '
+        ElseIf IsNothing(newPrecoCompra) Then
+            '
+            db.AdicionarParametros("@DescontoCompra", newDescontoCompra)
+            '
+            myQuery += "DescontoCompra = @DescontoCompra"
+            '
+        End If
+        '
+        db.AdicionarParametros("@IDProduto", IDProduto)
+        myQuery += " WHERE IDProduto = @IDProduto"
+        '
+        Try
+            db.ExecutarManipulacao(CommandType.Text, myQuery)
+            Return True
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' To detect redundant calls
 

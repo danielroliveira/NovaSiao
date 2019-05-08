@@ -8,6 +8,8 @@ Public Class frmTransportadora
     Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
     '
+    Private _formOrigem As Form = Nothing
+    '
 #Region "LOAD E PROPERTIES"
     '
     Private Property Sit As EnumFlagEstado
@@ -51,7 +53,7 @@ Public Class frmTransportadora
         End Set
     End Property
     '
-    Sub New(objTransp As clTransportadora)
+    Sub New(objTransp As clTransportadora, Optional formOrigem As Form = Nothing)
         '
         ' This call is required by the designer.
         InitializeComponent()
@@ -61,6 +63,7 @@ Public Class frmTransportadora
             MessageBox.Show("Esse formulário não pode ser aberto assim...", "Erro ao abrir")
         End If
         '
+        _formOrigem = formOrigem
         propTransp = objTransp
         PreencheDataBindings()
         '
@@ -219,8 +222,10 @@ Public Class frmTransportadora
     '
     '--- BTN FECHAR
     Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
-        Me.Close()
-        MostraMenuPrincipal()
+        '
+        Close()
+        If Application.OpenForms.Count = 1 Then MostraMenuPrincipal()
+        '
     End Sub
     '
 #End Region
@@ -265,8 +270,14 @@ Public Class frmTransportadora
             '
             '--- Mensagem de Sucesso:
             MsgBox("Registro Salvo com sucesso!", vbInformation, "Registro Salvo")
+            '
+            If Not IsNothing(_formOrigem) Then
+                DialogResult = DialogResult.OK
+                'btnFechar_Click(sender, e)
+            End If
+            '
         Else
-            MsgBox("Registro NÃO pôde ser salvo!", vbInformation, "Erro ao Salvar")
+                MsgBox("Registro NÃO pôde ser salvo!", vbInformation, "Erro ao Salvar")
         End If
         '
     End Sub

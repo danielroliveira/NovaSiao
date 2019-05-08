@@ -81,7 +81,7 @@ Public Class TransportadoraBLL
         db.AdicionarParametros("@CNPJ", transp.CNPJ)
         db.AdicionarParametros("@InscricaoEstadual", transp.InscricaoEstadual)
         db.AdicionarParametros("@NomeFantasia", transp.NomeFantasia)
-        db.AdicionarParametros("@FundacaoData", transp.FundacaoData)
+        db.AdicionarParametros("@FundacaoData", If(transp.FundacaoData, DBNull.Value))
         db.AdicionarParametros("@ContatoNome", transp.ContatoNome)
         db.AdicionarParametros("@Endereco", transp.Endereco)
         db.AdicionarParametros("@Bairro", transp.Bairro)

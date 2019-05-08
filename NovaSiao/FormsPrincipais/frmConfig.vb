@@ -20,9 +20,11 @@ Public Class frmConfig
 #Region "LOAD"
     '
     Private Property Sit As EnumFlagEstado
+        '
         Get
             Return _Sit
         End Get
+        '
         Set(value As EnumFlagEstado)
             _Sit = value
             If _Sit = EnumFlagEstado.RegistroSalvo Then
@@ -36,6 +38,7 @@ Public Class frmConfig
                 btnCancelar.Text = "Sair"
             End If
         End Set
+        '
     End Property
     '
     ' EVENTO LOAD
@@ -75,6 +78,7 @@ Public Class frmConfig
         '--- Add Handlers
         HandlerChangedControles()
         _VerAlteracao = True
+        addToolTipHandler()
         '
     End Sub
     '
@@ -203,8 +207,9 @@ Public Class frmConfig
                 'ProdutoTipoPadrao = .SelectSingleNode("ProdutoTipoPadrao").InnerText
                 'IDProdutoSubTipoPadrao = .SelectSingleNode("IDProdutoSubTipoPadrao").InnerText
                 'ProdutoSubTipoPadrao = .SelectSingleNode("ProdutoSubTipoPadrao").InnerText
-                txtPermanencia.Text = .SelectSingleNode("TaxaPermanencia").InnerText
+                txtPermanencia.Text = .SelectSingleNode("TaxaPermanencia").InnerText.Replace(".", ",")
                 chkEstoqueNegativo.Checked = .SelectSingleNode("EstoqueNegativo").InnerText
+                txtDescontoMaximo.Text = .SelectSingleNode("DescontoMaximo").InnerText.Replace(".", ",")
                 '
             End With
             '
@@ -278,8 +283,9 @@ Error_Handler:
                 .WriteElementString("ProdutoTipoPadrao", "")
                 .WriteElementString("IDProdutoSubTipoPadrao", "")
                 .WriteElementString("ProdutoSubTipoPadrao", "")
-                .WriteElementString("TaxaPermanencia", txtPermanencia.Text)
+                .WriteElementString("TaxaPermanencia", txtPermanencia.Text.Replace(",", "."))
                 .WriteElementString("EstoqueNegativo", chkEstoqueNegativo.Checked)
+                .WriteElementString("DescontoMaximo", txtDescontoMaximo.Text.Replace(",", "."))
                 'encerra o elemento
                 .WriteEndElement()
 
@@ -594,7 +600,7 @@ Error_Handler:
     End Sub
     '
     '--- FAZER O txtTaxa formatar como 0,00
-    Private Sub txtPermanencia_Validated(sender As Object, e As EventArgs) Handles txtPermanencia.Validated
+    Private Sub txtPermanencia_Validated(sender As Object, e As EventArgs) Handles txtPermanencia.Validated, txtDescontoMaximo.Validated
         If txtPermanencia.TextLength > 0 Then
             txtPermanencia.Text = FormatNumber(txtPermanencia.Text, 2, TriState.True, TriState.UseDefault, TriState.UseDefault)
         Else
@@ -605,6 +611,7 @@ Error_Handler:
 #End Region
     '
 #Region "SALVAR DADOS"
+    '
     ' SALVAR OS DADOS NO CONFIG
     '-----------------------------------------------------------------------------------------------
     Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
@@ -681,6 +688,15 @@ Error_Handler:
         End If
         '
         If Not f.VerificaControlesForm(txtNaturalidade, "Naturalidade Padrão", EProvider) Then
+            Return False
+        End If
+        '
+        If txtDescontoMaximo.Text < 0 OrElse txtDescontoMaximo.Text > 100 Then
+            AbrirDialog("O Desconto Máximo deve estar entre 0 e 100" & vbNewLine &
+                        "Não pode ser negativo e nem pode ser maior que 100",
+                        "Desconto Máximo", frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
+            txtDescontoMaximo.Focus()
             Return False
         End If
         '
@@ -862,5 +878,59 @@ Error_Handler:
     End Sub
     '
 #End Region
+    '
+#Region "TOOLTIPS"
+    '
+    Private Sub addToolTipHandler()
+        '
+        ' Define o texto da ToolTip para o Button, TextBox, Checkbox e Label
+        txtPermanencia.Tag = "Taxa de permanência padrão aplicada na Venda Crédito"
+        txtDescontoMaximo.Tag = "Desconto Máximo permitido ao usuário padrão na Venda"
+        chkEstoqueNegativo.Tag = "Permite produtos com estoque negativo..."
+        '
+        Dim listControles As New List(Of Control)
+        '
+        listControles.Add(txtPermanencia)
+        listControles.Add(txtDescontoMaximo)
+        listControles.Add(chkEstoqueNegativo)
+        listControles.Add(txtFilialPadrao)
+        listControles.Add(txtContaPadrao)
+        '
+        For Each c As Control In listControles
+            AddHandler c.GotFocus, AddressOf showToolTip
+            AddHandler c.MouseHover, AddressOf showToolTip
+        Next
+        '
+    End Sub
+    '
+    Private Sub showToolTip(sender As Object, e As EventArgs)
+        '
+        Dim myControl As Control = DirectCast(sender, Control)
+        '
+        ' Cria a ToolTip e associa com o Form container.
+        Dim toolTip1 As New ToolTip()
+        '
+        ' Define o delay para a ToolTip.
+        With toolTip1
+            .AutoPopDelay = 2000
+            .InitialDelay = 1000
+            .ReshowDelay = 500
+            .IsBalloon = True
+            .UseAnimation = True
+            .UseFading = True
+        End With
+        '
+        If myControl.Tag = "" Then
+            toolTip1.Show("Pressione '+'  para escolher...", myControl, myControl.Width - 30, -40, 1000)
+        Else
+            toolTip1.Show(myControl.Tag, myControl, myControl.Width - 30, -40, 1000)
+        End If
+        '
+        RemoveHandler myControl.GotFocus, AddressOf showToolTip
+        'RemoveHandler myControl.MouseHover, AddressOf showToolTip
+        '
+    End Sub
+    '
+#End Region '// TOOLTIPS
     '
 End Class

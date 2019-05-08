@@ -1,13 +1,14 @@
 ﻿Imports System.Xml
 Imports System.IO
 Imports CamadaBLL
+Imports CamadaDTO
 
 Public Module GlobalPrincipal
     '
 #Region "PUBLIC VARIANTS"
     '
     ' VARIANT PUBLICA PARA PASSAGEM DE DADOS
-    Public UsuarioAtual As CamadaDTO.clUsuario
+    Public UsuarioAtual As clUsuario
     '
     ' ENUM PUBLICO ESTADO DO REGISTRO
     Public Enum EnumFlagEstado
@@ -209,6 +210,18 @@ Public Module GlobalPrincipal
         '
     End Function
     '
+    '--- OBTER DESCONTO MAXIMO
+    Public Function Obter_DescontoMaximo() As Double
+        Dim desc As String = String.Empty
+        '
+        desc = ObterDefault("DescontoMaximo")
+        If desc <> String.Empty Then Return desc.Replace(".", ",")
+        '
+        '--- else
+        Return 0
+        '
+    End Function
+    '
 #End Region ' /CONFIG XML - OBTER DADOS
     '
 #Region "CONFIG XML - CONTROLE"
@@ -273,5 +286,34 @@ Public Module GlobalPrincipal
     End Function
     '
 #End Region '/CONFIG XML - CONTROLE
+    '
+#Region "USER GUARD AUTHORIZATION"
+    '
+    Public Function GetAuthorization(AuthLevel As EnumAcessoTipo,
+                                     AuthDescription As String,
+                                     Optional formOrigem As Form = Nothing) As Boolean
+        '
+        Dim frmA As New frmUserAuthorization(AuthDescription, formOrigem)
+        frmA.ShowDialog()
+        '
+        If frmA.DialogResult <> DialogResult.OK Then Return False
+        '
+        '--- GET User Data
+        Dim db As New AcessoControlBLL
+        Dim obj As Object = db.GetAuthorization(frmA.propUser, frmA.propSenha, AuthLevel, AuthDescription)
+        '
+        If TypeOf obj Is clUsuario Then
+            Return True
+        Else
+            AbrirDialog("Uma falha ocorreu na autorização:" & vbNewLine & obj.ToString,
+                        "Autorização Negada",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Warning)
+            Return False
+        End If
+        '
+    End Function
+    '
+#End Region '/ USER GUARD AUTHORIZATION
     '
 End Module

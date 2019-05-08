@@ -32,6 +32,7 @@ Partial Class frmConfig
         Me.Label22 = New System.Windows.Forms.Label()
         Me.txtContaPadrao = New System.Windows.Forms.TextBox()
         Me.txtFilialPadrao = New System.Windows.Forms.TextBox()
+        Me.txtDescontoMaximo = New Controles.Text_SoNumeros()
         Me.txtPermanencia = New Controles.Text_SoNumeros()
         Me.btnAlteraConta = New VIBlend.WinForms.Controls.vButton()
         Me.btnContaAdd = New VIBlend.WinForms.Controls.vButton()
@@ -42,7 +43,9 @@ Partial Class frmConfig
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
@@ -163,6 +166,7 @@ Partial Class frmConfig
         Me.Tab1.Controls.Add(Me.Label22)
         Me.Tab1.Controls.Add(Me.txtContaPadrao)
         Me.Tab1.Controls.Add(Me.txtFilialPadrao)
+        Me.Tab1.Controls.Add(Me.txtDescontoMaximo)
         Me.Tab1.Controls.Add(Me.txtPermanencia)
         Me.Tab1.Controls.Add(Me.btnAlteraConta)
         Me.Tab1.Controls.Add(Me.btnContaAdd)
@@ -173,7 +177,9 @@ Partial Class frmConfig
         Me.Tab1.Controls.Add(Me.Label34)
         Me.Tab1.Controls.Add(Me.Label15)
         Me.Tab1.Controls.Add(Me.Label14)
+        Me.Tab1.Controls.Add(Me.Label19)
         Me.Tab1.Controls.Add(Me.Label13)
+        Me.Tab1.Controls.Add(Me.Label1)
         Me.Tab1.Controls.Add(Me.Label20)
         Me.Tab1.Controls.Add(Me.Label21)
         Me.Tab1.Controls.Add(Me.Label12)
@@ -204,14 +210,14 @@ Partial Class frmConfig
         Me.chkEstoqueNegativo.Location = New System.Drawing.Point(214, 408)
         Me.chkEstoqueNegativo.Name = "chkEstoqueNegativo"
         Me.chkEstoqueNegativo.Size = New System.Drawing.Size(202, 20)
-        Me.chkEstoqueNegativo.TabIndex = 23
+        Me.chkEstoqueNegativo.TabIndex = 26
         Me.chkEstoqueNegativo.Text = "Permitir Estoque Negativo!"
         Me.chkEstoqueNegativo.UseVisualStyleBackColor = False
         '
         'lblDataBloqueio
         '
         Me.lblDataBloqueio.BackColor = System.Drawing.Color.Transparent
-        Me.lblDataBloqueio.Location = New System.Drawing.Point(334, 152)
+        Me.lblDataBloqueio.Location = New System.Drawing.Point(336, 138)
         Me.lblDataBloqueio.Name = "lblDataBloqueio"
         Me.lblDataBloqueio.Size = New System.Drawing.Size(92, 18)
         Me.lblDataBloqueio.TabIndex = 11
@@ -221,7 +227,7 @@ Partial Class frmConfig
         '
         Me.Label22.AutoSize = True
         Me.Label22.BackColor = System.Drawing.Color.Transparent
-        Me.Label22.Location = New System.Drawing.Point(211, 152)
+        Me.Label22.Location = New System.Drawing.Point(213, 138)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(117, 16)
         Me.Label22.TabIndex = 10
@@ -230,7 +236,8 @@ Partial Class frmConfig
         'txtContaPadrao
         '
         Me.txtContaPadrao.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtContaPadrao.Location = New System.Drawing.Point(214, 117)
+        Me.txtContaPadrao.Location = New System.Drawing.Point(214, 106)
+        Me.txtContaPadrao.Margin = New System.Windows.Forms.Padding(6)
         Me.txtContaPadrao.Name = "txtContaPadrao"
         Me.txtContaPadrao.Size = New System.Drawing.Size(212, 27)
         Me.txtContaPadrao.TabIndex = 7
@@ -238,18 +245,31 @@ Partial Class frmConfig
         'txtFilialPadrao
         '
         Me.txtFilialPadrao.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFilialPadrao.Location = New System.Drawing.Point(214, 73)
+        Me.txtFilialPadrao.Location = New System.Drawing.Point(214, 67)
+        Me.txtFilialPadrao.Margin = New System.Windows.Forms.Padding(6)
         Me.txtFilialPadrao.Name = "txtFilialPadrao"
         Me.txtFilialPadrao.Size = New System.Drawing.Size(212, 27)
         Me.txtFilialPadrao.TabIndex = 3
+        '
+        'txtDescontoMaximo
+        '
+        Me.txtDescontoMaximo.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtDescontoMaximo.Inteiro = False
+        Me.txtDescontoMaximo.Location = New System.Drawing.Point(214, 282)
+        Me.txtDescontoMaximo.Margin = New System.Windows.Forms.Padding(6)
+        Me.txtDescontoMaximo.Name = "txtDescontoMaximo"
+        Me.txtDescontoMaximo.Size = New System.Drawing.Size(69, 27)
+        Me.txtDescontoMaximo.TabIndex = 22
+        Me.txtDescontoMaximo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txtPermanencia
         '
         Me.txtPermanencia.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtPermanencia.Inteiro = False
-        Me.txtPermanencia.Location = New System.Drawing.Point(214, 280)
+        Me.txtPermanencia.Location = New System.Drawing.Point(214, 243)
+        Me.txtPermanencia.Margin = New System.Windows.Forms.Padding(6)
         Me.txtPermanencia.Name = "txtPermanencia"
-        Me.txtPermanencia.Size = New System.Drawing.Size(53, 27)
+        Me.txtPermanencia.Size = New System.Drawing.Size(69, 27)
         Me.txtPermanencia.TabIndex = 19
         Me.txtPermanencia.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -257,7 +277,7 @@ Partial Class frmConfig
         '
         Me.btnAlteraConta.AllowAnimations = True
         Me.btnAlteraConta.BackColor = System.Drawing.Color.Transparent
-        Me.btnAlteraConta.Location = New System.Drawing.Point(441, 115)
+        Me.btnAlteraConta.Location = New System.Drawing.Point(441, 104)
         Me.btnAlteraConta.Name = "btnAlteraConta"
         Me.btnAlteraConta.RoundedCornersMask = CType(15, Byte)
         Me.btnAlteraConta.Size = New System.Drawing.Size(106, 30)
@@ -273,7 +293,7 @@ Partial Class frmConfig
         Me.btnContaAdd.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.btnContaAdd.ImageAbsolutePosition = New System.Drawing.Point(7, 3)
         Me.btnContaAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnContaAdd.Location = New System.Drawing.Point(556, 115)
+        Me.btnContaAdd.Location = New System.Drawing.Point(556, 104)
         Me.btnContaAdd.Name = "btnContaAdd"
         Me.btnContaAdd.RoundedCornersMask = CType(15, Byte)
         Me.btnContaAdd.Size = New System.Drawing.Size(80, 30)
@@ -294,7 +314,7 @@ Partial Class frmConfig
         Me.btnFilialAdd.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.btnFilialAdd.ImageAbsolutePosition = New System.Drawing.Point(7, 3)
         Me.btnFilialAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnFilialAdd.Location = New System.Drawing.Point(556, 71)
+        Me.btnFilialAdd.Location = New System.Drawing.Point(556, 65)
         Me.btnFilialAdd.Name = "btnFilialAdd"
         Me.btnFilialAdd.RoundedCornersMask = CType(15, Byte)
         Me.btnFilialAdd.Size = New System.Drawing.Size(80, 30)
@@ -312,7 +332,7 @@ Partial Class frmConfig
         '
         Me.btnAlteraFilial.AllowAnimations = True
         Me.btnAlteraFilial.BackColor = System.Drawing.Color.Transparent
-        Me.btnAlteraFilial.Location = New System.Drawing.Point(441, 71)
+        Me.btnAlteraFilial.Location = New System.Drawing.Point(441, 65)
         Me.btnAlteraFilial.Name = "btnAlteraFilial"
         Me.btnAlteraFilial.RoundedCornersMask = CType(15, Byte)
         Me.btnAlteraFilial.Size = New System.Drawing.Size(106, 30)
@@ -336,7 +356,7 @@ Partial Class frmConfig
         Me.Label35.AutoSize = True
         Me.Label35.BackColor = System.Drawing.Color.Transparent
         Me.Label35.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label35.Location = New System.Drawing.Point(83, 120)
+        Me.Label35.Location = New System.Drawing.Point(83, 109)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(125, 18)
         Me.Label35.TabIndex = 6
@@ -358,7 +378,7 @@ Partial Class frmConfig
         Me.Label15.AutoSize = True
         Me.Label15.BackColor = System.Drawing.Color.Transparent
         Me.Label15.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.Location = New System.Drawing.Point(92, 76)
+        Me.Label15.Location = New System.Drawing.Point(92, 70)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(116, 18)
         Me.Label15.TabIndex = 2
@@ -372,26 +392,50 @@ Partial Class frmConfig
         Me.Label14.Location = New System.Drawing.Point(50, 326)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(158, 18)
-        Me.Label14.TabIndex = 21
+        Me.Label14.TabIndex = 24
         Me.Label14.Text = "Mensagem Inicial:"
+        '
+        'Label19
+        '
+        Me.Label19.AutoSize = True
+        Me.Label19.BackColor = System.Drawing.Color.Transparent
+        Me.Label19.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label19.Location = New System.Drawing.Point(49, 285)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(159, 18)
+        Me.Label19.TabIndex = 21
+        Me.Label19.Text = "Desconto Máximo:"
         '
         'Label13
         '
         Me.Label13.AutoSize = True
         Me.Label13.BackColor = System.Drawing.Color.Transparent
         Me.Label13.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(26, 239)
+        Me.Label13.Location = New System.Drawing.Point(26, 207)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(182, 18)
         Me.Label13.TabIndex = 16
         Me.Label13.Text = "Naturalidade Padrão:"
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.BackColor = System.Drawing.Color.Transparent
+        Me.Label1.Font = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.Location = New System.Drawing.Point(289, 289)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(0)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(302, 16)
+        Me.Label1.TabIndex = 23
+        Me.Label1.Text = "(% - Insira 0 para permitir todos descontos)"
+        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'Label20
         '
         Me.Label20.AutoSize = True
         Me.Label20.BackColor = System.Drawing.Color.Transparent
         Me.Label20.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label20.Location = New System.Drawing.Point(20, 283)
+        Me.Label20.Location = New System.Drawing.Point(20, 246)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(188, 18)
         Me.Label20.TabIndex = 18
@@ -401,11 +445,11 @@ Partial Class frmConfig
         '
         Me.Label21.AutoSize = True
         Me.Label21.BackColor = System.Drawing.Color.Transparent
-        Me.Label21.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label21.Location = New System.Drawing.Point(271, 283)
+        Me.Label21.Font = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label21.Location = New System.Drawing.Point(289, 250)
         Me.Label21.Margin = New System.Windows.Forms.Padding(0)
         Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(105, 18)
+        Me.Label21.Size = New System.Drawing.Size(85, 16)
         Me.Label21.TabIndex = 20
         Me.Label21.Text = "(% ao mês)"
         Me.Label21.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -415,7 +459,7 @@ Partial Class frmConfig
         Me.Label12.AutoSize = True
         Me.Label12.BackColor = System.Drawing.Color.Transparent
         Me.Label12.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(452, 192)
+        Me.Label12.Location = New System.Drawing.Point(452, 168)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(98, 18)
         Me.Label12.TabIndex = 14
@@ -426,7 +470,7 @@ Partial Class frmConfig
         Me.Label11.AutoSize = True
         Me.Label11.BackColor = System.Drawing.Color.Transparent
         Me.Label11.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(75, 192)
+        Me.Label11.Location = New System.Drawing.Point(75, 168)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(133, 18)
         Me.Label11.TabIndex = 12
@@ -436,16 +480,18 @@ Partial Class frmConfig
         '
         Me.txtMensagem.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtMensagem.Location = New System.Drawing.Point(214, 323)
+        Me.txtMensagem.Margin = New System.Windows.Forms.Padding(6)
         Me.txtMensagem.MaxLength = 1000
         Me.txtMensagem.Multiline = True
         Me.txtMensagem.Name = "txtMensagem"
         Me.txtMensagem.Size = New System.Drawing.Size(457, 68)
-        Me.txtMensagem.TabIndex = 22
+        Me.txtMensagem.TabIndex = 25
         '
         'txtNaturalidade
         '
         Me.txtNaturalidade.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtNaturalidade.Location = New System.Drawing.Point(214, 236)
+        Me.txtNaturalidade.Location = New System.Drawing.Point(214, 204)
+        Me.txtNaturalidade.Margin = New System.Windows.Forms.Padding(6)
         Me.txtNaturalidade.MaxLength = 50
         Me.txtNaturalidade.Name = "txtNaturalidade"
         Me.txtNaturalidade.Size = New System.Drawing.Size(212, 27)
@@ -455,7 +501,8 @@ Partial Class frmConfig
         '
         Me.txtUF.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
         Me.txtUF.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUF.Location = New System.Drawing.Point(556, 189)
+        Me.txtUF.Location = New System.Drawing.Point(556, 165)
+        Me.txtUF.Margin = New System.Windows.Forms.Padding(6)
         Me.txtUF.MaxLength = 2
         Me.txtUF.Name = "txtUF"
         Me.txtUF.Size = New System.Drawing.Size(51, 27)
@@ -464,7 +511,8 @@ Partial Class frmConfig
         'txtCidade
         '
         Me.txtCidade.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtCidade.Location = New System.Drawing.Point(214, 189)
+        Me.txtCidade.Location = New System.Drawing.Point(214, 165)
+        Me.txtCidade.Margin = New System.Windows.Forms.Padding(6)
         Me.txtCidade.MaxLength = 50
         Me.txtCidade.Name = "txtCidade"
         Me.txtCidade.Size = New System.Drawing.Size(212, 27)
@@ -1079,4 +1127,7 @@ Partial Class frmConfig
     Friend WithEvents lblDataBloqueio As Label
     Friend WithEvents Label22 As Label
     Friend WithEvents chkEstoqueNegativo As CheckBox
+    Friend WithEvents txtDescontoMaximo As Controles.Text_SoNumeros
+    Friend WithEvents Label19 As Label
+    Friend WithEvents Label1 As Label
 End Class

@@ -18,6 +18,8 @@ Public Class frmVendaPrazo
     Private _IDFilial As Integer
     Private VerificaAlteracao As Boolean
     Private Taxa As Double?
+    Property DescontoMaximo As Double
+    '
     '
 #Region "LOAD"
     '
@@ -181,6 +183,9 @@ Public Class frmVendaPrazo
         Catch ex As Exception
             Taxa = 0
         End Try
+        '
+        '--- Define a DESCONTO MAXIMO padrao
+        DescontoMaximo = Obter_DescontoMaximo()
         '
         '--- hANDLER Menu Acao
         MenuOpen_AdHandler()

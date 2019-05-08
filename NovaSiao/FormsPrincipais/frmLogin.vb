@@ -51,23 +51,26 @@ Public Class frmLogin
         Try
             Cursor = Cursors.WaitCursor
             '
-            UsuarioAtual = db.GetNewLoginAcesso(txtApelido.Text, txtSenha.Text)
+            Dim obj As Object = db.GetAuthorization(txtApelido.Text, txtSenha.Text)
             '
-            If Not IsNothing(UsuarioAtual) Then
+            If TypeOf obj Is CamadaDTO.clUsuario Then
+                UsuarioAtual = obj
                 '
                 Logado = True
                 '
                 ' Bem-vindo
-                MessageBox.Show("Seja Bem-Vindo: " & txtApelido.Text.ToUpper & vbNewLine & vbNewLine &
-                                "Acesso: " & CType(UsuarioAtual.UsuarioAcesso, CamadaDTO.EnumAcessoTipo).ToString.ToUpper,
-                                Fantasia, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                Me.DialogResult = DialogResult.Yes
-                Me.Close()
+                AbrirDialog("Seja Bem-Vindo: " & txtApelido.Text.ToUpper & vbNewLine & vbNewLine &
+                            "Acesso: " & CType(UsuarioAtual.UsuarioAcesso, CamadaDTO.EnumAcessoTipo).ToString.ToUpper,
+                            Fantasia, frmDialog.DialogType.OK,
+                            frmDialog.DialogIcon.Information)
+                DialogResult = DialogResult.Yes
+                Close()
+                '
             Else
                 '
                 Select Case db.TentativasAcesso
                     Case = 1
-                        MessageBox.Show("Usuário ou Senha estão incorretas!" & vbCrLf &
+                        MessageBox.Show(obj.ToString & vbCrLf &
                                         "Tente novamente..." & vbCrLf &
                                         "PRIMEIRA TENTATIVA, você pode tentar mais DUAS vezes", "Senha e/ou Usuário Incorreto",
                                         MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -126,12 +129,12 @@ Public Class frmLogin
     End Sub
     '
     Private Function VerificaCampos() As Boolean
+        '
         'Verifica se o campo Apelido tem algum valor
         If Len(txtApelido.Text.Trim) = 0 Then
             MsgBox("Por Favor, preencha o campo Nome do Usuário...", vbInformation, "Nome do Usuário Vazio")
             txtApelido.Focus()
             Return False
-            Exit Function
         End If
         'Verifica se o campo senha tem algum valor
         If Len(txtSenha.Text.Trim) < 8 Then
@@ -139,9 +142,10 @@ Public Class frmLogin
                    "Sua SENHA precisa ter pelo menos 8 caracteres", vbInformation, "Senha Incompleta")
             txtSenha.Focus()
             Return False
-            Exit Function
         End If
+        '
         Return True
+        '
     End Function
     '
     Private Sub frmLogin_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown

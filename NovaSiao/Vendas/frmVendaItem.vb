@@ -1,6 +1,7 @@
 ﻿Imports CamadaDTO
 Imports CamadaBLL
 Imports System.ComponentModel
+Imports System.Reflection
 '
 Public Class frmVendaItem
     '
@@ -10,6 +11,7 @@ Public Class frmVendaItem
     Private _precoOrigem As EnumPrecoOrigem
     Private _formOrigem As Form
     Private _IDFilial As Integer?
+    Private _descontoMaximo As Double
     Private BindItem As New BindingSource
     Private _RGAlterado As Boolean = False '--> detecta alteracao do RGProduto
     Private QuantAnterior As Integer '--> backup da quantidade original
@@ -28,6 +30,11 @@ Public Class frmVendaItem
         _precoOrigem = pOrigem '--- DEFINE SE É ENTRADA OU SAÍDA
         _formOrigem = fOrigem '--- DEFINE O FORMULARIO DE ORIGEM PARA RETORNAR
         _IDFilial = Filial
+        '
+        '--- get DescontoMaximo
+        If Array.Exists(fOrigem.GetType().GetProperties(), Function(x) x.Name = "DescontoMaximo") Then
+            _descontoMaximo = fOrigem.GetType().GetProperties().First(Function(x) x.Name = "DescontoMaximo").GetValue(fOrigem)
+        End If
         '
         '--- DEFINE E PREECHE A CLASSE
         _clItem = Item
@@ -264,7 +271,7 @@ Public Class frmVendaItem
     ' CONTROLA O KEYPRESS DO DESCONTO
     Private Sub txtDesconto_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtDesconto.KeyPress
         '
-        If Char.IsNumber(e.KeyChar) OrElse e.KeyChar = New Char() {vbBack, ",", "."} Then
+        If Char.IsNumber(e.KeyChar) OrElse New Char() {vbBack, ",", "."}.Contains(e.KeyChar) Then
             e.Handled = False
         ElseIf e.KeyChar = "+" Then
             e.Handled = True
@@ -363,6 +370,29 @@ Public Class frmVendaItem
                             MessageBoxIcon.Information)
             txtDesconto.Focus()
             Return False
+        End If
+        '
+        If _descontoMaximo > 0 AndAlso _clItem.Desconto > _descontoMaximo Then
+            '
+            If AbrirDialog("O DESCONTO não pode ser maior que " & Format(_descontoMaximo, "#,##.00") & "%" &
+                            vbNewLine &
+                            "Deseja solicitar autorização?",
+                            "Desconto Máximo",
+                            frmDialog.DialogType.SIM_NAO,
+                            frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                '
+                If GetAuthorization(EnumAcessoTipo.UsuarioSenior, "Desconto Máximo", Me) Then
+                    Return True
+                Else
+                    txtDesconto.Focus()
+                    Return False
+                End If
+                '
+            Else
+                txtDesconto.Focus()
+                Return False
+            End If
+            '
         End If
         '
         Return True

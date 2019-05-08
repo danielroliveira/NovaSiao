@@ -12,36 +12,45 @@ Public Class AcessoControlBLL
     '--------------------------------------------------------------------------------------------
     ' GET NEW LOGIN ACESSO
     '--------------------------------------------------------------------------------------------
-    Public Function GetNewLoginAcesso(login As String, senha As String) As clUsuario
+    Public Function GetAuthorization(UsuarioApelido As String,
+                                     UsuarioSenha As String,
+                                     Optional UsuarioAcesso As EnumAcessoTipo = 3,
+                                     Optional AuthDescription As String = "Acesso Login") As Object
         '
         Dim db As New AcessoDados
         db.LimparParametros()
         '
-        db.AdicionarParametros("@UsuarioApelido", login)
-        db.AdicionarParametros("@UsuarioSenha", senha)
-        '
-        Dim myQuery As String = "SELECT TOP 1 * FROM tblUsuario " &
-                                "WHERE UsuarioApelido = @UsuarioApelido " &
-                                "AND UsuarioSenha = @UsuarioSenha COLLATE Latin1_General_CS_AS;"
+        db.AdicionarParametros("@UsuarioApelido", UsuarioApelido)
+        db.AdicionarParametros("@UsuarioSenha", UsuarioSenha)
+        db.AdicionarParametros("@UsuarioAcesso", UsuarioAcesso)
+        db.AdicionarParametros("@AuthDescription", AuthDescription)
+        db.AdicionarParametros("@AuthDate", Now)
         '
         Try
-            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, myQuery)
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.StoredProcedure, "uspUserGetAuthorization")
             '
             If dt.Rows.Count = 0 Then
                 TentativasAcesso += 1
                 Return Nothing
             Else
                 Dim r As DataRow = dt.Rows(0)
-                Dim UsuarioAtual As New clUsuario With {
+
+                If r.ItemArray.Count = 1 Then
+                    TentativasAcesso += 1
+                    Return dt.Rows(0).Item(0)
+                Else
+                    Dim UsuarioAtual As New clUsuario With {
                     .IdUser = r("IdUser"),
                     .UsuarioAcesso = r("UsuarioAcesso"),
                     .UsuarioApelido = r("UsuarioApelido")
                     }
-                Return UsuarioAtual
+                    Return UsuarioAtual
+                End If
+
             End If
             '
         Catch ex As Exception
-            Throw ex
+            Return Nothing
         End Try
         '
     End Function

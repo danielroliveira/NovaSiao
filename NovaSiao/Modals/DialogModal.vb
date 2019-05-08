@@ -1,7 +1,11 @@
 ﻿Module DialogModal
 
-    Function abrirDialog(message As String, title As String, type As frmDialog.DialogType) As DialogResult
-        Dim f As New frmDialog(frmDialog.DialogType.SIM_NAO)
+    Function AbrirDialog(message As String,
+                         title As String,
+                         type As frmDialog.DialogType,
+                         icon As frmDialog.DialogIcon) As DialogResult
+        '
+        Dim f As New frmDialog(message, title, type, icon)
 
         f.ShowDialog()
 

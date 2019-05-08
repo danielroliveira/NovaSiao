@@ -528,13 +528,21 @@ Public Class frmCompra
     Private Sub obterItens()
         '
         Dim tBLL As New TransacaoItemBLL
+        '
         Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             _ItensList = tBLL.GetTransacaoItens_WithCustos_List(_Compra.IDCompra, _IDFilial)
             '--- Atualiza o label TOTAL
             Dim x = TotalGeral
+            '
         Catch ex As Exception
-            MessageBox.Show("Um execeção ocorreu ao obter Itens da Compra:" & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao obter Itens da Compra:..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
         End Try
         '
     End Sub
@@ -599,12 +607,26 @@ Public Class frmCompra
         '--- Abre o frmItem
         Dim itmAtual As clTransacaoItem
         itmAtual = dgvItens.SelectedRows(0).DataBoundItem
-        Dim fitem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_COMPRA, _IDFilial, itmAtual)
         '
-        fitem.ShowDialog()
         '
-        '--- Verifica a resposa do Dialog
-        If Not fitem.DialogResult = DialogResult.OK Then Exit Sub
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim fitem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_COMPRA, _IDFilial, itmAtual)
+            '
+            fitem.ShowDialog()
+            '
+            '--- Verifica a resposa do Dialog
+            If Not fitem.DialogResult = DialogResult.OK Then Exit Sub
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Abrir Form de Item..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
         Dim ItemBLL As New TransacaoItemBLL
         Dim myID As Long? = Nothing
@@ -613,6 +635,9 @@ Public Class frmCompra
         '
         '--- Altera o ITEM no BD e reforma o ESTOQUE
         Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             itmAtual.IDTransacao = _Compra.IDCompra
             myID = ItemBLL.EditarItem(itmAtual,
                                       TransacaoItemBLL.EnumMovimento.ENTRADA,
@@ -624,6 +649,9 @@ Public Class frmCompra
         Catch ex As Exception
             MessageBox.Show("Houve um exceção ao ALTERAR o item no BD..." & vbNewLine & ex.Message,
                             "Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
         End Try
         '
         '--- Atualiza o ITEM da lista
@@ -669,10 +697,17 @@ Public Class frmCompra
         '
         '--- Altera o ITEM no BD e reforma o ESTOQUE
         Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             myID = ItemBLL.ExcluirItem(itmAtual, TransacaoItemBLL.EnumMovimento.ENTRADA)
+            '
         Catch ex As Exception
             MessageBox.Show("Houve um exceção ao EXCLUIR o item no BD..." & vbNewLine & ex.Message,
                             "Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
         End Try
         '
         '--- Atualiza o ITEM da lista
@@ -680,7 +715,6 @@ Public Class frmCompra
         bindItem.ResetBindings(False)
         '--- Atualiza o DataGrid
         dgvItens.DataSource = bindItem
-        '
         '
         '--- Atualiza o label TOTAL
         Dim a = TotalGeral
@@ -755,12 +789,42 @@ Public Class frmCompra
         '
     End Sub
     '
+    Private Sub btnTransportadoraAdd_Click(sender As Object, e As EventArgs) Handles btnTransportadoraAdd.Click
+        '
+        Dim fTransp As New frmTransportadora(New clTransportadora, Me)
+        '
+        Visible = False
+        fTransp.ShowDialog()
+        Visible = True
+        cmbIDTransportadora.Focus()
+
+        If fTransp.DialogResult = DialogResult.OK Then
+            '
+            '--- get new transportadora
+            Dim newTransp As clTransportadora = fTransp.propTransp
+            '
+            '--- insert new transportadora in combo
+            Dim dtTransp As DataTable = cmbIDTransportadora.DataSource
+
+            Dim row As DataRow = dtTransp.NewRow()
+            row("IDTransportadora") = newTransp.IDPessoa
+            row("Cadastro") = newTransp.Cadastro
+            dtTransp.Rows.Add(row)
+            '
+            '--- select new transportadora inserted
+            cmbIDTransportadora.SelectedValue = newTransp.IDPessoa
+            '
+        End If
+        '
+    End Sub
+    '
 #End Region
     '
 #Region "FORMATACAO E FLUXO"
     ' CRIA TECLA DE ATALHO PARA O TAB
     '---------------------------------------------------------------------------------------------------
     Private Sub Form_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        '
         If e.Alt AndAlso e.KeyCode = Keys.D1 Then
             tabPrincipal.SelectedTab = vtab1
             tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
@@ -771,9 +835,11 @@ Public Class frmCompra
             tabPrincipal.SelectedTab = vtab3
             tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
         End If
+        '
     End Sub
     '
     Private Sub tabPrincipal_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabPrincipal.SelectedIndexChanged
+        '
         If tabPrincipal.SelectedIndex = 0 Then
             dgvItens.Focus()
         ElseIf tabPrincipal.SelectedIndex = 1 Then
@@ -781,6 +847,7 @@ Public Class frmCompra
         ElseIf tabPrincipal.SelectedIndex = 2 Then
             dgvVendaNotas.Focus()
         End If
+        '
     End Sub
     '
     ' HABILITA OU DESABILITA OS CONTROLES DO FRETE
@@ -790,6 +857,7 @@ Public Class frmCompra
     End Sub
     '
     Public Sub Controla_cmbFrete()
+        '
         If Not IsNumeric(cmbFreteTipo.SelectedValue) Then Exit Sub
         '
         If _Compra.FreteTipo = 0 Then
@@ -806,10 +874,12 @@ Public Class frmCompra
             End If
             '--- Desabilita os controles
             cmbIDTransportadora.Enabled = False
+            btnTransportadoraAdd.Enabled = False
             txtFreteValor.Enabled = False
             txtVolumes.Enabled = False
         Else
             cmbIDTransportadora.Enabled = True
+            btnTransportadoraAdd.Enabled = True
             txtFreteValor.Enabled = True
             txtVolumes.Enabled = True
         End If
@@ -1130,6 +1200,9 @@ Public Class frmCompra
     '
 #Region "FINALIZAR COMPRA"
     '
+    '==========================================================================================
+    ' FINALIZE COMPRA WITH VERIFIES
+    '==========================================================================================
     Private Sub btnFinalizar_Click(sender As Object, e As EventArgs) Handles btnFinalizar.Click
         '
         '--- Verifica se a SITUACAO do registro permite salvar
@@ -1159,46 +1232,28 @@ Public Class frmCompra
             '
             '
             Dim TGeral As Decimal = TotalGeral
-            Dim TProdutos As Decimal = TotalProdutos
             '
             '--- SALVA O APAGAR PARCELAS NO BD
-            If Salvar_APagar() = False Then Exit Sub
+            If Salvar_APagar() = False Then
+                _Compra.IDSituacao = 1
+                SalvaRegistroCompra()
+                Sit = EnumFlagEstado.Alterado
+                Return
+            End If
             '
             '--- EFETUA O RATEIO DO FRETE NOS ITENS
-            Dim Rateio As Object = Nothing
+            EfetuarRateio()
             '
-            Try
-                Dim FreteTotal As Decimal = IIf(IsNothing(_Compra.FreteCobrado), 0, _Compra.FreteCobrado)
-                FreteTotal = FreteTotal + IIf(IsNothing(_Compra.FreteValor), 0, _Compra.FreteValor)
-                '
-                Rateio = cBLL.CompraItens_ReteioFrete(_Compra.IDCompra, FreteTotal, TProdutos)
-                '
-                If Not IsNumeric(Rateio) Then
-                    Throw New Exception(Rateio.ToString)
-                End If
-            Catch ex As Exception
-                MessageBox.Show("Houve uma exceção no Rateio do Frete..." & vbNewLine &
-                                ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
+            '--- altera a situacao da transacao atual
+            _Compra.IDSituacao = 2 'CONCLUÍDA
+            _Compra.TotalCompra = TGeral
             '
             '--- SALVA A TRANSACAO/COMPRA NO BD
-            Try
-                '--- altera a situacao da transacao atual
-                _Compra.IDSituacao = 2 'CONCLUÍDA
-                _Compra.TotalCompra = TGeral
+            If SalvaRegistroCompra() Then
                 '
-                Dim obj As Object = cBLL.AtualizaCompra_Procedure_ID(_Compra)
-                '
-                If Not IsNumeric(obj) Then
-                    Throw New Exception(obj.ToString)
-                End If
-                '
-            Catch ex As Exception
-                MessageBox.Show(ex.Message)
-            End Try
-            '
-            '--- ALTERA A SITUACAO DO REGISTRO ATUAL
-            Sit = EnumFlagEstado.RegistroSalvo
+                '--- ALTERA A SITUACAO DO REGISTRO ATUAL
+                Sit = EnumFlagEstado.RegistroSalvo
+            End If
             '
         End If
         '
@@ -1214,6 +1269,41 @@ Public Class frmCompra
         '
     End Sub
     '
+    '==========================================================================================
+    ' SAVE IN BD
+    '==========================================================================================
+    Private Function SalvaRegistroCompra() As Boolean
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim obj As Object = cBLL.AtualizaCompra_Procedure_ID(_Compra)
+            '
+            If Not IsNumeric(obj) Then
+                Throw New Exception(obj.ToString)
+            End If
+            '
+            Return True
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao Salvar o Registro da Compra..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+        Return False
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' CHECK TO SAVE
+    '==========================================================================================
     Private Function Verificar() As Boolean
         '--- Verifica se a Data não está BLOQUEADA pelo sistema
         '
@@ -1299,6 +1389,9 @@ Public Class frmCompra
         '
     End Function
     '
+    '==========================================================================================
+    ' SAVE A PAGAR
+    '==========================================================================================
     Private Function Salvar_APagar() As Boolean
         If _APagarList.Count = 0 Then Return False
         '
@@ -1306,6 +1399,10 @@ Public Class frmCompra
         '
         '--- Exclui todos os registros de APagar da Compra atual
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             pagBLL.Excluir_APagar_Origem(_Compra.IDCompra, clAPagar.Origem_APagar.Compra)
             '
             '--- Insere cada um APagar no BD
@@ -1318,10 +1415,48 @@ Public Class frmCompra
             MessageBox.Show("Houve uma exceção inesperada ao SALVAR Registros de APagar..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return False
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Function
     '
+    '==========================================================================================
+    ' DO RATEIO
+    '==========================================================================================
+    Private Sub EfetuarRateio()
+        '
+        Dim Rateio As Object = Nothing
+        Dim TProdutos As Decimal = TotalProdutos
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim FreteTotal As Decimal = IIf(IsNothing(_Compra.FreteCobrado), 0, _Compra.FreteCobrado)
+            FreteTotal = FreteTotal + IIf(IsNothing(_Compra.FreteValor), 0, _Compra.FreteValor)
+            '
+            Rateio = cBLL.CompraItens_ReteioFrete(_Compra.IDCompra, FreteTotal, TProdutos)
+            '
+            If Not IsNumeric(Rateio) Then
+                Throw New Exception(Rateio.ToString)
+            End If
+        Catch ex As Exception
+            MessageBox.Show("Houve uma exceção no Rateio do Frete..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
+    '   
 #End Region
     '
 #Region "CONTROLE DO CONTEXT MENUSTRIP"
@@ -1469,6 +1604,7 @@ Public Class frmCompra
     ' FUNCAO QUE CONFERE REGISTRO BLOQUEADO E EMITE MENSAGEM PADRAO
     '-----------------------------------------------------------------------------------------------------
     Private Function RegistroBloqueado() As Boolean
+        '
         If Sit = EnumFlagEstado.RegistroBloqueado Then
             MessageBox.Show("Esse registro de COMPRA está BLOQUEADO para alterações..." & vbNewLine &
                             "Não é possível adicionar produtos ou alterar algum dado!",
@@ -1477,51 +1613,47 @@ Public Class frmCompra
         Else
             RegistroBloqueado = False
         End If
+        '
     End Function
     '
     ' FUNCAO QUE CONFERE REGISTRO FINALIZADO E PERGUNTA SE DESEJA ALTERAR
     '-----------------------------------------------------------------------------------------------------
     Private Function RegistroFinalizado() As Boolean
-        If Sit = EnumFlagEstado.RegistroSalvo Then
-            If MessageBox.Show("Esse registro de COMPRA já se encontra FINALIZADO..." & vbNewLine &
-                               "Deseja realmente fazer alterações nesse registro?",
-                               "Registro Finalizado", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                               MessageBoxDefaultButton.Button2) = DialogResult.Yes Then
-                '--- Edita o registro e altera a situação
-                _Compra.IDSituacao = 1
-                '
-                '--- SALVA A TRANSACAO/VENDA NO BD
-                Try
-                    Dim obj As Object = cBLL.AtualizaCompra_Procedure_ID(_Compra)
-                    '
-                    If Not IsNumeric(obj) Then
-                        Throw New Exception(obj.ToString)
-                    End If
-                    '
-                Catch ex As Exception
-                    MessageBox.Show(ex.Message)
-                End Try
-                '
-                RegistroFinalizado = False
-            Else
-                RegistroFinalizado = True
-            End If
+        '
+        '--- check Sit
+        If Not Sit = EnumFlagEstado.RegistroSalvo Then Return False
+        '
+        '--- ask to user
+        If AbrirDialog("Esse registro de COMPRA já se encontra FINALIZADO..." & vbNewLine &
+                       "Deseja realmente fazer alterações nesse registro?",
+                       "Registro Finalizado",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question) = DialogResult.No Then Return True
+        '
+        '--- Edita o registro e altera a situação
+        _Compra.IDSituacao = 1
+        Sit = EnumFlagEstado.Alterado
+        '
+        '--- SAVE A TRANSACAO/COMPRA NO BD
+        If SalvaRegistroCompra() Then
+            Return False
         Else
-            RegistroFinalizado = False
+            Return True
         End If
+        '
     End Function
     '
     Private Function CanCloseMessage() As Boolean
         '
         If Not (Sit = EnumFlagEstado.NovoRegistro Or Sit = EnumFlagEstado.Alterado) Then Return True
         '
-        If MessageBox.Show("Essa COMPRA ainda não está CONCLUÍDA!" & vbNewLine & vbNewLine &
-                           "Se você fechar agora o fomulário de compra," & vbNewLine &
-                           "Algumas alterações podem ser perdidas." & vbNewLine & vbNewLine &
-                           "Deseja Fechar a Compra assim mesmo?",
-                           "Fechar a Compra",
-                           MessageBoxButtons.YesNo,
-                           MessageBoxIcon.Question) = vbNo Then
+        If AbrirDialog("Essa COMPRA ainda não está CONCLUÍDA!" & vbNewLine & vbNewLine &
+                        "Se você fechar agora o fomulário de compra," & vbNewLine &
+                        "Algumas alterações podem ser perdidas." & vbNewLine & vbNewLine &
+                        "Deseja Fechar a Compra assim mesmo?",
+                        "Fechar a Compra",
+                        frmDialog.DialogType.SIM_NAO,
+                        frmDialog.DialogIcon.Question) = vbNo Then
             '
             '--- Seleciona a TAB
             tabPrincipal.SelectedTab = vtab2
