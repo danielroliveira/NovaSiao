@@ -14,6 +14,7 @@ Public Class frmVendaVista
     Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
     Private _IDFilial As Integer
     Private VerificaAlteracao As Boolean
+    Property DescontoMaximo As Double
     '
 #Region "LOAD"
     '
@@ -183,6 +184,9 @@ Public Class frmVendaVista
         '
         ' Add Handler Menu Acao
         MenuOpen_AdHandler()
+        '
+        '--- Define a DESCONTO MAXIMO padrao
+        DescontoMaximo = Obter_DescontoMaximo()
         '
     End Sub
     '

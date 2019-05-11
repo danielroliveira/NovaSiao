@@ -20,7 +20,6 @@ Public Class frmVendaPrazo
     Private Taxa As Double?
     Property DescontoMaximo As Double
     '
-    '
 #Region "LOAD"
     '
     Private Property Sit As EnumFlagEstado
