@@ -3,7 +3,7 @@
 '========================================================================
 ' CLASSE PRIMARIA PESSOA
 '========================================================================
-Public MustInherit Class clPessoa
+Public Class clPessoa
     Structure StructurePessoa
         Dim _IDPessoa As Integer?
         Dim _Cadastro As String

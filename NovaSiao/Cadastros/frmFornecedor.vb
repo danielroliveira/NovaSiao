@@ -238,20 +238,43 @@ Public Class frmFornecedor
         If VerificaDados() = False Then Exit Sub
         '
         '--- define os dados da classe
-        Dim NewFornID As Long
-        Dim fornBLL As New FornecedorBLL
+        Dim NewFornID As Integer
+        Dim pBLL As New PessoaBLL
         '
         Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Define o tipo de Pessoa
+            _forn.PessoaTipo = 2 '---> PJ
+            '
             '--- Salva mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
             If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
-                NewFornID = fornBLL.SalvaNovoFornecedor_ID(_forn)
-            ElseIf Sit = enumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
-                NewFornID = fornBLL.AtualizaFornecedor(_forn)
+                '
+                Dim response = pBLL.InsertNewPessoa(_forn, PessoaBLL.EnumPessoaGrupo.FORNECEDOR)
+                '
+                If TypeOf response Is Integer Then
+                    NewFornID = response
+                Else
+                    Throw New Exception("Já existe FORNECEDOR com mesmo CNPJ...")
+                End If
+                '
+            ElseIf Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
+                '
+                If pBLL.UpdatePessoa(_forn, PessoaBLL.EnumPessoaGrupo.FORNECEDOR) Then
+                    NewFornID = _forn.IDPessoa
+                End If
+                '
             End If
         Catch ex As Exception
             MessageBox.Show("Um erro ocorreu ao salvar o registro!" & vbCrLf &
                             ex.Message, "Erro ao Salvar Registro",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
         '--- Verifica se houve Retorno da Função de Salvar
@@ -430,7 +453,7 @@ Public Class frmFornecedor
         Dim myPessoa As Object = Nothing
         '
         Try
-            myPessoa = db.ProcurarCNP_Pessoa(txtCNPJ.Text, "FORNECEDOR")
+            myPessoa = db.ProcurarCNP_Pessoa(txtCNPJ.Text, PessoaBLL.EnumPessoaGrupo.FORNECEDOR)
             '
             ' NÃO ENCOTROU NENHUM CLIENTE NO CPF/CNPJ RETORNA NOVO CLIENTE
             If IsNothing(myPessoa) Then Return Nothing

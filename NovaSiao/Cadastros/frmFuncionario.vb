@@ -247,6 +247,7 @@ Public Class frmFuncionario
 #End Region
     '
 #Region "SALVAR REGISTRO"
+    '
     ' SALVAR O REGISTRO
     '---------------------------------------------------------------------------------------------------
     Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
@@ -270,7 +271,7 @@ Public Class frmFuncionario
         '
         '--- define os dados da classe
         Dim NewFuncID As Long
-        Dim func_BLL As New FuncionarioBLL
+        Dim pessoaBLL As New PessoaBLL
         '
         '--- salva ou não salva a tabela VendaFuncionario
         DirectCast(bindFunc.CurrencyManager.Current, clFuncionario).Vendedor = chkVendas.Checked
@@ -279,20 +280,44 @@ Public Class frmFuncionario
         End If
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             '--- Salva mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
             If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
-                NewFuncID = func_BLL.SalvaNovoFuncionario_Procedure_ID(bindFunc.CurrencyManager.Current)
+                Dim response As Object = pessoaBLL.InsertNewPessoa(bindFunc.CurrencyManager.Current,
+                                                                   PessoaBLL.EnumPessoaGrupo.FUNCIONARIO)
+                '
+                If TypeOf response Is Integer Then
+                    NewFuncID = response
+                Else
+                    Throw New Exception("Já existe Funcionario com mesmo CPF...")
+                End If
+                '
             ElseIf Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
-                NewFuncID = func_BLL.AtualizaFuncionario_Procedure_ID(bindFunc.CurrencyManager.Current)
+                If pessoaBLL.UpdatePessoa(bindFunc.CurrencyManager.Current,
+                                          PessoaBLL.EnumPessoaGrupo.FUNCIONARIO) Then
+                    '
+                    NewFuncID = DirectCast(bindFunc.CurrencyManager.Current, clFuncionario).IDPessoa
+                    '
+                End If
             End If
+            '
         Catch ex As Exception
             MessageBox.Show("Um erro ocorreu ao salvar o registro!" & vbCrLf &
                             ex.Message, "Erro ao Salvar Registro",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
         '--- Verifica se houve Retorno da Função de Salvar
         If IsNumeric(NewFuncID) AndAlso NewFuncID <> 0 Then
+            '
             '--- Retorna o número de Registro do Novo Cliente Cadastrado
             If _Sit = EnumFlagEstado.NovoRegistro Then
                 DirectCast(bindFunc.Current, clFuncionario).IDPessoa = NewFuncID
@@ -303,8 +328,6 @@ Public Class frmFuncionario
             Sit = EnumFlagEstado.RegistroSalvo
             bindFunc.EndEdit()
             bindFunc.CurrencyManager.Refresh()
-            '
-            'PreencheFuncionarios()
             '
             '--- Mensagem de Sucesso:
             MsgBox("Registro Salvo com sucesso!", vbInformation, "Registro Salvo")
@@ -375,11 +398,12 @@ Public Class frmFuncionario
     '
     ' VERIFICA PESSOA EXISTENTE RETORNA UM clFuncionario
     Private Function VerPessoaExistente() As Object
+        '
         Dim db As New PessoaBLL
         Dim myPessoa As Object = Nothing
         '
         Try
-            myPessoa = db.ProcurarCNP_Pessoa(txtCPF.Text, "FUNCIONARIO")
+            myPessoa = db.ProcurarCNP_Pessoa(txtCPF.Text, PessoaBLL.EnumPessoaGrupo.FUNCIONARIO)
             '
             ' NÃO ENCOTROU NENHUM CLIENTE NO CPF/CNPJ RETORNA NOVO CLIENTE
             If IsNothing(myPessoa) Then Return Nothing
@@ -417,11 +441,16 @@ Public Class frmFuncionario
     '--- FUNCAO QUE VERIFICA SE O FUNCIONARIO/VENDEDOR POSSUI ALGUM REGISTRO DE VENDA ASSOCIADO A ELE
     '-------------------------------------------------------------------------------------------------------
     Private Function DesabilitaVendedor_Verificacao() As Integer
+        '
         If chkVendas.Checked = False AndAlso Sit <> EnumFlagEstado.NovoRegistro Then
             Dim fBLL As New FuncionarioBLL
             Dim qdeVendas As Integer?
             '
             Try
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
                 qdeVendas = fBLL.FuncionarioVendedor_GetVendas(DirectCast(bindFunc.Current, clFuncionario).IDPessoa)
                 If Not IsNothing(qdeVendas) Then
                     Return qdeVendas
@@ -431,10 +460,16 @@ Public Class frmFuncionario
             Catch ex As Exception
                 MessageBox.Show("Uma falha inesperada ocorreu: " & vbNewLine & ex.Message)
                 Return -1
+            Finally
+                '
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+                '
             End Try
         Else
             Return 0
         End If
+        '
     End Function
     '
     '----------------------------------------------------------------------------------------------------------
@@ -553,7 +588,7 @@ Public Class frmFuncionario
                     txtTelefoneB.Text = f.TelefoneB
                     txtEmail.Text = f.Email
                     txtIdentidade.Text = f.Identidade
-                    txtIdentidadeData.Text = f.IdentidadeData
+                    txtIdentidadeData.Text = If(f.IdentidadeData, "")
                     txtIdentidadeOrgao.Text = f.IdentidadeOrgao
                     '
                 End If
@@ -581,19 +616,27 @@ Public Class frmFuncionario
     End Sub
     '
     Private Sub AddHandlerControles()
-        For Each c As Control In Me.Controls
+        '
+        For Each c As Control In Controls
+            '
             If c.GetType = GetType(TextBox) Then
                 AddHandler DirectCast(c, TextBox).GotFocus, AddressOf SelTodoTexto
                 AddHandler DirectCast(c, TextBox).KeyDown, AddressOf EnterForTab
             ElseIf c.GetType = GetType(MaskedTextBox) Then
                 AddHandler DirectCast(c, MaskedTextBox).GotFocus, AddressOf SelTodoTexto
                 AddHandler DirectCast(c, MaskedTextBox).KeyDown, AddressOf EnterForTab
+            ElseIf c.GetType = GetType(ComboBox) Then
+                AddHandler DirectCast(c, ComboBox).GotFocus, AddressOf SelTodoTexto
+                AddHandler DirectCast(c, ComboBox).KeyDown, AddressOf EnterForTab
             End If
+            '
         Next
+        '
     End Sub
     '
     ' HANDLER SELECIONAR TODO O TEXTO
     Private Sub SelTodoTexto(sender As Object, e As EventArgs)
+        '
         If sender.GetType = GetType(TextBox) Then
             DirectCast(sender, TextBox).SelectAll()
         ElseIf sender.GetType = GetType(MaskedTextBox) Then

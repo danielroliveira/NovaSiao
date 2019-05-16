@@ -268,20 +268,39 @@ Public Class frmClientePF
 
         'define os dados da classe
         Dim NewCliID As Integer
-        Dim cliPF_BLL As New ClientePF_BLL
-
+        Dim pessoaBLL As New PessoaBLL
+        '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             'Salva o Cliente, mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
             If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
-                NewCliID = cliPF_BLL.SalvaNovoClientePF_Procedure_ID(_ClientePF)
+                '
+                Dim response As Object = pessoaBLL.InsertNewPessoa(_ClientePF, PessoaBLL.EnumPessoaGrupo.CLIENTE)
+                '
+                If TypeOf response Is Integer Then
+                    NewCliID = response
+                Else
+                    Throw New Exception("Já existe Cliente Pessoa Física com mesmo CPF...")
+                End If
+                '
             ElseIf _Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
-                NewCliID = cliPF_BLL.AtualizaClientePF_Procedure_ID(_ClientePF)
+                '
+                pessoaBLL.UpdatePessoa(_ClientePF, PessoaBLL.EnumPessoaGrupo.CLIENTE)
+                '
             End If
             '
         Catch ex As Exception
             MessageBox.Show("Um erro ocorreu ao salvar o registro!" & vbCrLf &
                             ex.Message, "Erro ao Salvar Registro",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
 
         'Verifica se houve Retorno da Função de Salvar

@@ -2,6 +2,7 @@
 Imports CamadaDTO
 
 Public Class CredorBLL
+    '
     '===================================================================================================
     ' OBTER LISTA COMPLETA PELO CREDORTIPO
     '===================================================================================================
@@ -9,44 +10,23 @@ Public Class CredorBLL
         Dim bd As New AcessoDados
         Dim lst As New List(Of clCredor)
         '
+        '--- declare Query
+        Dim myQuery As String = "SELECT * FROM qryCredor"
+        '
+        '--- Paramns
         bd.LimparParametros()
         '
         If Not IsNothing(CredorTipo) Then
             bd.AdicionarParametros("@CredorTipo", CredorTipo)
+            myQuery += " WHERE CredorTipo = @CredorTipo"
         End If
         '
+        '--- Execute Query
         Try
-            Dim dt As DataTable = bd.ExecutarConsulta(CommandType.StoredProcedure, "uspCredor_GET_PorTipo")
+            Dim dt As DataTable = bd.ExecutarConsulta(CommandType.Text, myQuery)
             '
             For Each r As DataRow In dt.Rows
-                Dim cred As New clCredor
-                '
-                cred.IDPessoa = IIf(IsDBNull(r("IDCredor")), Nothing, r("IDCredor"))
-                cred.Cadastro = IIf(IsDBNull(r("Cadastro")), String.Empty, r("Cadastro"))
-                cred.CredorTipo = IIf(IsDBNull(r("CredorTipo")), Nothing, r("CredorTipo"))
-                cred.Ativo = IIf(IsDBNull(r("Ativo")), Nothing, r("Ativo"))
-                '
-                If Not IsDBNull(r("CNPJ")) Then
-                    cred.CNP = IIf(IsDBNull(r("CNPJ")), String.Empty, r("CNPJ"))
-                Else
-                    If Not IsDBNull(r("CPF")) Then
-                        cred.CNP = IIf(IsDBNull(r("CPF")), String.Empty, r("CPF"))
-                    Else
-                        cred.CNP = Nothing
-                    End If
-                End If
-                '
-                cred.Endereco = IIf(IsDBNull(r("Endereco")), String.Empty, r("Endereco"))
-                cred.Bairro = IIf(IsDBNull(r("Bairro")), String.Empty, r("Bairro"))
-                cred.Cidade = IIf(IsDBNull(r("Cidade")), String.Empty, r("Cidade"))
-                cred.UF = IIf(IsDBNull(r("UF")), String.Empty, r("UF"))
-                cred.CEP = IIf(IsDBNull(r("CEP")), String.Empty, r("CEP"))
-                cred.TelefoneA = IIf(IsDBNull(r("TelefoneA")), String.Empty, r("TelefoneA"))
-                cred.TelefoneB = IIf(IsDBNull(r("TelefoneB")), String.Empty, r("TelefoneB"))
-                cred.Email = IIf(IsDBNull(r("Email")), String.Empty, r("Email"))
-                '
-                lst.Add(cred)
-                '
+                lst.Add(ConvertDtRow_Credor(r))
             Next
             '
             Return lst
@@ -58,38 +38,24 @@ Public Class CredorBLL
     End Function
     '
     '===================================================================================================
-    ' INSERIR NOVO
+    ' GET CREDOR PELO ID
     '===================================================================================================
-    Public Function Credor_Inserir(myCredor As clCredor) As Object
+    Public Function CredorGetPeloID(IDCredor) As clCredor
         Dim bd As New AcessoDados
         '
+        '--- declare Query
+        Dim myQuery As String = "SELECT * FROM qryCredor WHERE IDCredor = @IDCredor"
+        '
+        '--- Paramns
         bd.LimparParametros()
+        bd.AdicionarParametros("@IDCredor", IDCredor)
         '
-        '--- ADICIONA OS PARAMENTROS NECESSARIOS
-        bd.AdicionarParametros("Cadastro", myCredor.Cadastro)
-        bd.AdicionarParametros("CredorTipo", myCredor.CredorTipo)
-        '--- CNPJ | CPF
-        bd.AdicionarParametros("CNP", myCredor.CNP)
-        '--- ENDERECO
-        bd.AdicionarParametros("Endereco", myCredor.Endereco)
-        bd.AdicionarParametros("Bairro", myCredor.Bairro)
-        bd.AdicionarParametros("Cidade", myCredor.Cidade)
-        bd.AdicionarParametros("UF", myCredor.UF)
-        bd.AdicionarParametros("CEP", myCredor.CEP)
-        '--- TELEFONES
-        bd.AdicionarParametros("TelefoneA", myCredor.TelefoneA)
-        bd.AdicionarParametros("TelefoneB", myCredor.TelefoneB)
-        '--- EMAIL
-        bd.AdicionarParametros("Email", myCredor.Email)
-        '
+        '--- Execute Query
         Try
-            Dim myID As Object = bd.ExecutarManipulacao(CommandType.StoredProcedure, "uspCredor_Inserir")
+            Dim dt As DataTable = bd.ExecutarConsulta(CommandType.Text, myQuery)
+            If dt.Rows.Count = 0 Then Return Nothing
             '
-            If IsNumeric(myID) Then
-                Return myID
-            Else
-                Throw New Exception(myID.ToString)
-            End If
+            Return ConvertDtRow_Credor(dt.Rows(0))
             '
         Catch ex As Exception
             Throw ex
@@ -97,45 +63,31 @@ Public Class CredorBLL
         '
     End Function
     '
-    '===================================================================================================
-    ' ALTERAR REGISTRO
-    '===================================================================================================
-    Public Function Credor_Alterar(myCredor As clCredor) As clCredor
-        Dim bd As New AcessoDados
+    '==========================================================================================
+    ' CONVERTE UM DATAROW EM UM CLCREDOR
+    '==========================================================================================
+    Shared Function ConvertDtRow_Credor(r As DataRow) As clCredor
         '
-        bd.LimparParametros()
+        Dim Cred As New clCredor With {
+            .IDPessoa = If(IsDBNull(r("IDPessoa")), Nothing, r("IDPessoa")),
+            .Cadastro = If(IsDBNull(r("Cadastro")), String.Empty, r("Cadastro")),
+            .CNP = If(IsDBNull(r("CNP")), String.Empty, r("CNP")),
+            .Endereco = If(IsDBNull(r("Endereco")), String.Empty, r("Endereco")),
+            .Bairro = If(IsDBNull(r("Bairro")), String.Empty, r("Bairro")),
+            .Cidade = If(IsDBNull(r("Cidade")), String.Empty, r("Cidade")),
+            .UF = If(IsDBNull(r("UF")), String.Empty, r("UF")),
+            .CEP = If(IsDBNull(r("CEP")), String.Empty, r("CEP")),
+            .Email = If(IsDBNull(r("Email")), String.Empty, r("Email")),
+            .TelefoneA = If(IsDBNull(r("TelefoneA")), String.Empty, r("TelefoneA")),
+            .TelefoneB = If(IsDBNull(r("TelefoneB")), String.Empty, r("TelefoneB")),
+            .PessoaTipo = If(IsDBNull(r("PessoaTipo")), Nothing, r("PessoaTipo")),
+            .CredorTipo = If(IsDBNull(r("CredorTipo")), Nothing, r("CredorTipo")),
+            .Ativo = If(IsDBNull(r("Ativo")), Nothing, r("Ativo")),
+            .Observacao = If(IsDBNull(r("Observacao")), String.Empty, r("Observacao")),
+            .InsercaoData = If(IsDBNull(r("InsercaoData")), Nothing, r("InsercaoData"))
+        }
         '
-        '--- ADICIONA OS PARAMENTROS NECESSARIOS
-        bd.AdicionarParametros("IDCredor", myCredor.IDPessoa)
-        bd.AdicionarParametros("Cadastro", myCredor.Cadastro)
-        bd.AdicionarParametros("CredorTipo", myCredor.CredorTipo)
-        '--- ENDERECO
-        bd.AdicionarParametros("Endereco", myCredor.Endereco)
-        bd.AdicionarParametros("Bairro", myCredor.Bairro)
-        bd.AdicionarParametros("Cidade", myCredor.Cidade)
-        bd.AdicionarParametros("UF", myCredor.UF)
-        bd.AdicionarParametros("CEP", myCredor.CEP)
-        '--- TELEFONES
-        bd.AdicionarParametros("TelefoneA", myCredor.TelefoneA)
-        bd.AdicionarParametros("TelefoneB", myCredor.TelefoneB)
-        '--- EMAIL
-        bd.AdicionarParametros("Email", myCredor.Email)
-        '
-        Try
-            Dim myResp As Object = bd.ExecutarConsulta(CommandType.StoredProcedure, "uspCredor_Alterar")
-            '
-            Dim r As DataRow = myResp.Rows(0)
-            '
-            If IsNumeric(r.Item(0)) Then
-                myCredor.Cadastro = r.Item(1)
-                Return myCredor
-            Else
-                Throw New Exception(r.Item(0))
-            End If
-            '
-        Catch ex As Exception
-            Throw ex
-        End Try
+        Return Cred
         '
     End Function
     '
@@ -155,4 +107,5 @@ Public Class CredorBLL
         End If
         '
     End Function
+    '
 End Class

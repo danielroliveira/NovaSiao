@@ -9,6 +9,7 @@ Public Class clCredor
         Dim _CNP As String
         Dim _CredorTipo As Byte '0:Credor Simples | 1:Credor PF | 2:Credor PJ | 3:OrgaoPublico
         Dim _Ativo As Boolean
+        Dim _Observacao As String
     End Structure
 #End Region
     '
@@ -23,6 +24,7 @@ Public Class clCredor
         With CredData
             ._CredorTipo = 0
             ._Ativo = True
+            ._Observacao = ""
         End With
         '
     End Sub
@@ -99,6 +101,19 @@ Public Class clCredor
         End Set
     End Property
     '
+    '--- Propriedade Observacao
+    '------------------------------------------------------
+    Public Property Observacao() As String
+        Get
+            Return CredData._Observacao
+        End Get
+        Set(ByVal value As String)
+            If value <> CredData._Observacao Then
+                RaiseAoAlterar()
+            End If
+            CredData._Observacao = value
+        End Set
+    End Property
 #End Region
 
 End Class

@@ -284,7 +284,7 @@ Public Class frmCredor
         Dim myPessoa As Object = Nothing
         '
         Try
-            myPessoa = db.ProcurarCNP_Pessoa(txtCNP.Text, "")
+            myPessoa = db.ProcurarCNP_Pessoa(txtCNP.Text, PessoaBLL.EnumPessoaGrupo.CREDOR)
             '
             ' NÃO ENCOTROU NENHUM CLIENTE NO CPF/CNPJ RETORNA NOVO CLIENTE
             If IsNothing(myPessoa) Then
@@ -389,10 +389,28 @@ Public Class frmCredor
     '
     Private Sub InserirNovoRegistro()
         '
-        Dim cBLL As New CredorBLL
+        Dim cBLL As New PessoaBLL
         '
         Try
-            Dim newID As Integer = cBLL.Credor_Inserir(_Credor)
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Define PessoaTipo
+            '0:Credor Simples | 1:Credor PF | 2:Credor PJ | 3:OrgaoPublico
+            If _Credor.CredorTipo = 0 OrElse _Credor.CredorTipo = 3 Then
+                _Credor.PessoaTipo = 4 '---> PESSOATIPO: CredorSimples
+            ElseIf _Credor.CredorTipo = 1 Then
+                _Credor.PessoaTipo = 1 '---> PESSOATIPO: PessoaFisica
+            ElseIf _Credor.CredorTipo = 2 Then
+                _Credor.PessoaTipo = 2 '---> PESSOATIPO: PessoaJuridica
+            End If
+            '
+            Dim newID As Object = cBLL.InsertNewPessoa(_Credor, PessoaBLL.EnumPessoaGrupo.CREDOR)
+            '
+            If Not TypeOf newID Is Integer Then
+                Throw New Exception("PJ, CNPJ ou Nome do Credor duplicados...")
+            End If
             '
             _Credor.IDPessoa = newID
             lblIDCredor.DataBindings.Item("Text").ReadValue()
@@ -403,24 +421,29 @@ Public Class frmCredor
             DialogResult = DialogResult.OK
             '
         Catch ex As Exception
-            MessageBox.Show("Ocorreu uma exceção inesperada ao salvar Credor:" & vbNewLine & vbNewLine &
+            MessageBox.Show("Ocorreu uma exceção inesperada ao salvar Credor:" &
+                            vbNewLine & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             txtCadastro.Focus()
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
+        '
     End Sub
     '
     Private Sub AlterarRegistro()
         '
-        Dim cBLL As New CredorBLL
+        Dim cBLL As New PessoaBLL
         '
         Try
-            Dim AltCred As clCredor = cBLL.Credor_Alterar(_Credor)
             '
-            If txtCadastro.Text <> AltCred.Cadastro Then
-                MessageBox.Show("O Cadastro do Credor não pode ser diferente do Nome/Razão Social associado ao CPF/CNPJ.",
-                                "Cadastro/Nome", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                txtCadastro.DataBindings("Text").ReadValue()
-            End If
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            cBLL.UpdatePessoa(_Credor, PessoaBLL.EnumPessoaGrupo.CREDOR)
             '
             MessageBox.Show("Registro Alterado com sucesso!", "Sucesso",
                             MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -431,6 +454,11 @@ Public Class frmCredor
             MessageBox.Show("Ocorreu uma exceção inesperada ao alterar o Credor:" & vbNewLine & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             txtCadastro.Focus()
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub

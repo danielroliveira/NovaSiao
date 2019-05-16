@@ -231,6 +231,7 @@ Public Class frmTransportadora
 #End Region
 
 #Region "SALVAR REGISTRO"
+    '
     ' SALVAR O REGISTRO
     '---------------------------------------------------------------------------------------------------
     Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
@@ -240,19 +241,43 @@ Public Class frmTransportadora
         '
         '--- define os dados da classe
         Dim NewTranspID As Long
-        Dim transp_BLL As New TransportadoraBLL
+        Dim pBLL As New PessoaBLL
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Define Pessoa Tipo
+            _Transp.PessoaTipo = 2 '---> PJ
+            '
             '--- Salva mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
             If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
-                NewTranspID = transp_BLL.SalvaNovaTransportadora_ID(_Transp)
+                '
+                Dim response = pBLL.InsertNewPessoa(_Transp, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA)
+                '
+                If TypeOf response Is Integer Then
+                    NewTranspID = response
+                Else
+                    Throw New Exception("Já existe TRANSPORTADORA com mesmo CNPJ...")
+                End If
+                '
             ElseIf Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
-                NewTranspID = transp_BLL.AtualizaTransportadora(_Transp)
+                If pBLL.UpdatePessoa(_Transp, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA) Then
+                    '
+                    NewTranspID = _Transp.IDPessoa
+                    '
+                End If
             End If
         Catch ex As Exception
             MessageBox.Show("Um erro ocorreu ao salvar o registro!" & vbCrLf &
                             ex.Message, "Erro ao Salvar Registro",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
         '--- Verifica se houve Retorno da Função de Salvar
@@ -432,7 +457,7 @@ Public Class frmTransportadora
         Dim myPessoa As Object = Nothing
         '
         Try
-            myPessoa = db.ProcurarCNP_Pessoa(txtCNPJ.Text, "TRANSPORTADORA")
+            myPessoa = db.ProcurarCNP_Pessoa(txtCNPJ.Text, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA)
             '
             ' NÃO ENCOTROU NENHUM CLIENTE NO CPF/CNPJ RETORNA NOVO CLIENTE
             If IsNothing(myPessoa) Then Return Nothing

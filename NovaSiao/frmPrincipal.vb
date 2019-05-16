@@ -371,10 +371,12 @@ Public Class frmPrincipal
     '========================================================================================================
 #Region "MENU CLIENTE"
     Private Sub miClienteNovo_Click(sender As Object, e As EventArgs) Handles miClienteNovo.Click
+        '
         Dim frmCN As New frmClienteNovo
         frmCN.MdiParent = Me
         frmCN.Show()
         OcultaMenuPrincipal()
+        '
     End Sub
     '
     Private Sub miClienteProcurar_Click(sender As Object, e As EventArgs) Handles miClienteProcurar.Click

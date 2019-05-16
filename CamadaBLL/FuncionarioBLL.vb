@@ -79,89 +79,6 @@ Public Class FuncionarioBLL
     End Function
     '
     '=====================================================================================================
-    ' UPDATE
-    '=====================================================================================================
-    Public Function AtualizaFuncionario_Procedure_ID(ByVal _func As clFuncionario) As Long
-        Dim objDB As New AcessoDados
-        '
-        objDB.LimparParametros()
-        '
-        'Adiciona os Parâmetros
-        objDB.AdicionarParametros("@IDPessoa", _func.IDPessoa)
-        objDB.AdicionarParametros("@Cadastro", _func.Cadastro)
-        objDB.AdicionarParametros("@CPF", _func.CPF)
-        objDB.AdicionarParametros("@Sexo", _func.Sexo)
-        objDB.AdicionarParametros("@NascimentoData", _func.NascimentoData)
-        objDB.AdicionarParametros("@Identidade", _func.Identidade)
-        objDB.AdicionarParametros("@IdentidadeOrgao", _func.IdentidadeOrgao)
-        objDB.AdicionarParametros("@IdentidadeData", _func.IdentidadeData)
-        objDB.AdicionarParametros("@Endereco", _func.Endereco)
-        objDB.AdicionarParametros("@Bairro", _func.Bairro)
-        objDB.AdicionarParametros("@Cidade", _func.Cidade)
-        objDB.AdicionarParametros("@UF", _func.UF)
-        objDB.AdicionarParametros("@CEP", _func.CEP)
-        objDB.AdicionarParametros("@TelefoneA", _func.TelefoneA)
-        objDB.AdicionarParametros("@TelefoneB", _func.TelefoneB)
-        objDB.AdicionarParametros("@Email", _func.Email)
-        objDB.AdicionarParametros("@AdmissaoData", _func.AdmissaoData)
-        objDB.AdicionarParametros("@Ativo", _func.Ativo)
-        objDB.AdicionarParametros("@Vendedor", _func.Vendedor)
-        objDB.AdicionarParametros("@ApelidoFuncionario", _func.ApelidoFuncionario)
-        objDB.AdicionarParametros("@IDFilial", _func.IDFilial)
-        objDB.AdicionarParametros("@Comissao", _func.Comissao)
-        objDB.AdicionarParametros("@VendaTipo", _func.VendaTipo)
-        objDB.AdicionarParametros("@VendedorAtivo", _func.VendedorAtivo)
-        '
-        Try
-            Return objDB.ExecutarManipulacao(CommandType.StoredProcedure, "uspFuncionario_Alterar")
-        Catch ex As Exception
-            Throw ex
-            Return Nothing
-        End Try
-        '
-    End Function
-    '
-    '=====================================================================================================
-    ' INSERT
-    '=====================================================================================================
-    Public Function SalvaNovoFuncionario_Procedure_ID(ByVal _func As clFuncionario) As Long
-        Dim objDB As New AcessoDados
-
-        'Adiciona os Parâmetros
-        objDB.AdicionarParametros("@Cadastro", _func.Cadastro)
-        objDB.AdicionarParametros("@CPF", _func.CPF)
-        objDB.AdicionarParametros("@Sexo", _func.Sexo)
-        objDB.AdicionarParametros("@NascimentoData", _func.NascimentoData)
-        objDB.AdicionarParametros("@Identidade", _func.Identidade)
-        objDB.AdicionarParametros("@IdentidadeOrgao", _func.IdentidadeOrgao)
-        objDB.AdicionarParametros("@IdentidadeData", _func.IdentidadeData)
-        objDB.AdicionarParametros("@Endereco", _func.Endereco)
-        objDB.AdicionarParametros("@Bairro", _func.Bairro)
-        objDB.AdicionarParametros("@Cidade", _func.Cidade)
-        objDB.AdicionarParametros("@UF", _func.UF)
-        objDB.AdicionarParametros("@CEP", _func.CEP)
-        objDB.AdicionarParametros("@TelefoneA", _func.TelefoneA)
-        objDB.AdicionarParametros("@TelefoneB", _func.TelefoneB)
-        objDB.AdicionarParametros("@Email", _func.Email)
-        objDB.AdicionarParametros("@AdmissaoData", _func.AdmissaoData)
-        objDB.AdicionarParametros("@Ativo", _func.Ativo)
-        objDB.AdicionarParametros("@Vendedor", _func.Vendedor)
-        objDB.AdicionarParametros("@ApelidoFuncionario", _func.ApelidoFuncionario)
-        objDB.AdicionarParametros("@Comissao", _func.Comissao)
-        objDB.AdicionarParametros("@VendaTipo", _func.VendaTipo)
-        objDB.AdicionarParametros("@IDFilial", _func.IDFilial)
-        'objDB.AdicionarParametros("@VendedorAtivo", _func.VendedorAtivo)) 'PADRAO 'TRUE'
-        '
-        Try
-            Return objDB.ExecutarManipulacao(CommandType.StoredProcedure, "uspFuncionario_Inserir")
-        Catch ex As Exception
-            Throw ex
-            Return Nothing
-        End Try
-        '
-    End Function
-    '
-    '=====================================================================================================
     ' DELETE
     '=====================================================================================================
     Public Function DeletaFuncionario_PorID(ByVal _IDFuncionario As Long) As Boolean
@@ -192,5 +109,5 @@ Public Class FuncionarioBLL
         End Try
         '
     End Function
-
+    '
 End Class

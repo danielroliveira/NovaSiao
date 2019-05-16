@@ -7,6 +7,7 @@ Public Class ObservacaoBLL
     '1      tblTransacao
     '2      tblPessoa
     '3      tblCaixaMovimentacao
+    '4      tblessoaCliente
     '5      tblCaixa
     '6      tblReserva
     '7      tblPedido
@@ -16,6 +17,8 @@ Public Class ObservacaoBLL
     '11     tblSimplesEntrada
     '12     tblDevolucaoSaida
     '13     tblCaixaTransferencia
+    '14     tblEstoqueAjuste
+    '15     tblPessoaCredor
     '
     '===============================================================================
     ' SAVE NEW OBSERVACAO
@@ -42,10 +45,8 @@ Public Class ObservacaoBLL
             '--- Verifica se existe observacao, se nao return TRUE
             If Observacao.Trim.Length = 0 Then
                 '--- COMMIT
-                If tranInterna Then
-                    db.CommitTransaction()
-                End If
-                '
+                If tranInterna Then db.CommitTransaction()
+                '--- RETURN
                 Return True
                 '
             End If

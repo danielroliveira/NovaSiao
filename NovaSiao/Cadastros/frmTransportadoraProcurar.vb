@@ -281,11 +281,23 @@ Public Class frmTransportadoraProcurar
         t.Ativo = True
         '
         '--- Salvar o Registro
-        Dim tBLL As New TransportadoraBLL
-        tBLL.AtualizaTransportadora(t)
-        '
-        '--- altera a imagem
-        FiltrarListagem()
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim tBLL As New PessoaBLL
+            tBLL.UpdatePessoa(t, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA)
+            '
+            '--- altera a imagem
+            FiltrarListagem()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Atualizar o Registro..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '
@@ -306,11 +318,23 @@ Public Class frmTransportadoraProcurar
         t.Ativo = False
         '
         '--- Salvar o Registro
-        Dim tBLL As New TransportadoraBLL
-        tBLL.AtualizaTransportadora(t)
-        '
-        '--- altera a imagem
-        FiltrarListagem()
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim tBLL As New PessoaBLL
+            tBLL.UpdatePessoa(t, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA)
+            '
+            '--- altera a imagem
+            FiltrarListagem()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Atualizar o Registro..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
 #End Region

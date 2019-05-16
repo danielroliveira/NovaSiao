@@ -1,6 +1,7 @@
 ﻿Imports CamadaBLL
 Imports CamadaDTO
 Public Class frmClienteNovo
+    '
     ' EVENTO LOAD
     Private Sub frmClienteNovo_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         txtCNPJ.Focus()
@@ -8,10 +9,12 @@ Public Class frmClienteNovo
     '
     ' SUPRIMIR A TECLA ENTER NO TXTCNPJ
     Private Sub txtCNPJ_KeyDown(sender As Object, e As KeyEventArgs) Handles txtCNPJ.KeyDown
+        '
         If e.KeyCode = Keys.Enter Then
             e.SuppressKeyPress = True
             SendKeys.Send("{Tab}")
         End If
+        '
     End Sub
     '
     ' FORMATAR A MÁSCARA DO CPF OU CNPJ
@@ -87,6 +90,7 @@ Public Class frmClienteNovo
     '
     ' BUTTON OK
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
+        '
         ' VALIDAR O NÚMERO DE CPF OU CNPJ
         If ValidaCNP() = String.Empty Then Exit Sub
         '
@@ -96,12 +100,14 @@ Public Class frmClienteNovo
         ' ABRIR O FORMULARIO DE CADASTRO DE NOVO CLIENTE
         '-------------------------------------------------------------------------------------------------------------------------
         If Not IsNothing(cli) AndAlso cli.GetType = GetType(clClientePF) Then ' CLIENTE PESSOA FÍSICA
+            '
             ' Fecha o Cliente PJ se estiver aberto 
             If Application.OpenForms.OfType(Of frmClientePJ)().Count() > 0 Then Application.OpenForms.OfType(Of frmClientePJ)().First.Close()
             '
             ' Abre o ClientePF se já não estiver aberto
             If Application.OpenForms.OfType(Of frmClientePF)().Count() = 0 Then
-                If Not IsNothing(DirectCast(cli, clClientePF).IDPessoa) Then
+                '
+                If Not IsNothing(DirectCast(cli, clClientePF).RGCliente) Then
                     Dim frmPF As New frmClientePF(EnumFlagAcao.EDITAR, DirectCast(cli, clClientePF))
                     frmPF.MdiParent = frmPrincipal
                     frmPF.Show()
@@ -110,10 +116,12 @@ Public Class frmClienteNovo
                     frmPF.MdiParent = frmPrincipal
                     frmPF.Show()
                 End If
+                '
             Else
+                '
                 Dim frmPF As frmClientePF = Application.OpenForms.OfType(Of frmClientePF).First
                 '
-                If Not IsNothing(DirectCast(cli, clClientePF).IDPessoa) Then
+                If Not IsNothing(DirectCast(cli, clClientePF).RGCliente) Then
                     frmPF.propAcao = EnumFlagAcao.EDITAR
                     frmPF.propClientePF = DirectCast(cli, clClientePF)
                     frmPF.Show()
@@ -122,8 +130,10 @@ Public Class frmClienteNovo
                     frmPF.propClientePF = DirectCast(cli, clClientePF)
                     frmPF.Show()
                 End If
+                '
             End If
         ElseIf Not IsNothing(cli) AndAlso cli.GetType = GetType(clClientePJ) Then ' CLIENTE PESSOA JURÍDICA
+            '
             ' Fecha o ClientePF se estiver aberto
             If Application.OpenForms.OfType(Of frmClientePF)().Count() > 0 Then Application.OpenForms.OfType(Of frmClientePF)().First.Close()
             '
@@ -168,7 +178,7 @@ Public Class frmClienteNovo
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            myPessoa = db.ProcurarCNP_Pessoa(txtCNPJ.Text, "CLIENTE")
+            myPessoa = db.ProcurarCNP_Pessoa(txtCNPJ.Text, PessoaBLL.EnumPessoaGrupo.CLIENTE)
             '
             ' NÃO ENCOTROU NENHUM CLIENTE NO CPF/CNPJ RETORNA NOVO CLIENTE
             If IsNothing(myPessoa) Then
@@ -187,10 +197,12 @@ Public Class frmClienteNovo
             If txtCNPJ.TextLength = 14 Then ' PESSOA FÍSICA
                 '
                 Select Case myPessoa.GetType()
+                    '
                     Case Is = GetType(clPessoaFisica) ' É APENAS PessoaFisica
                         MessageBox.Show("Já Existe PESSOA FÍSICA cadastrada com esse mesmo CPF..." & vbCrLf & vbCrLf &
                                         "Os dados serão copiados para um NOVO CADASTRO de Cliente Pessoa Física",
                                         "CPF Já existe", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        '
                         Dim cli As New clClientePF
                         Dim PF As clPessoaFisica = DirectCast(myPessoa, clPessoaFisica)
                         '
@@ -219,6 +231,7 @@ Public Class frmClienteNovo
                         '
                         Return cli
                     Case Is = GetType(clClientePF) ' JÁ é um CLIENTE
+                        '
                         MessageBox.Show("Já existe um CLIENTE PESSOA FÍSICA com esse mesmo CPF..." & vbCrLf & vbNewLine &
                                         "O cadastro do Cliente será aberto",
                                         "CPF Já existe como Cliente", MessageBoxButtons.OK, MessageBoxIcon.Information)

@@ -282,11 +282,23 @@ Public Class frmFornecedorProcurar
         f.Ativo = True
         '
         '--- Salvar o Registro
-        Dim fBLL As New FornecedorBLL
-        fBLL.AtualizaFornecedor(f)
-        '
-        '--- altera a imagem
-        FiltrarListagem()
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim fBLL As New PessoaBLL
+            fBLL.UpdatePessoa(f, PessoaBLL.EnumPessoaGrupo.FORNECEDOR)
+            '
+            '--- altera a imagem
+            FiltrarListagem()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Atualizar o registro..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '
@@ -307,11 +319,27 @@ Public Class frmFornecedorProcurar
         f.Ativo = False
         '
         '--- Salvar o Registro
-        Dim fBLL As New FornecedorBLL
-        fBLL.AtualizaFornecedor(f)
-        '
-        '--- altera a imagem
-        FiltrarListagem()
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim fBLL As New PessoaBLL
+            fBLL.UpdatePessoa(f, PessoaBLL.EnumPessoaGrupo.FORNECEDOR)
+            '
+            '--- altera a imagem
+            FiltrarListagem()
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao Atualizar o Registro..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
         '
     End Sub
 #End Region
