@@ -499,7 +499,7 @@ Public Class frmMovFormas
     ' VERIFICA OS DADOS ANTES DE SALVAR
     Private Function VerificaDados() As Boolean
         '
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         If Not f.VerificaDadosClasse(txtMovForma, "Descrição da Forma de Movimento", _MovForma, epValida) Then
             Return False

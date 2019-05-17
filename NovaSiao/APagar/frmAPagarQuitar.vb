@@ -136,7 +136,7 @@ Public Class frmAPagarQuitar
     ' VERIFICACAO DOS CAMPOS NECESSARIOS
     '------------------------------------------------------------------------------------------
     Private Function VerificarValores() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         '--- Campo Conta de Entrada
         If IsNothing(propMovSaida.IDConta) OrElse propMovSaida.IDConta = 0 Then

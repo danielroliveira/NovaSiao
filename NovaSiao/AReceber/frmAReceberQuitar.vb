@@ -206,7 +206,7 @@ Public Class frmAReceberQuitar
     ' VERIFICACAO DOS CAMPOS NECESSARIOS
     '------------------------------------------------------------------------------------------
     Private Function VerificarValores() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         '--- Campo Conta de Entrada
         If f.VerificaControlesForm(txtConta, "Conta da Entrada") = False Then

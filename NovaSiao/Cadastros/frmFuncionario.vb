@@ -341,7 +341,7 @@ Public Class frmFuncionario
     Private Function VerificaDados() As Boolean
         EProvider.Clear()
         '
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         If Not f.VerificaControlesForm(txtFuncionario, "Nome do Funcionário", EProvider) Then
             Return False

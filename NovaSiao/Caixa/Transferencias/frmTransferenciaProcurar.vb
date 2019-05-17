@@ -102,7 +102,7 @@ Public Class frmTransferenciaProcurar
             If chkPeriodoTodos.Checked = True Then
                 TransfLista = tBLL.GetTransferenciasLista_Procura(propIDConta)
             Else
-                Dim f As New FuncoesUtilitarias
+                Dim f As New Utilidades
                 Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
                 Dim dtFinal As Date = f.LastDayOfMonth(myMes)
                 '

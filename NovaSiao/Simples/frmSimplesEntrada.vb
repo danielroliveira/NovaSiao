@@ -1085,7 +1085,7 @@ Public Class frmSimplesEntrada
     '
     '--- Função que Verifica os Campos/Valores da Nota Fiscal
     Private Function VerificarNotaValores() As Boolean
-        Dim F As New FuncoesUtilitarias
+        Dim F As New Utilidades
 
         'verifica CHAVE ACESSO
         'If Not F.VerificaControlesForm(txtChaveAcesso, "Chave de Acesso") Then Return False

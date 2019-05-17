@@ -91,7 +91,7 @@ Public Class frmDespesaProcurar
             If chkPeriodoTodos.Checked = True Then
                 despLista = despBLL.GetDespesaLista_Procura(IDDespesaTipo, IDCredor, txtDescricao.Text)
             Else
-                Dim f As New FuncoesUtilitarias
+                Dim f As New Utilidades
                 Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
                 Dim dtFinal As Date = f.LastDayOfMonth(myMes)
                 '

@@ -464,7 +464,7 @@ Public Class frmCredor
     End Sub
     '
     Private Function VerificaControles() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         If f.VerificaControlesForm(txtCadastro, "Nome/Razão Social do Credor", EProvider) = False Then
             Return False

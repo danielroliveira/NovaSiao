@@ -515,7 +515,7 @@ Public Class frmDespesaSimples
     End Sub
     '
     Private Function VerificaControles() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         '--- Verifica o campo CREDOR
         If f.VerificaDadosClasse(txtCredor, "Credor", _clDespesa, eProvider) = False Then

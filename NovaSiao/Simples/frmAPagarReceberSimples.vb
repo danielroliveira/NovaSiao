@@ -167,7 +167,7 @@ Public Class frmAPagarReceberSimples
                                                            txtFilialDestino.Text,
                                                            False, True)
             Else
-                Dim f As New FuncoesUtilitarias
+                Dim f As New Utilidades
                 Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
                 Dim dtFinal As Date = f.LastDayOfMonth(myMes)
                 '
@@ -203,7 +203,7 @@ Public Class frmAPagarReceberSimples
             If chkPeriodoTodos.Checked = True Then
                 SourceList = simplesBLL.GetSimplesAReceberLista_Procura(_IDFilialPadrao, _IDFilial)
             Else
-                Dim f As New FuncoesUtilitarias
+                Dim f As New Utilidades
                 Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
                 Dim dtFinal As Date = f.LastDayOfMonth(myMes)
                 '

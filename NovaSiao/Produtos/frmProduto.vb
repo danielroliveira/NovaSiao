@@ -309,7 +309,7 @@ Public Class frmProduto
     ' FAZER VERIFICAÇÃO ANTES DE SALVAR
     Private Function VerificaDados() As Boolean
 
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         If Not f.VerificaControlesForm(txtProduto, "Descrição do Produto", EProvider) Then
             Return False
@@ -586,7 +586,7 @@ Public Class frmProduto
     Private Sub txtProduto_Validating(sender As Object, e As CancelEventArgs) Handles txtProduto.Validating
         '
         If txtProduto.Text.Trim.Length > 0 Then
-            Dim f As New FuncoesUtilitarias
+            Dim f As New Utilidades
             txtProduto.Text = f.removeAcentos(txtProduto.Text)
         End If
         '

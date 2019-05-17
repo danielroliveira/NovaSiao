@@ -103,7 +103,7 @@ Public Class frmCaixaProcurar
             If chkPeriodoTodos.Checked = True Then
                 cxLista = cxBLL.GetCaixaLista_Procura(propIDConta)
             Else
-                Dim f As New FuncoesUtilitarias
+                Dim f As New Utilidades
                 Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
                 Dim dtFinal As Date = f.LastDayOfMonth(myMes)
                 '

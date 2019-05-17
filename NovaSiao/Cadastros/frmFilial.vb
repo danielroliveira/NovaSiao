@@ -3,6 +3,7 @@ Imports CamadaDTO
 
 Public Class frmFilial
     Private _filial As clFilial
+    Private _oldFilial As clFilial = Nothing
     Private _formOrigem As Form
     Private BindFil As New BindingSource
     Dim _Sit As Byte
@@ -19,6 +20,7 @@ Public Class frmFilial
         Set(value As EnumFlagEstado)
             _Sit = value
             If _Sit = EnumFlagEstado.RegistroSalvo Then
+                lblID.Text = If(_filial.IDPessoa, "")
                 btnSalvar.Enabled = False
                 btnNovo.Enabled = True
                 btnCancelar.Enabled = False
@@ -27,11 +29,11 @@ Public Class frmFilial
                 btnNovo.Enabled = False
                 btnCancelar.Enabled = True
             ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
-                txtApelidoFilial.Select()
+                txtApelidoFilial.Focus()
                 btnSalvar.Enabled = True
                 btnNovo.Enabled = False
                 btnCancelar.Enabled = True
-                lblID.Text = "NOVO"
+                lblID.Text = "NOVA"
             End If
         End Set
     End Property
@@ -42,6 +44,11 @@ Public Class frmFilial
             Return _filial
         End Get
         Set(ByVal value As clFilial)
+            '
+            If IsNothing(value.IDPessoa) Then
+                Sit = EnumFlagEstado.NovoRegistro
+            End If
+            '
             _filial = value
             BindFil.DataSource = _filial
             AtivoButtonImage()
@@ -60,7 +67,7 @@ Public Class frmFilial
         PreencheDataBindings()
         _formOrigem = formOrigem
         '
-        Sit = EnumFlagEstado.RegistroSalvo
+        If Not IsNothing(_filial.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
         '
     End Sub
     '
@@ -78,19 +85,20 @@ Public Class frmFilial
         '
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler lblID.DataBindings("Tag").Format, AddressOf idFormatRG
+        AddHandler txtAliquotaICMS.DataBindings("Text").Format, AddressOf idFormatDesc
         AddHandler BindFil.CurrentChanged, AddressOf handler_CurrentChanged
         '
         ' ADD HANDLER PARA DATABINGS
-        AddHandler DirectCast(BindFil.CurrencyManager.Current, clFornecedor).AoAlterar, AddressOf HandlerAoAlterar
+        AddHandler DirectCast(BindFil.CurrencyManager.Current, clFilial).AoAlterar, AddressOf HandlerAoAlterar
         '
     End Sub
     '
     Private Sub handler_CurrentChanged()
         ' ADD HANDLER PARA DATABINGS
-        AddHandler DirectCast(BindFil.CurrencyManager.Current, clFornecedor).AoAlterar, AddressOf HandlerAoAlterar
+        AddHandler DirectCast(BindFil.CurrencyManager.Current, clFilial).AoAlterar, AddressOf HandlerAoAlterar
         '
         '--- Nesse caso é um novo registro
-        If IsNothing(DirectCast(BindFil.Current, clFornecedor).IDPessoa) Then
+        If IsNothing(DirectCast(BindFil.Current, clFilial).IDPessoa) Then
             Exit Sub
         Else
             ' LER O ID
@@ -113,12 +121,31 @@ Public Class frmFilial
         e.Value = Format(e.Value, "0000")
     End Sub
     '
+    ' FORMATA OS BINDINGS
+    Private Sub idFormatDesc(sender As Object, e As ConvertEventArgs)
+        If IsDBNull(e.Value) Then Exit Sub
+        e.Value = Format(e.Value, "#,##0.00")
+    End Sub
+    '
 #End Region
     '
 #Region "ACAO BOTOES"
     '
     '--- BTN NOVO
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
+        '
+        '--- save the old filial
+        If Not IsNothing(_filial.IDPessoa) Then
+            _oldFilial = New clFilial With {
+                .IDPessoa = _filial.IDPessoa,
+                .ApelidoFilial = _filial.ApelidoFilial,
+                .AliquotaICMS = _filial.AliquotaICMS,
+                .Ativo = _filial.Ativo,
+                .Cadastro = _filial.Cadastro,
+                .InsercaoData = _filial.InsercaoData,
+                .PessoaTipo = _filial.PessoaTipo
+                }
+        End If
         '
         propFilial = New clFilial
         Sit = EnumFlagEstado.NovoRegistro
@@ -129,8 +156,28 @@ Public Class frmFilial
     '--- BTN CANCELAR
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
         '
-        BindFil.CancelEdit()
-        Sit = EnumFlagEstado.RegistroSalvo
+        If Not IsNothing(_oldFilial) Then
+            '
+            '--- recupera o valor anterior
+            _filial = New clFilial With {
+                .IDPessoa = _oldFilial.IDPessoa,
+                .ApelidoFilial = _oldFilial.ApelidoFilial,
+                .AliquotaICMS = _oldFilial.AliquotaICMS,
+                .Ativo = _oldFilial.Ativo,
+                .Cadastro = _oldFilial.Cadastro,
+                .InsercaoData = _oldFilial.InsercaoData,
+                .PessoaTipo = _oldFilial.PessoaTipo
+                }
+            '--- zera oldfilial
+            _oldFilial = Nothing
+            '--- CancelEdit
+            BindFil.CancelEdit()
+            Sit = EnumFlagEstado.RegistroSalvo
+            '
+        Else
+            Close()
+        End If
+        '
         '
     End Sub
     '
@@ -143,9 +190,9 @@ Public Class frmFilial
             Exit Sub
         End If
         '
-        Dim filial As clFornecedor = BindFil.Current
+        Dim filial As clFilial = BindFil.Current
         '
-        If filial.Ativo = True Then ' Fornecedor Ativo
+        If filial.Ativo = True Then ' Filial Ativo
             '
             If MessageBox.Show("Você deseja realmente DESATIVAR a Filial:" & vbNewLine &
                         txtApelidoFilial.Text.ToUpper, "Inativar Filial", MessageBoxButtons.YesNo,
@@ -155,7 +202,7 @@ Public Class frmFilial
                 AtivoButtonImage()
             End If
             '
-        ElseIf filial.Ativo = False Then ' Fornecedor Inativo
+        ElseIf filial.Ativo = False Then ' Filial Inativo
             '
             If MessageBox.Show("Você deseja realmente ATIVAR a Filial:" & vbNewLine &
             txtApelidoFilial.Text.ToUpper, "Ativar Filial", MessageBoxButtons.YesNo,
@@ -174,12 +221,12 @@ Public Class frmFilial
         '
         Dim filial As clFilial = BindFil.Current
         '
-        If filial.Ativo = True Then ' Nesse caso é Fornecedor Ativo
+        If filial.Ativo = True Then ' Nesse caso é Filial Ativa
             btnAtivo.Image = AtivarImage
-            btnAtivo.Text = "Ativo"
-        ElseIf filial.Ativo = False Then ' Nesse caso é Fornecedor Inativo
+            btnAtivo.Text = "Ativa"
+        ElseIf filial.Ativo = False Then ' Nesse caso é Filial Inativa
             btnAtivo.Image = DesativarImage
-            btnAtivo.Text = "Inativo"
+            btnAtivo.Text = "Inativa"
         End If
         '
     End Sub
@@ -195,15 +242,138 @@ Public Class frmFilial
     '
 #End Region
     '
+#Region "CONTROLES"
     '
-#Region "SALVAR REGISTRO"
-
-    ' SALVAR O REGISTRO
-    '-----------------------------------------------------------------------------------------------
-    Private Sub btnSalvar_Click(sender As Object, e As EventArgs)
-
+    '---------------------------------------------------------------------------------------
+    '--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
+    '---------------------------------------------------------------------------------------
+    Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) _
+    Handles txtAliquotaICMS.KeyDown, txtApelidoFilial.KeyDown
+        '
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            SendKeys.Send("{Tab}")
+        End If
+        '
     End Sub
     '
+    '---------------------------------------------------------------------------------------
+    ' EVITA DIGITACAO DE TEXTO
+    '---------------------------------------------------------------------------------------
+    Private Sub Text_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtAliquotaICMS.KeyPress
+        '
+        If Char.IsNumber(e.KeyChar) OrElse New Char() {vbBack, ","}.Contains(e.KeyChar) Then
+            e.Handled = False
+        ElseIf e.KeyChar = "."c Then
+            DirectCast(sender, TextBox).SelectedText = ","
+            e.Handled = True
+        Else
+            e.Handled = True
+        End If
+        '
+    End Sub
+    '
+#End Region '/ CONTROLES
+    '
+#Region "SALVAR REGISTRO"
+    '
+    ' SALVAR O REGISTRO
+    '-----------------------------------------------------------------------------------------------
+    Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
+        '
+        '--- Get Authorization
+        If Not GetAuthorization(EnumAcessoTipo.Administrador, "Inserir Nova Filial", Me) Then Exit Sub
+        '
+        '--- check if Apelido and Aliquota is OK
+        If Not VerificaCampos() Then Return
+        '
+        '--- SAVE
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim db As New PessoaBLL
+            Dim resolve As Object = db.InsertNewPessoa(_filial, PessoaBLL.EnumPessoaGrupo.FILIAL)
+            '
+            If Not IsNumeric(resolve) Then
+                Throw New Exception("Uma exceção inesperada ocorreu ao Salvar Registro")
+                Return
+            End If
+            '
+            _filial.IDPessoa = resolve
+            lblID.DataBindings.Item("Tag").ReadValue()
+            '
+            MessageBox.Show("Filial Salva com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            BindFil.EndEdit()
+            Sit = EnumFlagEstado.RegistroSalvo
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Inserir Nova Filial..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Function VerificaCampos() As Boolean
+        '
+        '--- FILIAL NAME
+        '----------------------------------------------------------------------------------
+        '
+        '--- Tamanho Mínimo
+        If txtApelidoFilial.Text.Length < 5 Then
+            MessageBox.Show("O Apelido da Filial deve ter no mínimo de 5 caracteres...")
+            txtApelidoFilial.Focus()
+            Return False
+        End If
+        '
+        '--- Transforma primeira em Maiuscula
+        txtApelidoFilial.Text = Utilidades.PrimeiraLetraMaiuscula(txtApelidoFilial.Text)
+        '
+        '--- PROCURAR MESMO CADASTRO NOME
+        '----------------------------------------------------------------------------------
+        Dim db As New PessoaBLL
+        Dim pes As clPessoa = db.ProcuraPessoaPeloCadastroNome(txtApelidoFilial.Text)
+        '
+        If Not IsNothing(pes) Then
+            '
+            If IsNothing(_filial.IDPessoa) OrElse _filial.IDPessoa = 0 Then '--> NOVO REGISTRO
+                '
+                MessageBox.Show("Já existe um cadastro de 'PESSOA' com esse mesmo 'NOME'...")
+                txtApelidoFilial.Focus()
+                Return False
+                '
+            Else '---> REGISTRO SALVO
+                '
+                If _filial.IDPessoa <> pes.IDPessoa Then
+                    MessageBox.Show("Já existe um cadastro de 'PESSOA' com esse mesmo 'NOME'...")
+                    txtApelidoFilial.Focus()
+                    Return False
+                End If
+                '
+            End If
+            '
+        End If
+        '
+        '--- ALIQUOTA ICMS
+        '----------------------------------------------------------------------------------
+        '
+        If txtAliquotaICMS.Text.Trim.Length = 0 Then txtAliquotaICMS.Text = "0"
+        '
+        Dim icms As Double = 0
+        Double.TryParse(txtAliquotaICMS.Text, icms)
+        '
+        If icms < 0 OrElse icms > 99 Then
+            MessageBox.Show("O valor da Alíquota do ICMS deve estar entre 0 e 99")
+            txtAliquotaICMS.Focus()
+            Return False
+        End If
+        '
+        Return True
+        '
+    End Function
     '
 #End Region
     '

@@ -1311,6 +1311,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="NovaSiao_ico_256px.ico" />
+    <None Include="Resources\editar_24px.png" />
     <None Include="Resources\icon_warning.png" />
     <None Include="Resources\icon_information.png" />
     <None Include="Resources\icon_exclamation.png" />

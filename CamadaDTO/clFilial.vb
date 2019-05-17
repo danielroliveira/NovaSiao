@@ -7,7 +7,7 @@ Public Class clFilial
 #Region "ESTRUTURA DOS DADOS"
     Structure StructureFilial ' alguns usam FRIEND em vez de DIM
         Dim _ApelidoFilial As String
-        Dim _AliquotaICMS As Decimal
+        Dim _AliquotaICMS As Double
         Dim _Ativo As Boolean
     End Structure
 #End Region
@@ -25,6 +25,8 @@ Public Class clFilial
             ._AliquotaICMS = 0
             ._Ativo = True
         End With
+        '
+        PData._PessoaTipo = 3 '---> Pessoa Filial
         '
     End Sub
     '
@@ -61,23 +63,29 @@ Public Class clFilial
     '------------------------------------------------------
     Public Property ApelidoFilial() As String
         Get
+            If If(PData._Cadastro, "") <> If(FilialData._ApelidoFilial, "") Then
+                PData._Cadastro = FilialData._ApelidoFilial
+            End If
+            '
             Return FilialData._ApelidoFilial
+            '
         End Get
         Set(ByVal value As String)
             If value <> FilialData._ApelidoFilial Then
                 RaiseAoAlterar()
             End If
+            PData._Cadastro = value
             FilialData._ApelidoFilial = value
         End Set
     End Property
     '
     '--- Propriedade AliquotaICMS
     '------------------------------------------------------
-    Public Property AliquotaICMS() As Decimal
+    Public Property AliquotaICMS() As Double
         Get
             Return FilialData._AliquotaICMS
         End Get
-        Set(ByVal value As Decimal)
+        Set(ByVal value As Double)
             If value <> FilialData._AliquotaICMS Then
                 RaiseAoAlterar()
             End If

@@ -47,6 +47,7 @@ Public Class clClientePF
             ._ConjugeRenda = 0
             ._FichaPrint = 1
         End With
+        '
     End Sub
     '
     Public Overrides Sub BeginEdit() Implements IEditableObject.BeginEdit

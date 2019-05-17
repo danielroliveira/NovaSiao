@@ -248,7 +248,7 @@ Public Class frmDespesaTipo
     End Sub
     '
     Private Function VerificaControles() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         If f.VerificaControlesForm(txtDespesaTipo, "Nome/Razão Social do Credor") = False Then
             Return False

@@ -123,7 +123,7 @@ Public Class frmOperacaoEntradaProcurar
             If chkPeriodoTodos.Checked = True Then
                 SourceList = cBLL.GetCompraLista_Procura(Obter_FilialPadrao)
             Else
-                Dim f As New FuncoesUtilitarias
+                Dim f As New Utilidades
                 Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
                 Dim dtFinal As Date = f.LastDayOfMonth(myMes)
                 '
@@ -157,7 +157,7 @@ Public Class frmOperacaoEntradaProcurar
             If chkPeriodoTodos.Checked = True Then
                 SourceList = sBLL.GetSimplesEntradaLista_Procura(Obter_FilialPadrao)
             Else
-                Dim f As New FuncoesUtilitarias
+                Dim f As New Utilidades
                 Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
                 Dim dtFinal As Date = f.LastDayOfMonth(myMes)
                 '

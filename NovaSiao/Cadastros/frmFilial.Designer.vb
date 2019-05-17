@@ -47,6 +47,7 @@ Partial Class frmFilial
         Me.Panel1.Controls.Add(Me.lblID)
         Me.Panel1.Controls.Add(Me.lbl_IdTexto)
         Me.Panel1.Size = New System.Drawing.Size(510, 50)
+        Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.lbl_IdTexto, 0)
         Me.Panel1.Controls.SetChildIndex(Me.lblID, 0)
@@ -56,6 +57,7 @@ Partial Class frmFilial
         Me.lblTitulo.Location = New System.Drawing.Point(313, 0)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(197, 50)
+        Me.lblTitulo.TabIndex = 2
         Me.lblTitulo.Text = "Cadastro de Filial"
         '
         'MenuFil
@@ -82,9 +84,10 @@ Partial Class frmFilial
         '
         Me.txtApelidoFilial.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtApelidoFilial.Location = New System.Drawing.Point(177, 77)
+        Me.txtApelidoFilial.MaxLength = 50
         Me.txtApelidoFilial.Name = "txtApelidoFilial"
         Me.txtApelidoFilial.Size = New System.Drawing.Size(269, 31)
-        Me.txtApelidoFilial.TabIndex = 7
+        Me.txtApelidoFilial.TabIndex = 2
         '
         'Label1
         '
@@ -92,16 +95,17 @@ Partial Class frmFilial
         Me.Label1.Location = New System.Drawing.Point(58, 83)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(113, 19)
-        Me.Label1.TabIndex = 8
+        Me.Label1.TabIndex = 1
         Me.Label1.Text = "Apelido da Filial"
         '
         'txtAliquotaICMS
         '
         Me.txtAliquotaICMS.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtAliquotaICMS.Location = New System.Drawing.Point(177, 122)
+        Me.txtAliquotaICMS.MaxLength = 6
         Me.txtAliquotaICMS.Name = "txtAliquotaICMS"
-        Me.txtAliquotaICMS.Size = New System.Drawing.Size(63, 31)
-        Me.txtAliquotaICMS.TabIndex = 7
+        Me.txtAliquotaICMS.Size = New System.Drawing.Size(69, 31)
+        Me.txtAliquotaICMS.TabIndex = 4
         '
         'Label2
         '
@@ -109,7 +113,7 @@ Partial Class frmFilial
         Me.Label2.Location = New System.Drawing.Point(58, 128)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(115, 19)
-        Me.Label2.TabIndex = 8
+        Me.Label2.TabIndex = 3
         Me.Label2.Text = "Aliquota ICMS %"
         '
         'lblID
@@ -121,7 +125,7 @@ Partial Class frmFilial
         Me.lblID.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblID.Name = "lblID"
         Me.lblID.Size = New System.Drawing.Size(94, 30)
-        Me.lblID.TabIndex = 10
+        Me.lblID.TabIndex = 0
         Me.lblID.Text = "0001"
         Me.lblID.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -135,7 +139,7 @@ Partial Class frmFilial
         Me.lbl_IdTexto.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lbl_IdTexto.Name = "lbl_IdTexto"
         Me.lbl_IdTexto.Size = New System.Drawing.Size(35, 13)
-        Me.lbl_IdTexto.TabIndex = 11
+        Me.lbl_IdTexto.TabIndex = 1
         Me.lbl_IdTexto.Text = "Reg."
         Me.lbl_IdTexto.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
@@ -154,7 +158,7 @@ Partial Class frmFilial
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
         Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
         Me.tsMenu.Size = New System.Drawing.Size(504, 48)
-        Me.tsMenu.TabIndex = 0
+        Me.tsMenu.TabIndex = 5
         Me.tsMenu.TabStop = True
         Me.tsMenu.Text = "Menu Cliente PF"
         '
@@ -230,6 +234,7 @@ Partial Class frmFilial
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.txtAliquotaICMS)
         Me.Controls.Add(Me.txtApelidoFilial)
+        Me.KeyPreview = True
         Me.Name = "frmFilial"
         Me.Controls.SetChildIndex(Me.txtApelidoFilial, 0)
         Me.Controls.SetChildIndex(Me.txtAliquotaICMS, 0)

@@ -562,7 +562,7 @@ Public Class frmSimplesQuitar
     ' VERIFICACAO DOS CAMPOS NECESSARIOS
     '------------------------------------------------------------------------------------------
     Private Function VerificarCamposControles() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         '--- Campo Conta de Entrada
         If f.VerificaControlesForm(cmbIDContaOrigem, "Conta da Entrada") = False Then

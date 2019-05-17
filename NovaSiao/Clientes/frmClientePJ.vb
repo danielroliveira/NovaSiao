@@ -285,7 +285,7 @@ Public Class frmClientePJ
     '-------------------------------------------------------------------------------------------------------
     Private Function VerificaDados() As Boolean
         '
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         'Se nenhuma das condições acima forem verdadeira retorna TRUE
         EProvider.Clear()

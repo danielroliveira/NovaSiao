@@ -339,7 +339,7 @@ Public Class frmVendaItem
     '
     '--- REALIZA O PREENCHIMENTO CORRETO DOS CAMPOS
     Private Function VerificaValores() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         If Not f.VerificaDadosClasse(txtRGProduto, "Reg. do Produto", _clItem) Then
             Return False

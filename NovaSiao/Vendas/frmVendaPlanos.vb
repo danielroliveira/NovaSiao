@@ -296,7 +296,7 @@ Public Class frmVendaPlanos
     '
     ' VALIDA CAMPOS
     Private Function VerificaDados() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         If Not f.VerificaControlesForm(txtPlano, "Descrição do Plano", epValida) Then
             Return False
         ElseIf Not f.VerificaControlesForm(txtMeses, "Número de Meses do Plano", epValida) Then

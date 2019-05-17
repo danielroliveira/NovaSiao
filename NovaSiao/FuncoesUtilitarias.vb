@@ -1,6 +1,6 @@
 ﻿Imports System.Reflection
 '
-Public Class FuncoesUtilitarias
+Public Class Utilidades
     '
     '--------------------------------------------------------------------------------------------------------------
     '--- FUNÇAO QUE VERIFICA OS VALORES DOS CONTROLES/CAMPOS E RETORNA SE ESTA PREENCHIDO
@@ -145,15 +145,50 @@ Public Class FuncoesUtilitarias
         End Try
     End Function
     '
-    'Get the first day of the month
+    '--------------------------------------------------------------------------------------------------------------
+    '--- GET THE FIRST DAY OF THE MONTH
+    '--------------------------------------------------------------------------------------------------------------
     Public Function FirstDayOfMonth(ByVal sourceDate As Date) As Date
         Return New DateTime(sourceDate.Year, sourceDate.Month, 1)
     End Function
     '
-    'Get the last day of the month
+    '--------------------------------------------------------------------------------------------------------------
+    '--- GET THE LAST DAY OF THE MONTH
+    '--------------------------------------------------------------------------------------------------------------
     Public Function LastDayOfMonth(ByVal sourceDate As Date) As Date
         Dim lastDay As DateTime = New DateTime(sourceDate.Year, sourceDate.Month, 1)
         Return lastDay.AddMonths(1).AddDays(-1)
+    End Function
+    '
+    '--------------------------------------------------------------------------------------------------------------
+    '--- CONVERTE A PRIMEIRA LETRA DO NOME EM MAIUSCULA
+    '--------------------------------------------------------------------------------------------------------------
+    Public Shared Function PrimeiraLetraMaiuscula(ByVal Nome As String) As String
+        '
+        '--- Get chars quantity
+        If Nome.Length = 0 Then Return ""
+        '
+
+        Dim palavrasExcluidas As String() = {
+            "de", "da", "do", "e"
+        }
+
+        Dim resposta As String = ""
+        Dim palavras As String() = Nome.Split(" ")
+        '
+        For Each palavra In palavras
+            If Not palavrasExcluidas.Contains(palavra) Then
+                Dim caracteres As Char() = palavra.ToArray()
+                caracteres(0) = caracteres(0).ToString.ToUpper
+                palavra = String.Join("", caracteres)
+            End If
+            '
+            resposta = resposta + " " + palavra
+            '
+        Next
+        '
+        Return resposta.Trim
+        '
     End Function
     '
 End Class

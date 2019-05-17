@@ -66,7 +66,7 @@ Public Class frmEstoqueAjusteProcurar
             If chkPeriodoTodos.Checked = True Then
                 ItensList = eBLL.GetItemsList_Procura(_IDFilial)
             Else
-                Dim f As New FuncoesUtilitarias
+                Dim f As New Utilidades
                 Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
                 Dim dtFinal As Date = f.LastDayOfMonth(myMes)
                 '

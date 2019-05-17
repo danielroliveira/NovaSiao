@@ -301,7 +301,7 @@ Public Class frmUsuarios
     End Sub
     ' VALIDA CAMPOS
     Private Function VerificaDados() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         If Not f.VerificaControlesForm(txtUsuarioApelido, "Apelido do Usuário", epValida) Then
             txtUsuarioApelido.Focus()
             Return False

@@ -454,7 +454,7 @@ Public Class frmContas
     '
     ' VERIFICAR SE OS CONTROLES ESTAO PREENCHIDOS
     Private Function VerificaControles() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         If Not f.VerificaDadosClasse(txtConta, "Descrição da Conta", _conta) Then
             Return False

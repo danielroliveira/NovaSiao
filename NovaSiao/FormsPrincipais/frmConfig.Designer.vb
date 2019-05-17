@@ -27,6 +27,11 @@ Partial Class frmConfig
         Me.lblTitulo = New System.Windows.Forms.Label()
         Me.TabPrincipal = New VIBlend.WinForms.Controls.vTabControl()
         Me.Tab1 = New VIBlend.WinForms.Controls.vTabPage()
+        Me.btnEditarFilial = New System.Windows.Forms.Button()
+        Me.btnContaAdd = New System.Windows.Forms.Button()
+        Me.btnAlteraConta = New System.Windows.Forms.Button()
+        Me.btnFilialAdd = New System.Windows.Forms.Button()
+        Me.btnAlteraFilial = New System.Windows.Forms.Button()
         Me.chkEstoqueNegativo = New System.Windows.Forms.CheckBox()
         Me.lblDataBloqueio = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
@@ -34,10 +39,6 @@ Partial Class frmConfig
         Me.txtFilialPadrao = New System.Windows.Forms.TextBox()
         Me.txtDescontoMaximo = New Controles.Text_SoNumeros()
         Me.txtPermanencia = New Controles.Text_SoNumeros()
-        Me.btnAlteraConta = New VIBlend.WinForms.Controls.vButton()
-        Me.btnContaAdd = New VIBlend.WinForms.Controls.vButton()
-        Me.btnFilialAdd = New VIBlend.WinForms.Controls.vButton()
-        Me.btnAlteraFilial = New VIBlend.WinForms.Controls.vButton()
         Me.dtpDataPadrao = New System.Windows.Forms.DateTimePicker()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label34 = New System.Windows.Forms.Label()
@@ -117,15 +118,16 @@ Partial Class frmConfig
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(720, 63)
+        Me.Panel1.Size = New System.Drawing.Size(744, 63)
         Me.Panel1.TabIndex = 0
         '
         'lblTitulo
         '
+        Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTitulo.AutoSize = True
         Me.lblTitulo.Font = New System.Drawing.Font("Verdana", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTitulo.ForeColor = System.Drawing.Color.White
-        Me.lblTitulo.Location = New System.Drawing.Point(250, 11)
+        Me.lblTitulo.Location = New System.Drawing.Point(274, 11)
         Me.lblTitulo.Name = "lblTitulo"
         Me.lblTitulo.Size = New System.Drawing.Size(464, 38)
         Me.lblTitulo.TabIndex = 0
@@ -143,7 +145,7 @@ Partial Class frmConfig
         Me.TabPrincipal.Location = New System.Drawing.Point(8, 69)
         Me.TabPrincipal.Name = "TabPrincipal"
         Me.TabPrincipal.Padding = New System.Windows.Forms.Padding(0, 40, 0, 0)
-        Me.TabPrincipal.Size = New System.Drawing.Size(706, 482)
+        Me.TabPrincipal.Size = New System.Drawing.Size(728, 482)
         Me.TabPrincipal.TabAlignment = VIBlend.WinForms.Controls.vTabPageAlignment.Top
         Me.TabPrincipal.TabIndex = 1
         Me.TabPrincipal.TabPages.Add(Me.Tab1)
@@ -161,6 +163,11 @@ Partial Class frmConfig
         '
         Me.Tab1.ContentBackColor = System.Drawing.Color.Azure
         Me.Tab1.ContentBorderColor = System.Drawing.Color.Transparent
+        Me.Tab1.Controls.Add(Me.btnEditarFilial)
+        Me.Tab1.Controls.Add(Me.btnContaAdd)
+        Me.Tab1.Controls.Add(Me.btnAlteraConta)
+        Me.Tab1.Controls.Add(Me.btnFilialAdd)
+        Me.Tab1.Controls.Add(Me.btnAlteraFilial)
         Me.Tab1.Controls.Add(Me.chkEstoqueNegativo)
         Me.Tab1.Controls.Add(Me.lblDataBloqueio)
         Me.Tab1.Controls.Add(Me.Label22)
@@ -168,10 +175,6 @@ Partial Class frmConfig
         Me.Tab1.Controls.Add(Me.txtFilialPadrao)
         Me.Tab1.Controls.Add(Me.txtDescontoMaximo)
         Me.Tab1.Controls.Add(Me.txtPermanencia)
-        Me.Tab1.Controls.Add(Me.btnAlteraConta)
-        Me.Tab1.Controls.Add(Me.btnContaAdd)
-        Me.Tab1.Controls.Add(Me.btnFilialAdd)
-        Me.Tab1.Controls.Add(Me.btnAlteraFilial)
         Me.Tab1.Controls.Add(Me.dtpDataPadrao)
         Me.Tab1.Controls.Add(Me.Label35)
         Me.Tab1.Controls.Add(Me.Label34)
@@ -194,7 +197,7 @@ Partial Class frmConfig
         Me.Tab1.Name = "Tab1"
         Me.Tab1.Padding = New System.Windows.Forms.Padding(0)
         Me.Tab1.SelectedTextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Tab1.Size = New System.Drawing.Size(706, 442)
+        Me.Tab1.Size = New System.Drawing.Size(728, 442)
         Me.Tab1.TabIndex = 0
         Me.Tab1.Text = "Valores Padrão"
         Me.Tab1.TextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -203,6 +206,81 @@ Partial Class frmConfig
         Me.Tab1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE
         Me.Tab1.Visible = False
         '
+        'btnEditarFilial
+        '
+        Me.btnEditarFilial.BackColor = System.Drawing.Color.Azure
+        Me.btnEditarFilial.FlatAppearance.BorderSize = 0
+        Me.btnEditarFilial.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnEditarFilial.Image = Global.NovaSiao.My.Resources.Resources.editar
+        Me.btnEditarFilial.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnEditarFilial.Location = New System.Drawing.Point(621, 64)
+        Me.btnEditarFilial.Name = "btnEditarFilial"
+        Me.btnEditarFilial.Size = New System.Drawing.Size(81, 30)
+        Me.btnEditarFilial.TabIndex = 6
+        Me.btnEditarFilial.Text = "Editar"
+        Me.btnEditarFilial.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnEditarFilial.UseVisualStyleBackColor = False
+        '
+        'btnContaAdd
+        '
+        Me.btnContaAdd.BackColor = System.Drawing.Color.Azure
+        Me.btnContaAdd.FlatAppearance.BorderSize = 0
+        Me.btnContaAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnContaAdd.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
+        Me.btnContaAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnContaAdd.Location = New System.Drawing.Point(530, 104)
+        Me.btnContaAdd.Name = "btnContaAdd"
+        Me.btnContaAdd.Size = New System.Drawing.Size(81, 30)
+        Me.btnContaAdd.TabIndex = 10
+        Me.btnContaAdd.Text = "Nova"
+        Me.btnContaAdd.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnContaAdd.UseVisualStyleBackColor = False
+        '
+        'btnAlteraConta
+        '
+        Me.btnAlteraConta.BackColor = System.Drawing.Color.Azure
+        Me.btnAlteraConta.FlatAppearance.BorderSize = 0
+        Me.btnAlteraConta.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnAlteraConta.Image = Global.NovaSiao.My.Resources.Resources.refresh
+        Me.btnAlteraConta.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnAlteraConta.Location = New System.Drawing.Point(439, 104)
+        Me.btnAlteraConta.Name = "btnAlteraConta"
+        Me.btnAlteraConta.Size = New System.Drawing.Size(81, 30)
+        Me.btnAlteraConta.TabIndex = 9
+        Me.btnAlteraConta.Text = "Alterar"
+        Me.btnAlteraConta.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnAlteraConta.UseVisualStyleBackColor = False
+        '
+        'btnFilialAdd
+        '
+        Me.btnFilialAdd.BackColor = System.Drawing.Color.Azure
+        Me.btnFilialAdd.FlatAppearance.BorderSize = 0
+        Me.btnFilialAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnFilialAdd.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
+        Me.btnFilialAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnFilialAdd.Location = New System.Drawing.Point(530, 64)
+        Me.btnFilialAdd.Name = "btnFilialAdd"
+        Me.btnFilialAdd.Size = New System.Drawing.Size(81, 30)
+        Me.btnFilialAdd.TabIndex = 5
+        Me.btnFilialAdd.Text = "Nova"
+        Me.btnFilialAdd.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnFilialAdd.UseVisualStyleBackColor = False
+        '
+        'btnAlteraFilial
+        '
+        Me.btnAlteraFilial.BackColor = System.Drawing.Color.Azure
+        Me.btnAlteraFilial.FlatAppearance.BorderSize = 0
+        Me.btnAlteraFilial.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnAlteraFilial.Image = Global.NovaSiao.My.Resources.Resources.refresh
+        Me.btnAlteraFilial.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnAlteraFilial.Location = New System.Drawing.Point(439, 64)
+        Me.btnAlteraFilial.Name = "btnAlteraFilial"
+        Me.btnAlteraFilial.Size = New System.Drawing.Size(81, 30)
+        Me.btnAlteraFilial.TabIndex = 4
+        Me.btnAlteraFilial.Text = "Alterar"
+        Me.btnAlteraFilial.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnAlteraFilial.UseVisualStyleBackColor = False
+        '
         'chkEstoqueNegativo
         '
         Me.chkEstoqueNegativo.AutoSize = True
@@ -210,7 +288,7 @@ Partial Class frmConfig
         Me.chkEstoqueNegativo.Location = New System.Drawing.Point(214, 408)
         Me.chkEstoqueNegativo.Name = "chkEstoqueNegativo"
         Me.chkEstoqueNegativo.Size = New System.Drawing.Size(202, 20)
-        Me.chkEstoqueNegativo.TabIndex = 26
+        Me.chkEstoqueNegativo.TabIndex = 27
         Me.chkEstoqueNegativo.Text = "Permitir Estoque Negativo!"
         Me.chkEstoqueNegativo.UseVisualStyleBackColor = False
         '
@@ -220,7 +298,7 @@ Partial Class frmConfig
         Me.lblDataBloqueio.Location = New System.Drawing.Point(336, 138)
         Me.lblDataBloqueio.Name = "lblDataBloqueio"
         Me.lblDataBloqueio.Size = New System.Drawing.Size(92, 18)
-        Me.lblDataBloqueio.TabIndex = 11
+        Me.lblDataBloqueio.TabIndex = 12
         Me.lblDataBloqueio.Text = "01/01/2018"
         '
         'Label22
@@ -230,7 +308,7 @@ Partial Class frmConfig
         Me.Label22.Location = New System.Drawing.Point(213, 138)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(117, 16)
-        Me.Label22.TabIndex = 10
+        Me.Label22.TabIndex = 11
         Me.Label22.Text = "Data Bloqueada:"
         '
         'txtContaPadrao
@@ -240,7 +318,7 @@ Partial Class frmConfig
         Me.txtContaPadrao.Margin = New System.Windows.Forms.Padding(6)
         Me.txtContaPadrao.Name = "txtContaPadrao"
         Me.txtContaPadrao.Size = New System.Drawing.Size(212, 27)
-        Me.txtContaPadrao.TabIndex = 7
+        Me.txtContaPadrao.TabIndex = 8
         '
         'txtFilialPadrao
         '
@@ -259,7 +337,7 @@ Partial Class frmConfig
         Me.txtDescontoMaximo.Margin = New System.Windows.Forms.Padding(6)
         Me.txtDescontoMaximo.Name = "txtDescontoMaximo"
         Me.txtDescontoMaximo.Size = New System.Drawing.Size(69, 27)
-        Me.txtDescontoMaximo.TabIndex = 22
+        Me.txtDescontoMaximo.TabIndex = 23
         Me.txtDescontoMaximo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txtPermanencia
@@ -270,76 +348,8 @@ Partial Class frmConfig
         Me.txtPermanencia.Margin = New System.Windows.Forms.Padding(6)
         Me.txtPermanencia.Name = "txtPermanencia"
         Me.txtPermanencia.Size = New System.Drawing.Size(69, 27)
-        Me.txtPermanencia.TabIndex = 19
+        Me.txtPermanencia.TabIndex = 20
         Me.txtPermanencia.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'btnAlteraConta
-        '
-        Me.btnAlteraConta.AllowAnimations = True
-        Me.btnAlteraConta.BackColor = System.Drawing.Color.Transparent
-        Me.btnAlteraConta.Location = New System.Drawing.Point(441, 104)
-        Me.btnAlteraConta.Name = "btnAlteraConta"
-        Me.btnAlteraConta.RoundedCornersMask = CType(15, Byte)
-        Me.btnAlteraConta.Size = New System.Drawing.Size(106, 30)
-        Me.btnAlteraConta.TabIndex = 8
-        Me.btnAlteraConta.Text = "Alterar Conta"
-        Me.btnAlteraConta.UseVisualStyleBackColor = False
-        Me.btnAlteraConta.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICESILVER
-        '
-        'btnContaAdd
-        '
-        Me.btnContaAdd.AllowAnimations = True
-        Me.btnContaAdd.BackColor = System.Drawing.Color.Transparent
-        Me.btnContaAdd.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.btnContaAdd.ImageAbsolutePosition = New System.Drawing.Point(7, 3)
-        Me.btnContaAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnContaAdd.Location = New System.Drawing.Point(556, 104)
-        Me.btnContaAdd.Name = "btnContaAdd"
-        Me.btnContaAdd.RoundedCornersMask = CType(15, Byte)
-        Me.btnContaAdd.Size = New System.Drawing.Size(80, 30)
-        Me.btnContaAdd.TabIndex = 9
-        Me.btnContaAdd.TabStop = False
-        Me.btnContaAdd.Text = "Conta"
-        Me.btnContaAdd.TextAbsolutePosition = New System.Drawing.Point(25, 5)
-        Me.btnContaAdd.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnContaAdd.UseAbsoluteImagePositioning = True
-        Me.btnContaAdd.UseAbsoluteTextPositioning = True
-        Me.btnContaAdd.UseVisualStyleBackColor = False
-        Me.btnContaAdd.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICESILVER
-        '
-        'btnFilialAdd
-        '
-        Me.btnFilialAdd.AllowAnimations = True
-        Me.btnFilialAdd.BackColor = System.Drawing.Color.Transparent
-        Me.btnFilialAdd.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.btnFilialAdd.ImageAbsolutePosition = New System.Drawing.Point(7, 3)
-        Me.btnFilialAdd.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnFilialAdd.Location = New System.Drawing.Point(556, 65)
-        Me.btnFilialAdd.Name = "btnFilialAdd"
-        Me.btnFilialAdd.RoundedCornersMask = CType(15, Byte)
-        Me.btnFilialAdd.Size = New System.Drawing.Size(80, 30)
-        Me.btnFilialAdd.TabIndex = 5
-        Me.btnFilialAdd.TabStop = False
-        Me.btnFilialAdd.Text = "Filial"
-        Me.btnFilialAdd.TextAbsolutePosition = New System.Drawing.Point(20, 5)
-        Me.btnFilialAdd.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnFilialAdd.UseAbsoluteImagePositioning = True
-        Me.btnFilialAdd.UseAbsoluteTextPositioning = True
-        Me.btnFilialAdd.UseVisualStyleBackColor = False
-        Me.btnFilialAdd.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICESILVER
-        '
-        'btnAlteraFilial
-        '
-        Me.btnAlteraFilial.AllowAnimations = True
-        Me.btnAlteraFilial.BackColor = System.Drawing.Color.Transparent
-        Me.btnAlteraFilial.Location = New System.Drawing.Point(441, 65)
-        Me.btnAlteraFilial.Name = "btnAlteraFilial"
-        Me.btnAlteraFilial.RoundedCornersMask = CType(15, Byte)
-        Me.btnAlteraFilial.Size = New System.Drawing.Size(106, 30)
-        Me.btnAlteraFilial.TabIndex = 4
-        Me.btnAlteraFilial.Text = "Alterar Filial"
-        Me.btnAlteraFilial.UseVisualStyleBackColor = False
-        Me.btnAlteraFilial.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICESILVER
         '
         'dtpDataPadrao
         '
@@ -359,7 +369,7 @@ Partial Class frmConfig
         Me.Label35.Location = New System.Drawing.Point(83, 109)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(125, 18)
-        Me.Label35.TabIndex = 6
+        Me.Label35.TabIndex = 7
         Me.Label35.Text = "Conta Padrão:"
         '
         'Label34
@@ -392,7 +402,7 @@ Partial Class frmConfig
         Me.Label14.Location = New System.Drawing.Point(50, 326)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(158, 18)
-        Me.Label14.TabIndex = 24
+        Me.Label14.TabIndex = 25
         Me.Label14.Text = "Mensagem Inicial:"
         '
         'Label19
@@ -403,7 +413,7 @@ Partial Class frmConfig
         Me.Label19.Location = New System.Drawing.Point(49, 285)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(159, 18)
-        Me.Label19.TabIndex = 21
+        Me.Label19.TabIndex = 22
         Me.Label19.Text = "Desconto Máximo:"
         '
         'Label13
@@ -414,7 +424,7 @@ Partial Class frmConfig
         Me.Label13.Location = New System.Drawing.Point(26, 207)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(182, 18)
-        Me.Label13.TabIndex = 16
+        Me.Label13.TabIndex = 17
         Me.Label13.Text = "Naturalidade Padrão:"
         '
         'Label1
@@ -426,7 +436,7 @@ Partial Class frmConfig
         Me.Label1.Margin = New System.Windows.Forms.Padding(0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(302, 16)
-        Me.Label1.TabIndex = 23
+        Me.Label1.TabIndex = 24
         Me.Label1.Text = "(% - Insira 0 para permitir todos descontos)"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -438,7 +448,7 @@ Partial Class frmConfig
         Me.Label20.Location = New System.Drawing.Point(20, 246)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(188, 18)
-        Me.Label20.TabIndex = 18
+        Me.Label20.TabIndex = 19
         Me.Label20.Text = "Taxa de Permanência:"
         '
         'Label21
@@ -450,7 +460,7 @@ Partial Class frmConfig
         Me.Label21.Margin = New System.Windows.Forms.Padding(0)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(85, 16)
-        Me.Label21.TabIndex = 20
+        Me.Label21.TabIndex = 21
         Me.Label21.Text = "(% ao mês)"
         Me.Label21.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -462,7 +472,7 @@ Partial Class frmConfig
         Me.Label12.Location = New System.Drawing.Point(452, 168)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(98, 18)
-        Me.Label12.TabIndex = 14
+        Me.Label12.TabIndex = 15
         Me.Label12.Text = "UF Padrão:"
         '
         'Label11
@@ -473,7 +483,7 @@ Partial Class frmConfig
         Me.Label11.Location = New System.Drawing.Point(75, 168)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(133, 18)
-        Me.Label11.TabIndex = 12
+        Me.Label11.TabIndex = 13
         Me.Label11.Text = "Cidade Padrão:"
         '
         'txtMensagem
@@ -484,8 +494,8 @@ Partial Class frmConfig
         Me.txtMensagem.MaxLength = 1000
         Me.txtMensagem.Multiline = True
         Me.txtMensagem.Name = "txtMensagem"
-        Me.txtMensagem.Size = New System.Drawing.Size(457, 68)
-        Me.txtMensagem.TabIndex = 25
+        Me.txtMensagem.Size = New System.Drawing.Size(477, 68)
+        Me.txtMensagem.TabIndex = 26
         '
         'txtNaturalidade
         '
@@ -495,7 +505,7 @@ Partial Class frmConfig
         Me.txtNaturalidade.MaxLength = 50
         Me.txtNaturalidade.Name = "txtNaturalidade"
         Me.txtNaturalidade.Size = New System.Drawing.Size(212, 27)
-        Me.txtNaturalidade.TabIndex = 17
+        Me.txtNaturalidade.TabIndex = 18
         '
         'txtUF
         '
@@ -506,7 +516,7 @@ Partial Class frmConfig
         Me.txtUF.MaxLength = 2
         Me.txtUF.Name = "txtUF"
         Me.txtUF.Size = New System.Drawing.Size(51, 27)
-        Me.txtUF.TabIndex = 15
+        Me.txtUF.TabIndex = 16
         '
         'txtCidade
         '
@@ -516,7 +526,7 @@ Partial Class frmConfig
         Me.txtCidade.MaxLength = 50
         Me.txtCidade.Name = "txtCidade"
         Me.txtCidade.Size = New System.Drawing.Size(212, 27)
-        Me.txtCidade.TabIndex = 13
+        Me.txtCidade.TabIndex = 14
         '
         'Tab2
         '
@@ -545,7 +555,7 @@ Partial Class frmConfig
         Me.Tab2.Name = "Tab2"
         Me.Tab2.Padding = New System.Windows.Forms.Padding(0)
         Me.Tab2.SelectedTextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Tab2.Size = New System.Drawing.Size(706, 442)
+        Me.Tab2.Size = New System.Drawing.Size(728, 442)
         Me.Tab2.TabIndex = 2
         Me.Tab2.Text = "Dados da Empresa"
         Me.Tab2.TextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -751,7 +761,7 @@ Partial Class frmConfig
         Me.Tab4.Name = "Tab4"
         Me.Tab4.Padding = New System.Windows.Forms.Padding(0)
         Me.Tab4.SelectedTextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Tab4.Size = New System.Drawing.Size(706, 442)
+        Me.Tab4.Size = New System.Drawing.Size(728, 442)
         Me.Tab4.TabIndex = 3
         Me.Tab4.Text = "Logomarcas"
         Me.Tab4.TextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -870,7 +880,7 @@ Partial Class frmConfig
         Me.Tab3.Name = "Tab3"
         Me.Tab3.Padding = New System.Windows.Forms.Padding(0)
         Me.Tab3.SelectedTextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Tab3.Size = New System.Drawing.Size(706, 442)
+        Me.Tab3.Size = New System.Drawing.Size(728, 442)
         Me.Tab3.TabIndex = 4
         Me.Tab3.Text = "Servidor de Dados"
         Me.Tab3.TextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -957,16 +967,17 @@ Partial Class frmConfig
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel2.Location = New System.Drawing.Point(0, 554)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(720, 59)
+        Me.Panel2.Size = New System.Drawing.Size(744, 59)
         Me.Panel2.TabIndex = 2
         '
         'btnCancelar
         '
+        Me.btnCancelar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCancelar.FlatAppearance.BorderSize = 0
         Me.btnCancelar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.BurlyWood
         Me.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnCancelar.Image = Global.NovaSiao.My.Resources.Resources.cancelar_edicao
-        Me.btnCancelar.Location = New System.Drawing.Point(564, 3)
+        Me.btnCancelar.Location = New System.Drawing.Point(588, 3)
         Me.btnCancelar.Name = "btnCancelar"
         Me.btnCancelar.Size = New System.Drawing.Size(149, 52)
         Me.btnCancelar.TabIndex = 1
@@ -977,6 +988,7 @@ Partial Class frmConfig
         '
         'btnSalvar
         '
+        Me.btnSalvar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnSalvar.FlatAppearance.BorderSize = 0
         Me.btnSalvar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.BurlyWood
         Me.btnSalvar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
@@ -1021,7 +1033,7 @@ Partial Class frmConfig
         Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 18.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Linen
-        Me.ClientSize = New System.Drawing.Size(720, 613)
+        Me.ClientSize = New System.Drawing.Size(744, 613)
         Me.ControlBox = False
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.TabPrincipal)
@@ -1111,23 +1123,24 @@ Partial Class frmConfig
     Friend WithEvents ProcurarToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LimparToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Label34 As Label
-    Friend WithEvents btnAlteraFilial As VIBlend.WinForms.Controls.vButton
     Friend WithEvents Label35 As Label
     Friend WithEvents Label20 As Label
     Friend WithEvents txtPermanencia As Controles.Text_SoNumeros
     Friend WithEvents Label21 As Label
-    Friend WithEvents btnAlteraConta As VIBlend.WinForms.Controls.vButton
     Friend WithEvents txtContaPadrao As TextBox
     Friend WithEvents txtFilialPadrao As TextBox
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents rbtServRemoto As RadioButton
     Friend WithEvents rbtServLocal As RadioButton
-    Friend WithEvents btnContaAdd As VIBlend.WinForms.Controls.vButton
-    Friend WithEvents btnFilialAdd As VIBlend.WinForms.Controls.vButton
     Friend WithEvents lblDataBloqueio As Label
     Friend WithEvents Label22 As Label
     Friend WithEvents chkEstoqueNegativo As CheckBox
     Friend WithEvents txtDescontoMaximo As Controles.Text_SoNumeros
     Friend WithEvents Label19 As Label
     Friend WithEvents Label1 As Label
+    Friend WithEvents btnEditarFilial As Button
+    Friend WithEvents btnFilialAdd As Button
+    Friend WithEvents btnAlteraFilial As Button
+    Friend WithEvents btnContaAdd As Button
+    Friend WithEvents btnAlteraConta As Button
 End Class

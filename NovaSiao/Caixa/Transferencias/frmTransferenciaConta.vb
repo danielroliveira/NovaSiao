@@ -248,7 +248,7 @@ Public Class frmTransferenciaConta
     ' VERIFICACAO DOS CAMPOS NECESSARIOS
     '==========================================================================================
     Private Function VerificarValores() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         '--- Campo Conta de Debito
         If IsNothing(_clTransf.IDContaDebito) OrElse _clTransf.IDContaDebito = 0 Then

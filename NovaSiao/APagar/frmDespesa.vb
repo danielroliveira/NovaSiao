@@ -1010,7 +1010,7 @@ Public Class frmDespesa
     End Function
     '
     Private Function VerificaControles() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         If Not f.VerificaDadosClasse(txtCredor, "Credor", _Despesa, eProvider) Then
             Return False

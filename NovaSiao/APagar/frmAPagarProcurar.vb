@@ -43,7 +43,7 @@ Public Class frmAPagarProcurar
         '
         Set(ByVal value As Date)
             '
-            Dim f As New FuncoesUtilitarias
+            Dim f As New Utilidades
             dtInicial = f.FirstDayOfMonth(value)
             dtFinal = f.LastDayOfMonth(value)
             '

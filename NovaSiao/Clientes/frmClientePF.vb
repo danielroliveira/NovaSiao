@@ -337,7 +337,7 @@ Public Class frmClientePF
         '
         EProvider.Clear()
         '
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         'Verifica o campo nome
         If Not f.VerificaControlesForm(txtClienteNome, "Nome do Cliente", EProvider) Then
             RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
@@ -1032,50 +1032,14 @@ Public Class frmClientePF
         End If
         '
     End Sub
-
+    '
+    '--- TRANSFORM 'NOME' IN UPPER CASE
+    '----------------------------------------------------------------------------------
     Private Sub txtClienteNome_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles txtClienteNome.Validating
         '
-        Dim texto As String = txtClienteNome.Text.Trim
-        '
-        '--- Get chars quantity
-        If texto.Length = 0 Then Return
-        '
-        Dim letraAnterior As String = ""
-        Dim letraNova As String = ""
-        Dim textoAlterado As String = ""
-        '
-        '--- loop at all letters of word
-        For Each l In texto
-            '
-            If letraAnterior = "" Then
-                letraNova = l.ToString.ToUpper
-            Else
-                If letraAnterior = " " Then
-                    If l = " " Then Continue For
-                    letraNova = l.ToString.ToUpper
-                ElseIf letraAnterior = "'" Then
-                    letraNova = l.ToString
-                Else
-                    letraNova = l.ToString.ToLower
-                End If
-            End If
-            '
-            letraAnterior = l.ToString
-            textoAlterado = textoAlterado + letraNova
-            '
-        Next
-        '
-        '--- find for the words in array to transform to LOWER
-        Dim palavrasExcluidas As String() = {
-            " De ", " Da ", " Do ", " E "
-        }
-        '
-        For Each palavra In palavrasExcluidas
-            textoAlterado = textoAlterado.Replace(palavra, palavra.ToLower)
-        Next
-        '
-        '--- return
-        txtClienteNome.Text = textoAlterado
+        If txtClienteNome.Text.Length > 0 Then
+            txtClienteNome.Text = Utilidades.PrimeiraLetraMaiuscula(txtClienteNome.Text)
+        End If
         '
     End Sub
     '

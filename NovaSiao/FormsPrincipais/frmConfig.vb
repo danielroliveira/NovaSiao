@@ -348,6 +348,31 @@ Error_Handler:
     '
 #Region "FILIAL E CONTA"
     '
+    Private Sub btnEditarFilial_Click(sender As Object, e As EventArgs) Handles btnEditarFilial.Click
+        '
+        '--- Abre o frmFilial
+        Dim fFil As New frmFilialEscolher()
+        '
+        Me.Opacity = 0.6
+        fFil.ShowDialog()
+        Me.Opacity = 1
+        '
+        If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
+        '
+        Dim fNew As New frmFilial(fFil.propIdFilial_Escolha, Me)
+
+        If fFil.propIdFilial_Escolha <> _Conta.IDFilial Then
+            Sit = EnumFlagEstado.Alterado
+            _Conta = New clConta '--- clear _Conta as NEW clConta
+            txtContaPadrao.Clear()
+        End If
+        '
+        _Conta.IDFilial = fFil.propIdFilial_Escolha
+        _Conta.ApelidoFilial = fFil.propFilial_Escolha
+        txtFilialPadrao.Text = fFil.propFilial_Escolha
+        '
+    End Sub
+    '
     Private Sub btnFilialAdd_Click(sender As Object, e As EventArgs) Handles btnFilialAdd.Click
         '
         '--- Abre o frmFilial
@@ -377,7 +402,7 @@ Error_Handler:
         '
     End Sub
     '
-    Private Sub btnAlteraFilial_Click(sender As Object, e As EventArgs) Handles btnAlteraFilial.Click
+    Private Sub btnAlteraFilial_Click(sender As Object, e As EventArgs) Handles btnAlteraFilial.Click, btnAlteraConta.Click
         '
         '--- Abre o frmFilial
         Dim fFil As New frmFilialEscolher()
@@ -656,7 +681,7 @@ Error_Handler:
     End Sub
     '
     Private Function VerificaDados() As Boolean
-        Dim f As New FuncoesUtilitarias
+        Dim f As New Utilidades
         '
         ' Verifica a validade de todos os campos
         ' Controles na TAB1
