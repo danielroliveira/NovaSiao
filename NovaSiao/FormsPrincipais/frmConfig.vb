@@ -351,7 +351,7 @@ Error_Handler:
     Private Sub btnFilialAdd_Click(sender As Object, e As EventArgs) Handles btnFilialAdd.Click
         '
         '--- Abre o frmFilial
-        Dim fFil As New frmFilial()
+        Dim fFil As New frmFilial(New clFilial)
         '
         Me.Opacity = 0.6
         fFil.ShowDialog()

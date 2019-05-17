@@ -77,6 +77,7 @@
     <Compile Include="clDespesa.vb" />
     <Compile Include="clDevolucaoSaida.vb" />
     <Compile Include="clEstoqueAjuste.vb" />
+    <Compile Include="clFilial.vb" />
     <Compile Include="clFornecedor.vb" />
     <Compile Include="clFuncionario.vb" />
     <Compile Include="clMovForma.vb" />

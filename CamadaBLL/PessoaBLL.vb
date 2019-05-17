@@ -19,6 +19,7 @@ Public Class PessoaBLL
         FUNCIONARIO
         TRANSPORTADORA
         CREDOR
+        FILIAL
     End Enum
     '
 #End Region '/ ENUMS
@@ -160,9 +161,10 @@ Public Class PessoaBLL
     End Function
     '
     '==========================================================================================
-    ' Find and Return Credor SIMPLES from "cadastro name"
+    ' Check PESSOA with the same "cadastro name"
     '==========================================================================================
-    Private Function FindCredorSimplesCadastro(CadastroNome As String) As clCredor
+    Private Sub CheckSameCadastro(CadastroNome As String,
+                                  Optional IDPessoa As Integer? = Nothing)
         '
         Try
             '
@@ -170,7 +172,11 @@ Public Class PessoaBLL
             Dim findPessoa As clPessoa = ProcuraPessoaPeloCadastroNome(CadastroNome)
             '
             ' VERIFICA O ROW RETORNADO
-            If IsNothing(findPessoa) Then Return Nothing
+            If IsNothing(findPessoa) Then Return
+            '
+            If Not IsNothing(IDPessoa) Then
+                If findPessoa.IDPessoa = IDPessoa Then Return
+            End If
             '
             Dim PessoaTipo As Byte = findPessoa.PessoaTipo
             '
@@ -188,12 +194,17 @@ Public Class PessoaBLL
                                         vbNewLine &
                                         "ID: " & Format(findPessoa.IDPessoa, "0000"))
                 Case 3 '--> Filial
-                    Throw New Exception("Já existe uma Filial com o mesmo nome de Cadastro...")
+                    Throw New Exception("Já existe uma Filial com o mesmo nome de Cadastro..." &
+                                        vbNewLine &
+                                        "Cadastro: " & findPessoa.Cadastro.ToUpper &
+                                        vbNewLine &
+                                        "ID: " & Format(findPessoa.IDPessoa, "0000"))
                 Case 4 '--> Credor Simples
-                    '--- Já existe um Credor com o mesmo nome de Cadastro...
-                    Dim cBLL As New CredorBLL
-                    '
-                    Return cBLL.CredorGetPeloID(findPessoa.IDPessoa)
+                    Throw New Exception("Já existe um Credor com o mesmo nome de Cadastro..." &
+                                        vbNewLine &
+                                        "Cadastro: " & findPessoa.Cadastro.ToUpper &
+                                        vbNewLine &
+                                        "ID: " & Format(findPessoa.IDPessoa, "0000"))
                     '
                 Case Else
                     Throw New Exception("Já existe um cadastro com a mesma designação de nome...")
@@ -203,7 +214,7 @@ Public Class PessoaBLL
             Throw ex
         End Try
         '
-    End Function
+    End Sub
     '
     '==========================================================================================
     ' LOOKING FOR PESSOA FROM CADASTRO NAME | RETURN CLPESSOA or NOTHING
@@ -370,7 +381,7 @@ Public Class PessoaBLL
     Public Function InsertNewPessoa(newPessoa As Object,
                                     PessoaGrupo As EnumPessoaGrupo) As Object
         '
-        '---1) CHECK CNP ALREADY INSERTED
+        '--- 1) CHECK IF IS THERE CNP IN NEW PESSOA
         '----------------------------------------------------------------------------------
         '--- obtain CNP from Pessoa of CPF or CNPJ
         Dim CNP As String = ""
@@ -387,40 +398,54 @@ Public Class PessoaBLL
             CNP = ""
         End If
         '
+        '--- 2) LOOK FOR PESSOA OF IN THE SAME "NAME" OR SAME "CNP"
+        '----------------------------------------------------------------------------------
         Try
             '
             If Not String.IsNullOrEmpty(CNP) Then
                 '--- procura pessoa pelo CNP
                 findPessoa = ProcurarCNP_Pessoa(CNP, PessoaGrupo)
                 '
-            Else '--> INSERT CREDOR SIMPLES (don't have CNP)
-                '--- procura credor simples pelo Cadastro
-                findPessoa = FindCredorSimplesCadastro(newPessoa)
-                '
-            End If
-            '
-            ' NÃO ENCOTROU NENHUMA PESSOA NO CPF/CNPJ RETORNA NOVO
-            If Not IsNothing(findPessoa) Then
-                '
-                '--- verifica o tipo returned
-                Select Case findPessoa.GetType()
+                '--- procurar pessoa com mesmo CADASTRO NOME
+                If Not IsNothing(findPessoa) Then
                     '
-                    Case Is = GetType(clPessoaFisica) ' É PESSOAFISICA
-                        findResult = "PessoaFisicaEncontrada"
-                    Case Is = GetType(clPessoaJuridica) ' É PESSOAJURIDICA
-                        findResult = "PessoaJuridicaEncontrada"
-                    Case Else ' PESSOA ALREADY EXISTS IN GROUP
-                        findResult = "PessoaMesmoTipoEncontrada"
-                        '
-                End Select
+                    '--- Verifica se ha pessoa com mesmo NOME DE CADASTRO mas com IDPessoa diferente
+                    CheckSameCadastro(newPessoa.Cadastro, findPessoa.IDPessoa)
+                    '
+                End If
                 '
             Else
-                findResult = "Insert"
+                '
+                '--- Verifica se ha pessoa com mesmo NOME DE CADASTRO
+                CheckSameCadastro(newPessoa.Cadastro)
+                '
             End If
             '
         Catch ex As Exception
             Throw ex
         End Try
+        '
+        '--- 3) CHECK CNP ALREADY INSERTED
+        '----------------------------------------------------------------------------------
+        '
+        ' NÃO ENCOTROU NENHUMA PESSOA NO CPF/CNPJ RETORNA NOVO
+        If Not IsNothing(findPessoa) Then
+            '
+            '--- verifica o tipo returned
+            Select Case findPessoa.GetType()
+                    '
+                Case Is = GetType(clPessoaFisica) ' É PESSOAFISICA
+                    findResult = "PessoaFisicaEncontrada"
+                Case Is = GetType(clPessoaJuridica) ' É PESSOAJURIDICA
+                    findResult = "PessoaJuridicaEncontrada"
+                Case Else ' PESSOA ALREADY EXISTS IN GROUP
+                    findResult = "PessoaMesmoTipoEncontrada"
+                    '
+            End Select
+            '
+        Else
+            findResult = "Insert"
+        End If
         '
         Try
             '
@@ -435,7 +460,7 @@ Public Class PessoaBLL
                     Return InsertPessoaGroup(newPessoa, PessoaGrupo, True)
 
                 Case "PessoaMesmoTipoEncontrada" '--> RETURN PESSOA
-                    Return newPessoa
+                    Return newPessoa '--> DEVOLVE A PESSOA ENCONTRADA
 
                 Case "Insert" '--> INSERT NEW PESSOA
                     Return InsertPessoaGroup(newPessoa, PessoaGrupo, False)
@@ -514,18 +539,21 @@ Public Class PessoaBLL
 
                     End Select
                     '
-                Case 4 '---> CREDOR SIMPLES
-                    Dim Pessoa As New clPessoa With {
-                        .Cadastro = newPessoa.Cadastro,
-                        .PessoaTipo = 4
-                    }
+                Case 3 '---> FILIAL
                     '
-                    '--- INSERT OR UPDATE PESSOA SIMPLES
-                    If Not AlreadyExists Then
-                        newPessoa.IDPessoa = InsertPessoaSimples(newPessoa.Cadastro,
-                                                                 EnumPessoaTipo.CREDOR_SIMPLES,
-                                                                 db) '--> INSERT CREDOR SIMPLES
-                    End If
+                    '--- INSERT PESSOA SIMPLES
+                    newPessoa.IDPessoa = InsertPessoaSimples(newPessoa.Cadastro,
+                                                             EnumPessoaTipo.FILIAL,
+                                                             db) '--> INSERT FILIAL
+                    '
+                    InsertFilial(DirectCast(newPessoa, clFilial), db)
+                    '
+                Case 4 '---> CREDOR SIMPLES
+                    '
+                    '--- INSERT PESSOA SIMPLES
+                    newPessoa.IDPessoa = InsertPessoaSimples(newPessoa.Cadastro,
+                                                             EnumPessoaTipo.CREDOR_SIMPLES,
+                                                             db) '--> INSERT CREDOR SIMPLES
                     '
                     InsertCredor(DirectCast(newPessoa, clCredor), db)
                     '
@@ -1145,6 +1173,34 @@ Public Class PessoaBLL
         '
     End Sub
     '
+    '--- FILIAL
+    '----------------------------------------------------------------------------------
+    Private Sub InsertFilial(Filial As clFilial, dbTran As AcessoDados)
+        '
+        Dim myQuery As String = ""
+        Dim dt As DataTable = Nothing
+        '
+        '--- 1) INSERT TBLPESSOAFILIAL
+        '----------------------------------------------------------------------------------
+        '// PARAMNS
+        dbTran.LimparParametros()
+        dbTran.AdicionarParametros("@IDPessoa", Filial.IDPessoa)
+        dbTran.AdicionarParametros("@ApelidoFilial", Filial.ApelidoFilial)
+        dbTran.AdicionarParametros("@AliquotaICMS", Filial.AliquotaICMS)
+        '
+        myQuery = "INSERT INTO tblPessoaFilial (IDFilial, ApelidoFilial, AliquotaICMS, Ativo) " &
+                  "VALUES (@IDPessoa, @ApelidoFilial, @AliquotaICMS ,'True')"
+        '
+        Try
+            dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+
+
 #End Region '/ INSERTS GROUP
     '
 #Region "UPDATES GROUP"
@@ -1308,7 +1364,9 @@ Public Class PessoaBLL
         dbTran.AdicionarParametros("@Cadastro", CadastroNome)
         dbTran.AdicionarParametros("@PessoaTipo", PessoaTipo)
         '
-        myQuery = "UPDATE tblPessoa SET Cadastro = @Cadastro WHERE IDPessoa = @IDPessoa"
+        myQuery = "UPDATE tblPessoa SET " &
+                  "Cadastro = @Cadastro, PessoaTipo = @PessoaTipo " &
+                  "WHERE IDPessoa = @IDPessoa"
         '
         '--- UPDATE
         Try

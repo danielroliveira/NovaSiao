@@ -163,20 +163,20 @@ Public Class frmContaDataPadrao
     Private Sub btnFilialEscolher_Click(sender As Object, e As EventArgs) Handles btnFilialEscolher.Click
         '
         '--- Abre o frmFilial
-        Dim fFil As New frmFilial(True, Me)
+        Dim fFil As New frmFilialEscolher(Me, _Conta.IDFilial)
         '
         fFil.ShowDialog()
         '
         If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
         '
-        If fFil.IDFilialEscolhida <> _Conta.IDFilial Then
+        If fFil.propIdFilial_Escolha <> _Conta.IDFilial Then
             _Conta = New clConta
             txtConta.Clear()
         End If
         '
-        _Conta.IDFilial = fFil.IDFilialEscolhida
-        _Conta.ApelidoFilial = fFil.FilialEscolhida
-        txtFilial.Text = fFil.FilialEscolhida
+        _Conta.IDFilial = fFil.propIdFilial_Escolha
+        _Conta.ApelidoFilial = fFil.propFilial_Escolha
+        txtFilial.Text = fFil.propFilial_Escolha
         '
     End Sub
 

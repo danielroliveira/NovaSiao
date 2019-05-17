@@ -368,7 +368,7 @@ Partial Class frmFornecedor
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.btnFechar)
         Me.SplitContainer1.Size = New System.Drawing.Size(614, 48)
-        Me.SplitContainer1.SplitterDistance = 506
+        Me.SplitContainer1.SplitterDistance = 505
         Me.SplitContainer1.SplitterWidth = 1
         Me.SplitContainer1.TabIndex = 36
         Me.SplitContainer1.TabStop = False
@@ -385,7 +385,7 @@ Partial Class frmFornecedor
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
         Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.tsMenu.Size = New System.Drawing.Size(506, 48)
+        Me.tsMenu.Size = New System.Drawing.Size(505, 48)
         Me.tsMenu.TabIndex = 0
         Me.tsMenu.TabStop = True
         Me.tsMenu.Text = "Menu Cliente PF"
@@ -510,7 +510,7 @@ Partial Class frmFornecedor
         Me.lbl_IdTexto.AutoSize = True
         Me.lbl_IdTexto.BackColor = System.Drawing.Color.Transparent
         Me.lbl_IdTexto.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_IdTexto.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lbl_IdTexto.ForeColor = System.Drawing.Color.Silver
         Me.lbl_IdTexto.Location = New System.Drawing.Point(29, 4)
         Me.lbl_IdTexto.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lbl_IdTexto.Name = "lbl_IdTexto"

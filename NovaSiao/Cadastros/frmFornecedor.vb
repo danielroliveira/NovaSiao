@@ -1,6 +1,5 @@
 ﻿Imports CamadaDTO
 Imports CamadaBLL
-Imports System.ComponentModel
 '
 Public Class frmFornecedor
     Private _forn As clFornecedor
@@ -41,7 +40,7 @@ Public Class frmFornecedor
         End Set
     End Property
     '
-    Public Property propTransp() As clFornecedor
+    Public Property propForn() As clFornecedor
         Get
             Return _forn
         End Get
@@ -52,17 +51,17 @@ Public Class frmFornecedor
         End Set
     End Property
     '
-    Sub New(objTransp As clFornecedor)
+    Sub New(objForn As clFornecedor)
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
-        If IsNothing(objTransp) Then
+        If IsNothing(objForn) Then
             MessageBox.Show("Esse formulário não pode ser aberto assim...", "Erro ao abrir")
         End If
         '
-        propTransp = objTransp
+        propForn = objForn
         PreencheDataBindings()
         '
         If Not IsNothing(_forn.IDPessoa) Then
@@ -160,7 +159,7 @@ Public Class frmFornecedor
     '
     '--- BTN NOVO
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
-        propTransp = New clFornecedor
+        propForn = New clFornecedor
         Sit = EnumFlagEstado.NovoRegistro
         txtRazaoSocial.Focus()
     End Sub

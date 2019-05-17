@@ -20,150 +20,43 @@ Partial Class frmFilial
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Me.dgvFiliais = New System.Windows.Forms.DataGridView()
-        Me.clnID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnFilia = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnImagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnAtivo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.btnFechar = New System.Windows.Forms.Button()
-        Me.btnNovo = New System.Windows.Forms.Button()
-        Me.btnSalvar = New System.Windows.Forms.Button()
         Me.MenuFil = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AtivarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DesativarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.txtApelidoFilial = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.txtAliquotaICMS = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lblID = New System.Windows.Forms.Label()
+        Me.lbl_IdTexto = New System.Windows.Forms.Label()
+        Me.tsMenu = New System.Windows.Forms.ToolStrip()
+        Me.btnNovo = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnSalvar = New System.Windows.Forms.ToolStripButton()
+        Me.btnCancelar = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnAtivo = New System.Windows.Forms.ToolStripButton()
+        Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.Panel1.SuspendLayout()
-        CType(Me.dgvFiliais, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuFil.SuspendLayout()
+        Me.tsMenu.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
         '
-        Me.Panel1.Size = New System.Drawing.Size(457, 50)
+        Me.Panel1.Controls.Add(Me.lblID)
+        Me.Panel1.Controls.Add(Me.lbl_IdTexto)
+        Me.Panel1.Size = New System.Drawing.Size(510, 50)
+        Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
+        Me.Panel1.Controls.SetChildIndex(Me.lbl_IdTexto, 0)
+        Me.Panel1.Controls.SetChildIndex(Me.lblID, 0)
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(260, 0)
+        Me.lblTitulo.Location = New System.Drawing.Point(313, 0)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(197, 50)
         Me.lblTitulo.Text = "Cadastro de Filial"
-        '
-        'dgvFiliais
-        '
-        Me.dgvFiliais.AllowUserToAddRows = False
-        Me.dgvFiliais.AllowUserToDeleteRows = False
-        Me.dgvFiliais.AllowUserToResizeColumns = False
-        Me.dgvFiliais.AllowUserToResizeRows = False
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White
-        Me.dgvFiliais.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvFiliais.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
-        Me.dgvFiliais.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Navy
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvFiliais.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvFiliais.ColumnHeadersHeight = 33
-        Me.dgvFiliais.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvFiliais.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnID, Me.clnFilia, Me.clnImagem, Me.clnAtivo})
-        Me.dgvFiliais.EnableHeadersVisualStyles = False
-        Me.dgvFiliais.GridColor = System.Drawing.SystemColors.ActiveCaption
-        Me.dgvFiliais.Location = New System.Drawing.Point(12, 65)
-        Me.dgvFiliais.MultiSelect = False
-        Me.dgvFiliais.Name = "dgvFiliais"
-        Me.dgvFiliais.RowHeadersVisible = False
-        Me.dgvFiliais.RowHeadersWidth = 45
-        DataGridViewCellStyle5.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White
-        Me.dgvFiliais.RowsDefaultCellStyle = DataGridViewCellStyle5
-        Me.dgvFiliais.RowTemplate.Height = 30
-        Me.dgvFiliais.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvFiliais.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.dgvFiliais.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvFiliais.Size = New System.Drawing.Size(433, 293)
-        Me.dgvFiliais.TabIndex = 2
-        '
-        'clnID
-        '
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.PowderBlue
-        DataGridViewCellStyle3.Padding = New System.Windows.Forms.Padding(5, 0, 0, 0)
-        Me.clnID.DefaultCellStyle = DataGridViewCellStyle3
-        Me.clnID.HeaderText = "Reg.:"
-        Me.clnID.Name = "clnID"
-        Me.clnID.ReadOnly = True
-        Me.clnID.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.clnID.Width = 60
-        '
-        'clnFilia
-        '
-        DataGridViewCellStyle4.BackColor = System.Drawing.Color.PowderBlue
-        Me.clnFilia.DefaultCellStyle = DataGridViewCellStyle4
-        Me.clnFilia.HeaderText = "Filial"
-        Me.clnFilia.Name = "clnFilia"
-        Me.clnFilia.Width = 220
-        '
-        'clnImagem
-        '
-        Me.clnImagem.HeaderText = "Ativo"
-        Me.clnImagem.Name = "clnImagem"
-        Me.clnImagem.ReadOnly = True
-        '
-        'clnAtivo
-        '
-        Me.clnAtivo.HeaderText = "Ativo"
-        Me.clnAtivo.Name = "clnAtivo"
-        Me.clnAtivo.ReadOnly = True
-        Me.clnAtivo.Visible = False
-        '
-        'btnFechar
-        '
-        Me.btnFechar.CausesValidation = False
-        Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar_24x24
-        Me.btnFechar.Location = New System.Drawing.Point(318, 370)
-        Me.btnFechar.Name = "btnFechar"
-        Me.btnFechar.Size = New System.Drawing.Size(127, 38)
-        Me.btnFechar.TabIndex = 6
-        Me.btnFechar.Text = "&Fechar"
-        Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnFechar.UseVisualStyleBackColor = True
-        '
-        'btnNovo
-        '
-        Me.btnNovo.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.btnNovo.Location = New System.Drawing.Point(12, 370)
-        Me.btnNovo.Name = "btnNovo"
-        Me.btnNovo.Size = New System.Drawing.Size(127, 38)
-        Me.btnNovo.TabIndex = 4
-        Me.btnNovo.Text = "&Novo"
-        Me.btnNovo.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnNovo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnNovo.UseVisualStyleBackColor = True
-        '
-        'btnSalvar
-        '
-        Me.btnSalvar.Enabled = False
-        Me.btnSalvar.Image = Global.NovaSiao.My.Resources.Resources.save
-        Me.btnSalvar.Location = New System.Drawing.Point(145, 370)
-        Me.btnSalvar.Name = "btnSalvar"
-        Me.btnSalvar.Size = New System.Drawing.Size(127, 38)
-        Me.btnSalvar.TabIndex = 5
-        Me.btnSalvar.Text = "&Salvar"
-        Me.btnSalvar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnSalvar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnSalvar.UseVisualStyleBackColor = True
         '
         'MenuFil
         '
@@ -185,36 +78,189 @@ Partial Class frmFilial
         Me.DesativarToolStripMenuItem.Size = New System.Drawing.Size(149, 22)
         Me.DesativarToolStripMenuItem.Text = "Desativar Filial"
         '
+        'txtApelidoFilial
+        '
+        Me.txtApelidoFilial.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtApelidoFilial.Location = New System.Drawing.Point(177, 77)
+        Me.txtApelidoFilial.Name = "txtApelidoFilial"
+        Me.txtApelidoFilial.Size = New System.Drawing.Size(269, 31)
+        Me.txtApelidoFilial.TabIndex = 7
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(58, 83)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(113, 19)
+        Me.Label1.TabIndex = 8
+        Me.Label1.Text = "Apelido da Filial"
+        '
+        'txtAliquotaICMS
+        '
+        Me.txtAliquotaICMS.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtAliquotaICMS.Location = New System.Drawing.Point(177, 122)
+        Me.txtAliquotaICMS.Name = "txtAliquotaICMS"
+        Me.txtAliquotaICMS.Size = New System.Drawing.Size(63, 31)
+        Me.txtAliquotaICMS.TabIndex = 7
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(58, 128)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(115, 19)
+        Me.Label2.TabIndex = 8
+        Me.Label2.Text = "Aliquota ICMS %"
+        '
+        'lblID
+        '
+        Me.lblID.BackColor = System.Drawing.Color.Transparent
+        Me.lblID.Font = New System.Drawing.Font("Verdana", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblID.ForeColor = System.Drawing.Color.AliceBlue
+        Me.lblID.Location = New System.Drawing.Point(8, 17)
+        Me.lblID.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
+        Me.lblID.Name = "lblID"
+        Me.lblID.Size = New System.Drawing.Size(94, 30)
+        Me.lblID.TabIndex = 10
+        Me.lblID.Text = "0001"
+        Me.lblID.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'lbl_IdTexto
+        '
+        Me.lbl_IdTexto.AutoSize = True
+        Me.lbl_IdTexto.BackColor = System.Drawing.Color.Transparent
+        Me.lbl_IdTexto.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_IdTexto.ForeColor = System.Drawing.Color.Silver
+        Me.lbl_IdTexto.Location = New System.Drawing.Point(32, 4)
+        Me.lbl_IdTexto.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
+        Me.lbl_IdTexto.Name = "lbl_IdTexto"
+        Me.lbl_IdTexto.Size = New System.Drawing.Size(35, 13)
+        Me.lbl_IdTexto.TabIndex = 11
+        Me.lbl_IdTexto.Text = "Reg."
+        Me.lbl_IdTexto.TextAlign = System.Drawing.ContentAlignment.TopCenter
+        '
+        'tsMenu
+        '
+        Me.tsMenu.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.tsMenu.AutoSize = False
+        Me.tsMenu.BackColor = System.Drawing.Color.AntiqueWhite
+        Me.tsMenu.Dock = System.Windows.Forms.DockStyle.None
+        Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
+        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNovo, Me.ToolStripSeparator5, Me.btnSalvar, Me.btnCancelar, Me.ToolStripSeparator1, Me.btnAtivo, Me.btnFechar})
+        Me.tsMenu.Location = New System.Drawing.Point(4, 186)
+        Me.tsMenu.Name = "tsMenu"
+        Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
+        Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
+        Me.tsMenu.Size = New System.Drawing.Size(504, 48)
+        Me.tsMenu.TabIndex = 0
+        Me.tsMenu.TabStop = True
+        Me.tsMenu.Text = "Menu Cliente PF"
+        '
+        'btnNovo
+        '
+        Me.btnNovo.Image = Global.NovaSiao.My.Resources.Resources.Adicionar1
+        Me.btnNovo.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnNovo.Name = "btnNovo"
+        Me.btnNovo.Size = New System.Drawing.Size(76, 45)
+        Me.btnNovo.Text = "&Nova"
+        Me.btnNovo.ToolTipText = "Novo Filial"
+        '
+        'ToolStripSeparator5
+        '
+        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 48)
+        '
+        'btnSalvar
+        '
+        Me.btnSalvar.Enabled = False
+        Me.btnSalvar.Image = Global.NovaSiao.My.Resources.Resources.Salvar_PEQ
+        Me.btnSalvar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnSalvar.Margin = New System.Windows.Forms.Padding(4, 1, 0, 2)
+        Me.btnSalvar.Name = "btnSalvar"
+        Me.btnSalvar.Size = New System.Drawing.Size(82, 45)
+        Me.btnSalvar.Text = "&Salvar"
+        Me.btnSalvar.ToolTipText = "Salvar Alterações"
+        '
+        'btnCancelar
+        '
+        Me.btnCancelar.Enabled = False
+        Me.btnCancelar.Image = Global.NovaSiao.My.Resources.Resources.delete_page
+        Me.btnCancelar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnCancelar.Name = "btnCancelar"
+        Me.btnCancelar.Size = New System.Drawing.Size(100, 45)
+        Me.btnCancelar.Text = "&Cancelar"
+        Me.btnCancelar.ToolTipText = "Cancelar Edição"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 48)
+        '
+        'btnAtivo
+        '
+        Me.btnAtivo.AutoSize = False
+        Me.btnAtivo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.btnAtivo.CheckOnClick = True
+        Me.btnAtivo.Image = Global.NovaSiao.My.Resources.Resources.Switch_ON_PEQ
+        Me.btnAtivo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnAtivo.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnAtivo.Name = "btnAtivo"
+        Me.btnAtivo.Size = New System.Drawing.Size(110, 41)
+        Me.btnAtivo.Text = "Ativo"
+        Me.btnAtivo.ToolTipText = "Ativar/Desativar Filial"
+        '
+        'btnFechar
+        '
+        Me.btnFechar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar
+        Me.btnFechar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFechar.Margin = New System.Windows.Forms.Padding(0, 0, 10, 0)
+        Me.btnFechar.Name = "btnFechar"
+        Me.btnFechar.Size = New System.Drawing.Size(86, 48)
+        Me.btnFechar.Text = "&Fechar"
+        '
         'frmFilial
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(457, 417)
-        Me.Controls.Add(Me.btnFechar)
-        Me.Controls.Add(Me.btnNovo)
-        Me.Controls.Add(Me.btnSalvar)
-        Me.Controls.Add(Me.dgvFiliais)
+        Me.ClientSize = New System.Drawing.Size(510, 236)
+        Me.Controls.Add(Me.tsMenu)
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.txtAliquotaICMS)
+        Me.Controls.Add(Me.txtApelidoFilial)
         Me.Name = "frmFilial"
+        Me.Controls.SetChildIndex(Me.txtApelidoFilial, 0)
+        Me.Controls.SetChildIndex(Me.txtAliquotaICMS, 0)
+        Me.Controls.SetChildIndex(Me.Label1, 0)
+        Me.Controls.SetChildIndex(Me.Label2, 0)
+        Me.Controls.SetChildIndex(Me.tsMenu, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
-        Me.Controls.SetChildIndex(Me.dgvFiliais, 0)
-        Me.Controls.SetChildIndex(Me.btnSalvar, 0)
-        Me.Controls.SetChildIndex(Me.btnNovo, 0)
-        Me.Controls.SetChildIndex(Me.btnFechar, 0)
         Me.Panel1.ResumeLayout(False)
-        CType(Me.dgvFiliais, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel1.PerformLayout()
         Me.MenuFil.ResumeLayout(False)
+        Me.tsMenu.ResumeLayout(False)
+        Me.tsMenu.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents dgvFiliais As DataGridView
-    Friend WithEvents btnFechar As Button
-    Friend WithEvents btnNovo As Button
-    Friend WithEvents btnSalvar As Button
     Friend WithEvents MenuFil As ContextMenuStrip
     Friend WithEvents AtivarToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents DesativarToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents clnID As DataGridViewTextBoxColumn
-    Friend WithEvents clnFilia As DataGridViewTextBoxColumn
-    Friend WithEvents clnImagem As DataGridViewTextBoxColumn
-    Friend WithEvents clnAtivo As DataGridViewTextBoxColumn
+    Friend WithEvents txtApelidoFilial As TextBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents txtAliquotaICMS As TextBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents lblID As Label
+    Friend WithEvents lbl_IdTexto As Label
+    Friend WithEvents tsMenu As ToolStrip
+    Friend WithEvents btnNovo As ToolStripButton
+    Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
+    Friend WithEvents btnSalvar As ToolStripButton
+    Friend WithEvents btnCancelar As ToolStripButton
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents btnAtivo As ToolStripButton
+    Friend WithEvents btnFechar As ToolStripButton
 End Class
