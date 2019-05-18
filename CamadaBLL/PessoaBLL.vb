@@ -565,7 +565,7 @@ Public Class PessoaBLL
         End Try
         '
         '--- COMMIT TRANSACTION
-        db.RollBackTransaction()
+        db.CommitTransaction()
         '
         '--- RETURN
         Return newPessoa.IDPessoa
@@ -1334,6 +1334,7 @@ Public Class PessoaBLL
             Return False
         End Try
         '
+        db.CommitTransaction()
         Return True
         '
     End Function

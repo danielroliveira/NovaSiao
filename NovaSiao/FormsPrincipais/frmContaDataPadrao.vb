@@ -169,14 +169,14 @@ Public Class frmContaDataPadrao
         '
         If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
         '
-        If fFil.propIdFilial_Escolha <> _Conta.IDFilial Then
+        If fFil.propFilial.IDPessoa <> _Conta.IDFilial Then
             _Conta = New clConta
             txtConta.Clear()
         End If
         '
-        _Conta.IDFilial = fFil.propIdFilial_Escolha
-        _Conta.ApelidoFilial = fFil.propFilial_Escolha
-        txtFilial.Text = fFil.propFilial_Escolha
+        _Conta.IDFilial = fFil.propFilial.IDPessoa
+        _Conta.ApelidoFilial = fFil.propFilial.ApelidoFilial
+        txtFilial.Text = fFil.propFilial.ApelidoFilial
         '
     End Sub
 

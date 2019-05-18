@@ -938,7 +938,7 @@ Public Class frmSimplesQuitar
         If frmT.DialogResult <> DialogResult.Cancel Then
             '
             '--- verify if is same Filial
-            Dim IDFilialEscolha As Integer = DirectCast(frmT, frmFilialEscolher).propIdFilial_Escolha
+            Dim IDFilialEscolha As Integer = DirectCast(frmT, frmFilialEscolher).propFilial.IDPessoa
             '
             If _IDFilialOrigem = IDFilialEscolha Then
                 MessageBox.Show("Você escolheu a mesma Filial Atual:" & vbNewLine &
@@ -951,7 +951,7 @@ Public Class frmSimplesQuitar
                 Return
             End If
             '
-            txtFilialDestino.Text = DirectCast(frmT, frmFilialEscolher).propFilial_Escolha
+            txtFilialDestino.Text = DirectCast(frmT, frmFilialEscolher).propFilial.ApelidoFilial
             _IDFilialDestino = IDFilialEscolha
             '
             ' Get CONTAS da Filial escolhida

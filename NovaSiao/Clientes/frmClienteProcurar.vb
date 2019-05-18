@@ -294,6 +294,11 @@ Public Class frmClienteProcurar
         btnEscolher_Click(New Object, New System.EventArgs)
     End Sub
     '
+    '--- LIMPAR LISTAGEM
+    Private Sub LimparListagem()
+        lstListagem.Clear()
+    End Sub
+    '
 #End Region
     '
 #Region "BUTONS FUNCTION"
@@ -553,6 +558,8 @@ Public Class frmClienteProcurar
     End Sub
     '
     Private Sub cmbRGAtividade_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbRGAtividade.SelectedIndexChanged, cmbAtivo.SelectedIndexChanged
+        '
+        If Not Me.CanFocus Then Exit Sub
         '
         If IsNumeric(cmbRGAtividade.SelectedValue) AndAlso Not IsNothing(dtClientes) Then
             txtProcurar.Clear()

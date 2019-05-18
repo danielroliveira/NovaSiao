@@ -777,10 +777,10 @@ Public Class frmFuncionario
             '
             If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
             '
-            If fFil.propIdFilial_Escolha <> bindFunc.Current.IDFilial Then
+            If fFil.propFilial.IDPessoa <> bindFunc.Current.IDFilial Then
                 Sit = EnumFlagEstado.Alterado
-                bindFunc.Current.IDFilial = fFil.propIdFilial_Escolha
-                lblApelidoFilial.Text = fFil.propFilial_Escolha
+                bindFunc.Current.IDFilial = fFil.propFilial.IDPessoa
+                lblApelidoFilial.Text = fFil.propFilial.ApelidoFilial
             End If
             '
         Catch ex As Exception

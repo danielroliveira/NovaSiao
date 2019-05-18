@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmFilial
     Inherits NovaSiao.frmModFinBorder
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         If disposing AndAlso components IsNot Nothing Then
             components.Dispose()
@@ -17,7 +17,7 @@ Partial Class frmFilial
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.MenuFil = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -30,13 +30,10 @@ Partial Class frmFilial
         Me.lblID = New System.Windows.Forms.Label()
         Me.lbl_IdTexto = New System.Windows.Forms.Label()
         Me.tsMenu = New System.Windows.Forms.ToolStrip()
-        Me.btnNovo = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnSalvar = New System.Windows.Forms.ToolStripButton()
         Me.btnCancelar = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnAtivo = New System.Windows.Forms.ToolStripButton()
-        Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.Panel1.SuspendLayout()
         Me.MenuFil.SuspendLayout()
         Me.tsMenu.SuspendLayout()
@@ -152,7 +149,7 @@ Partial Class frmFilial
         Me.tsMenu.Dock = System.Windows.Forms.DockStyle.None
         Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
-        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNovo, Me.ToolStripSeparator5, Me.btnSalvar, Me.btnCancelar, Me.ToolStripSeparator1, Me.btnAtivo, Me.btnFechar})
+        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSalvar, Me.btnCancelar, Me.ToolStripSeparator1, Me.btnAtivo})
         Me.tsMenu.Location = New System.Drawing.Point(4, 186)
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
@@ -161,20 +158,6 @@ Partial Class frmFilial
         Me.tsMenu.TabIndex = 5
         Me.tsMenu.TabStop = True
         Me.tsMenu.Text = "Menu Cliente PF"
-        '
-        'btnNovo
-        '
-        Me.btnNovo.Image = Global.NovaSiao.My.Resources.Resources.Adicionar1
-        Me.btnNovo.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnNovo.Name = "btnNovo"
-        Me.btnNovo.Size = New System.Drawing.Size(76, 45)
-        Me.btnNovo.Text = "&Nova"
-        Me.btnNovo.ToolTipText = "Novo Filial"
-        '
-        'ToolStripSeparator5
-        '
-        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 48)
         '
         'btnSalvar
         '
@@ -199,6 +182,7 @@ Partial Class frmFilial
         '
         'ToolStripSeparator1
         '
+        Me.ToolStripSeparator1.Margin = New System.Windows.Forms.Padding(10, 0, 0, 0)
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 48)
         '
@@ -210,20 +194,11 @@ Partial Class frmFilial
         Me.btnAtivo.Image = Global.NovaSiao.My.Resources.Resources.Switch_ON_PEQ
         Me.btnAtivo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.btnAtivo.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnAtivo.Margin = New System.Windows.Forms.Padding(10, 1, 0, 2)
         Me.btnAtivo.Name = "btnAtivo"
         Me.btnAtivo.Size = New System.Drawing.Size(110, 41)
-        Me.btnAtivo.Text = "Ativo"
+        Me.btnAtivo.Text = "Ativa"
         Me.btnAtivo.ToolTipText = "Ativar/Desativar Filial"
-        '
-        'btnFechar
-        '
-        Me.btnFechar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar
-        Me.btnFechar.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnFechar.Margin = New System.Windows.Forms.Padding(0, 0, 10, 0)
-        Me.btnFechar.Name = "btnFechar"
-        Me.btnFechar.Size = New System.Drawing.Size(86, 48)
-        Me.btnFechar.Text = "&Fechar"
         '
         'frmFilial
         '
@@ -261,11 +236,8 @@ Partial Class frmFilial
     Friend WithEvents lblID As Label
     Friend WithEvents lbl_IdTexto As Label
     Friend WithEvents tsMenu As ToolStrip
-    Friend WithEvents btnNovo As ToolStripButton
-    Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
     Friend WithEvents btnSalvar As ToolStripButton
     Friend WithEvents btnCancelar As ToolStripButton
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents btnAtivo As ToolStripButton
-    Friend WithEvents btnFechar As ToolStripButton
 End Class

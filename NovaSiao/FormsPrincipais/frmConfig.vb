@@ -359,17 +359,23 @@ Error_Handler:
         '
         If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
         '
-        Dim fNew As New frmFilial(fFil.propIdFilial_Escolha, Me)
-
-        If fFil.propIdFilial_Escolha <> _Conta.IDFilial Then
-            Sit = EnumFlagEstado.Alterado
-            _Conta = New clConta '--- clear _Conta as NEW clConta
-            txtContaPadrao.Clear()
-        End If
+        Dim fNew As New frmFilial(fFil.propFilial, Me)
         '
-        _Conta.IDFilial = fFil.propIdFilial_Escolha
-        _Conta.ApelidoFilial = fFil.propFilial_Escolha
-        txtFilialPadrao.Text = fFil.propFilial_Escolha
+        Me.Opacity = 0.6
+        fNew.ShowDialog()
+        Me.Opacity = 1
+        '
+        If Not fNew.DialogResult = DialogResult.OK Then Return
+        '
+        '--- verifica se houve alteracao na filial atual
+        If fNew.propFilial.IDPessoa = IDFilial_Config Then
+            '
+            If txtFilialPadrao.Text <> fNew.propFilial.ApelidoFilial Then
+                txtFilialPadrao.Text = fNew.propFilial.ApelidoFilial
+                Sit = EnumFlagEstado.Alterado
+            End If
+            '
+        End If
         '
     End Sub
     '
@@ -402,7 +408,7 @@ Error_Handler:
         '
     End Sub
     '
-    Private Sub btnAlteraFilial_Click(sender As Object, e As EventArgs) Handles btnAlteraFilial.Click, btnAlteraConta.Click
+    Private Sub btnAlteraFilial_Click(sender As Object, e As EventArgs) Handles btnAlteraFilial.Click
         '
         '--- Abre o frmFilial
         Dim fFil As New frmFilialEscolher()
@@ -413,15 +419,15 @@ Error_Handler:
         '
         If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
         '
-        If fFil.propIdFilial_Escolha <> _Conta.IDFilial Then
+        If fFil.propFilial.IDPessoa <> _Conta.IDFilial Then
             Sit = EnumFlagEstado.Alterado
             _Conta = New clConta '--- clear _Conta as NEW clConta
             txtContaPadrao.Clear()
         End If
         '
-        _Conta.IDFilial = fFil.propIdFilial_Escolha
-        _Conta.ApelidoFilial = fFil.propFilial_Escolha
-        txtFilialPadrao.Text = fFil.propFilial_Escolha
+        _Conta.IDFilial = fFil.propFilial.IDPessoa
+        _Conta.ApelidoFilial = fFil.propFilial.ApelidoFilial
+        txtFilialPadrao.Text = fFil.propFilial.ApelidoFilial
         '
     End Sub
     '
@@ -716,7 +722,10 @@ Error_Handler:
             Return False
         End If
         '
-        If txtDescontoMaximo.Text < 0 OrElse txtDescontoMaximo.Text > 100 Then
+        '--- desconto maximo
+        Dim desc As Double = 0
+        Double.TryParse(txtDescontoMaximo.Text.Replace(",", "."), desc)
+        If desc < 0 OrElse desc > 100 Then
             AbrirDialog("O Desconto Máximo deve estar entre 0 e 100" & vbNewLine &
                         "Não pode ser negativo e nem pode ser maior que 100",
                         "Desconto Máximo", frmDialog.DialogType.OK,

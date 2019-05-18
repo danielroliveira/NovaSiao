@@ -231,8 +231,8 @@ Public Class AcaoGlobal
         frmF.ShowDialog()
         If frmF.DialogResult = DialogResult.Cancel Then Return Nothing
         '
-        Dim IDFil As Integer = frmF.propIdFilial_Escolha
-        Dim Filial As String = frmF.propFilial_Escolha
+        Dim IDFil As Integer = frmF.propFilial.IDPessoa
+        Dim Filial As String = frmF.propFilial.ApelidoFilial
         '
         '--- Verifica se a Filial escolhida é a mesma filialPadrao
         Dim IDFilialPadrao As Integer = Obter_FilialPadrao()

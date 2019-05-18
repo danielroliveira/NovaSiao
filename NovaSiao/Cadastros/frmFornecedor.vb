@@ -412,7 +412,7 @@ Public Class frmFornecedor
                     txtTelefoneA.Text = t.TelefoneA
                     txtTelefoneB.Text = t.TelefoneB
                     txtEmail.Text = t.Email
-                    txtFundacaoData.Text = t.FundacaoData
+                    txtFundacaoData.Text = If(t.FundacaoData, "")
                     txtContatoNome.Text = t.ContatoNome
                     '
                 End If

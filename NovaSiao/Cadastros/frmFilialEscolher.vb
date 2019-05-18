@@ -1,16 +1,16 @@
 ﻿Imports System.Drawing.Drawing2D
 Imports CamadaBLL
+Imports CamadaDTO
 Imports ComponentOwl.BetterListView
 
 Public Class frmFilialEscolher
-    Private dtFilial As DataTable = Nothing
+    Private lstFilial As List(Of clfilial)
     Private ItemAtivo As Image = My.Resources.accept
     Private ItemInativo As Image = My.Resources.block
     Private _formOrigem As Form = Nothing
     Private indexFilialPadrao As Integer? = Nothing '--- index na listagem do IDpadrao informado
     '
-    Property propIdFilial_Escolha As Integer
-    Property propFilial_Escolha As String
+    Property propFilial As clFilial
     '
 #Region "SUB NEW | PROPERTYS"
     '
@@ -61,18 +61,26 @@ Public Class frmFilialEscolher
         '
         Dim fBLL As New FilialBLL
         '
+        '
         Try
-            dtFilial = fBLL.GetFiliais
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            lstFilial = fBLL.GetFiliais
+            '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao obter lista das Filiais", "Exceção",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Uma exceção ocorreu ao obter lista de Filiais..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
         End Try
         '
     End Sub
     '
     '--- PREENCHE LISTAGEM
     Private Sub PreencheListagem()
-        lstItens.DataSource = dtFilial
+        lstItens.DataSource = lstFilial
         FormataListagem()
     End Sub
     '
@@ -82,7 +90,7 @@ Public Class frmFilialEscolher
         lstItens.MultiSelect = False
         lstItens.HideSelection = False
         '
-        clnID.DisplayMember = "IDFilial"
+        clnID.DisplayMember = "IDPessoa"
         clnTipo.DisplayMember = "ApelidoFilial"
         clnAtivo.ValueMember = "Ativo"
         clnAtivo.Width = 70
@@ -140,8 +148,8 @@ Public Class frmFilialEscolher
         End If
         '
         ' DEFINIR O VALOR
-        propIdFilial_Escolha = CInt(lstItens.SelectedItems(0).Text) ' ID DA FILIAL
-        propFilial_Escolha = lstItens.SelectedItems(0).SubItems(1).Text ' DESCRICAO DA FILIAL
+        Dim ID As Integer = CInt(lstItens.SelectedItems(0).Text) ' ID DA FILIAL
+        propFilial = lstFilial.First(Function(x) x.IDPessoa = ID)
         '
         Me.DialogResult = DialogResult.OK
         Me.Close()
@@ -188,12 +196,27 @@ Public Class frmFilialEscolher
     '
 #End Region
     '
-#Region "OUTRAS FUNCOES"
+#Region "PROCURA"
+    '
+    '--- FILTRAR LISTAGEM
+    Private Sub FiltrarListagem()
+        '
+        lstItens.DataSource = lstFilial.FindAll(AddressOf FindTransp)
+        '
+    End Sub
+    '
+    Private Function FindTransp(ByVal T As clFilial) As Boolean
+        '
+        If txtProcura.TextLength > 0 AndAlso IsNumeric(txtProcura.Text.Substring(0, 1)) Then
+            Return T.IDPessoa = txtProcura.Text
+        Else
+            Return T.ApelidoFilial.ToLower Like "*" & txtProcura.Text.ToLower & "*"
+        End If
+        '
+    End Function
     '
     Private Sub txtProcura_TextChanged(sender As Object, e As EventArgs) Handles txtProcura.TextChanged
-        '
-        ProcurarST()
-        '
+        FiltrarListagem()
         Dim itemsFound As BetterListViewItemCollection
         '
         If txtProcura.Text.Length > 0 Then
@@ -202,21 +225,11 @@ Public Class frmFilialEscolher
             lstItens.FindItemsWithText("?")
             lstItens.SelectedItems.Clear()
         End If
-        '
     End Sub
     '
-    ' PROCURAR SubTipo
-    Private Sub ProcurarST()
-        '
-        Dim dvTipos As DataView = dtFilial.DefaultView
-        '
-        If txtProcura.TextLength > 0 AndAlso IsNumeric(txtProcura.Text.Substring(0, 1)) Then
-            dvTipos.RowFilter = "IDFilial = " & txtProcura.Text
-        Else
-            dvTipos.RowFilter = "ApelidoFilial LIKE '*" & txtProcura.Text & "*'" ' PROCURA PELO NOME
-        End If
-        '
-    End Sub
+#End Region '/ PROCURA
+    '
+#Region "OUTRAS FUNCOES"
     '
     '--- QUANDO PRESSIONA A TECLA ESC FECHA O FORMULARIO
     '--- QUANDO A TECLA CIMA E BAIXO NAVEGA ENTRE OS ITENS DA LISTAGEM

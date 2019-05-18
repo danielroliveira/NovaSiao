@@ -3,7 +3,6 @@ Imports CamadaDTO
 
 Public Class frmFilial
     Private _filial As clFilial
-    Private _oldFilial As clFilial = Nothing
     Private _formOrigem As Form
     Private BindFil As New BindingSource
     Dim _Sit As Byte
@@ -20,18 +19,15 @@ Public Class frmFilial
         Set(value As EnumFlagEstado)
             _Sit = value
             If _Sit = EnumFlagEstado.RegistroSalvo Then
-                lblID.Text = If(_filial.IDPessoa, "")
+                lblID.Text = If(Format(_filial.IDPessoa, "0000"), "")
                 btnSalvar.Enabled = False
-                btnNovo.Enabled = True
                 btnCancelar.Enabled = False
             ElseIf _Sit = EnumFlagEstado.Alterado Then
                 btnSalvar.Enabled = True
-                btnNovo.Enabled = False
                 btnCancelar.Enabled = True
             ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
                 txtApelidoFilial.Focus()
                 btnSalvar.Enabled = True
-                btnNovo.Enabled = False
                 btnCancelar.Enabled = True
                 lblID.Text = "NOVA"
             End If
@@ -131,53 +127,11 @@ Public Class frmFilial
     '
 #Region "ACAO BOTOES"
     '
-    '--- BTN NOVO
-    Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
-        '
-        '--- save the old filial
-        If Not IsNothing(_filial.IDPessoa) Then
-            _oldFilial = New clFilial With {
-                .IDPessoa = _filial.IDPessoa,
-                .ApelidoFilial = _filial.ApelidoFilial,
-                .AliquotaICMS = _filial.AliquotaICMS,
-                .Ativo = _filial.Ativo,
-                .Cadastro = _filial.Cadastro,
-                .InsercaoData = _filial.InsercaoData,
-                .PessoaTipo = _filial.PessoaTipo
-                }
-        End If
-        '
-        propFilial = New clFilial
-        Sit = EnumFlagEstado.NovoRegistro
-        txtApelidoFilial.Focus()
-        '
-    End Sub
-    '
     '--- BTN CANCELAR
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
         '
-        If Not IsNothing(_oldFilial) Then
-            '
-            '--- recupera o valor anterior
-            _filial = New clFilial With {
-                .IDPessoa = _oldFilial.IDPessoa,
-                .ApelidoFilial = _oldFilial.ApelidoFilial,
-                .AliquotaICMS = _oldFilial.AliquotaICMS,
-                .Ativo = _oldFilial.Ativo,
-                .Cadastro = _oldFilial.Cadastro,
-                .InsercaoData = _oldFilial.InsercaoData,
-                .PessoaTipo = _oldFilial.PessoaTipo
-                }
-            '--- zera oldfilial
-            _oldFilial = Nothing
-            '--- CancelEdit
-            BindFil.CancelEdit()
-            Sit = EnumFlagEstado.RegistroSalvo
-            '
-        Else
-            Close()
-        End If
-        '
+        AutoValidate = AutoValidate.Disable
+        DialogResult = DialogResult.Cancel
         '
     End Sub
     '
@@ -228,15 +182,6 @@ Public Class frmFilial
             btnAtivo.Image = DesativarImage
             btnAtivo.Text = "Inativa"
         End If
-        '
-    End Sub
-    '
-    '--- BTN FECHAR
-    Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
-        '
-        AutoValidate = AutoValidate.Disable
-        Me.Close()
-        MostraMenuPrincipal()
         '
     End Sub
     '
@@ -293,19 +238,30 @@ Public Class frmFilial
             Cursor = Cursors.WaitCursor
             '
             Dim db As New PessoaBLL
-            Dim resolve As Object = db.InsertNewPessoa(_filial, PessoaBLL.EnumPessoaGrupo.FILIAL)
             '
-            If Not IsNumeric(resolve) Then
-                Throw New Exception("Uma exceção inesperada ocorreu ao Salvar Registro")
-                Return
+            If Sit = EnumFlagEstado.NovoRegistro Then '--> SAVE NEW
+                '
+                Dim resolve As Object = db.InsertNewPessoa(_filial, PessoaBLL.EnumPessoaGrupo.FILIAL)
+                '
+                If Not IsNumeric(resolve) Then
+                    Throw New Exception("Uma exceção inesperada ocorreu ao Salvar Registro")
+                    Return
+                End If
+                '
+                _filial.IDPessoa = resolve
+                lblID.DataBindings.Item("Tag").ReadValue()
+                '
+            ElseIf Sit = EnumFlagEstado.Alterado Then '--> UPDATE
+                '
+                db.UpdatePessoa(_filial, PessoaBLL.EnumPessoaGrupo.FILIAL)
+                '
             End If
-            '
-            _filial.IDPessoa = resolve
-            lblID.DataBindings.Item("Tag").ReadValue()
             '
             MessageBox.Show("Filial Salva com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
             BindFil.EndEdit()
             Sit = EnumFlagEstado.RegistroSalvo
+            '
+            DialogResult = DialogResult.OK
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Inserir Nova Filial..." & vbNewLine &

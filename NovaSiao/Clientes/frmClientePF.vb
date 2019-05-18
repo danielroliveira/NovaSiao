@@ -118,7 +118,9 @@ Public Class frmClientePF
     End Sub
     '
     Private Sub frmClientesPF_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        '
         AddHandler dgvReferencias.CellValueChanged, AddressOf AlteraReferencia
+        '
     End Sub
 #End Region
     '
@@ -338,6 +340,7 @@ Public Class frmClientePF
         EProvider.Clear()
         '
         Dim f As New Utilidades
+        '
         'Verifica o campo nome
         If Not f.VerificaControlesForm(txtClienteNome, "Nome do Cliente", EProvider) Then
             RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
@@ -346,6 +349,7 @@ Public Class frmClientePF
             AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
             Return False
         End If
+        '
         'Verifica o campo Atividade do Cliente
         If Not f.VerificaControlesForm(cmbRGAtividade, "Atividade do Cliente", EProvider) Then
             RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
@@ -354,6 +358,7 @@ Public Class frmClientePF
             AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
             Return False
         End If
+        '
         'Verifica o campo Data de Nascimento
         If Not f.VerificaControlesForm(txtNascimentoData, "Data de Nascimento", EProvider) Then
             RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
@@ -362,6 +367,7 @@ Public Class frmClientePF
             AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
             Return False
         End If
+        '
         'Verifica o campo endereço
         If Not f.VerificaControlesForm(txtEndereco, "Endereço do Cliente", EProvider) Then
             RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
@@ -370,6 +376,7 @@ Public Class frmClientePF
             AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
             Return False
         End If
+        '
         'Verifica o campo endereço
         If Not f.VerificaControlesForm(txtBairro, "Bairro da Residência do Cliente", EProvider) Then
             RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
@@ -378,6 +385,7 @@ Public Class frmClientePF
             AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
             Return False
         End If
+        '
         'Verifica o campo endereço
         If Not f.VerificaControlesForm(txtCidade, "Cidade  da Residência do Cliente", EProvider) Then
             RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
@@ -386,6 +394,7 @@ Public Class frmClientePF
             AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
             Return False
         End If
+        '
         'Verifica o campo endereço
         If Not f.VerificaControlesForm(txtUF, "Estado/UF da Residência do Cliente", EProvider) Then
             RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
@@ -394,6 +403,7 @@ Public Class frmClientePF
             AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
             Return False
         End If
+        '
         'Verifica o campo endereço
         If Not f.VerificaControlesForm(txtCEP, "CEP da Residência do Cliente", EProvider) Then
             RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
@@ -402,6 +412,7 @@ Public Class frmClientePF
             AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
             Return False
         End If
+        '
         'Verifica o campo Sexo
         If Not f.VerificaControlesForm(cmbSexo, "Sexo do Cliente", EProvider) Then
             RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
@@ -410,12 +421,21 @@ Public Class frmClientePF
             AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
             Return False
         End If
+        '
         'Verifica o campo IDENTIDADE
+
+
+
+
         If Not f.VerificaControlesForm(txtIdentidade, "Número da Identidade", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab2
-            txtIdentidade.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            TabControl_IrPara(vtab2)
+
+            'RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            'tabPrincipal.SelectedTab = vtab2
+            'txtIdentidade.Focus()
+            'AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+
+
             Return False
         End If
         '
@@ -497,6 +517,17 @@ Public Class frmClientePF
         Return True
         '
     End Function
+    '
+    '
+    '--- ALTERA A TAB DESABILITA E HABILITA O HANDLER
+    '----------------------------------------------------------------------------------
+    Private Sub TabControl_IrPara(irPara As vTabPage)
+        RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+        tabPrincipal.SelectedTab = irPara
+        Dim Controles = irPara.Controls.OfType(Of TextBox).OrderBy(Function(c) c.TabIndex)
+        Controles(0).Focus()
+        AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+    End Sub
     '
     Private Function VerificaRGCliente() As Boolean
         Dim db As New PessoaBLL
