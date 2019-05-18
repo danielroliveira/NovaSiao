@@ -291,6 +291,7 @@ Public Class frmClientePF
             ElseIf _Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
                 '
                 pessoaBLL.UpdatePessoa(_ClientePF, PessoaBLL.EnumPessoaGrupo.CLIENTE)
+                NewCliID = _ClientePF.IDPessoa
                 '
             End If
             '
@@ -343,120 +344,79 @@ Public Class frmClientePF
         '
         'Verifica o campo nome
         If Not f.VerificaControlesForm(txtClienteNome, "Nome do Cliente", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab1
-            txtClienteNome.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            TabControl_IrPara(vtab1, txtClienteNome)
             Return False
         End If
         '
         'Verifica o campo Atividade do Cliente
         If Not f.VerificaControlesForm(cmbRGAtividade, "Atividade do Cliente", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab1
-            cmbRGAtividade.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            TabControl_IrPara(vtab1, cmbRGAtividade)
             Return False
         End If
         '
         'Verifica o campo Data de Nascimento
         If Not f.VerificaControlesForm(txtNascimentoData, "Data de Nascimento", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab1
-            txtNascimentoData.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            TabControl_IrPara(vtab1, txtNascimentoData)
             Return False
         End If
         '
         'Verifica o campo endereço
         If Not f.VerificaControlesForm(txtEndereco, "Endereço do Cliente", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab1
-            txtEndereco.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            TabControl_IrPara(vtab1, txtEndereco)
             Return False
         End If
         '
         'Verifica o campo endereço
         If Not f.VerificaControlesForm(txtBairro, "Bairro da Residência do Cliente", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab1
-            txtBairro.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            TabControl_IrPara(vtab1, txtBairro)
             Return False
         End If
         '
         'Verifica o campo endereço
         If Not f.VerificaControlesForm(txtCidade, "Cidade  da Residência do Cliente", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab1
-            txtCidade.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            TabControl_IrPara(vtab1, txtCidade)
             Return False
         End If
         '
         'Verifica o campo endereço
         If Not f.VerificaControlesForm(txtUF, "Estado/UF da Residência do Cliente", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab1
-            txtUF.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            TabControl_IrPara(vtab1, txtUF)
             Return False
         End If
         '
         'Verifica o campo endereço
         If Not f.VerificaControlesForm(txtCEP, "CEP da Residência do Cliente", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab1
-            txtCEP.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            TabControl_IrPara(vtab1, txtCEP)
             Return False
         End If
         '
         'Verifica o campo Sexo
         If Not f.VerificaControlesForm(cmbSexo, "Sexo do Cliente", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab1
-            cmbSexo.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            TabControl_IrPara(vtab1, cmbSexo)
             Return False
         End If
         '
         'Verifica o campo IDENTIDADE
-
-
-
-
-        If Not f.VerificaControlesForm(txtIdentidade, "Número da Identidade", EProvider) Then
-            TabControl_IrPara(vtab2)
-
-            'RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            'tabPrincipal.SelectedTab = vtab2
-            'txtIdentidade.Focus()
-            'AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-
-
+        '
+        If Not f.VerificaDadosClasse(txtIdentidade, "Número da Identidade", _ClientePF, EProvider) Then
+            TabControl_IrPara(vtab2, txtIdentidade)
             Return False
         End If
         '
-        If Not f.VerificaControlesForm(txtIdentidadeOrgao, "Órgão Expedidor da Identidade", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab2
-            txtIdentidadeOrgao.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+        If Not f.VerificaDadosClasse(txtIdentidadeOrgao, "Órgão Expedidor da Identidade", _ClientePF, EProvider) Then
+            TabControl_IrPara(vtab2, txtIdentidadeOrgao)
             Return False
         End If
         '
         'Verifica o campo ESTADOCIVIL
-        If Not f.VerificaControlesForm(cmbEstadoCivil, "Estado Civil", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab2
-            cmbEstadoCivil.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+        If Not f.VerificaDadosClasse(cmbEstadoCivil, "Estado Civil", _ClientePF, EProvider) Then
+            TabControl_IrPara(vtab2, cmbEstadoCivil)
             Return False
         End If
         '
         '--- Verifica se Existe CONJUGE MESMO NÃO SENDO CASADO
+        cmbEstadoCivil.SelectedValue = If(_ClientePF.EstadoCivil, -1)
+        '
         If Not (cmbEstadoCivil.SelectedValue = 2 Or cmbEstadoCivil.SelectedValue = 5) Then '--- Nesse caso essa pessoa NÃO tem CONJUGE
             If txtConjuge.Text.Length > 0 OrElse _ClientePF.ConjugeRenda > 0 Then
                 If MessageBox.Show("Se o cliente não é CASADO ou não vive em UNIÃO ESTÁVEL..." & vbCrLf &
@@ -470,21 +430,15 @@ Public Class frmClientePF
                     txtConjugeRenda.DataBindings.Item("Text").ReadValue()
                     Return True
                 Else
-                    RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-                    tabPrincipal.SelectedTab = vtab2
-                    AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-                    cmbEstadoCivil.Focus()
+                    TabControl_IrPara(vtab2, cmbEstadoCivil)
                     Return False
                 End If
 
             End If
         Else
             'Verifica o campo Cônjuge Nome
-            If Not f.VerificaControlesForm(txtConjuge, "Nome do Cônjuge", EProvider) Then
-                RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-                tabPrincipal.SelectedTab = vtab2
-                txtConjuge.Focus()
-                AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+            If Not f.VerificaDadosClasse(txtConjuge, "Nome do Cônjuge", _ClientePF, EProvider) Then
+                TabControl_IrPara(vtab2, txtConjuge)
                 Return False
             End If
             '
@@ -497,18 +451,13 @@ Public Class frmClientePF
             MsgBox("O campo Limite de Compras não pode ser menor ou igual a 0;" & vbCrLf &
                    "Preencha esse campo antes de Salvar o registro por favor...", vbInformation, "Valor Inválido")
             EProvider.SetError(txtLimiteCompras, "Preencha o valor desse campo!")
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab3
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            txtLimiteCompras.Focus()
+            '
+            TabControl_IrPara(vtab3, txtLimiteCompras)
             Return False
         End If
         '
-        If Not f.VerificaControlesForm(txtLimiteCompras, "Limite de Compras", EProvider) Then
-            RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
-            tabPrincipal.SelectedTab = vtab3
-            txtLimiteCompras.Focus()
-            AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
+        If Not f.VerificaDadosClasse(txtLimiteCompras, "Limite de Compras", _ClientePF, EProvider) Then
+            TabControl_IrPara(vtab3, txtLimiteCompras)
             Return False
         End If
         '
@@ -521,11 +470,10 @@ Public Class frmClientePF
     '
     '--- ALTERA A TAB DESABILITA E HABILITA O HANDLER
     '----------------------------------------------------------------------------------
-    Private Sub TabControl_IrPara(irPara As vTabPage)
+    Private Sub TabControl_IrPara(irPara As vTabPage, focusControl As Control)
         RemoveHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
         tabPrincipal.SelectedTab = irPara
-        Dim Controles = irPara.Controls.OfType(Of TextBox).OrderBy(Function(c) c.TabIndex)
-        Controles(0).Focus()
+        focusControl.Focus()
         AddHandler tabPrincipal.SelectedIndexChanged, AddressOf tabPrincipal_SelectedIndexChanged
     End Sub
     '

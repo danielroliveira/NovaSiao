@@ -1546,6 +1546,7 @@ Public Class frmVendaVista
         '
         lblTotalGeral.DataBindings.Item("text").ReadValue()
         lblValorProdutos.DataBindings.Item("text").ReadValue()
+        lblValorDevolucao.DataBindings.Item("text").ReadValue()
         '
         Return _Venda.TotalVenda
         '
@@ -1682,6 +1683,10 @@ Public Class frmVendaVista
         Dim tBLL As New TrocaBLL
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             _Troca = tBLL.GetTroca_PorIDVenda_clTroca(_Venda.IDVenda)
             '
             If Not IsNothing(_Troca) Then
@@ -1722,6 +1727,11 @@ Public Class frmVendaVista
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao verificar se existe TROCA anexada à Venda..." & vbNewLine &
                 ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub

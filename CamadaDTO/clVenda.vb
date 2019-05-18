@@ -383,7 +383,8 @@ Public Class clVenda : Implements IEditableObject
     '--- Propriedade TotalVenda
     ReadOnly Property TotalVenda() As Decimal
         Get
-            Return ValorProdutos + ValorFrete + ValorImpostos + ValorAcrescimos - ValorDevolucao
+            Dim T = ValorProdutos + ValorFrete + ValorImpostos + ValorAcrescimos - ValorDevolucao
+            Return If(T < 0, 0, T)
         End Get
     End Property
     '

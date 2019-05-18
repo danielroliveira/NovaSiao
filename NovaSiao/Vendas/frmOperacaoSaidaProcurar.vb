@@ -66,7 +66,7 @@ Public Class frmOperacaoSaidaProcurar
     Private Sub frmOperacaoSaidaProcurar_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         '
         '--- define a posicao do pnlMes
-        pnlMes.Location = New Point(636, 130)
+        pnlMes.Location = New Point(636, 124)
         '
         AddHandler cmbOperacao.SelectedIndexChanged, AddressOf Handler_GetList
         AddHandler dtMes.DateChanged, AddressOf dtMes_DateChanged
@@ -994,7 +994,7 @@ Public Class frmOperacaoSaidaProcurar
         dtMes.Focus()
     End Sub
     '
-    Private Sub pnlMes_Leave(sender As Object, e As EventArgs) Handles pnlMes.MouseLeave, dtMes.LostFocus
+    Private Sub pnlMes_Leave(sender As Object, e As EventArgs) Handles dtMes.LostFocus ', pnlMes.MouseLeave
         pnlMes.Visible = False
     End Sub
     '

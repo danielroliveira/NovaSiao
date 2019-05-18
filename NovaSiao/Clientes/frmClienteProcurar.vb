@@ -103,6 +103,8 @@ Public Class frmClienteProcurar
                 btnProcurar.Visible = True
                 btnProcurar.Enabled = False
                 '
+                lstListagem.Items.Clear()
+                '
             End If
             '
             _propPreenchido = value
@@ -562,11 +564,16 @@ Public Class frmClienteProcurar
         If Not Me.CanFocus Then Exit Sub
         '
         If IsNumeric(cmbRGAtividade.SelectedValue) AndAlso Not IsNothing(dtClientes) Then
-            txtProcurar.Clear()
-            propPreenchido = False
+            '
+            If txtProcurar.Text.Trim.Length > 0 Then
+                propPreenchido = True
+                btnProcurar_Click(sender, e)
+            End If
+            '
             lstListagem.FindItemsWithText("?")
             lstListagem.SelectedItems.Clear()
             txtProcurar.Focus()
+            '
         End If
         '
     End Sub

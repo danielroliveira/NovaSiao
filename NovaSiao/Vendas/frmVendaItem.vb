@@ -426,6 +426,7 @@ Public Class frmVendaItem
                                 "Estoque Nulo",
                                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                 '
+                BlinkTimer.Enabled = True
                 txtQuantidade.Focus()
                 txtQuantidade.SelectAll()
                 Return False
@@ -439,6 +440,7 @@ Public Class frmVendaItem
                                 "Estoque Negativo",
                                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                 '
+                BlinkTimer.Enabled = True
                 txtQuantidade.Focus()
                 txtQuantidade.SelectAll()
                 Return False
