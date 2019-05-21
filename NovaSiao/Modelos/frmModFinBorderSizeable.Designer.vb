@@ -23,9 +23,9 @@ Partial Class frmModFinBorderSizeable
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.btnMaximizar = New VIBlend.WinForms.Controls.vFormButton()
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
         Me.lblTitulo = New System.Windows.Forms.Label()
-        Me.btnMaximizar = New VIBlend.WinForms.Controls.vFormButton()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -37,10 +37,32 @@ Partial Class frmModFinBorderSizeable
         Me.Panel1.Controls.Add(Me.btnMaximizar)
         Me.Panel1.Controls.Add(Me.btnClose)
         Me.Panel1.Controls.Add(Me.lblTitulo)
-        Me.Panel1.Location = New System.Drawing.Point(2, 1)
+        Me.Panel1.Location = New System.Drawing.Point(3, 1)
+        Me.Panel1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(796, 50)
+        Me.Panel1.Size = New System.Drawing.Size(734, 50)
         Me.Panel1.TabIndex = 2
+        '
+        'btnMaximizar
+        '
+        Me.btnMaximizar.AllowAnimations = True
+        Me.btnMaximizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnMaximizar.BackColor = System.Drawing.Color.Transparent
+        Me.btnMaximizar.BorderStyle = VIBlend.WinForms.Controls.ButtonBorderStyle.NONE
+        Me.btnMaximizar.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.MaximizeButton
+        Me.btnMaximizar.CausesValidation = False
+        Me.btnMaximizar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnMaximizar.Location = New System.Drawing.Point(676, 12)
+        Me.btnMaximizar.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.btnMaximizar.Name = "btnMaximizar"
+        Me.btnMaximizar.RibbonStyle = False
+        Me.btnMaximizar.RoundedCornersMask = CType(15, Byte)
+        Me.btnMaximizar.ShowFocusRectangle = False
+        Me.btnMaximizar.Size = New System.Drawing.Size(20, 20)
+        Me.btnMaximizar.TabIndex = 9
+        Me.btnMaximizar.TabStop = False
+        Me.btnMaximizar.UseVisualStyleBackColor = False
+        Me.btnMaximizar.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.BLUEBLEND
         '
         'btnClose
         '
@@ -50,7 +72,9 @@ Partial Class frmModFinBorderSizeable
         Me.btnClose.BorderStyle = VIBlend.WinForms.Controls.ButtonBorderStyle.NONE
         Me.btnClose.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.CloseButton
         Me.btnClose.CausesValidation = False
-        Me.btnClose.Location = New System.Drawing.Point(764, 12)
+        Me.btnClose.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnClose.Location = New System.Drawing.Point(702, 12)
+        Me.btnClose.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.RibbonStyle = False
         Me.btnClose.RoundedCornersMask = CType(15, Byte)
@@ -66,41 +90,24 @@ Partial Class frmModFinBorderSizeable
         Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTitulo.Font = New System.Drawing.Font("Calibri", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTitulo.ForeColor = System.Drawing.Color.White
-        Me.lblTitulo.Location = New System.Drawing.Point(611, 0)
+        Me.lblTitulo.Location = New System.Drawing.Point(507, 0)
         Me.lblTitulo.Margin = New System.Windows.Forms.Padding(0)
         Me.lblTitulo.Name = "lblTitulo"
-        Me.lblTitulo.Padding = New System.Windows.Forms.Padding(0, 0, 0, 6)
-        Me.lblTitulo.Size = New System.Drawing.Size(122, 50)
+        Me.lblTitulo.Padding = New System.Windows.Forms.Padding(0, 0, 0, 9)
+        Me.lblTitulo.Size = New System.Drawing.Size(163, 50)
         Me.lblTitulo.TabIndex = 1
         Me.lblTitulo.Text = "Label1"
         Me.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'btnMaximizar
-        '
-        Me.btnMaximizar.AllowAnimations = True
-        Me.btnMaximizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnMaximizar.BackColor = System.Drawing.Color.Transparent
-        Me.btnMaximizar.BorderStyle = VIBlend.WinForms.Controls.ButtonBorderStyle.NONE
-        Me.btnMaximizar.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.MaximizeButton
-        Me.btnMaximizar.CausesValidation = False
-        Me.btnMaximizar.Location = New System.Drawing.Point(740, 12)
-        Me.btnMaximizar.Name = "btnMaximizar"
-        Me.btnMaximizar.RibbonStyle = False
-        Me.btnMaximizar.RoundedCornersMask = CType(15, Byte)
-        Me.btnMaximizar.ShowFocusRectangle = False
-        Me.btnMaximizar.Size = New System.Drawing.Size(20, 20)
-        Me.btnMaximizar.TabIndex = 9
-        Me.btnMaximizar.TabStop = False
-        Me.btnMaximizar.UseVisualStyleBackColor = False
-        Me.btnMaximizar.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.BLUEBLEND
-        '
         'frmModFinBorderSizeable
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.ClientSize = New System.Drawing.Size(739, 658)
         Me.Controls.Add(Me.Panel1)
+        Me.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.Name = "frmModFinBorderSizeable"
         Me.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show
         Me.Text = "Form1"

@@ -1,4 +1,5 @@
 ﻿Imports CamadaDTO
+Imports Microsoft.Reporting.WinForms
 '
 Public Class frmClientePFFicha
     Private _ClientePF As clClientePF
@@ -23,13 +24,16 @@ Public Class frmClientePFFicha
         Dim lista As New List(Of clClientePF)
         lista.Add(_ClientePF)
         '
-        Dim ds As New Microsoft.Reporting.WinForms.ReportDataSource("dsClientePF", lista)
+        Dim ds As New ReportDataSource("dsClientePF", lista)
         '
         '--- define o relatório
         rptvClienteFicha.LocalReport.DataSources.Clear()
         rptvClienteFicha.LocalReport.DataSources.Add(ds)
-        rptvClienteFicha.SetDisplayMode(Microsoft.Reporting.WinForms.DisplayMode.PrintLayout)
+        'getLogo()
+        rptvClienteFicha.SetDisplayMode(DisplayMode.PrintLayout)
         rptvClienteFicha.RefreshReport()
+
+
         '
         '--- define o tamanho
         'Me.Width = Application.OpenForms("frmPrincipal").Width - 200
@@ -41,5 +45,19 @@ Public Class frmClientePFFicha
         Location = New Point(posX, 50)
         '
     End Sub
+    '
+    Private Sub getLogo()
+        '
+        'rptvClienteFicha.LocalReport.EnableExternalImages = True
+        'Dim imagePath As String = "D:\LogoNovaSiao.png"
+        'Dim parameter As New ReportParameter("LogoPath", "file:\\" + imagePath)
+
+        'rptvClienteFicha.LocalReport.SetParameters(parameter)
+        'rptvClienteFicha.LocalReport.Refresh()
+
+
+        '
+    End Sub
+
     '
 End Class

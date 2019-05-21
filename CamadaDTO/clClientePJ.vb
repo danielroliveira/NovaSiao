@@ -25,6 +25,7 @@ Public Class clClientePJ
     Public Sub New()
         CPJData = New StructureClientePJ()
         CPJData._IDSituacao = 1
+        CPJData._ClienteDesde = Today.ToShortDateString
         Situacao = "ATIVO"
     End Sub
     '

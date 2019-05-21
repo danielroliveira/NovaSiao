@@ -20,12 +20,12 @@ Partial Class frmClientePF
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmClientePF))
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblIDCliente = New System.Windows.Forms.Label()
         Me.txtCEP = New System.Windows.Forms.MaskedTextBox()
         Me.Label15 = New System.Windows.Forms.Label()
@@ -103,6 +103,9 @@ Partial Class frmClientePF
         Me.EProvider = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.tabPrincipal = New VIBlend.WinForms.Controls.vTabControl()
         Me.vtab1 = New VIBlend.WinForms.Controls.vTabPage()
+        Me.Label45 = New System.Windows.Forms.Label()
+        Me.Label44 = New System.Windows.Forms.Label()
+        Me.dtpClienteDesde = New System.Windows.Forms.DateTimePicker()
         Me.btnProcuraRG = New VIBlend.WinForms.Controls.vButton()
         Me.txtRGCliente = New System.Windows.Forms.TextBox()
         Me.Label34 = New System.Windows.Forms.Label()
@@ -111,7 +114,6 @@ Partial Class frmClientePF
         Me.txtClienteNome = New System.Windows.Forms.TextBox()
         Me.txtTelefoneA = New Controles.MaskText_Telefone()
         Me.Label40 = New System.Windows.Forms.Label()
-        Me.txtNascimentoData = New Controles.MaskText_Data()
         Me.cmbSexo = New System.Windows.Forms.ComboBox()
         Me.txtMae = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -127,6 +129,7 @@ Partial Class frmClientePF
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.ShapeContainer2 = New Microsoft.VisualBasic.PowerPacks.ShapeContainer()
+        Me.LineShape10 = New Microsoft.VisualBasic.PowerPacks.LineShape()
         Me.LineShape3 = New Microsoft.VisualBasic.PowerPacks.LineShape()
         Me.LineShape2 = New Microsoft.VisualBasic.PowerPacks.LineShape()
         Me.vtab2 = New VIBlend.WinForms.Controls.vTabPage()
@@ -152,6 +155,7 @@ Partial Class frmClientePF
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dtpNascimentoData = New System.Windows.Forms.DateTimePicker()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvReferencias, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tsMenuCliente.SuspendLayout()
@@ -168,6 +172,7 @@ Partial Class frmClientePF
         Me.Panel1.Controls.Add(Me.lbl_IdTexto)
         Me.Panel1.Controls.Add(Me.lblIDCliente)
         Me.Panel1.Size = New System.Drawing.Size(765, 50)
+        Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.lblIDCliente, 0)
         Me.Panel1.Controls.SetChildIndex(Me.lbl_IdTexto, 0)
@@ -177,7 +182,7 @@ Partial Class frmClientePF
         Me.lblTitulo.Location = New System.Drawing.Point(525, 0)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(240, 50)
-        Me.lblTitulo.TabIndex = 3
+        Me.lblTitulo.TabIndex = 2
         Me.lblTitulo.Text = "Cliente Pessoa Física"
         '
         'lblIDCliente
@@ -195,11 +200,11 @@ Partial Class frmClientePF
         '
         'txtCEP
         '
-        Me.txtCEP.Location = New System.Drawing.Point(264, 370)
+        Me.txtCEP.Location = New System.Drawing.Point(264, 406)
         Me.txtCEP.Mask = "00000-000"
         Me.txtCEP.Name = "txtCEP"
         Me.txtCEP.Size = New System.Drawing.Size(94, 27)
-        Me.txtCEP.TabIndex = 13
+        Me.txtCEP.TabIndex = 34
         Me.txtCEP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label15
@@ -207,10 +212,10 @@ Partial Class frmClientePF
         Me.Label15.AutoSize = True
         Me.Label15.BackColor = System.Drawing.Color.Transparent
         Me.Label15.ForeColor = System.Drawing.Color.Black
-        Me.Label15.Location = New System.Drawing.Point(228, 374)
+        Me.Label15.Location = New System.Drawing.Point(228, 410)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(34, 19)
-        Me.Label15.TabIndex = 15
+        Me.Label15.TabIndex = 33
         Me.Label15.Text = "CEP"
         '
         'Label8
@@ -218,10 +223,10 @@ Partial Class frmClientePF
         Me.Label8.AutoSize = True
         Me.Label8.BackColor = System.Drawing.Color.Transparent
         Me.Label8.ForeColor = System.Drawing.Color.Black
-        Me.Label8.Location = New System.Drawing.Point(134, 373)
+        Me.Label8.Location = New System.Drawing.Point(134, 409)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(26, 19)
-        Me.Label8.TabIndex = 15
+        Me.Label8.TabIndex = 31
         Me.Label8.Text = "UF"
         '
         'Label7
@@ -229,10 +234,10 @@ Partial Class frmClientePF
         Me.Label7.AutoSize = True
         Me.Label7.BackColor = System.Drawing.Color.Transparent
         Me.Label7.ForeColor = System.Drawing.Color.Black
-        Me.Label7.Location = New System.Drawing.Point(458, 338)
+        Me.Label7.Location = New System.Drawing.Point(458, 374)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(54, 19)
-        Me.Label7.TabIndex = 15
+        Me.Label7.TabIndex = 29
         Me.Label7.Text = "Cidade"
         '
         'Label10
@@ -240,10 +245,10 @@ Partial Class frmClientePF
         Me.Label10.AutoSize = True
         Me.Label10.BackColor = System.Drawing.Color.Transparent
         Me.Label10.ForeColor = System.Drawing.Color.Black
-        Me.Label10.Location = New System.Drawing.Point(320, 406)
+        Me.Label10.Location = New System.Drawing.Point(320, 442)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(55, 19)
-        Me.Label10.TabIndex = 15
+        Me.Label10.TabIndex = 37
         Me.Label10.Text = "Celular"
         '
         'Label9
@@ -251,10 +256,10 @@ Partial Class frmClientePF
         Me.Label9.AutoSize = True
         Me.Label9.BackColor = System.Drawing.Color.Transparent
         Me.Label9.ForeColor = System.Drawing.Color.Black
-        Me.Label9.Location = New System.Drawing.Point(95, 406)
+        Me.Label9.Location = New System.Drawing.Point(95, 442)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(65, 19)
-        Me.Label9.TabIndex = 15
+        Me.Label9.TabIndex = 35
         Me.Label9.Text = "Telefone"
         '
         'Label16
@@ -262,10 +267,10 @@ Partial Class frmClientePF
         Me.Label16.AutoSize = True
         Me.Label16.BackColor = System.Drawing.Color.Transparent
         Me.Label16.ForeColor = System.Drawing.Color.Black
-        Me.Label16.Location = New System.Drawing.Point(111, 439)
+        Me.Label16.Location = New System.Drawing.Point(111, 475)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(51, 19)
-        Me.Label16.TabIndex = 15
+        Me.Label16.TabIndex = 39
         Me.Label16.Text = "e-Mail"
         '
         'Label6
@@ -273,10 +278,10 @@ Partial Class frmClientePF
         Me.Label6.AutoSize = True
         Me.Label6.BackColor = System.Drawing.Color.Transparent
         Me.Label6.ForeColor = System.Drawing.Color.Black
-        Me.Label6.Location = New System.Drawing.Point(112, 338)
+        Me.Label6.Location = New System.Drawing.Point(112, 374)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(48, 19)
-        Me.Label6.TabIndex = 15
+        Me.Label6.TabIndex = 27
         Me.Label6.Text = "Bairro"
         '
         'Label5
@@ -284,55 +289,55 @@ Partial Class frmClientePF
         Me.Label5.AutoSize = True
         Me.Label5.BackColor = System.Drawing.Color.Transparent
         Me.Label5.ForeColor = System.Drawing.Color.Black
-        Me.Label5.Location = New System.Drawing.Point(91, 305)
+        Me.Label5.Location = New System.Drawing.Point(91, 341)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(69, 19)
-        Me.Label5.TabIndex = 15
+        Me.Label5.TabIndex = 25
         Me.Label5.Text = "Endereço"
         '
         'txtEmail
         '
-        Me.txtEmail.Location = New System.Drawing.Point(168, 436)
+        Me.txtEmail.Location = New System.Drawing.Point(168, 472)
         Me.txtEmail.MaxLength = 100
         Me.txtEmail.Name = "txtEmail"
         Me.txtEmail.Size = New System.Drawing.Size(357, 27)
-        Me.txtEmail.TabIndex = 16
+        Me.txtEmail.TabIndex = 40
         Me.txtEmail.Tag = "nexttab"
         '
         'txtBairro
         '
-        Me.txtBairro.Location = New System.Drawing.Point(168, 335)
+        Me.txtBairro.Location = New System.Drawing.Point(168, 371)
         Me.txtBairro.MaxLength = 30
         Me.txtBairro.Name = "txtBairro"
         Me.txtBairro.Size = New System.Drawing.Size(279, 27)
-        Me.txtBairro.TabIndex = 10
+        Me.txtBairro.TabIndex = 28
         '
         'txtEndereco
         '
         Me.txtEndereco.BackColor = System.Drawing.Color.White
-        Me.txtEndereco.Location = New System.Drawing.Point(168, 302)
+        Me.txtEndereco.Location = New System.Drawing.Point(168, 338)
         Me.txtEndereco.Name = "txtEndereco"
         Me.txtEndereco.Size = New System.Drawing.Size(541, 27)
-        Me.txtEndereco.TabIndex = 9
+        Me.txtEndereco.TabIndex = 26
         '
         'txtUF
         '
         Me.txtUF.BackColor = System.Drawing.Color.White
         Me.txtUF.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtUF.Location = New System.Drawing.Point(168, 370)
+        Me.txtUF.Location = New System.Drawing.Point(168, 406)
         Me.txtUF.MaxLength = 2
         Me.txtUF.Name = "txtUF"
         Me.txtUF.Size = New System.Drawing.Size(46, 27)
-        Me.txtUF.TabIndex = 12
+        Me.txtUF.TabIndex = 32
         '
         'txtCidade
         '
         Me.txtCidade.BackColor = System.Drawing.Color.White
-        Me.txtCidade.Location = New System.Drawing.Point(518, 335)
+        Me.txtCidade.Location = New System.Drawing.Point(518, 371)
         Me.txtCidade.MaxLength = 50
         Me.txtCidade.Name = "txtCidade"
         Me.txtCidade.Size = New System.Drawing.Size(191, 27)
-        Me.txtCidade.TabIndex = 11
+        Me.txtCidade.TabIndex = 30
         '
         'Label36
         '
@@ -342,7 +347,7 @@ Partial Class frmClientePF
         Me.Label36.Location = New System.Drawing.Point(19, 19)
         Me.Label36.Name = "Label36"
         Me.Label36.Size = New System.Drawing.Size(108, 23)
-        Me.Label36.TabIndex = 2
+        Me.Label36.TabIndex = 1
         Me.Label36.Text = "IDENTIDADE"
         '
         'txtIgreja
@@ -351,7 +356,7 @@ Partial Class frmClientePF
         Me.txtIgreja.MaxLength = 50
         Me.txtIgreja.Name = "txtIgreja"
         Me.txtIgreja.Size = New System.Drawing.Size(451, 27)
-        Me.txtIgreja.TabIndex = 10
+        Me.txtIgreja.TabIndex = 26
         '
         'Label32
         '
@@ -360,7 +365,7 @@ Partial Class frmClientePF
         Me.Label32.Location = New System.Drawing.Point(116, 441)
         Me.Label32.Name = "Label32"
         Me.Label32.Size = New System.Drawing.Size(46, 19)
-        Me.Label32.TabIndex = 2
+        Me.Label32.TabIndex = 25
         Me.Label32.Text = "Igreja"
         '
         'txtIgrejaFuncao
@@ -369,7 +374,7 @@ Partial Class frmClientePF
         Me.txtIgrejaFuncao.MaxLength = 30
         Me.txtIgrejaFuncao.Name = "txtIgrejaFuncao"
         Me.txtIgrejaFuncao.Size = New System.Drawing.Size(164, 27)
-        Me.txtIgrejaFuncao.TabIndex = 12
+        Me.txtIgrejaFuncao.TabIndex = 30
         Me.txtIgrejaFuncao.Tag = "nexttab"
         '
         'Label31
@@ -379,7 +384,7 @@ Partial Class frmClientePF
         Me.Label31.Location = New System.Drawing.Point(394, 476)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(55, 19)
-        Me.Label31.TabIndex = 2
+        Me.Label31.TabIndex = 29
         Me.Label31.Text = "Função"
         '
         'txtIgrejaAtuacao
@@ -388,7 +393,7 @@ Partial Class frmClientePF
         Me.txtIgrejaAtuacao.MaxLength = 50
         Me.txtIgrejaAtuacao.Name = "txtIgrejaAtuacao"
         Me.txtIgrejaAtuacao.Size = New System.Drawing.Size(220, 27)
-        Me.txtIgrejaAtuacao.TabIndex = 11
+        Me.txtIgrejaAtuacao.TabIndex = 28
         '
         'Label30
         '
@@ -397,7 +402,7 @@ Partial Class frmClientePF
         Me.Label30.Location = New System.Drawing.Point(100, 475)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(62, 19)
-        Me.Label30.TabIndex = 2
+        Me.Label30.TabIndex = 27
         Me.Label30.Text = "Atuação"
         '
         'Label29
@@ -408,7 +413,7 @@ Partial Class frmClientePF
         Me.Label29.Location = New System.Drawing.Point(62, 402)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(65, 23)
-        Me.Label29.TabIndex = 2
+        Me.Label29.TabIndex = 24
         Me.Label29.Text = "IGREJA"
         '
         'Label28
@@ -418,7 +423,7 @@ Partial Class frmClientePF
         Me.Label28.Location = New System.Drawing.Point(77, 300)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(85, 19)
-        Me.Label28.TabIndex = 2
+        Me.Label28.TabIndex = 18
         Me.Label28.Text = "Estado Civil"
         '
         'cmbEstadoCivil
@@ -429,7 +434,7 @@ Partial Class frmClientePF
         Me.cmbEstadoCivil.Location = New System.Drawing.Point(168, 298)
         Me.cmbEstadoCivil.Name = "cmbEstadoCivil"
         Me.cmbEstadoCivil.Size = New System.Drawing.Size(207, 27)
-        Me.cmbEstadoCivil.TabIndex = 7
+        Me.cmbEstadoCivil.TabIndex = 19
         '
         'Label27
         '
@@ -438,7 +443,7 @@ Partial Class frmClientePF
         Me.Label27.Location = New System.Drawing.Point(112, 366)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(50, 19)
-        Me.Label27.TabIndex = 20
+        Me.Label27.TabIndex = 22
         Me.Label27.Text = "Renda"
         '
         'txtConjuge
@@ -447,7 +452,7 @@ Partial Class frmClientePF
         Me.txtConjuge.MaxLength = 50
         Me.txtConjuge.Name = "txtConjuge"
         Me.txtConjuge.Size = New System.Drawing.Size(451, 27)
-        Me.txtConjuge.TabIndex = 8
+        Me.txtConjuge.TabIndex = 21
         '
         'Label26
         '
@@ -456,7 +461,7 @@ Partial Class frmClientePF
         Me.Label26.Location = New System.Drawing.Point(115, 333)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(47, 19)
-        Me.Label26.TabIndex = 2
+        Me.Label26.TabIndex = 20
         Me.Label26.Text = "Nome"
         '
         'Label25
@@ -467,7 +472,7 @@ Partial Class frmClientePF
         Me.Label25.Location = New System.Drawing.Point(19, 262)
         Me.Label25.Name = "Label25"
         Me.Label25.Size = New System.Drawing.Size(85, 23)
-        Me.Label25.TabIndex = 2
+        Me.Label25.TabIndex = 17
         Me.Label25.Text = "CÔNJUGE"
         '
         'Label24
@@ -477,7 +482,7 @@ Partial Class frmClientePF
         Me.Label24.Location = New System.Drawing.Point(358, 228)
         Me.Label24.Name = "Label24"
         Me.Label24.Size = New System.Drawing.Size(50, 19)
-        Me.Label24.TabIndex = 20
+        Me.Label24.TabIndex = 15
         Me.Label24.Text = "Renda"
         '
         'Label22
@@ -487,7 +492,7 @@ Partial Class frmClientePF
         Me.Label22.Location = New System.Drawing.Point(97, 227)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(65, 19)
-        Me.Label22.TabIndex = 20
+        Me.Label22.TabIndex = 13
         Me.Label22.Text = "Telefone"
         '
         'Label23
@@ -497,7 +502,7 @@ Partial Class frmClientePF
         Me.Label23.Location = New System.Drawing.Point(107, 195)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(55, 19)
-        Me.Label23.TabIndex = 2
+        Me.Label23.TabIndex = 11
         Me.Label23.Text = "Função"
         '
         'txtTrabalhoFuncao
@@ -506,7 +511,7 @@ Partial Class frmClientePF
         Me.txtTrabalhoFuncao.MaxLength = 50
         Me.txtTrabalhoFuncao.Name = "txtTrabalhoFuncao"
         Me.txtTrabalhoFuncao.Size = New System.Drawing.Size(346, 27)
-        Me.txtTrabalhoFuncao.TabIndex = 4
+        Me.txtTrabalhoFuncao.TabIndex = 12
         '
         'Label21
         '
@@ -516,7 +521,7 @@ Partial Class frmClientePF
         Me.Label21.Location = New System.Drawing.Point(19, 126)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(98, 23)
-        Me.Label21.TabIndex = 2
+        Me.Label21.TabIndex = 8
         Me.Label21.Text = "TRABALHO"
         '
         'Label19
@@ -526,7 +531,7 @@ Partial Class frmClientePF
         Me.Label19.Location = New System.Drawing.Point(91, 90)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(71, 19)
-        Me.Label19.TabIndex = 2
+        Me.Label19.TabIndex = 6
         Me.Label19.Text = "Exp. Data"
         '
         'Label18
@@ -536,7 +541,7 @@ Partial Class frmClientePF
         Me.Label18.Location = New System.Drawing.Point(331, 58)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(80, 19)
-        Me.Label18.TabIndex = 2
+        Me.Label18.TabIndex = 4
         Me.Label18.Text = "Orgão Exp."
         '
         'Label20
@@ -546,7 +551,7 @@ Partial Class frmClientePF
         Me.Label20.Location = New System.Drawing.Point(97, 161)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(65, 19)
-        Me.Label20.TabIndex = 2
+        Me.Label20.TabIndex = 9
         Me.Label20.Text = "Empresa"
         '
         'Label17
@@ -566,7 +571,7 @@ Partial Class frmClientePF
         Me.txtIdentidadeOrgao.MaxLength = 10
         Me.txtIdentidadeOrgao.Name = "txtIdentidadeOrgao"
         Me.txtIdentidadeOrgao.Size = New System.Drawing.Size(163, 27)
-        Me.txtIdentidadeOrgao.TabIndex = 1
+        Me.txtIdentidadeOrgao.TabIndex = 5
         '
         'txtTrabalhoContratante
         '
@@ -574,7 +579,7 @@ Partial Class frmClientePF
         Me.txtTrabalhoContratante.MaxLength = 50
         Me.txtTrabalhoContratante.Name = "txtTrabalhoContratante"
         Me.txtTrabalhoContratante.Size = New System.Drawing.Size(346, 27)
-        Me.txtTrabalhoContratante.TabIndex = 3
+        Me.txtTrabalhoContratante.TabIndex = 10
         '
         'txtIdentidade
         '
@@ -583,7 +588,7 @@ Partial Class frmClientePF
         Me.txtIdentidade.MaxLength = 20
         Me.txtIdentidade.Name = "txtIdentidade"
         Me.txtIdentidade.Size = New System.Drawing.Size(148, 27)
-        Me.txtIdentidade.TabIndex = 0
+        Me.txtIdentidade.TabIndex = 3
         '
         'Label43
         '
@@ -635,38 +640,38 @@ Partial Class frmClientePF
         Me.dgvReferencias.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
         Me.dgvReferencias.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable
         Me.dgvReferencias.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.FloralWhite
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvReferencias.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.BackColor = System.Drawing.Color.FloralWhite
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvReferencias.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
         Me.dgvReferencias.ColumnHeadersHeight = 25
         Me.dgvReferencias.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvReferencias.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ReferenciaNome, Me.Afinidade, Me.ReferenciaTelefone})
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvReferencias.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvReferencias.DefaultCellStyle = DataGridViewCellStyle8
         Me.dgvReferencias.EnableHeadersVisualStyles = False
         Me.dgvReferencias.Location = New System.Drawing.Point(168, 315)
         Me.dgvReferencias.MultiSelect = False
         Me.dgvReferencias.Name = "dgvReferencias"
         Me.dgvReferencias.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.Color.FloralWhite
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvReferencias.RowHeadersDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle9.BackColor = System.Drawing.Color.FloralWhite
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvReferencias.RowHeadersDefaultCellStyle = DataGridViewCellStyle9
         Me.dgvReferencias.RowHeadersWidth = 30
         Me.dgvReferencias.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvReferencias.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
@@ -678,8 +683,8 @@ Partial Class frmClientePF
         '
         Me.ReferenciaNome.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
         Me.ReferenciaNome.DataPropertyName = "ReferenciaNome"
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
-        Me.ReferenciaNome.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle7.BackColor = System.Drawing.Color.White
+        Me.ReferenciaNome.DefaultCellStyle = DataGridViewCellStyle7
         Me.ReferenciaNome.HeaderText = "Nome"
         Me.ReferenciaNome.Name = "ReferenciaNome"
         Me.ReferenciaNome.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
@@ -744,7 +749,7 @@ Partial Class frmClientePF
         Me.lbl_IdTexto.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lbl_IdTexto.Name = "lbl_IdTexto"
         Me.lbl_IdTexto.Size = New System.Drawing.Size(35, 13)
-        Me.lbl_IdTexto.TabIndex = 43
+        Me.lbl_IdTexto.TabIndex = 1
         Me.lbl_IdTexto.Text = "Reg."
         Me.lbl_IdTexto.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
@@ -944,7 +949,7 @@ Partial Class frmClientePF
         Me.tabPrincipal.Padding = New System.Windows.Forms.Padding(0, 45, 0, 0)
         Me.tabPrincipal.Size = New System.Drawing.Size(756, 560)
         Me.tabPrincipal.TabAlignment = VIBlend.WinForms.Controls.vTabPageAlignment.Top
-        Me.tabPrincipal.TabIndex = 0
+        Me.tabPrincipal.TabIndex = 1
         Me.tabPrincipal.TabPages.Add(Me.vtab1)
         Me.tabPrincipal.TabPages.Add(Me.vtab2)
         Me.tabPrincipal.TabPages.Add(Me.vtab3)
@@ -956,6 +961,10 @@ Partial Class frmClientePF
         '
         'vtab1
         '
+        Me.vtab1.Controls.Add(Me.dtpNascimentoData)
+        Me.vtab1.Controls.Add(Me.Label45)
+        Me.vtab1.Controls.Add(Me.Label44)
+        Me.vtab1.Controls.Add(Me.dtpClienteDesde)
         Me.vtab1.Controls.Add(Me.btnProcuraRG)
         Me.vtab1.Controls.Add(Me.txtRGCliente)
         Me.vtab1.Controls.Add(Me.Label34)
@@ -964,7 +973,6 @@ Partial Class frmClientePF
         Me.vtab1.Controls.Add(Me.txtClienteNome)
         Me.vtab1.Controls.Add(Me.txtTelefoneA)
         Me.vtab1.Controls.Add(Me.Label40)
-        Me.vtab1.Controls.Add(Me.txtNascimentoData)
         Me.vtab1.Controls.Add(Me.txtCidade)
         Me.vtab1.Controls.Add(Me.cmbSexo)
         Me.vtab1.Controls.Add(Me.txtMae)
@@ -1002,7 +1010,7 @@ Partial Class frmClientePF
         Me.vtab1.Padding = New System.Windows.Forms.Padding(0)
         Me.vtab1.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.vtab1.Size = New System.Drawing.Size(756, 515)
-        Me.vtab1.TabIndex = 3
+        Me.vtab1.TabIndex = 0
         Me.vtab1.Text = "Dados Principais"
         Me.vtab1.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.vtab1.TooltipText = "TabPage"
@@ -1010,18 +1018,48 @@ Partial Class frmClientePF
         Me.vtab1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
         Me.vtab1.Visible = False
         '
+        'Label45
+        '
+        Me.Label45.AutoSize = True
+        Me.Label45.BackColor = System.Drawing.Color.Transparent
+        Me.Label45.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label45.Location = New System.Drawing.Point(19, 21)
+        Me.Label45.Name = "Label45"
+        Me.Label45.Size = New System.Drawing.Size(98, 23)
+        Me.Label45.TabIndex = 1
+        Me.Label45.Text = "CADASTRO"
+        '
+        'Label44
+        '
+        Me.Label44.AutoSize = True
+        Me.Label44.BackColor = System.Drawing.Color.Transparent
+        Me.Label44.ForeColor = System.Drawing.Color.Black
+        Me.Label44.Location = New System.Drawing.Point(291, 61)
+        Me.Label44.Name = "Label44"
+        Me.Label44.Size = New System.Drawing.Size(100, 19)
+        Me.Label44.TabIndex = 5
+        Me.Label44.Text = "Cliente Desde"
+        '
+        'dtpClienteDesde
+        '
+        Me.dtpClienteDesde.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpClienteDesde.Location = New System.Drawing.Point(397, 57)
+        Me.dtpClienteDesde.Name = "dtpClienteDesde"
+        Me.dtpClienteDesde.Size = New System.Drawing.Size(131, 27)
+        Me.dtpClienteDesde.TabIndex = 6
+        '
         'btnProcuraRG
         '
         Me.btnProcuraRG.AllowAnimations = True
         Me.btnProcuraRG.BackColor = System.Drawing.Color.Transparent
         Me.btnProcuraRG.FlatAppearance.BorderColor = System.Drawing.Color.Black
         Me.btnProcuraRG.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnProcuraRG.Location = New System.Drawing.Point(675, 85)
+        Me.btnProcuraRG.Location = New System.Drawing.Point(240, 55)
         Me.btnProcuraRG.Name = "btnProcuraRG"
         Me.btnProcuraRG.RoundedCornersMask = CType(15, Byte)
         Me.btnProcuraRG.RoundedCornersRadius = 0
         Me.btnProcuraRG.Size = New System.Drawing.Size(34, 30)
-        Me.btnProcuraRG.TabIndex = 31
+        Me.btnProcuraRG.TabIndex = 4
         Me.btnProcuraRG.TabStop = False
         Me.btnProcuraRG.Text = "..."
         Me.btnProcuraRG.UseCompatibleTextRendering = True
@@ -1030,10 +1068,10 @@ Partial Class frmClientePF
         '
         'txtRGCliente
         '
-        Me.txtRGCliente.Location = New System.Drawing.Point(615, 87)
+        Me.txtRGCliente.Location = New System.Drawing.Point(168, 57)
         Me.txtRGCliente.MaxLength = 10
         Me.txtRGCliente.Name = "txtRGCliente"
-        Me.txtRGCliente.Size = New System.Drawing.Size(54, 27)
+        Me.txtRGCliente.Size = New System.Drawing.Size(66, 27)
         Me.txtRGCliente.TabIndex = 3
         '
         'Label34
@@ -1041,96 +1079,87 @@ Partial Class frmClientePF
         Me.Label34.AutoSize = True
         Me.Label34.BackColor = System.Drawing.Color.Transparent
         Me.Label34.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label34.Location = New System.Drawing.Point(19, 264)
+        Me.Label34.Location = New System.Drawing.Point(19, 306)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(96, 23)
-        Me.Label34.TabIndex = 29
+        Me.Label34.TabIndex = 24
         Me.Label34.Text = "ENDEREÇO"
         '
         'txtTelefoneB
         '
-        Me.txtTelefoneB.Location = New System.Drawing.Point(381, 403)
+        Me.txtTelefoneB.Location = New System.Drawing.Point(381, 439)
         Me.txtTelefoneB.Mask = "(99) 99000-0000"
         Me.txtTelefoneB.Name = "txtTelefoneB"
         Me.txtTelefoneB.Size = New System.Drawing.Size(144, 27)
-        Me.txtTelefoneB.TabIndex = 15
+        Me.txtTelefoneB.TabIndex = 38
         '
         'Label33
         '
         Me.Label33.AutoSize = True
         Me.Label33.BackColor = System.Drawing.Color.Transparent
         Me.Label33.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label33.Location = New System.Drawing.Point(19, 19)
+        Me.Label33.Location = New System.Drawing.Point(19, 98)
         Me.Label33.Name = "Label33"
         Me.Label33.Size = New System.Drawing.Size(86, 23)
-        Me.Label33.TabIndex = 29
+        Me.Label33.TabIndex = 9
         Me.Label33.Text = "PESSOAIS"
         '
         'txtClienteNome
         '
         Me.txtClienteNome.BackColor = System.Drawing.Color.White
-        Me.txtClienteNome.Location = New System.Drawing.Point(168, 54)
+        Me.txtClienteNome.Location = New System.Drawing.Point(168, 133)
         Me.txtClienteNome.MaxLength = 50
         Me.txtClienteNome.Name = "txtClienteNome"
         Me.txtClienteNome.Size = New System.Drawing.Size(541, 27)
-        Me.txtClienteNome.TabIndex = 0
+        Me.txtClienteNome.TabIndex = 11
         '
         'txtTelefoneA
         '
-        Me.txtTelefoneA.Location = New System.Drawing.Point(168, 403)
+        Me.txtTelefoneA.Location = New System.Drawing.Point(168, 439)
         Me.txtTelefoneA.Mask = "(99) 99000-0000"
         Me.txtTelefoneA.Name = "txtTelefoneA"
         Me.txtTelefoneA.Size = New System.Drawing.Size(144, 27)
-        Me.txtTelefoneA.TabIndex = 14
+        Me.txtTelefoneA.TabIndex = 36
         '
         'Label40
         '
         Me.Label40.AutoSize = True
         Me.Label40.BackColor = System.Drawing.Color.Transparent
         Me.Label40.ForeColor = System.Drawing.Color.Black
-        Me.Label40.Location = New System.Drawing.Point(551, 89)
+        Me.Label40.Location = New System.Drawing.Point(68, 61)
         Me.Label40.Name = "Label40"
-        Me.Label40.Size = New System.Drawing.Size(60, 19)
-        Me.Label40.TabIndex = 26
-        Me.Label40.Text = "RegAnt."
-        '
-        'txtNascimentoData
-        '
-        Me.txtNascimentoData.Location = New System.Drawing.Point(168, 120)
-        Me.txtNascimentoData.Mask = "00/00/0000"
-        Me.txtNascimentoData.Name = "txtNascimentoData"
-        Me.txtNascimentoData.Size = New System.Drawing.Size(124, 27)
-        Me.txtNascimentoData.TabIndex = 4
-        Me.txtNascimentoData.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.Label40.Size = New System.Drawing.Size(94, 19)
+        Me.Label40.TabIndex = 2
+        Me.Label40.Text = "Reg. Anterior"
         '
         'cmbSexo
         '
         Me.cmbSexo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cmbSexo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cmbSexo.FormattingEnabled = True
-        Me.cmbSexo.Location = New System.Drawing.Point(381, 120)
+        Me.cmbSexo.Location = New System.Drawing.Point(358, 166)
         Me.cmbSexo.Name = "cmbSexo"
-        Me.cmbSexo.Size = New System.Drawing.Size(157, 27)
-        Me.cmbSexo.TabIndex = 5
+        Me.cmbSexo.Size = New System.Drawing.Size(119, 27)
+        Me.cmbSexo.TabIndex = 15
         '
         'txtMae
         '
         Me.txtMae.BackColor = System.Drawing.Color.White
-        Me.txtMae.Location = New System.Drawing.Point(168, 219)
+        Me.txtMae.Location = New System.Drawing.Point(168, 265)
         Me.txtMae.MaxLength = 50
         Me.txtMae.Name = "txtMae"
         Me.txtMae.Size = New System.Drawing.Size(541, 27)
-        Me.txtMae.TabIndex = 8
+        Me.txtMae.TabIndex = 23
         '
         'Label3
         '
         Me.Label3.AutoSize = True
         Me.Label3.BackColor = System.Drawing.Color.Transparent
         Me.Label3.ForeColor = System.Drawing.Color.Black
-        Me.Label3.Location = New System.Drawing.Point(80, 122)
+        Me.Label3.Location = New System.Drawing.Point(80, 168)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(80, 19)
-        Me.Label3.TabIndex = 15
+        Me.Label3.TabIndex = 12
         Me.Label3.Text = "Data Nasc."
         '
         'Label13
@@ -1138,10 +1167,10 @@ Partial Class frmClientePF
         Me.Label13.AutoSize = True
         Me.Label13.BackColor = System.Drawing.Color.Transparent
         Me.Label13.ForeColor = System.Drawing.Color.Black
-        Me.Label13.Location = New System.Drawing.Point(131, 189)
+        Me.Label13.Location = New System.Drawing.Point(131, 235)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(29, 19)
-        Me.Label13.TabIndex = 16
+        Me.Label13.TabIndex = 20
         Me.Label13.Text = "Pai"
         '
         'Label4
@@ -1149,10 +1178,10 @@ Partial Class frmClientePF
         Me.Label4.AutoSize = True
         Me.Label4.BackColor = System.Drawing.Color.Transparent
         Me.Label4.ForeColor = System.Drawing.Color.Black
-        Me.Label4.Location = New System.Drawing.Point(127, 90)
+        Me.Label4.Location = New System.Drawing.Point(544, 61)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(33, 19)
-        Me.Label4.TabIndex = 16
+        Me.Label4.TabIndex = 7
         Me.Label4.Text = "CPF"
         '
         'Label35
@@ -1160,48 +1189,48 @@ Partial Class frmClientePF
         Me.Label35.AutoSize = True
         Me.Label35.BackColor = System.Drawing.Color.Transparent
         Me.Label35.ForeColor = System.Drawing.Color.Black
-        Me.Label35.Location = New System.Drawing.Point(304, 91)
+        Me.Label35.Location = New System.Drawing.Point(491, 169)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(70, 19)
-        Me.Label35.TabIndex = 26
+        Me.Label35.TabIndex = 16
         Me.Label35.Text = "Atividade"
         '
         'txtPai
         '
         Me.txtPai.BackColor = System.Drawing.Color.White
-        Me.txtPai.Location = New System.Drawing.Point(168, 186)
+        Me.txtPai.Location = New System.Drawing.Point(168, 232)
         Me.txtPai.MaxLength = 50
         Me.txtPai.Name = "txtPai"
         Me.txtPai.Size = New System.Drawing.Size(541, 27)
-        Me.txtPai.TabIndex = 7
+        Me.txtPai.TabIndex = 21
         '
         'txtNaturalidade
         '
-        Me.txtNaturalidade.Location = New System.Drawing.Point(168, 153)
+        Me.txtNaturalidade.Location = New System.Drawing.Point(168, 199)
         Me.txtNaturalidade.MaxLength = 50
         Me.txtNaturalidade.Name = "txtNaturalidade"
         Me.txtNaturalidade.Size = New System.Drawing.Size(279, 27)
-        Me.txtNaturalidade.TabIndex = 6
+        Me.txtNaturalidade.TabIndex = 19
         '
         'cmbRGAtividade
         '
         Me.cmbRGAtividade.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cmbRGAtividade.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cmbRGAtividade.FormattingEnabled = True
-        Me.cmbRGAtividade.Location = New System.Drawing.Point(381, 88)
+        Me.cmbRGAtividade.Location = New System.Drawing.Point(567, 166)
         Me.cmbRGAtividade.Name = "cmbRGAtividade"
-        Me.cmbRGAtividade.Size = New System.Drawing.Size(157, 27)
-        Me.cmbRGAtividade.TabIndex = 2
+        Me.cmbRGAtividade.Size = New System.Drawing.Size(142, 27)
+        Me.cmbRGAtividade.TabIndex = 17
         '
         'lblCPF_Texto
         '
         Me.lblCPF_Texto.BackColor = System.Drawing.Color.WhiteSmoke
         Me.lblCPF_Texto.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lblCPF_Texto.Location = New System.Drawing.Point(168, 87)
+        Me.lblCPF_Texto.Location = New System.Drawing.Point(585, 57)
         Me.lblCPF_Texto.Margin = New System.Windows.Forms.Padding(3)
         Me.lblCPF_Texto.Name = "lblCPF_Texto"
         Me.lblCPF_Texto.Size = New System.Drawing.Size(124, 27)
-        Me.lblCPF_Texto.TabIndex = 1
+        Me.lblCPF_Texto.TabIndex = 8
         Me.lblCPF_Texto.Text = "000.000.000-00"
         Me.lblCPF_Texto.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -1210,10 +1239,10 @@ Partial Class frmClientePF
         Me.Label2.AutoSize = True
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(113, 56)
+        Me.Label2.Location = New System.Drawing.Point(113, 135)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(47, 19)
-        Me.Label2.TabIndex = 16
+        Me.Label2.TabIndex = 10
         Me.Label2.Text = "Nome"
         '
         'Label11
@@ -1221,10 +1250,10 @@ Partial Class frmClientePF
         Me.Label11.AutoSize = True
         Me.Label11.BackColor = System.Drawing.Color.Transparent
         Me.Label11.ForeColor = System.Drawing.Color.Black
-        Me.Label11.Location = New System.Drawing.Point(335, 123)
+        Me.Label11.Location = New System.Drawing.Point(313, 169)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(39, 19)
-        Me.Label11.TabIndex = 15
+        Me.Label11.TabIndex = 14
         Me.Label11.Text = "Sexo"
         '
         'Label12
@@ -1232,10 +1261,10 @@ Partial Class frmClientePF
         Me.Label12.AutoSize = True
         Me.Label12.BackColor = System.Drawing.Color.Transparent
         Me.Label12.ForeColor = System.Drawing.Color.Black
-        Me.Label12.Location = New System.Drawing.Point(67, 156)
+        Me.Label12.Location = New System.Drawing.Point(67, 202)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(93, 19)
-        Me.Label12.TabIndex = 15
+        Me.Label12.TabIndex = 18
         Me.Label12.Text = "Naturalidade"
         '
         'Label14
@@ -1243,21 +1272,32 @@ Partial Class frmClientePF
         Me.Label14.AutoSize = True
         Me.Label14.BackColor = System.Drawing.Color.Transparent
         Me.Label14.ForeColor = System.Drawing.Color.Black
-        Me.Label14.Location = New System.Drawing.Point(122, 222)
+        Me.Label14.Location = New System.Drawing.Point(122, 268)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(38, 19)
-        Me.Label14.TabIndex = 16
+        Me.Label14.TabIndex = 22
         Me.Label14.Text = "Mãe"
+        Me.Label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'ShapeContainer2
         '
         Me.ShapeContainer2.Location = New System.Drawing.Point(4, 4)
         Me.ShapeContainer2.Margin = New System.Windows.Forms.Padding(0)
         Me.ShapeContainer2.Name = "ShapeContainer2"
-        Me.ShapeContainer2.Shapes.AddRange(New Microsoft.VisualBasic.PowerPacks.Shape() {Me.LineShape3, Me.LineShape2})
+        Me.ShapeContainer2.Shapes.AddRange(New Microsoft.VisualBasic.PowerPacks.Shape() {Me.LineShape10, Me.LineShape3, Me.LineShape2})
         Me.ShapeContainer2.Size = New System.Drawing.Size(748, 507)
-        Me.ShapeContainer2.TabIndex = 30
+        Me.ShapeContainer2.TabIndex = 0
         Me.ShapeContainer2.TabStop = False
+        '
+        'LineShape10
+        '
+        Me.LineShape10.BorderColor = System.Drawing.Color.LightSlateGray
+        Me.LineShape10.BorderWidth = 3
+        Me.LineShape10.Name = "LineShape10"
+        Me.LineShape10.X1 = 120
+        Me.LineShape10.X2 = 729
+        Me.LineShape10.Y1 = 27
+        Me.LineShape10.Y2 = 27
         '
         'LineShape3
         '
@@ -1266,8 +1306,8 @@ Partial Class frmClientePF
         Me.LineShape3.Name = "LineShape3"
         Me.LineShape3.X1 = 115
         Me.LineShape3.X2 = 729
-        Me.LineShape3.Y1 = 273
-        Me.LineShape3.Y2 = 273
+        Me.LineShape3.Y1 = 313
+        Me.LineShape3.Y2 = 313
         '
         'LineShape2
         '
@@ -1276,8 +1316,8 @@ Partial Class frmClientePF
         Me.LineShape2.Name = "LineShape2"
         Me.LineShape2.X1 = 105
         Me.LineShape2.X2 = 729
-        Me.LineShape2.Y1 = 27
-        Me.LineShape2.Y2 = 27
+        Me.LineShape2.Y1 = 107
+        Me.LineShape2.Y2 = 107
         '
         'vtab2
         '
@@ -1319,7 +1359,7 @@ Partial Class frmClientePF
         Me.vtab2.Padding = New System.Windows.Forms.Padding(0)
         Me.vtab2.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.vtab2.Size = New System.Drawing.Size(756, 515)
-        Me.vtab2.TabIndex = 4
+        Me.vtab2.TabIndex = 0
         Me.vtab2.Text = "Dados Secundários"
         Me.vtab2.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.vtab2.TooltipText = "TabPage"
@@ -1333,7 +1373,7 @@ Partial Class frmClientePF
         Me.txtConjugeRenda.Name = "txtConjugeRenda"
         Me.txtConjugeRenda.Size = New System.Drawing.Size(102, 27)
         Me.txtConjugeRenda.SomentePositivos = True
-        Me.txtConjugeRenda.TabIndex = 9
+        Me.txtConjugeRenda.TabIndex = 23
         Me.txtConjugeRenda.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txtTrabalhoTelefone
@@ -1342,7 +1382,7 @@ Partial Class frmClientePF
         Me.txtTrabalhoTelefone.Mask = "(99) 99000-0000"
         Me.txtTrabalhoTelefone.Name = "txtTrabalhoTelefone"
         Me.txtTrabalhoTelefone.Size = New System.Drawing.Size(128, 27)
-        Me.txtTrabalhoTelefone.TabIndex = 5
+        Me.txtTrabalhoTelefone.TabIndex = 14
         '
         'txtIdentidadeData
         '
@@ -1350,7 +1390,7 @@ Partial Class frmClientePF
         Me.txtIdentidadeData.Mask = "00/00/0000"
         Me.txtIdentidadeData.Name = "txtIdentidadeData"
         Me.txtIdentidadeData.Size = New System.Drawing.Size(100, 27)
-        Me.txtIdentidadeData.TabIndex = 2
+        Me.txtIdentidadeData.TabIndex = 7
         '
         'txtRenda
         '
@@ -1358,7 +1398,7 @@ Partial Class frmClientePF
         Me.txtRenda.Name = "txtRenda"
         Me.txtRenda.Size = New System.Drawing.Size(102, 27)
         Me.txtRenda.SomentePositivos = True
-        Me.txtRenda.TabIndex = 6
+        Me.txtRenda.TabIndex = 16
         Me.txtRenda.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'ShapeContainer1
@@ -1368,7 +1408,7 @@ Partial Class frmClientePF
         Me.ShapeContainer1.Name = "ShapeContainer1"
         Me.ShapeContainer1.Shapes.AddRange(New Microsoft.VisualBasic.PowerPacks.Shape() {Me.LineShape6, Me.LineShape5, Me.LineShape4, Me.LineShape1})
         Me.ShapeContainer1.Size = New System.Drawing.Size(748, 507)
-        Me.ShapeContainer1.TabIndex = 21
+        Me.ShapeContainer1.TabIndex = 0
         Me.ShapeContainer1.TabStop = False
         '
         'LineShape6
@@ -1435,7 +1475,7 @@ Partial Class frmClientePF
         Me.vtab3.Padding = New System.Windows.Forms.Padding(0)
         Me.vtab3.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.vtab3.Size = New System.Drawing.Size(756, 515)
-        Me.vtab3.TabIndex = 5
+        Me.vtab3.TabIndex = 0
         Me.vtab3.Text = "Outros Dados"
         Me.vtab3.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.vtab3.TooltipText = "TabPage"
@@ -1529,8 +1569,8 @@ Partial Class frmClientePF
         '
         Me.DataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "ReferenciaNome"
-        DataGridViewCellStyle5.BackColor = System.Drawing.Color.White
-        Me.DataGridViewTextBoxColumn1.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle10.BackColor = System.Drawing.Color.White
+        Me.DataGridViewTextBoxColumn1.DefaultCellStyle = DataGridViewCellStyle10
         Me.DataGridViewTextBoxColumn1.HeaderText = "Nome"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
@@ -1562,6 +1602,14 @@ Partial Class frmClientePF
         Me.DataGridViewTextBoxColumn4.HeaderText = "RG"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.Width = 40
+        '
+        'dtpNascimentoData
+        '
+        Me.dtpNascimentoData.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpNascimentoData.Location = New System.Drawing.Point(168, 166)
+        Me.dtpNascimentoData.Name = "dtpNascimentoData"
+        Me.dtpNascimentoData.Size = New System.Drawing.Size(131, 27)
+        Me.dtpNascimentoData.TabIndex = 13
         '
         'frmClientePF
         '
@@ -1677,10 +1725,8 @@ Partial Class frmClientePF
     Friend WithEvents vtab3 As VIBlend.WinForms.Controls.vTabPage
     Friend WithEvents btnFechar As ToolStripButton
     Friend WithEvents PainelInferior As Panel
-    Friend WithEvents Label33 As Label
     Friend WithEvents txtClienteNome As TextBox
     Friend WithEvents Label40 As Label
-    Friend WithEvents txtNascimentoData As Controles.MaskText_Data
     Friend WithEvents cmbSexo As ComboBox
     Friend WithEvents txtMae As TextBox
     Friend WithEvents Label3 As Label
@@ -1720,4 +1766,10 @@ Partial Class frmClientePF
     Friend WithEvents ReferenciaNome As DataGridViewTextBoxColumn
     Friend WithEvents Afinidade As DataGridViewTextBoxColumn
     Friend WithEvents ReferenciaTelefone As DataGridViewTextBoxColumn
+    Friend WithEvents Label44 As Label
+    Friend WithEvents dtpClienteDesde As DateTimePicker
+    Private WithEvents LineShape10 As PowerPacks.LineShape
+    Friend WithEvents Label45 As Label
+    Friend WithEvents Label33 As Label
+    Friend WithEvents dtpNascimentoData As DateTimePicker
 End Class

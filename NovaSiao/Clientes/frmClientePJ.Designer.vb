@@ -79,6 +79,8 @@ Partial Class frmClientePJ
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtNomeFantasia = New System.Windows.Forms.TextBox()
         Me.dtpDataFundacao = New System.Windows.Forms.DateTimePicker()
+        Me.Label44 = New System.Windows.Forms.Label()
+        Me.dtpClienteDesde = New System.Windows.Forms.DateTimePicker()
         Me.Panel1.SuspendLayout()
         Me.PainelInferior.SuspendLayout()
         Me.tsMenuCliente.SuspendLayout()
@@ -90,6 +92,7 @@ Partial Class frmClientePJ
         Me.Panel1.Controls.Add(Me.lblIDCliente)
         Me.Panel1.Controls.Add(Me.lbl_IdTexto)
         Me.Panel1.Size = New System.Drawing.Size(764, 50)
+        Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.lbl_IdTexto, 0)
         Me.Panel1.Controls.SetChildIndex(Me.lblIDCliente, 0)
@@ -137,7 +140,7 @@ Partial Class frmClientePJ
         Me.PainelInferior.Location = New System.Drawing.Point(0, 633)
         Me.PainelInferior.Name = "PainelInferior"
         Me.PainelInferior.Size = New System.Drawing.Size(764, 47)
-        Me.PainelInferior.TabIndex = 41
+        Me.PainelInferior.TabIndex = 43
         '
         'tsMenuCliente
         '
@@ -249,7 +252,7 @@ Partial Class frmClientePJ
         Me.Label42.Location = New System.Drawing.Point(21, 498)
         Me.Label42.Name = "Label42"
         Me.Label42.Size = New System.Drawing.Size(126, 23)
-        Me.Label42.TabIndex = 36
+        Me.Label42.TabIndex = 38
         Me.Label42.Text = "OBSERVAÇÕES"
         '
         'Label37
@@ -259,7 +262,7 @@ Partial Class frmClientePJ
         Me.Label37.Location = New System.Drawing.Point(71, 565)
         Me.Label37.Name = "Label37"
         Me.Label37.Size = New System.Drawing.Size(93, 19)
-        Me.Label37.TabIndex = 39
+        Me.Label37.TabIndex = 41
         Me.Label37.Text = "Observações"
         '
         'txtObservacoes
@@ -269,7 +272,7 @@ Partial Class frmClientePJ
         Me.txtObservacoes.Multiline = True
         Me.txtObservacoes.Name = "txtObservacoes"
         Me.txtObservacoes.Size = New System.Drawing.Size(518, 59)
-        Me.txtObservacoes.TabIndex = 40
+        Me.txtObservacoes.TabIndex = 42
         '
         'Label39
         '
@@ -278,7 +281,7 @@ Partial Class frmClientePJ
         Me.Label39.Location = New System.Drawing.Point(34, 528)
         Me.Label39.Name = "Label39"
         Me.Label39.Size = New System.Drawing.Size(130, 19)
-        Me.Label39.TabIndex = 37
+        Me.Label39.TabIndex = 39
         Me.Label39.Text = "Limite de Compras"
         '
         'txtLimiteCompras
@@ -287,7 +290,7 @@ Partial Class frmClientePJ
         Me.txtLimiteCompras.Name = "txtLimiteCompras"
         Me.txtLimiteCompras.Size = New System.Drawing.Size(124, 27)
         Me.txtLimiteCompras.SomentePositivos = True
-        Me.txtLimiteCompras.TabIndex = 38
+        Me.txtLimiteCompras.TabIndex = 40
         Me.txtLimiteCompras.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'btnProcuraRG
@@ -296,7 +299,7 @@ Partial Class frmClientePJ
         Me.btnProcuraRG.BackColor = System.Drawing.Color.Transparent
         Me.btnProcuraRG.FlatAppearance.BorderColor = System.Drawing.Color.Black
         Me.btnProcuraRG.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnProcuraRG.Location = New System.Drawing.Point(476, 128)
+        Me.btnProcuraRG.Location = New System.Drawing.Point(527, 128)
         Me.btnProcuraRG.Name = "btnProcuraRG"
         Me.btnProcuraRG.RoundedCornersMask = CType(15, Byte)
         Me.btnProcuraRG.RoundedCornersRadius = 0
@@ -310,7 +313,7 @@ Partial Class frmClientePJ
         '
         'txtRGCliente
         '
-        Me.txtRGCliente.Location = New System.Drawing.Point(413, 128)
+        Me.txtRGCliente.Location = New System.Drawing.Point(464, 128)
         Me.txtRGCliente.MaxLength = 10
         Me.txtRGCliente.Name = "txtRGCliente"
         Me.txtRGCliente.Size = New System.Drawing.Size(57, 27)
@@ -324,7 +327,7 @@ Partial Class frmClientePJ
         Me.Label34.Location = New System.Drawing.Point(21, 300)
         Me.Label34.Name = "Label34"
         Me.Label34.Size = New System.Drawing.Size(96, 23)
-        Me.Label34.TabIndex = 19
+        Me.Label34.TabIndex = 21
         Me.Label34.Text = "ENDEREÇO"
         '
         'txtTelefoneB
@@ -333,7 +336,7 @@ Partial Class frmClientePJ
         Me.txtTelefoneB.Mask = "(99) 99000-0000"
         Me.txtTelefoneB.Name = "txtTelefoneB"
         Me.txtTelefoneB.Size = New System.Drawing.Size(144, 27)
-        Me.txtTelefoneB.TabIndex = 33
+        Me.txtTelefoneB.TabIndex = 35
         '
         'Label33
         '
@@ -361,14 +364,14 @@ Partial Class frmClientePJ
         Me.txtTelefoneA.Mask = "(99) 99000-0000"
         Me.txtTelefoneA.Name = "txtTelefoneA"
         Me.txtTelefoneA.Size = New System.Drawing.Size(144, 27)
-        Me.txtTelefoneA.TabIndex = 31
+        Me.txtTelefoneA.TabIndex = 33
         '
         'Label40
         '
         Me.Label40.AutoSize = True
         Me.Label40.BackColor = System.Drawing.Color.Transparent
         Me.Label40.ForeColor = System.Drawing.Color.Black
-        Me.Label40.Location = New System.Drawing.Point(347, 130)
+        Me.Label40.Location = New System.Drawing.Point(398, 130)
         Me.Label40.Name = "Label40"
         Me.Label40.Size = New System.Drawing.Size(60, 19)
         Me.Label40.TabIndex = 6
@@ -381,7 +384,7 @@ Partial Class frmClientePJ
         Me.txtCidade.MaxLength = 50
         Me.txtCidade.Name = "txtCidade"
         Me.txtCidade.Size = New System.Drawing.Size(191, 27)
-        Me.txtCidade.TabIndex = 25
+        Me.txtCidade.TabIndex = 27
         '
         'txtContatoNome
         '
@@ -390,7 +393,7 @@ Partial Class frmClientePJ
         Me.txtContatoNome.MaxLength = 50
         Me.txtContatoNome.Name = "txtContatoNome"
         Me.txtContatoNome.Size = New System.Drawing.Size(501, 27)
-        Me.txtContatoNome.TabIndex = 18
+        Me.txtContatoNome.TabIndex = 20
         '
         'txtUF
         '
@@ -400,7 +403,7 @@ Partial Class frmClientePJ
         Me.txtUF.MaxLength = 2
         Me.txtUF.Name = "txtUF"
         Me.txtUF.Size = New System.Drawing.Size(46, 27)
-        Me.txtUF.TabIndex = 27
+        Me.txtUF.TabIndex = 29
         '
         'Label3
         '
@@ -419,7 +422,7 @@ Partial Class frmClientePJ
         Me.txtEndereco.Location = New System.Drawing.Point(170, 327)
         Me.txtEndereco.Name = "txtEndereco"
         Me.txtEndereco.Size = New System.Drawing.Size(541, 27)
-        Me.txtEndereco.TabIndex = 21
+        Me.txtEndereco.TabIndex = 23
         '
         'Label16
         '
@@ -429,7 +432,7 @@ Partial Class frmClientePJ
         Me.Label16.Location = New System.Drawing.Point(113, 464)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(51, 19)
-        Me.Label16.TabIndex = 34
+        Me.Label16.TabIndex = 36
         Me.Label16.Text = "e-Mail"
         '
         'Label13
@@ -440,7 +443,7 @@ Partial Class frmClientePJ
         Me.Label13.Location = New System.Drawing.Point(336, 197)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(127, 19)
-        Me.Label13.TabIndex = 13
+        Me.Label13.TabIndex = 15
         Me.Label13.Text = "Inscrição Estadual"
         '
         'txtBairro
@@ -449,7 +452,7 @@ Partial Class frmClientePJ
         Me.txtBairro.MaxLength = 30
         Me.txtBairro.Name = "txtBairro"
         Me.txtBairro.Size = New System.Drawing.Size(279, 27)
-        Me.txtBairro.TabIndex = 23
+        Me.txtBairro.TabIndex = 25
         '
         'Label4
         '
@@ -459,7 +462,7 @@ Partial Class frmClientePJ
         Me.Label4.Location = New System.Drawing.Point(124, 198)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(40, 19)
-        Me.Label4.TabIndex = 11
+        Me.Label4.TabIndex = 13
         Me.Label4.Text = "CNPJ"
         '
         'Label6
@@ -470,7 +473,7 @@ Partial Class frmClientePJ
         Me.Label6.Location = New System.Drawing.Point(116, 363)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(48, 19)
-        Me.Label6.TabIndex = 22
+        Me.Label6.TabIndex = 24
         Me.Label6.Text = "Bairro"
         '
         'Label35
@@ -490,7 +493,7 @@ Partial Class frmClientePJ
         Me.txtEmail.MaxLength = 100
         Me.txtEmail.Name = "txtEmail"
         Me.txtEmail.Size = New System.Drawing.Size(357, 27)
-        Me.txtEmail.TabIndex = 35
+        Me.txtEmail.TabIndex = 37
         '
         'txtInscricaoEstadual
         '
@@ -499,7 +502,7 @@ Partial Class frmClientePJ
         Me.txtInscricaoEstadual.MaxLength = 30
         Me.txtInscricaoEstadual.Name = "txtInscricaoEstadual"
         Me.txtInscricaoEstadual.Size = New System.Drawing.Size(207, 27)
-        Me.txtInscricaoEstadual.TabIndex = 14
+        Me.txtInscricaoEstadual.TabIndex = 16
         '
         'Label5
         '
@@ -509,7 +512,7 @@ Partial Class frmClientePJ
         Me.Label5.Location = New System.Drawing.Point(95, 330)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(69, 19)
-        Me.Label5.TabIndex = 20
+        Me.Label5.TabIndex = 22
         Me.Label5.Text = "Endereço"
         '
         'txtCEP
@@ -518,7 +521,7 @@ Partial Class frmClientePJ
         Me.txtCEP.Mask = "00000-000"
         Me.txtCEP.Name = "txtCEP"
         Me.txtCEP.Size = New System.Drawing.Size(94, 27)
-        Me.txtCEP.TabIndex = 29
+        Me.txtCEP.TabIndex = 31
         Me.txtCEP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'cmbRGAtividade
@@ -539,7 +542,7 @@ Partial Class frmClientePJ
         Me.Label9.Location = New System.Drawing.Point(99, 431)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(65, 19)
-        Me.Label9.TabIndex = 30
+        Me.Label9.TabIndex = 32
         Me.Label9.Text = "Telefone"
         '
         'lblCNPJ_Texto
@@ -550,7 +553,7 @@ Partial Class frmClientePJ
         Me.lblCNPJ_Texto.Margin = New System.Windows.Forms.Padding(3)
         Me.lblCNPJ_Texto.Name = "lblCNPJ_Texto"
         Me.lblCNPJ_Texto.Size = New System.Drawing.Size(159, 27)
-        Me.lblCNPJ_Texto.TabIndex = 12
+        Me.lblCNPJ_Texto.TabIndex = 14
         Me.lblCNPJ_Texto.Text = "00.000.000/0000-00"
         Me.lblCNPJ_Texto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -562,7 +565,7 @@ Partial Class frmClientePJ
         Me.Label15.Location = New System.Drawing.Point(230, 399)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(34, 19)
-        Me.Label15.TabIndex = 28
+        Me.Label15.TabIndex = 30
         Me.Label15.Text = "CEP"
         '
         'Label2
@@ -584,7 +587,7 @@ Partial Class frmClientePJ
         Me.Label10.Location = New System.Drawing.Point(322, 431)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(55, 19)
-        Me.Label10.TabIndex = 32
+        Me.Label10.TabIndex = 34
         Me.Label10.Text = "Celular"
         '
         'Label8
@@ -595,7 +598,7 @@ Partial Class frmClientePJ
         Me.Label8.Location = New System.Drawing.Point(138, 398)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(26, 19)
-        Me.Label8.TabIndex = 26
+        Me.Label8.TabIndex = 28
         Me.Label8.Text = "UF"
         '
         'Label7
@@ -606,7 +609,7 @@ Partial Class frmClientePJ
         Me.Label7.Location = New System.Drawing.Point(460, 363)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(54, 19)
-        Me.Label7.TabIndex = 24
+        Me.Label7.TabIndex = 26
         Me.Label7.Text = "Cidade"
         '
         'Label14
@@ -617,7 +620,7 @@ Partial Class frmClientePJ
         Me.Label14.Location = New System.Drawing.Point(34, 263)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(130, 19)
-        Me.Label14.TabIndex = 17
+        Me.Label14.TabIndex = 19
         Me.Label14.Text = "Pessoa de Contato"
         '
         'LineShape2
@@ -673,7 +676,7 @@ Partial Class frmClientePJ
         Me.Label1.Location = New System.Drawing.Point(58, 230)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(106, 19)
-        Me.Label1.TabIndex = 15
+        Me.Label1.TabIndex = 17
         Me.Label1.Text = "Nome Fantasia"
         '
         'txtNomeFantasia
@@ -683,7 +686,7 @@ Partial Class frmClientePJ
         Me.txtNomeFantasia.MaxLength = 50
         Me.txtNomeFantasia.Name = "txtNomeFantasia"
         Me.txtNomeFantasia.Size = New System.Drawing.Size(501, 27)
-        Me.txtNomeFantasia.TabIndex = 16
+        Me.txtNomeFantasia.TabIndex = 18
         '
         'dtpDataFundacao
         '
@@ -696,11 +699,32 @@ Partial Class frmClientePJ
         Me.dtpDataFundacao.TabIndex = 10
         Me.dtpDataFundacao.Value = New Date(2019, 3, 15, 0, 0, 0, 0)
         '
+        'Label44
+        '
+        Me.Label44.AutoSize = True
+        Me.Label44.BackColor = System.Drawing.Color.Transparent
+        Me.Label44.ForeColor = System.Drawing.Color.Black
+        Me.Label44.Location = New System.Drawing.Point(358, 165)
+        Me.Label44.Name = "Label44"
+        Me.Label44.Size = New System.Drawing.Size(100, 19)
+        Me.Label44.TabIndex = 11
+        Me.Label44.Text = "Cliente Desde"
+        '
+        'dtpClienteDesde
+        '
+        Me.dtpClienteDesde.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpClienteDesde.Location = New System.Drawing.Point(464, 161)
+        Me.dtpClienteDesde.Name = "dtpClienteDesde"
+        Me.dtpClienteDesde.Size = New System.Drawing.Size(131, 27)
+        Me.dtpClienteDesde.TabIndex = 12
+        '
         'frmClientePJ
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.BackColor = System.Drawing.Color.AliceBlue
         Me.ClientSize = New System.Drawing.Size(764, 680)
+        Me.Controls.Add(Me.Label44)
+        Me.Controls.Add(Me.dtpClienteDesde)
         Me.Controls.Add(Me.dtpDataFundacao)
         Me.Controls.Add(Me.txtNomeFantasia)
         Me.Controls.Add(Me.Label1)
@@ -787,8 +811,10 @@ Partial Class frmClientePJ
         Me.Controls.SetChildIndex(Me.Label42, 0)
         Me.Controls.SetChildIndex(Me.Label1, 0)
         Me.Controls.SetChildIndex(Me.txtNomeFantasia, 0)
-        Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.dtpDataFundacao, 0)
+        Me.Controls.SetChildIndex(Me.dtpClienteDesde, 0)
+        Me.Controls.SetChildIndex(Me.Label44, 0)
+        Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.PainelInferior.ResumeLayout(False)
@@ -859,4 +885,6 @@ Partial Class frmClientePJ
     Private WithEvents LineShape8 As PowerPacks.LineShape
     Private WithEvents ShapeContainer1 As PowerPacks.ShapeContainer
     Friend WithEvents dtpDataFundacao As DateTimePicker
+    Friend WithEvents Label44 As Label
+    Friend WithEvents dtpClienteDesde As DateTimePicker
 End Class

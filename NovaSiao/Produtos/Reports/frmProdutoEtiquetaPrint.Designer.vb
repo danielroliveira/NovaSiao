@@ -26,21 +26,26 @@ Partial Class frmProdutoEtiquetaPrint
         '
         'Panel1
         '
-        Me.Panel1.Size = New System.Drawing.Size(803, 50)
+        Me.Panel1.Location = New System.Drawing.Point(2, 1)
+        Me.Panel1.Margin = New System.Windows.Forms.Padding(5, 6, 5, 6)
+        Me.Panel1.Size = New System.Drawing.Size(996, 50)
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(525, 0)
-        Me.lblTitulo.Size = New System.Drawing.Size(215, 50)
+        Me.lblTitulo.Location = New System.Drawing.Point(692, 6)
+        Me.lblTitulo.Padding = New System.Windows.Forms.Padding(0, 0, 0, 13)
+        Me.lblTitulo.Size = New System.Drawing.Size(223, 40)
         Me.lblTitulo.Text = "Etiquetas de Venda"
         '
         'btnClose
         '
-        Me.btnClose.Location = New System.Drawing.Point(772, 12)
+        Me.btnClose.Location = New System.Drawing.Point(962, 13)
+        Me.btnClose.Margin = New System.Windows.Forms.Padding(5, 6, 5, 6)
         '
         'btnMaximizar
         '
-        Me.btnMaximizar.Location = New System.Drawing.Point(746, 12)
+        Me.btnMaximizar.Location = New System.Drawing.Point(928, 13)
+        Me.btnMaximizar.Margin = New System.Windows.Forms.Padding(5, 6, 5, 6)
         '
         'btnFechar
         '
@@ -48,9 +53,10 @@ Partial Class frmProdutoEtiquetaPrint
         Me.btnFechar.CausesValidation = False
         Me.btnFechar.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar_24x24
-        Me.btnFechar.Location = New System.Drawing.Point(668, 483)
+        Me.btnFechar.Location = New System.Drawing.Point(852, 639)
+        Me.btnFechar.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.btnFechar.Name = "btnFechar"
-        Me.btnFechar.Size = New System.Drawing.Size(127, 43)
+        Me.btnFechar.Size = New System.Drawing.Size(135, 41)
         Me.btnFechar.TabIndex = 18
         Me.btnFechar.Text = "&Fechar"
         Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -63,18 +69,20 @@ Partial Class frmProdutoEtiquetaPrint
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.rptvLocal.LocalReport.ReportEmbeddedResource = "NovaSiao.rptProdutoEtiquetaVenda.rdlc"
-        Me.rptvLocal.Location = New System.Drawing.Point(12, 57)
+        Me.rptvLocal.Location = New System.Drawing.Point(12, 63)
+        Me.rptvLocal.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.rptvLocal.Name = "rptvLocal"
         Me.rptvLocal.ServerReport.BearerToken = Nothing
-        Me.rptvLocal.Size = New System.Drawing.Size(781, 418)
+        Me.rptvLocal.Size = New System.Drawing.Size(975, 566)
         Me.rptvLocal.TabIndex = 17
         '
         'frmProdutoEtiquetaPrint
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.ClientSize = New System.Drawing.Size(807, 535)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
+        Me.ClientSize = New System.Drawing.Size(1000, 689)
         Me.Controls.Add(Me.btnFechar)
         Me.Controls.Add(Me.rptvLocal)
+        Me.Margin = New System.Windows.Forms.Padding(5, 6, 5, 6)
         Me.Name = "frmProdutoEtiquetaPrint"
         Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.rptvLocal, 0)

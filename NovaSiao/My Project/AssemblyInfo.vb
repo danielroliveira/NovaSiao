@@ -1,4 +1,5 @@
-﻿Imports System
+﻿Imports System.Resources
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -9,7 +10,7 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("Programa Loja")>
-<Assembly: AssemblyDescription("")>
+<Assembly: AssemblyDescription("Aplicativo para controle de comércios")>
 <Assembly: AssemblyCompany("DRO Systems")>
 <Assembly: AssemblyProduct("ProgramaLoja")>
 <Assembly: AssemblyCopyright("Copyright ©  2018")>
@@ -31,5 +32,6 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.0.7")>
-<Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: AssemblyVersion("1.0.0.8")>
+<Assembly: AssemblyFileVersion("1.0.0.8")>
+<Assembly: NeutralResourcesLanguage("pt-BR")>

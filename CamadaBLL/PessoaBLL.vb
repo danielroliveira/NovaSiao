@@ -1520,7 +1520,7 @@ Public Class PessoaBLL
             '
             db.LimparParametros()
             db.AdicionarParametros("@IDPessoa", PF.IDPessoa)
-            db.AdicionarParametros("@Email", PF.TelefoneA)
+            db.AdicionarParametros("@Email", PF.Email)
             '
             myQuery = "INSERT INTO tblPessoaEmail (IDPessoa, Email, EmailDestino, EmailPrincipal) " &
                       "VALUES (@IDPessoa, @Email, 'Principal', 'TRUE')"

@@ -144,7 +144,7 @@ Public Class frmClientePF
         txtObservacao.DataBindings.Add("Text", BindingCliente, "Observacao", True, DataSourceUpdateMode.OnPropertyChanged)
         txtLimiteCompras.DataBindings.Add("Text", BindingCliente, "LimiteCompras", True, DataSourceUpdateMode.OnPropertyChanged)
         txtRGCliente.DataBindings.Add("Text", BindingCliente, "RGCliente", True, DataSourceUpdateMode.OnPropertyChanged)
-        txtNascimentoData.DataBindings.Add("Text", BindingCliente, "NascimentoData", True, DataSourceUpdateMode.OnPropertyChanged)
+        dtpNascimentoData.DataBindings.Add("Value", BindingCliente, "NascimentoData", True, DataSourceUpdateMode.OnPropertyChanged)
         txtNaturalidade.DataBindings.Add("Text", BindingCliente, "Naturalidade", True, DataSourceUpdateMode.OnPropertyChanged)
         txtPai.DataBindings.Add("Text", BindingCliente, "Pai", True, DataSourceUpdateMode.OnPropertyChanged)
         txtMae.DataBindings.Add("Text", BindingCliente, "Mae", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -160,6 +160,7 @@ Public Class frmClientePF
         txtIgreja.DataBindings.Add("Text", BindingCliente, "Igreja", True, DataSourceUpdateMode.OnPropertyChanged)
         txtIgrejaAtuacao.DataBindings.Add("Text", BindingCliente, "IgrejaAtuacao", True, DataSourceUpdateMode.OnPropertyChanged)
         txtIgrejaFuncao.DataBindings.Add("Text", BindingCliente, "IgrejaFuncao", True, DataSourceUpdateMode.OnPropertyChanged)
+        dtpClienteDesde.DataBindings.Add("Value", BindingCliente, "ClienteDesde", True, DataSourceUpdateMode.OnPropertyChanged)
 
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler lblIDCliente.DataBindings("Tag").Format, AddressOf idFormatRG
@@ -355,8 +356,8 @@ Public Class frmClientePF
         End If
         '
         'Verifica o campo Data de Nascimento
-        If Not f.VerificaControlesForm(txtNascimentoData, "Data de Nascimento", EProvider) Then
-            TabControl_IrPara(vtab1, txtNascimentoData)
+        If Not f.VerificaControlesForm(dtpNascimentoData, "Data de Nascimento", EProvider) Then
+            TabControl_IrPara(vtab1, dtpNascimentoData)
             Return False
         End If
         '
@@ -621,7 +622,8 @@ Public Class frmClientePF
         Dim myTypes As Type() = {GetType(TextBox),
                                  GetType(ComboBox),
                                  GetType(MaskedTextBox),
-                                 GetType(Controles.Text_Monetario)}
+                                 GetType(Controles.Text_Monetario),
+                                 GetType(DateTimePicker)}
         '
         '--- para cada TabPage no tabPrincipal
         For Each t As vTabPage In tabPrincipal.TabPages

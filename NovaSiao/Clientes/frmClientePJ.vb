@@ -151,6 +151,7 @@ Public Class frmClientePJ
         txtInscricaoEstadual.DataBindings.Add("Text", BindingCliente, "InscricaoEstadual", True, DataSourceUpdateMode.OnPropertyChanged)
         txtContatoNome.DataBindings.Add("Text", BindingCliente, "ContatoNome", True, DataSourceUpdateMode.OnPropertyChanged)
         dtpDataFundacao.DataBindings.Add("Value", BindingCliente, "FundacaoData", True, DataSourceUpdateMode.OnPropertyChanged)
+        dtpClienteDesde.DataBindings.Add("Value", BindingCliente, "ClienteDesde", True, DataSourceUpdateMode.OnPropertyChanged)
         '
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler lblIDCliente.DataBindings("Tag").Format, AddressOf idFormatRG
