@@ -507,7 +507,7 @@ Public Class CaixaBLL
                     db.LimparParametros()
                     db.AdicionarParametros("@IDAPagar", mov.IDOrigem)
                     '
-                    Dim myQuery As String = "SELECT Origem, IDOrigem FROM tblAPagar WHERE IDAPagar = @IDAPagar)"
+                    Dim myQuery As String = "SELECT Origem, IDOrigem FROM tblAPagar WHERE IDAPagar = @IDAPagar"
                     '
                     Try
                         Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, myQuery)

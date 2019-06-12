@@ -724,7 +724,7 @@ Error_Handler:
         '
         '--- desconto maximo
         Dim desc As Double = 0
-        Double.TryParse(txtDescontoMaximo.Text.Replace(",", "."), desc)
+        Double.TryParse(txtDescontoMaximo.Text, desc) '.Replace(",", ".")
         If desc < 0 OrElse desc > 100 Then
             AbrirDialog("O Desconto Máximo deve estar entre 0 e 100" & vbNewLine &
                         "Não pode ser negativo e nem pode ser maior que 100",
