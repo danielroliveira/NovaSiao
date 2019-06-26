@@ -31,13 +31,15 @@ Public Class PessoaBLL
     '==========================================================================================
     Function DetachPessoaFisica(newPessoa As Object) As clPessoaFisica
         '
+        Dim isCredorPF As Boolean = TypeOf newPessoa Is clCredor
+        '
         Dim pf As New clPessoaFisica With {
             .IDPessoa = newPessoa.IDPessoa,
             .Cadastro = newPessoa.Cadastro,
-            .CPF = newPessoa.CPF,
+            .CPF = If(Not isCredorPF, newPessoa.CPF, newPessoa.CNP),
             .PessoaTipo = newPessoa.PessoaTipo,
-            .NascimentoData = newPessoa.NascimentoData,
-            .Sexo = newPessoa.Sexo,
+            .NascimentoData = If(Not isCredorPF, newPessoa.NascimentoData, Nothing),
+            .Sexo = If(Not isCredorPF, newPessoa.Sexo, Nothing),
             .Endereco = newPessoa.Endereco,
             .Bairro = newPessoa.Bairro,
             .Cidade = newPessoa.Cidade,
@@ -48,9 +50,9 @@ Public Class PessoaBLL
             .Email = newPessoa.Email,
             .EmailDestino = newPessoa.EmailDestino,
             .EmailPrincipal = newPessoa.EmailPrincipal,
-            .Identidade = newPessoa.Identidade,
-            .IdentidadeData = newPessoa.IdentidadeData,
-            .IdentidadeOrgao = newPessoa.IdentidadeOrgao,
+            .Identidade = If(Not isCredorPF, newPessoa.Identidade, Nothing),
+            .IdentidadeData = If(Not isCredorPF, newPessoa.IdentidadeData, Nothing),
+            .IdentidadeOrgao = If(Not isCredorPF, newPessoa.IdentidadeOrgao, Nothing),
             .InsercaoData = newPessoa.InsercaoData
         }
         '
@@ -58,14 +60,16 @@ Public Class PessoaBLL
         '
     End Function
     '
-    Function DetachPessoaJuridica(newPessoa As clPessoaJuridica) As clPessoaJuridica
+    Function DetachPessoaJuridica(newPessoa As Object) As clPessoaJuridica
+        '
+        Dim isCredorPF As Boolean = TypeOf newPessoa Is clCredor
         '
         Dim pj As New clPessoaJuridica With {
             .IDPessoa = newPessoa.IDPessoa,
             .Cadastro = newPessoa.Cadastro,
-            .NomeFantasia = newPessoa.NomeFantasia,
+            .NomeFantasia = If(Not isCredorPF, newPessoa.NomeFantasia, Nothing),
             .PessoaTipo = newPessoa.PessoaTipo,
-            .ContatoNome = newPessoa.ContatoNome,
+            .ContatoNome = If(Not isCredorPF, newPessoa.ContatoNome, Nothing),
             .Endereco = newPessoa.Endereco,
             .Bairro = newPessoa.Bairro,
             .Cidade = newPessoa.Cidade,
@@ -73,12 +77,12 @@ Public Class PessoaBLL
             .UF = newPessoa.UF,
             .TelefoneA = newPessoa.TelefoneA,
             .TelefoneB = newPessoa.TelefoneB,
-            .CNPJ = newPessoa.CNPJ,
-            .InscricaoEstadual = newPessoa.InscricaoEstadual,
+            .CNPJ = If(Not isCredorPF, newPessoa.CNPJ, newPessoa.CNP),
+            .InscricaoEstadual = If(Not isCredorPF, newPessoa.InscricaoEstadual, Nothing),
             .Email = newPessoa.Email,
             .EmailDestino = newPessoa.EmailDestino,
             .EmailPrincipal = newPessoa.EmailPrincipal,
-            .FundacaoData = newPessoa.FundacaoData,
+            .FundacaoData = If(Not isCredorPF, newPessoa.FundacaoData, Nothing),
             .InsercaoData = newPessoa.InsercaoData
         }
         '
@@ -642,9 +646,9 @@ Public Class PessoaBLL
         dbTran.LimparParametros()
         dbTran.AdicionarParametros("@IDPessoa", PF.IDPessoa)
         dbTran.AdicionarParametros("@CPF", PF.CPF)
-        dbTran.AdicionarParametros("@Sexo", PF.Sexo)
-        dbTran.AdicionarParametros("@NascimentoData", PF.NascimentoData)
-        dbTran.AdicionarParametros("@Identidade", PF.Identidade)
+        dbTran.AdicionarParametros("@Sexo", If(PF.Sexo, DBNull.Value))
+        dbTran.AdicionarParametros("@NascimentoData", If(PF.NascimentoData, DBNull.Value))
+        dbTran.AdicionarParametros("@Identidade", If(PF.Identidade, DBNull.Value))
         dbTran.AdicionarParametros("@IdentidadeOrgao", If(PF.IdentidadeOrgao, DBNull.Value))
         dbTran.AdicionarParametros("@IdentidadeData", If(PF.IdentidadeData, DBNull.Value))
         '
@@ -765,8 +769,8 @@ Public Class PessoaBLL
         dbTran.LimparParametros()
         dbTran.AdicionarParametros("@IDPessoa", PJ.IDPessoa)
         dbTran.AdicionarParametros("@CNPJ", PJ.CNPJ)
-        dbTran.AdicionarParametros("@InscricaoEstadual", PJ.InscricaoEstadual)
-        dbTran.AdicionarParametros("@NomeFantasia", PJ.NomeFantasia)
+        dbTran.AdicionarParametros("@InscricaoEstadual", If(PJ.InscricaoEstadual, DBNull.Value))
+        dbTran.AdicionarParametros("@NomeFantasia", If(PJ.NomeFantasia, PJ.Cadastro))
         dbTran.AdicionarParametros("@FundacaoData", If(PJ.FundacaoData, DBNull.Value))
         dbTran.AdicionarParametros("@ContatoNome", If(PJ.ContatoNome, DBNull.Value))
         '

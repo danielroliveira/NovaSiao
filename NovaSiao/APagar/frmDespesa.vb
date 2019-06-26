@@ -144,13 +144,11 @@ Public Class frmDespesa
                 Sit = EnumFlagEstado.RegistroSalvo
             End If
             '
-            '--- Permite a verificacao dos combo
-            VerificaAlteracao = True
-            '
             '--- Seleciona o primeiro controle
             txtCredor.Focus()
             '
         End Set
+        '
     End Property
     '
     Sub New(Despesa As clDespesa, Optional formOrigem As Form = Nothing)
@@ -166,6 +164,14 @@ Public Class frmDespesa
         Handler_MouseMove()
         '
     End Sub
+    '
+    Private Sub frmDespesa_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        '
+        '--- Permite a verificacao dos combo
+        VerificaAlteracao = True
+        '
+    End Sub
+    '
 #End Region
     '
 #Region "DATABINDING"
@@ -810,39 +816,65 @@ Public Class frmDespesa
     End Sub
     '
     Private Sub btnCredor_Click(sender As Object, e As EventArgs) Handles btnCredor.Click
-        Dim frmC As New frmCredorProcurar(True, Me)
         '
-        frmC.ShowDialog()
-        If frmC.DialogResult = DialogResult.Cancel Then Exit Sub
-        '
-        Dim Cred As clCredor = frmC.propCredorEscolhido
-        '
-        txtCredor.Text = Cred.Cadastro
-        _Despesa.CNP = Cred.CNP
-        lblCNP.DataBindings.Item("text").ReadValue()
-        _Despesa.IDCredor = Cred.IDPessoa
-        '
-        If Cred.CredorTipo = 1 Then
-            lblCNPTexto.Text = "CPF"
-        ElseIf Cred.CredorTipo = 2 Then
-            lblCNPTexto.Text = "CNPJ"
-        Else Cred.CredorTipo = 0 OrElse Cred.CredorTipo = 3
-            lblCNPTexto.Text = "CNPJ"
-        End If
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frmC As New frmCredorProcurar(True, Me)
+            '
+            frmC.ShowDialog()
+            If frmC.DialogResult = DialogResult.Cancel Then Exit Sub
+            '
+            Dim Cred As clCredor = frmC.propCredorEscolhido
+            '
+            txtCredor.Text = Cred.Cadastro
+            _Despesa.CNP = Cred.CNP
+            lblCNP.DataBindings.Item("text").ReadValue()
+            _Despesa.IDCredor = Cred.IDPessoa
+            '
+            If Cred.CredorTipo = 1 Then
+                lblCNPTexto.Text = "CPF"
+            ElseIf Cred.CredorTipo = 2 Then
+                lblCNPTexto.Text = "CNPJ"
+            Else Cred.CredorTipo = 0 OrElse Cred.CredorTipo = 3
+                lblCNPTexto.Text = "CNPJ"
+            End If
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir Formulário de Procura de Credores..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '
     Private Sub btnTipo_Click(sender As Object, e As EventArgs) Handles btnTipo.Click
-        Dim frmT As New frmDespesaTipoProcurar(True, Me)
         '
-        frmT.ShowDialog()
-        If frmT.DialogResult = DialogResult.Cancel Then Exit Sub
-        '
-        Dim T As clDespesaTipo = frmT.propDespesaEscolhida
-        '
-        txtDespesaTipo.Text = T.DespesaTipo
-        _Despesa.IDDespesaTipo = T.IDDespesaTipo
-        _Despesa.DespesaTipo = T.DespesaTipo
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frmT As New frmDespesaTipoProcurar(True, Me)
+            '
+            frmT.ShowDialog()
+            If frmT.DialogResult = DialogResult.Cancel Then Exit Sub
+            '
+            Dim T As clDespesaTipo = frmT.propDespesaEscolhida
+            '
+            txtDespesaTipo.Text = T.DespesaTipo
+            _Despesa.IDDespesaTipo = T.IDDespesaTipo
+            _Despesa.DespesaTipo = T.DespesaTipo
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Abrir formulário de Tipos de Despesas..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '
@@ -860,11 +892,18 @@ Public Class frmDespesa
         '
         '--- Verifica os Controles
         '----------------------------------------------------------------------
+        '
+        '--- Ampulheta ON
+        Cursor = Cursors.WaitCursor
+        '
         If Not VerificaControles() Then Exit Sub
         '
         '--- Verifica a soma dos valores de APagar
         '----------------------------------------------------------------------
         If Not Verifica_APagar() Then Exit Sub
+        '
+        '--- Ampulheta OFF
+        Cursor = Cursors.Default
         '
         '--- Salva a Despesa
         '----------------------------------------------------------------------
@@ -872,6 +911,10 @@ Public Class frmDespesa
         '
         If Sit = EnumFlagEstado.NovoRegistro Then
             Try
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
                 Dim newID As Integer = dBLL.Despesa_Inserir(_Despesa)
                 '
                 _Despesa.IDDespesa = newID
@@ -882,9 +925,18 @@ Public Class frmDespesa
                                 ex.Message & vbNewLine & "O registro não pode ser salvo...",
                                 "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Exit Sub
+            Finally
+                '
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+                '
             End Try
         ElseIf Sit = EnumFlagEstado.Alterado Then
             Try
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
                 Dim newID As Integer = dBLL.Despesa_Alterar(_Despesa)
                 '
                 _Despesa.IDDespesa = newID
@@ -895,6 +947,11 @@ Public Class frmDespesa
                                 ex.Message & vbNewLine & "O registro não pode ser salvo...",
                                 "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Exit Sub
+            Finally
+                '
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+                '
             End Try
         End If
         '
@@ -990,6 +1047,10 @@ Public Class frmDespesa
         '
         '--- Exclui todos os registros de APagar da Compra atual
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             If Not IsNothing(_Despesa.IDDespesa) Then
                 pagBLL.Excluir_APagar_Origem(_Despesa.IDDespesa, clAPagar.Origem_APagar.Despesa)
             End If
@@ -1005,6 +1066,11 @@ Public Class frmDespesa
             MessageBox.Show("Houve uma exceção inesperada ao SALVAR Registros de APagar..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return False
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Function

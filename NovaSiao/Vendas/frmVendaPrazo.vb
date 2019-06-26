@@ -1272,7 +1272,7 @@ Public Class frmVendaPrazo
         Dim ParcelaCount As Integer = _ParcelaList.Count
         Dim myLetra As Char = Chr(ParcelaCount + 65)
         '
-        clPar.PermanenciaTaxa = Taxa
+        clPar.PermanenciaTaxa = Taxa / 100
         clPar.IDAReceber = _Venda.IDAReceber
         clPar.IDPessoa = _Venda.IDPessoaDestino
         clPar.ParcelaValor = vl - _ParcelaList.Sum(Function(x) x.ParcelaValor)
@@ -1434,7 +1434,7 @@ Public Class frmVendaPrazo
             _parc.IDAReceber = _Venda.IDAReceber
             _parc.IDPessoa = _Venda.IDPessoaDestino
             _parc.SituacaoParcela = 0
-            _parc.PermanenciaTaxa = Taxa
+            _parc.PermanenciaTaxa = Taxa / 100
             '
             If Entrada = True Then
                 _parc.Letra = Chr(i + 65)

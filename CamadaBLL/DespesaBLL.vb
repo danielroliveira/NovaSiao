@@ -5,8 +5,8 @@ Public Class DespesaBLL
     '===================================================================================================
     ' INSERIR NOVA DESPESA
     '===================================================================================================
-    Public Function Despesa_Inserir(myDespesa As clDespesa) As Integer
-        Dim db As New AcessoDados
+    Public Function Despesa_Inserir(myDespesa As clDespesa, dbTran As Object) As Integer
+        Dim db As AcessoDados = dbTran
         '
         '--- Adicionar os paramentros
         db.LimparParametros()
@@ -18,6 +18,8 @@ Public Class DespesaBLL
         db.AdicionarParametros("DespesaValor", myDespesa.DespesaValor)
         db.AdicionarParametros("Descricao", myDespesa.Descricao)
         db.AdicionarParametros("Parcelado", myDespesa.Parcelado)
+        '
+
         '
         '---Inserir a despesa
         Try

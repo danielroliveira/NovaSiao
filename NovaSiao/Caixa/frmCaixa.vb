@@ -370,8 +370,8 @@ Public Class frmCaixa
                                       r("Meio"),
                                       r("IDConta"),
                                       r("Conta"),
-                                      r("MovValor"),
-                                      r("MovValor"),
+                                      r("SaldoFinal"),
+                                      r("SaldoFinal"),
                                       0})
                 Next
                 '
@@ -381,7 +381,7 @@ Public Class frmCaixa
             For Each c As clMovimentacao In lstMov
                 '
                 '--- GET valor real positivo para entrada e negativo para saída
-                Dim MovValorReal As Double = c.MovValorReal
+                Dim MovValor As Double = c.MovValor
                 '
                 '--- Find IDMEIO no DataTable SaldoAnterior
                 Dim saldoFind As DataRow = dtSaldo.Rows.Find(c.IDMeio)
@@ -394,7 +394,7 @@ Public Class frmCaixa
                                          c.IDConta,
                                          c.Conta,
                                          0,
-                                         MovValorReal,
+                                         MovValor,
                                          True,
                                          0})
                     Else
@@ -403,7 +403,7 @@ Public Class frmCaixa
                                          c.IDConta,
                                          c.Conta,
                                          0,
-                                         MovValorReal,
+                                         MovValor,
                                          False,
                                          If(IsNothing(c.IDContaPadrao), 0, c.MovValorReal)})
                     End If
@@ -414,12 +414,13 @@ Public Class frmCaixa
                         saldoFind("Nivelamento") = True
                     End If
                     '
-                    saldoFind("SaldoFinal") += MovValorReal
+                    If IsDBNull(saldoFind("ATransferir")) Then saldoFind("ATransferir") = 0
                     '
                     If Not IsNothing(c.IDContaPadrao) Then
-                        saldoFind("ATransferir") += MovValorReal
+                        saldoFind("ATransferir") += MovValor
                     End If
                     '
+                    saldoFind("SaldoFinal") += MovValor
                     saldoFind.AcceptChanges()
                     '
                 End If

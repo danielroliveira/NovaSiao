@@ -50,10 +50,19 @@ Public Class frmCredorProcurar
         Dim cBLL As New CredorBLL
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             listCred = cBLL.Credor_GET_List(CByte(cmbCredorTipo.SelectedValue))
         Catch ex As Exception
             MessageBox.Show("Houve uma exceção ao obter a lista de Credores..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
         PreencheListagem()

@@ -37,6 +37,7 @@ Public Class clDespesa : Implements IEditableObject
             ._Parcelado = False
             ._Bloqueada = False
             ._ValorPagoTotal = 0
+            ._DespesaData = Today.ToShortDateString
         End With
     End Sub
     '

@@ -474,6 +474,27 @@ Public Class frmCredor
             If f.VerificaControlesForm(txtCNP, "CPF/CNPJ", EProvider) = False Then
                 Return False
             End If
+
+            If f.VerificaControlesForm(txtBairro, "Bairro", EProvider) = False Then
+                Return False
+            End If
+
+            If f.VerificaControlesForm(txtCidade, "Cidade", EProvider) = False Then
+                Return False
+            End If
+
+            If f.VerificaControlesForm(txtEndereco, "Endereço", EProvider) = False Then
+                Return False
+            End If
+
+            If f.VerificaControlesForm(txtCEP, "CEP", EProvider) = False Then
+                Return False
+            End If
+
+            If f.VerificaControlesForm(txtUF, "UF", EProvider) = False Then
+                Return False
+            End If
+
         End If
         '
         Return True

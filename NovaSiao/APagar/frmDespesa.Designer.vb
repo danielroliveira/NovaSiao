@@ -23,8 +23,8 @@ Partial Class frmDespesa
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblCNPTexto = New System.Windows.Forms.Label()
         Me.lblID = New System.Windows.Forms.Label()
         Me.lbl_IdTexto = New System.Windows.Forms.Label()
@@ -129,7 +129,7 @@ Partial Class frmDespesa
         Me.lbl_IdTexto.AutoSize = True
         Me.lbl_IdTexto.BackColor = System.Drawing.Color.Transparent
         Me.lbl_IdTexto.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_IdTexto.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.lbl_IdTexto.ForeColor = System.Drawing.Color.LightGray
         Me.lbl_IdTexto.Location = New System.Drawing.Point(24, 3)
         Me.lbl_IdTexto.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lbl_IdTexto.Name = "lbl_IdTexto"
@@ -166,7 +166,7 @@ Partial Class frmDespesa
         Me.Label18.AutoSize = True
         Me.Label18.BackColor = System.Drawing.Color.Transparent
         Me.Label18.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label18.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label18.ForeColor = System.Drawing.Color.LightGray
         Me.Label18.Location = New System.Drawing.Point(124, 4)
         Me.Label18.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label18.Name = "Label18"
@@ -330,9 +330,9 @@ Partial Class frmDespesa
         '
         'clnVencimento
         '
-        DataGridViewCellStyle1.Format = "C2"
-        DataGridViewCellStyle1.NullValue = "0"
-        Me.clnVencimento.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle3.Format = "C2"
+        DataGridViewCellStyle3.NullValue = "0"
+        Me.clnVencimento.DefaultCellStyle = DataGridViewCellStyle3
         Me.clnVencimento.HeaderText = "Vencimento"
         Me.clnVencimento.Name = "clnVencimento"
         Me.clnVencimento.ReadOnly = True
@@ -366,7 +366,7 @@ Partial Class frmDespesa
         Me.Label15.AutoSize = True
         Me.Label15.BackColor = System.Drawing.Color.Transparent
         Me.Label15.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.ForeColor = System.Drawing.SystemColors.ControlText
+        Me.Label15.ForeColor = System.Drawing.Color.LightGray
         Me.Label15.Location = New System.Drawing.Point(249, 4)
         Me.Label15.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label15.Name = "Label15"
@@ -485,9 +485,9 @@ Partial Class frmDespesa
         '
         'DataGridViewTextBoxColumn4
         '
-        DataGridViewCellStyle2.Format = "C2"
-        DataGridViewCellStyle2.NullValue = "0"
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle4.Format = "C2"
+        DataGridViewCellStyle4.NullValue = "0"
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle4
         Me.DataGridViewTextBoxColumn4.HeaderText = "Vencimento"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.Width = 110
@@ -516,6 +516,7 @@ Partial Class frmDespesa
         Me.txtDespesaValor.MaxLength = 15
         Me.txtDespesaValor.Name = "txtDespesaValor"
         Me.txtDespesaValor.Size = New System.Drawing.Size(100, 27)
+        Me.txtDespesaValor.SomentePositivos = True
         Me.txtDespesaValor.TabIndex = 14
         Me.txtDespesaValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -536,7 +537,7 @@ Partial Class frmDespesa
         '
         Me.cmsMenuAPagar.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.InserirNovaParcelaToolStripMenuItem, Me.EditarParcelaToolStripMenuItem, Me.ToolStripSeparator1, Me.ExcluirParcelaToolStripMenuItem})
         Me.cmsMenuAPagar.Name = "cmsMenuAPagar"
-        Me.cmsMenuAPagar.Size = New System.Drawing.Size(179, 98)
+        Me.cmsMenuAPagar.Size = New System.Drawing.Size(179, 76)
         '
         'InserirNovaParcelaToolStripMenuItem
         '
