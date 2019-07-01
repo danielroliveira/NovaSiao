@@ -23,8 +23,8 @@ Partial Class frmDespesa
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblCNPTexto = New System.Windows.Forms.Label()
         Me.lblID = New System.Windows.Forms.Label()
         Me.lbl_IdTexto = New System.Windows.Forms.Label()
@@ -116,7 +116,7 @@ Partial Class frmDespesa
         Me.lblID.BackColor = System.Drawing.Color.Transparent
         Me.lblID.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblID.ForeColor = System.Drawing.Color.AliceBlue
-        Me.lblID.Location = New System.Drawing.Point(6, 16)
+        Me.lblID.Location = New System.Drawing.Point(6, 18)
         Me.lblID.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblID.Name = "lblID"
         Me.lblID.Size = New System.Drawing.Size(70, 30)
@@ -130,7 +130,7 @@ Partial Class frmDespesa
         Me.lbl_IdTexto.BackColor = System.Drawing.Color.Transparent
         Me.lbl_IdTexto.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_IdTexto.ForeColor = System.Drawing.Color.LightGray
-        Me.lbl_IdTexto.Location = New System.Drawing.Point(24, 3)
+        Me.lbl_IdTexto.Location = New System.Drawing.Point(24, 5)
         Me.lbl_IdTexto.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.lbl_IdTexto.Name = "lbl_IdTexto"
         Me.lbl_IdTexto.Size = New System.Drawing.Size(35, 13)
@@ -167,7 +167,7 @@ Partial Class frmDespesa
         Me.Label18.BackColor = System.Drawing.Color.Transparent
         Me.Label18.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label18.ForeColor = System.Drawing.Color.LightGray
-        Me.Label18.Location = New System.Drawing.Point(124, 4)
+        Me.Label18.Location = New System.Drawing.Point(124, 6)
         Me.Label18.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(43, 13)
@@ -180,7 +180,7 @@ Partial Class frmDespesa
         Me.lblFilial.BackColor = System.Drawing.Color.Transparent
         Me.lblFilial.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblFilial.ForeColor = System.Drawing.Color.AliceBlue
-        Me.lblFilial.Location = New System.Drawing.Point(80, 16)
+        Me.lblFilial.Location = New System.Drawing.Point(80, 18)
         Me.lblFilial.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblFilial.Name = "lblFilial"
         Me.lblFilial.Size = New System.Drawing.Size(130, 30)
@@ -330,9 +330,9 @@ Partial Class frmDespesa
         '
         'clnVencimento
         '
-        DataGridViewCellStyle3.Format = "C2"
-        DataGridViewCellStyle3.NullValue = "0"
-        Me.clnVencimento.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Format = "C2"
+        DataGridViewCellStyle1.NullValue = "0"
+        Me.clnVencimento.DefaultCellStyle = DataGridViewCellStyle1
         Me.clnVencimento.HeaderText = "Vencimento"
         Me.clnVencimento.Name = "clnVencimento"
         Me.clnVencimento.ReadOnly = True
@@ -367,7 +367,7 @@ Partial Class frmDespesa
         Me.Label15.BackColor = System.Drawing.Color.Transparent
         Me.Label15.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label15.ForeColor = System.Drawing.Color.LightGray
-        Me.Label15.Location = New System.Drawing.Point(249, 4)
+        Me.Label15.Location = New System.Drawing.Point(249, 6)
         Me.Label15.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(67, 13)
@@ -380,7 +380,7 @@ Partial Class frmDespesa
         Me.lblSituacao.BackColor = System.Drawing.Color.Transparent
         Me.lblSituacao.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSituacao.ForeColor = System.Drawing.Color.AliceBlue
-        Me.lblSituacao.Location = New System.Drawing.Point(214, 16)
+        Me.lblSituacao.Location = New System.Drawing.Point(214, 18)
         Me.lblSituacao.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblSituacao.Name = "lblSituacao"
         Me.lblSituacao.Size = New System.Drawing.Size(136, 30)
@@ -485,9 +485,9 @@ Partial Class frmDespesa
         '
         'DataGridViewTextBoxColumn4
         '
-        DataGridViewCellStyle4.Format = "C2"
-        DataGridViewCellStyle4.NullValue = "0"
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.Format = "C2"
+        DataGridViewCellStyle2.NullValue = "0"
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridViewTextBoxColumn4.HeaderText = "Vencimento"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.Width = 110

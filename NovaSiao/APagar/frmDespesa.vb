@@ -908,6 +908,8 @@ Public Class frmDespesa
         '--- Salva a Despesa
         '----------------------------------------------------------------------
         Dim dBLL As New DespesaBLL
+        Dim tran As New AcessoControlBLL
+        Dim dbTran As Object = tran.GetNewAcessoWithTransaction
         '
         If Sit = EnumFlagEstado.NovoRegistro Then
             Try
@@ -915,7 +917,7 @@ Public Class frmDespesa
                 '--- Ampulheta ON
                 Cursor = Cursors.WaitCursor
                 '
-                Dim newID As Integer = dBLL.Despesa_Inserir(_Despesa)
+                Dim newID As Integer = dBLL.Despesa_Inserir(_Despesa, dbTran)
                 '
                 _Despesa.IDDespesa = newID
                 lblID.DataBindings("text").ReadValue()
@@ -924,6 +926,7 @@ Public Class frmDespesa
                 MessageBox.Show("Uma exceção ocorreu ao inserir nova despesa:" & vbNewLine &
                                 ex.Message & vbNewLine & "O registro não pode ser salvo...",
                                 "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                tran.RollbackAcessoWithTransaction(dbTran)
                 Exit Sub
             Finally
                 '
@@ -937,7 +940,7 @@ Public Class frmDespesa
                 '--- Ampulheta ON
                 Cursor = Cursors.WaitCursor
                 '
-                Dim newID As Integer = dBLL.Despesa_Alterar(_Despesa)
+                Dim newID As Integer = dBLL.Despesa_Alterar(_Despesa, dbTran)
                 '
                 _Despesa.IDDespesa = newID
                 lblID.DataBindings("text").ReadValue()
@@ -946,6 +949,7 @@ Public Class frmDespesa
                 MessageBox.Show("Uma exceção ocorreu ao alterar a despesa:" & vbNewLine &
                                 ex.Message & vbNewLine & "O registro não pode ser salvo...",
                                 "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                tran.RollbackAcessoWithTransaction(dbTran)
                 Exit Sub
             Finally
                 '
@@ -957,13 +961,32 @@ Public Class frmDespesa
         '
         '--- Salva as Parcelas de APagar
         '----------------------------------------------------------------------
-        Salvar_APagar()
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Salvar_APagar(dbTran)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Houve uma exceção inesperada ao SALVAR Registros de APagar..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            tran.RollbackAcessoWithTransaction(dbTran)
+            Exit Sub
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
         '--- Finaliza
         '----------------------------------------------------------------------
+        ' COMMIT TRANSACTION
+        tran.CommitAcessoWithTransaction(dbTran)
+        Sit = EnumFlagEstado.RegistroSalvo
+        '
+        ' USER MESSAGE
         MessageBox.Show("Registro Salvo com sucesso!",
                         "Registro Salvo", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        Sit = EnumFlagEstado.RegistroSalvo
         txtCredor.Focus()
         '
     End Sub
@@ -1041,7 +1064,7 @@ Public Class frmDespesa
         '
     End Function
     '
-    Private Function Salvar_APagar() As Boolean
+    Private Sub Salvar_APagar(dbTran As Object)
         '
         Dim pagBLL As New APagarBLL
         '
@@ -1052,20 +1075,17 @@ Public Class frmDespesa
             Cursor = Cursors.WaitCursor
             '
             If Not IsNothing(_Despesa.IDDespesa) Then
-                pagBLL.Excluir_APagar_Origem(_Despesa.IDDespesa, clAPagar.Origem_APagar.Despesa)
+                pagBLL.Excluir_APagar_Origem(_Despesa.IDDespesa, clAPagar.Origem_APagar.Despesa, dbTran)
             End If
             '
             '--- Insere cada um AReceber no BD
             For Each pag As clAPagar In _APagarList
                 pag.IDOrigem = _Despesa.IDDespesa
-                pagBLL.InserirNovo_APagar(pag)
+                pagBLL.InserirNovo_APagar(pag, dbTran)
             Next
             '
-            Return True
         Catch ex As Exception
-            MessageBox.Show("Houve uma exceção inesperada ao SALVAR Registros de APagar..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return False
+            Throw ex
         Finally
             '
             '--- Ampulheta OFF
@@ -1073,7 +1093,7 @@ Public Class frmDespesa
             '
         End Try
         '
-    End Function
+    End Sub
     '
     Private Function VerificaControles() As Boolean
         Dim f As New Utilidades

@@ -1842,7 +1842,7 @@ Public Class PessoaBLL
         dbTran.AdicionarParametros("@ClienteDesde", cliPF.ClienteDesde)
         dbTran.AdicionarParametros("@RGAtividade", cliPF.RGAtividade)
         dbTran.AdicionarParametros("@LimiteCompras", cliPF.LimiteCompras)
-        dbTran.AdicionarParametros("@UltimaVenda", cliPF.UltimaVenda)
+        dbTran.AdicionarParametros("@UltimaVenda", If(cliPF.UltimaVenda, DBNull.Value))
         dbTran.AdicionarParametros("@RGCliente", cliPF.RGCliente)
         '
         myQuery = "UPDATE tblPessoaCliente SET " &

@@ -19,11 +19,25 @@ Public Class DespesaBLL
         db.AdicionarParametros("Descricao", myDespesa.Descricao)
         db.AdicionarParametros("Parcelado", myDespesa.Parcelado)
         '
-
+        Dim myQuery As String =
+            "INSERT INTO tblDespesa " &
+            "(IDCredor, IDFilial, IDDespesaTipo, Descricao, DespesaData, DespesaValor, " &
+            "Parcelado, Bloqueada, ValorPagoTotal) " &
+            "VALUES " &
+            "(@IDCredor, @IDFilial, @IDDespesaTipo, @Descricao, @DespesaData, @DespesaValor, " &
+            "@Parcelado, 'FALSE', 0);"
         '
         '---Inserir a despesa
         Try
-            Dim newID As Object = db.ExecutarManipulacao(CommandType.StoredProcedure, "uspDespesa_Inserir")
+            '
+            db.ExecutarManipulacao(CommandType.Text, myQuery)
+            '
+            '--- obter NewID
+            db.LimparParametros()
+            myQuery = "SELECT @@IDENTITY As LastID;"
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, myQuery)
+            '
+            Dim newID As Object = dt.Rows(0)(0)
             '
             If IsNumeric(newID) Then
                 Return newID
@@ -34,14 +48,14 @@ Public Class DespesaBLL
         Catch ex As Exception
             Throw ex
         End Try
-
+        '
     End Function
     '
     '===================================================================================================
     ' ALTERAR DESPESA
     '===================================================================================================
-    Public Function Despesa_Alterar(myDespesa As clDespesa) As Integer
-        Dim db As New AcessoDados
+    Public Function Despesa_Alterar(myDespesa As clDespesa, dbTran As Object) As Integer
+        Dim db As AcessoDados = dbTran
         '
         '--- Adicionar os paramentros
         db.LimparParametros()
@@ -55,15 +69,22 @@ Public Class DespesaBLL
         db.AdicionarParametros("Descricao", myDespesa.Descricao)
         db.AdicionarParametros("Parcelado", myDespesa.Parcelado)
         '
-        '---Inserir a despesa
+        Dim myQuery As String =
+            "UPDATE tblDespesa SET " &
+            "IDCredor = @IDCredor, " &
+            "IDFilial = @IDFilial, " &
+            "IDDespesaTipo = @IDDespesaTipo, " &
+            "Descricao = @Descricao, " &
+            "DespesaData = @DespesaData, " &
+            "DespesaValor = @DespesaValor, " &
+            "Parcelado = @Parcelado " &
+            "WHERE IDDespesa = @IDDespesa"
+        '
+        '-- Update a despesa
         Try
-            Dim newID As Object = db.ExecutarManipulacao(CommandType.StoredProcedure, "uspDespesa_Alterar")
+            db.ExecutarManipulacao(CommandType.Text, myQuery)
             '
-            If IsNumeric(newID) Then
-                Return newID
-            Else
-                Throw New Exception(newID.ToString)
-            End If
+            Return myDespesa.IDDespesa
             '
         Catch ex As Exception
             Throw ex

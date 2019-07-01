@@ -20,12 +20,12 @@ Partial Class frmClientePF
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmClientePF))
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblIDCliente = New System.Windows.Forms.Label()
         Me.txtCEP = New System.Windows.Forms.MaskedTextBox()
         Me.Label15 = New System.Windows.Forms.Label()
@@ -103,6 +103,7 @@ Partial Class frmClientePF
         Me.EProvider = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.tabPrincipal = New VIBlend.WinForms.Controls.vTabControl()
         Me.vtab1 = New VIBlend.WinForms.Controls.vTabPage()
+        Me.dtpNascimentoData = New System.Windows.Forms.DateTimePicker()
         Me.Label45 = New System.Windows.Forms.Label()
         Me.Label44 = New System.Windows.Forms.Label()
         Me.dtpClienteDesde = New System.Windows.Forms.DateTimePicker()
@@ -155,7 +156,6 @@ Partial Class frmClientePF
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dtpNascimentoData = New System.Windows.Forms.DateTimePicker()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvReferencias, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tsMenuCliente.SuspendLayout()
@@ -316,6 +316,7 @@ Partial Class frmClientePF
         '
         Me.txtEndereco.BackColor = System.Drawing.Color.White
         Me.txtEndereco.Location = New System.Drawing.Point(168, 338)
+        Me.txtEndereco.MaxLength = 50
         Me.txtEndereco.Name = "txtEndereco"
         Me.txtEndereco.Size = New System.Drawing.Size(541, 27)
         Me.txtEndereco.TabIndex = 26
@@ -640,38 +641,38 @@ Partial Class frmClientePF
         Me.dgvReferencias.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
         Me.dgvReferencias.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable
         Me.dgvReferencias.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.Color.FloralWhite
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvReferencias.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.FloralWhite
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvReferencias.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvReferencias.ColumnHeadersHeight = 25
         Me.dgvReferencias.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvReferencias.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ReferenciaNome, Me.Afinidade, Me.ReferenciaTelefone})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvReferencias.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvReferencias.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvReferencias.EnableHeadersVisualStyles = False
         Me.dgvReferencias.Location = New System.Drawing.Point(168, 315)
         Me.dgvReferencias.MultiSelect = False
         Me.dgvReferencias.Name = "dgvReferencias"
         Me.dgvReferencias.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle9.BackColor = System.Drawing.Color.FloralWhite
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvReferencias.RowHeadersDefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.Color.FloralWhite
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvReferencias.RowHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.dgvReferencias.RowHeadersWidth = 30
         Me.dgvReferencias.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvReferencias.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
@@ -683,8 +684,8 @@ Partial Class frmClientePF
         '
         Me.ReferenciaNome.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
         Me.ReferenciaNome.DataPropertyName = "ReferenciaNome"
-        DataGridViewCellStyle7.BackColor = System.Drawing.Color.White
-        Me.ReferenciaNome.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.White
+        Me.ReferenciaNome.DefaultCellStyle = DataGridViewCellStyle2
         Me.ReferenciaNome.HeaderText = "Nome"
         Me.ReferenciaNome.Name = "ReferenciaNome"
         Me.ReferenciaNome.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
@@ -1017,6 +1018,14 @@ Partial Class frmClientePF
         Me.vtab1.UseDefaultTextFont = False
         Me.vtab1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
         Me.vtab1.Visible = False
+        '
+        'dtpNascimentoData
+        '
+        Me.dtpNascimentoData.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpNascimentoData.Location = New System.Drawing.Point(168, 166)
+        Me.dtpNascimentoData.Name = "dtpNascimentoData"
+        Me.dtpNascimentoData.Size = New System.Drawing.Size(131, 27)
+        Me.dtpNascimentoData.TabIndex = 13
         '
         'Label45
         '
@@ -1395,6 +1404,7 @@ Partial Class frmClientePF
         'txtRenda
         '
         Me.txtRenda.Location = New System.Drawing.Point(412, 225)
+        Me.txtRenda.MaxLength = 15
         Me.txtRenda.Name = "txtRenda"
         Me.txtRenda.Size = New System.Drawing.Size(102, 27)
         Me.txtRenda.SomentePositivos = True
@@ -1569,8 +1579,8 @@ Partial Class frmClientePF
         '
         Me.DataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "ReferenciaNome"
-        DataGridViewCellStyle10.BackColor = System.Drawing.Color.White
-        Me.DataGridViewTextBoxColumn1.DefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle5.BackColor = System.Drawing.Color.White
+        Me.DataGridViewTextBoxColumn1.DefaultCellStyle = DataGridViewCellStyle5
         Me.DataGridViewTextBoxColumn1.HeaderText = "Nome"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
@@ -1602,14 +1612,6 @@ Partial Class frmClientePF
         Me.DataGridViewTextBoxColumn4.HeaderText = "RG"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.Width = 40
-        '
-        'dtpNascimentoData
-        '
-        Me.dtpNascimentoData.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpNascimentoData.Location = New System.Drawing.Point(168, 166)
-        Me.dtpNascimentoData.Name = "dtpNascimentoData"
-        Me.dtpNascimentoData.Size = New System.Drawing.Size(131, 27)
-        Me.dtpNascimentoData.TabIndex = 13
         '
         'frmClientePF
         '
