@@ -19,6 +19,7 @@ Public Class frmPedidoProcurar
         '
         ' Add any initialization after the InitializeComponent() call.
         If Not formOrigem Is Nothing Then _formOrigem = formOrigem
+        rbtCompondo.Checked = True
         propSituacaoAtual = 0
         CarregaCmbMes()
         CarregaCmbAno()
@@ -37,18 +38,8 @@ Public Class frmPedidoProcurar
     End Sub
     '
     Public Property propSituacaoAtual() As Byte?
+        '
         Get
-            If rbtCompondo.Checked = True Then
-                SituacaoAtual = 0 '--- Compondo | Formulando
-            ElseIf rbtEnviado.Checked = True Then
-                SituacaoAtual = 1 '--- Enviados
-            ElseIf rbtRecebidos.Checked = True Then
-                SituacaoAtual = 2 '--- Recebidos
-            ElseIf rbtCancelados.Checked = True Then
-                SituacaoAtual = 3 '--- Cancelados
-            Else
-                SituacaoAtual = Nothing
-            End If
             '
             controlaDataFinal()
             Return SituacaoAtual
@@ -62,38 +53,18 @@ Public Class frmPedidoProcurar
             '
             Select Case SituacaoAtual
                 Case 0 '--- Compondo
-                    rbtCompondo.Checked = True
                     rbtCompondo.Focus()
-                    rbtEnviado.Checked = False
-                    rbtRecebidos.Checked = False
-                    rbtCancelados.Checked = False
                     lblDtFinal.Text = "Dt. da Revisão"
                 Case 1 '--- Enviados
-                    rbtCompondo.Checked = False
-                    rbtEnviado.Checked = True
                     rbtEnviado.Focus()
-                    rbtRecebidos.Checked = False
-                    rbtCancelados.Checked = False
                     lblDtFinal.Text = "Dt. do Envio"
                 Case 2 '--- Recebidos
-                    rbtCompondo.Checked = False
-                    rbtEnviado.Checked = False
-                    rbtRecebidos.Checked = True
                     rbtRecebidos.Focus()
-                    rbtCancelados.Checked = False
                     lblDtFinal.Text = "Dt. da Chegada"
                 Case 3 '--- Cancelados
-                    rbtCompondo.Checked = False
-                    rbtEnviado.Checked = False
-                    rbtRecebidos.Checked = False
-                    rbtCancelados.Checked = True
                     rbtCancelados.Focus()
                     lblDtFinal.Text = "Dt. do Cancelamento"
                 Case Else '--- Todas
-                    rbtCompondo.Checked = False
-                    rbtEnviado.Checked = False
-                    rbtRecebidos.Checked = False
-                    rbtCancelados.Checked = False
                     lblDtFinal.Text = "Dt. da Revisão"
             End Select
             '
@@ -155,6 +126,11 @@ Public Class frmPedidoProcurar
         '
         '--- consulta o banco de dados
         Try
+            'MsgBox("get")
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             '--- verifica o filtro das datas
             If cmbAno.SelectedValue = 0 AndAlso cmbMes.SelectedValue = 0 Then 'ANO e MES nulos
                 pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual)
@@ -178,6 +154,11 @@ Public Class frmPedidoProcurar
         Catch ex As Exception
             MessageBox.Show("Ocorreu exceção ao obter a lista de Pedidos..." & vbNewLine &
             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -515,7 +496,26 @@ Public Class frmPedidoProcurar
     End Sub
     '
     Private Sub Butons_CheckedChanged(sender As Object, e As EventArgs)
-        Get_Dados()
+        '
+        Dim valorAlterado As Byte?
+        '
+        If rbtCompondo.Checked = True Then
+            valorAlterado = 0 '--- Compondo | Formulando
+        ElseIf rbtEnviado.Checked = True Then
+            valorAlterado = 1 '--- Enviados
+        ElseIf rbtRecebidos.Checked = True Then
+            valorAlterado = 2 '--- Recebidos
+        ElseIf rbtCancelados.Checked = True Then
+            valorAlterado = 3 '--- Cancelados
+        Else
+            valorAlterado = Nothing
+        End If
+        '
+        If If(propSituacaoAtual, 4) <> If(valorAlterado, 4) Then
+            propSituacaoAtual = valorAlterado
+            Get_Dados()
+        End If
+        '
     End Sub
     '
 #End Region

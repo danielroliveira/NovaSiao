@@ -81,6 +81,7 @@ Partial Class frmClientePJ
         Me.dtpDataFundacao = New System.Windows.Forms.DateTimePicker()
         Me.Label44 = New System.Windows.Forms.Label()
         Me.dtpClienteDesde = New System.Windows.Forms.DateTimePicker()
+        Me.btnCEPProcura = New VIBlend.WinForms.Controls.vButton()
         Me.Panel1.SuspendLayout()
         Me.PainelInferior.SuspendLayout()
         Me.tsMenuCliente.SuspendLayout()
@@ -718,11 +719,30 @@ Partial Class frmClientePJ
         Me.dtpClienteDesde.Size = New System.Drawing.Size(131, 27)
         Me.dtpClienteDesde.TabIndex = 12
         '
+        'btnCEPProcura
+        '
+        Me.btnCEPProcura.AllowAnimations = True
+        Me.btnCEPProcura.BackColor = System.Drawing.Color.Transparent
+        Me.btnCEPProcura.FlatAppearance.BorderColor = System.Drawing.Color.Black
+        Me.btnCEPProcura.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnCEPProcura.Location = New System.Drawing.Point(366, 395)
+        Me.btnCEPProcura.Name = "btnCEPProcura"
+        Me.btnCEPProcura.RoundedCornersMask = CType(15, Byte)
+        Me.btnCEPProcura.RoundedCornersRadius = 0
+        Me.btnCEPProcura.Size = New System.Drawing.Size(34, 27)
+        Me.btnCEPProcura.TabIndex = 44
+        Me.btnCEPProcura.TabStop = False
+        Me.btnCEPProcura.Text = "..."
+        Me.btnCEPProcura.UseCompatibleTextRendering = True
+        Me.btnCEPProcura.UseVisualStyleBackColor = False
+        Me.btnCEPProcura.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
+        '
         'frmClientePJ
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.BackColor = System.Drawing.Color.AliceBlue
         Me.ClientSize = New System.Drawing.Size(764, 680)
+        Me.Controls.Add(Me.btnCEPProcura)
         Me.Controls.Add(Me.Label44)
         Me.Controls.Add(Me.dtpClienteDesde)
         Me.Controls.Add(Me.dtpDataFundacao)
@@ -815,6 +835,7 @@ Partial Class frmClientePJ
         Me.Controls.SetChildIndex(Me.dtpClienteDesde, 0)
         Me.Controls.SetChildIndex(Me.Label44, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
+        Me.Controls.SetChildIndex(Me.btnCEPProcura, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.PainelInferior.ResumeLayout(False)
@@ -887,4 +908,5 @@ Partial Class frmClientePJ
     Friend WithEvents dtpDataFundacao As DateTimePicker
     Friend WithEvents Label44 As Label
     Friend WithEvents dtpClienteDesde As DateTimePicker
+    Friend WithEvents btnCEPProcura As VIBlend.WinForms.Controls.vButton
 End Class

@@ -16,6 +16,21 @@ Public Class frmVendaVista
     Private VerificaAlteracao As Boolean
     Property DescontoMaximo As Double
     '
+    Private Parciais As New List(Of SomaParcial)
+    '
+    Private Class SomaParcial
+        Property itemInicio As Integer
+        Property itemFinal As Integer
+        Sub New(inicio As Integer, Optional fim As Integer = 0)
+            itemInicio = inicio
+            If fim = 0 Then
+                itemFinal = inicio
+            Else
+                itemFinal = fim
+            End If
+        End Sub
+    End Class
+    '
 #Region "LOAD"
     '
     Private Property Sit As EnumFlagEstado
@@ -483,6 +498,7 @@ Public Class frmVendaVista
         '--------------------------------------------------------
         '_ItensList.Item(i) = Item
         bindItem.ResetBindings(False)
+        ParcialRecalcula(_ItensList.IndexOf(itmAtual))
         '
         '--- Atualiza o DataGrid
         dgvItens.DataSource = bindItem
@@ -533,6 +549,7 @@ Public Class frmVendaVista
         '--- Atualiza o ITEM da lista
         '--------------------------------------------------------
         _ItensList.RemoveAt(i)
+        ParcialRemoverItem(i)
         bindItem.ResetBindings(False)
         '
         '--- Atualiza o DataGrid
@@ -863,6 +880,10 @@ Public Class frmVendaVista
         ElseIf e.Alt AndAlso e.KeyCode = Keys.D2 Then
             tabPrincipal.SelectedTab = vtab2
             tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
+        End If
+        '
+        If e.KeyCode = Keys.Divide Then
+            ParcialFechar()
         End If
         '
     End Sub
@@ -1602,6 +1623,229 @@ Public Class frmVendaVista
     End Sub
     '
 #End Region
+    '
+#Region "PARCIAIS DE VENDA"
+    '
+    '--- CONTROLA PARCIAIS | SUBTOTAIS
+    '----------------------------------------------------------------------------------
+    Private Sub ParcialRecalcula(index As Integer)
+        '
+        If Parciais.Count = 0 Then Exit Sub
+        '
+        Dim totalParcial As Double = 0
+        '
+        For Each parcial As SomaParcial In Parciais
+            If index >= parcial.itemInicio And index <= parcial.itemFinal Then
+                Dim pRange = _ItensList.GetRange(parcial.itemInicio, parcial.itemFinal - parcial.itemInicio + 1)
+                totalParcial = pRange.Sum(Function(x) x.SubTotal)
+                lblParcial.Text = Format(totalParcial, "c")
+                Exit For
+            End If
+        Next
+        '
+        '--- if index is out of created parcial
+        If totalParcial = 0 Then
+            '
+            '--- get last parcial item
+            Dim lastIndex As Integer = Parciais.Last.itemFinal
+            '
+            If index >= lastIndex Then
+                Dim count = _ItensList.Count - lastIndex - 1
+                Dim pRange = _ItensList.GetRange(lastIndex + 1, count)
+                totalParcial = pRange.Sum(Function(x) x.SubTotal)
+                lblParcial.Text = Format(totalParcial, "c")
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- FECHAR PARCIAL
+    '----------------------------------------------------------------------------------
+    Private Sub ParcialFechar()
+        '
+        Dim countItens As Integer = _ItensList.Count
+        '
+        '--- check if exist items
+        If countItens = 0 Then
+            Parciais.Clear()
+            pnlParcial.Visible = False
+            lblParcial.Text = 0
+            Exit Sub
+        End If
+        '
+        '--- check if exits any PARCIAIS
+        If Parciais.Count = 0 Then
+            Parciais.Add(New SomaParcial(0, countItens - 1))
+            ParcialRecalcula(0)
+        Else
+            '-- verifica se existe novo item que ainda nao foi incluido
+            If countItens <= Parciais.Last().itemFinal + 1 Then Exit Sub
+
+            '-- verify the last item included
+            Dim itemInicial As Integer = Parciais.Last().itemFinal + 1
+
+            '-- include new items
+            Parciais.Add(New SomaParcial(itemInicial, countItens - 1))
+            ParcialRecalcula(countItens - 1)
+
+        End If
+        '
+        pnlParcial.Visible = True
+        '
+    End Sub
+    '
+    '--- REMOVE PARCIAL AND RECALC
+    '----------------------------------------------------------------------------------
+    Private Sub ParcialRemoverItem(index As Integer)
+        '
+        '--- check if exists parcial
+        If Parciais.Count = 0 Then Exit Sub
+        '
+        '--- check if exists rows yet
+        If existsItems() = 0 Then Exit Sub
+        '
+        Dim parcialEncontrada As Boolean = False
+        '
+        For Each parcial As SomaParcial In Parciais
+            '
+            If Not parcialEncontrada Then
+                '
+                If index >= parcial.itemInicio And index <= parcial.itemFinal Then
+                    parcial.itemFinal -= 1
+                    parcialEncontrada = True
+                End If
+                '
+            Else
+                '
+                parcial.itemInicio -= 1
+                parcial.itemFinal -= 1
+                '
+            End If
+        Next
+        '
+    End Sub
+    '
+    '--- PUT ONE LINE ON BOTTOM OF PARCIAL GROUP
+    '----------------------------------------------------------------------------------
+    Private Sub dgvItens_RowPostPaint(sender As Object, e As DataGridViewRowPostPaintEventArgs) Handles dgvItens.RowPostPaint
+        '
+        If Parciais.Count = 0 Then Exit Sub
+        '
+        If Parciais.Exists(Function(x) x.itemFinal + 1 = e.RowIndex) Then
+            Dim pen As New Pen(Color.SlateGray, 3)
+            pen.DashStyle = Drawing2D.DashStyle.Dash
+            e.Graphics.DrawLine(pen, 30, e.RowBounds.Top, e.ClipBounds.Right - 32, e.RowBounds.Top)
+        End If
+        '
+    End Sub
+    '
+    '--- ALTERA SOMA PARCIAL
+    '----------------------------------------------------------------------------------
+    Private Sub dgvItens_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.RowEnter
+        '
+        If Parciais.Count = 0 Then Exit Sub
+        '
+        Dim item As clTransacaoItem = dgvItens.Rows(e.RowIndex).DataBoundItem
+        Dim lstItemIndex As Integer = _ItensList.IndexOf(item)
+        '
+        ParcialRecalcula(lstItemIndex)
+        '
+    End Sub
+    '
+    '--- MOUSE OVER LBLPARCIAL
+    '----------------------------------------------------------------------------------
+    Private Sub lblParcialBtn_MouseHover(sender As Object, e As EventArgs) Handles lblParcialBtn.MouseHover
+        DirectCast(sender, Label).BackColor = Color.LightGray
+    End Sub
+    Private Sub lblParcialBtn_MouseLeave(sender As Object, e As EventArgs) Handles lblParcialBtn.MouseLeave
+        DirectCast(sender, Label).BackColor = Color.Transparent
+    End Sub
+    '
+    '--- INSERT PARCIAL
+    '----------------------------------------------------------------------------------
+    Private Sub lblParcialBtn_Click(sender As Object, e As EventArgs) Handles lblParcialBtn.Click
+        '
+        '--- check if exist items
+        Dim nItems As Integer = existsItems()
+        If nItems = 0 Then Exit Sub
+        '
+        '--- check if exits any PARCIAIS
+        If Parciais.Count = 0 Then
+            Parciais.Add(New SomaParcial(0, nItems - 1))
+            ParcialRecalcula(0)
+            Return '-- exit
+        End If
+        '
+        '-- get the actual row index
+        Dim actualRow As Integer = dgvItens.CurrentRow.Index
+        Dim insertBefore As Integer = -1
+        Dim insertFinalRow As Integer = -1
+        Dim insertInicioRow As Integer = -1
+        Dim i As Integer = 0
+        '
+        '-- go through parcial looking for the actualrow
+        For Each parcial As SomaParcial In Parciais
+            '
+            If actualRow = parcial.itemFinal Then '--- already exists parcial in actual row
+                Exit For
+            Else
+                '
+                If insertInicioRow <> -1 Then
+                    'parcial.itemInicio = insertInicioRow
+                    insertFinalRow = parcial.itemInicio - 1
+                    Exit For
+                End If
+                '
+                If actualRow >= parcial.itemInicio And actualRow < parcial.itemFinal Then
+                    parcial.itemFinal = actualRow
+                    insertInicioRow = actualRow + 1
+                    insertBefore = i + 1
+                End If
+                '
+            End If
+            '
+            i += 1
+            '
+        Next
+        '
+        '--- check if there is parcial for to be included
+        If insertBefore = -1 Then Exit Sub
+        '
+        '--- insert new Parcial
+        If insertFinalRow = -1 Then insertFinalRow = nItems - 1
+        Parciais.Insert(insertBefore, New SomaParcial(insertInicioRow, insertFinalRow))
+        '
+        ParcialRecalcula(nItems - 1)
+        dgvItens.Refresh()
+        '
+    End Sub
+    '
+    '--- FUNCTION RETURN NUMBER OF ITEMS AND HIDE PARCIAL CONTROLS
+    '----------------------------------------------------------------------------------
+    Function existsItems() As Integer
+        '
+        Dim countItens As Integer = _ItensList.Count
+        '
+        '--- check if exist items
+        If countItens = 0 Then
+            Parciais.Clear()
+            pnlParcial.Visible = False
+            lblParcial.Text = 0
+        End If
+        '
+        Return countItens
+        '
+    End Function
+    '
+    Private Sub btnParcialClear_Click(sender As Object, e As EventArgs) Handles btnParcialClear.Click
+        Parciais.Clear()
+        pnlParcial.Visible = False
+        lblParcial.Text = 0
+        dgvItens.Refresh()
+    End Sub
+    '
+#End Region '/ PARCIAIS DE VENDA
     '
 #Region "BLOQUEIO DE REGISTRO"
 

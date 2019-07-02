@@ -485,6 +485,69 @@ Public Class frmClientePJ
         '
     End Sub
     '
+    '--- PROCURA CEP
+    '----------------------------------------------------------------------------------
+    Private Sub btnCEPProcura_Click(sender As Object, e As EventArgs) Handles btnCEPProcura.Click
+        Process.Start("http://www.buscacep.correios.com.br/sistemas/buscacep/buscaCepEndereco.cfm") 'Aqui você poderá alterar o site'
+    End Sub
+    '
+    '---------------------------------------------------------------------------------------
+    '--- BLOQUEIA PRESS A TECLA (+)
+    '---------------------------------------------------------------------------------------
+    Private Sub me_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
+        '
+        If e.KeyChar = "+" Then
+            '--- cria uma lista de controles que serao impedidos de receber '+'
+            Dim controlesBloqueados As String() = {
+            "txtCEP",
+            "txtRGCliente"
+        }
+            '
+            If controlesBloqueados.Contains(ActiveControl.Name) Then
+                e.Handled = True
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    '---------------------------------------------------------------------------------------
+    '--- EXECUTAR A FUNCAO DO BOTAO QUANDO PRESSIONA A TECLA (+) NO CONTROLE
+    '--- ACIONA ATALHO TECLA (+) E (DEL)
+    '---------------------------------------------------------------------------------------
+    Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) _
+    Handles txtCEP.KeyDown,
+            txtRGCliente.KeyDown
+        '
+        Dim ctr As Control = DirectCast(sender, Control)
+        '
+        If e.KeyCode = Keys.Add Then
+            e.Handled = True
+            '
+            Select Case ctr.Name
+                Case "txtRGCliente"
+                    btnProcuraRG_Click(New Object, New EventArgs)
+                Case "txtCEP"
+                    btnCEPProcura_Click(sender, New EventArgs)
+            End Select
+            '
+        ElseIf e.KeyCode = Keys.Delete Then
+            e.Handled = True
+            Select Case ctr.Name
+                Case "txtRGCliente"
+                    If Not IsNothing(_ClientePJ.RGCliente) Then Sit = EnumFlagEstado.Alterado
+                    txtRGCliente.Clear()
+                    _ClientePJ.RGCliente = Nothing
+                Case "txtCEP"
+                    If Not IsNothing(_ClientePJ.CEP) Then Sit = EnumFlagEstado.Alterado
+                    txtCEP.Clear()
+                    _ClientePJ.CEP = Nothing
+            End Select
+            '
+        End If
+        '
+    End Sub
+    '
 #End Region
     '
 #Region "OPERAÇÕES DE REGISTRO"

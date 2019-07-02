@@ -340,12 +340,12 @@ Public Class frmReservaProcurar
 #End Region
     '
 #Region "TRATAMENTO VISUAL"
-    Private Sub pnlVenda_Paint(sender As Object, e As PaintEventArgs)
-        '
-        Dim brush As Brush = New LinearGradientBrush(e.ClipRectangle, Color.LightSteelBlue, Color.FromArgb(100, Color.SlateGray), LinearGradientMode.Vertical)
-        e.Graphics.FillRectangle(brush, e.ClipRectangle)
-        '
-    End Sub
+    'Private Sub pnlVenda_Paint(sender As Object, e As PaintEventArgs)
+    '    '
+    '    Dim brush As Brush = New LinearGradientBrush(e.ClipRectangle, Color.LightSteelBlue, Color.FromArgb(100, Color.SlateGray), LinearGradientMode.Vertical)
+    '    e.Graphics.FillRectangle(brush, e.ClipRectangle)
+    '    '
+    'End Sub
     '
     '--- ALTERAR A COR DE FUNDO DO HEADER DO DATAGRIDVIEW
     Private Sub dgvListagem_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs)

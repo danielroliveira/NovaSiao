@@ -156,6 +156,7 @@ Partial Class frmClientePF
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnCEPProcura = New VIBlend.WinForms.Controls.vButton()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvReferencias, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tsMenuCliente.SuspendLayout()
@@ -962,6 +963,7 @@ Partial Class frmClientePF
         '
         'vtab1
         '
+        Me.vtab1.Controls.Add(Me.btnCEPProcura)
         Me.vtab1.Controls.Add(Me.dtpNascimentoData)
         Me.vtab1.Controls.Add(Me.Label45)
         Me.vtab1.Controls.Add(Me.Label44)
@@ -1063,11 +1065,11 @@ Partial Class frmClientePF
         Me.btnProcuraRG.BackColor = System.Drawing.Color.Transparent
         Me.btnProcuraRG.FlatAppearance.BorderColor = System.Drawing.Color.Black
         Me.btnProcuraRG.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnProcuraRG.Location = New System.Drawing.Point(240, 55)
+        Me.btnProcuraRG.Location = New System.Drawing.Point(240, 57)
         Me.btnProcuraRG.Name = "btnProcuraRG"
         Me.btnProcuraRG.RoundedCornersMask = CType(15, Byte)
         Me.btnProcuraRG.RoundedCornersRadius = 0
-        Me.btnProcuraRG.Size = New System.Drawing.Size(34, 30)
+        Me.btnProcuraRG.Size = New System.Drawing.Size(34, 27)
         Me.btnProcuraRG.TabIndex = 4
         Me.btnProcuraRG.TabStop = False
         Me.btnProcuraRG.Text = "..."
@@ -1613,6 +1615,24 @@ Partial Class frmClientePF
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
         Me.DataGridViewTextBoxColumn4.Width = 40
         '
+        'btnCEPProcura
+        '
+        Me.btnCEPProcura.AllowAnimations = True
+        Me.btnCEPProcura.BackColor = System.Drawing.Color.Transparent
+        Me.btnCEPProcura.FlatAppearance.BorderColor = System.Drawing.Color.Black
+        Me.btnCEPProcura.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnCEPProcura.Location = New System.Drawing.Point(364, 406)
+        Me.btnCEPProcura.Name = "btnCEPProcura"
+        Me.btnCEPProcura.RoundedCornersMask = CType(15, Byte)
+        Me.btnCEPProcura.RoundedCornersRadius = 0
+        Me.btnCEPProcura.Size = New System.Drawing.Size(34, 27)
+        Me.btnCEPProcura.TabIndex = 41
+        Me.btnCEPProcura.TabStop = False
+        Me.btnCEPProcura.Text = "..."
+        Me.btnCEPProcura.UseCompatibleTextRendering = True
+        Me.btnCEPProcura.UseVisualStyleBackColor = False
+        Me.btnCEPProcura.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
+        '
         'frmClientePF
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
@@ -1774,4 +1794,5 @@ Partial Class frmClientePF
     Friend WithEvents Label45 As Label
     Friend WithEvents Label33 As Label
     Friend WithEvents dtpNascimentoData As DateTimePicker
+    Friend WithEvents btnCEPProcura As VIBlend.WinForms.Controls.vButton
 End Class

@@ -670,6 +670,63 @@ Public Class frmClientePF
         '
     End Sub
     '
+    '---------------------------------------------------------------------------------------
+    '--- BLOQUEIA PRESS A TECLA (+)
+    '---------------------------------------------------------------------------------------
+    Private Sub me_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
+        '
+        If e.KeyChar = "+" Then
+            '--- cria uma lista de controles que serao impedidos de receber '+'
+            Dim controlesBloqueados As String() = {
+            "txtCEP",
+            "txtRGCliente"
+        }
+            '
+            If controlesBloqueados.Contains(ActiveControl.Name) Then
+                e.Handled = True
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    '---------------------------------------------------------------------------------------
+    '--- EXECUTAR A FUNCAO DO BOTAO QUANDO PRESSIONA A TECLA (+) NO CONTROLE
+    '--- ACIONA ATALHO TECLA (+) E (DEL)
+    '---------------------------------------------------------------------------------------
+    Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) _
+    Handles txtCEP.KeyDown,
+            txtRGCliente.KeyDown
+        '
+        Dim ctr As Control = DirectCast(sender, Control)
+        '
+        If e.KeyCode = Keys.Add Then
+            e.Handled = True
+            '
+            Select Case ctr.Name
+                Case "txtRGCliente"
+                    btnProcuraRG_Click(New Object, New EventArgs)
+                Case "txtCEP"
+                    btnCEPProcura_Click(sender, New EventArgs)
+            End Select
+            '
+        ElseIf e.KeyCode = Keys.Delete Then
+            e.Handled = True
+            Select Case ctr.Name
+                Case "txtRGCliente"
+                    If Not IsNothing(_ClientePF.RGCliente) Then Sit = EnumFlagEstado.Alterado
+                    txtRGCliente.Clear()
+                    _ClientePF.RGCliente = Nothing
+                Case "txtCEP"
+                    If Not IsNothing(_ClientePF.CEP) Then Sit = EnumFlagEstado.Alterado
+                    txtCEP.Clear()
+                    _ClientePF.CEP = Nothing
+            End Select
+            '
+        End If
+        '
+    End Sub
+    '
 #End Region
     '
 #Region "OPERAÇÕES DE REGISTRO"
@@ -734,6 +791,7 @@ Public Class frmClientePF
     '
     ' CANCELAR ALTERAÇÃO DO REGISTRO ATUAL
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
+        '
         If MessageBox.Show("Deseja cancelar todas as alterações feitas no registro atual?",
                            "Cancelar Alterações", MessageBoxButtons.YesNo,
                            MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = DialogResult.Yes Then
@@ -742,6 +800,7 @@ Public Class frmClientePF
             txtClienteNome.Focus()
             Sit = EnumFlagEstado.RegistroSalvo
         End If
+        '
     End Sub
     '
     '-------------------------------------------------------------------------------------------------------
@@ -790,6 +849,7 @@ Public Class frmClientePF
     '
     ' FECHA O FORMULÁRIO
     Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+        '
         If Sit <> EnumFlagEstado.RegistroSalvo Then
             If MessageBox.Show("Esse registro ainda não foi salvo..." & vbNewLine & vbNewLine &
                                "Se você fechar agora, todas as alterações feitas serão perdidas!" & vbNewLine &
@@ -810,6 +870,7 @@ Public Class frmClientePF
         frm.ShowDialog()
 
     End Sub
+    '
 #End Region
     '
 #Region "OUTRAS FUNÇÕES"
@@ -884,6 +945,12 @@ Public Class frmClientePF
         '
         frm.ShowDialog()
         '
+    End Sub
+    '
+    '--- PROCURA CEP
+    '----------------------------------------------------------------------------------
+    Private Sub btnCEPProcura_Click(sender As Object, e As EventArgs) Handles btnCEPProcura.Click
+        Process.Start("http://www.buscacep.correios.com.br/sistemas/buscacep/buscaCepEndereco.cfm") 'Aqui você poderá alterar o site'
     End Sub
     '
 #End Region

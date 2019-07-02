@@ -20,11 +20,12 @@ Partial Class frmVendaVista
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.tabPrincipal = New VIBlend.WinForms.Controls.vTabControl()
         Me.vtab1 = New VIBlend.WinForms.Controls.vTabPage()
         Me.dgvItens = New System.Windows.Forms.DataGridView()
@@ -93,6 +94,21 @@ Partial Class frmVendaVista
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.mnuItemInserir = New System.Windows.Forms.ToolStripMenuItem()
         Me.mnuItemExcluir = New System.Windows.Forms.ToolStripMenuItem()
+        Me.pnlParcial = New VIBlend.WinForms.Controls.vPanel()
+        Me.btnParcialClear = New VIBlend.WinForms.Controls.vFormButton()
+        Me.lblParcialBtn = New System.Windows.Forms.Label()
+        Me.lblParcial = New System.Windows.Forms.Label()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.tabPrincipal.SuspendLayout()
         Me.vtab1.SuspendLayout()
@@ -109,6 +125,8 @@ Partial Class frmVendaVista
         Me.VPanel1.SuspendLayout()
         Me.tspMenuAcao.SuspendLayout()
         Me.mnuContexto.SuspendLayout()
+        Me.pnlParcial.Content.SuspendLayout()
+        Me.pnlParcial.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -192,43 +210,43 @@ Partial Class frmVendaVista
         '
         Me.dgvItens.AllowUserToAddRows = False
         Me.dgvItens.AllowUserToDeleteRows = False
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Azure
-        Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle7.BackColor = System.Drawing.Color.Azure
+        Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
         Me.dgvItens.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
         Me.dgvItens.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvItens.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
         Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
         Me.dgvItens.ColumnHeadersHeight = 30
         Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDTransacaoItem, Me.clnRGProduto, Me.clnProduto, Me.clnQuantidade, Me.clnPreco, Me.clnSubTotal, Me.clnDesconto, Me.clnTotal})
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.SteelBlue
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.SteelBlue
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle9
         Me.dgvItens.EnableHeadersVisualStyles = False
         Me.dgvItens.GridColor = System.Drawing.SystemColors.ActiveCaption
         Me.dgvItens.Location = New System.Drawing.Point(9, 9)
         Me.dgvItens.Name = "dgvItens"
         Me.dgvItens.ReadOnly = True
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItens.RowHeadersDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
+        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.RowHeadersDefaultCellStyle = DataGridViewCellStyle10
         Me.dgvItens.RowHeadersWidth = 35
         Me.dgvItens.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.dgvItens.Size = New System.Drawing.Size(1012, 444)
@@ -552,9 +570,9 @@ Partial Class frmVendaVista
         '
         'clnValor
         '
-        DataGridViewCellStyle5.Format = "C2"
-        DataGridViewCellStyle5.NullValue = "0"
-        Me.clnValor.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle11.Format = "C2"
+        DataGridViewCellStyle11.NullValue = "0"
+        Me.clnValor.DefaultCellStyle = DataGridViewCellStyle11
         Me.clnValor.HeaderText = "Valor"
         Me.clnValor.Name = "clnValor"
         Me.clnValor.ReadOnly = True
@@ -731,7 +749,7 @@ Partial Class frmVendaVista
         '
         Me.lblTotalGeral.Dock = System.Windows.Forms.DockStyle.Right
         Me.lblTotalGeral.Font = New System.Drawing.Font("Calibri", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTotalGeral.Location = New System.Drawing.Point(67, 0)
+        Me.lblTotalGeral.Location = New System.Drawing.Point(62, 0)
         Me.lblTotalGeral.Name = "lblTotalGeral"
         Me.lblTotalGeral.Size = New System.Drawing.Size(145, 37)
         Me.lblTotalGeral.TabIndex = 12
@@ -740,7 +758,7 @@ Partial Class frmVendaVista
         '
         'Label13
         '
-        Me.Label13.Location = New System.Drawing.Point(11, 8)
+        Me.Label13.Location = New System.Drawing.Point(7, 9)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(49, 19)
         Me.Label13.TabIndex = 16
@@ -876,14 +894,14 @@ Partial Class frmVendaVista
         Me.VPanel1.Content.Controls.Add(Me.lblTotalGeral)
         Me.VPanel1.Content.Location = New System.Drawing.Point(1, 1)
         Me.VPanel1.Content.Name = "Content"
-        Me.VPanel1.Content.Size = New System.Drawing.Size(212, 37)
+        Me.VPanel1.Content.Size = New System.Drawing.Size(207, 37)
         Me.VPanel1.Content.TabIndex = 17
         Me.VPanel1.CustomScrollersIntersectionColor = System.Drawing.Color.Empty
-        Me.VPanel1.Location = New System.Drawing.Point(818, 617)
+        Me.VPanel1.Location = New System.Drawing.Point(830, 617)
         Me.VPanel1.Name = "VPanel1"
         Me.VPanel1.Opacity = 1.0!
         Me.VPanel1.PanelBorderColor = System.Drawing.SystemColors.ActiveCaption
-        Me.VPanel1.Size = New System.Drawing.Size(214, 39)
+        Me.VPanel1.Size = New System.Drawing.Size(209, 39)
         Me.VPanel1.TabIndex = 17
         Me.VPanel1.Text = "VPanel1"
         Me.VPanel1.UsePanelBorderColor = True
@@ -1006,10 +1024,147 @@ Partial Class frmVendaVista
         Me.mnuItemExcluir.Size = New System.Drawing.Size(135, 22)
         Me.mnuItemExcluir.Text = "Excluir Item"
         '
+        'pnlParcial
+        '
+        Me.pnlParcial.AllowAnimations = True
+        Me.pnlParcial.BorderRadius = 0
+        '
+        'pnlParcial.Content
+        '
+        Me.pnlParcial.Content.AutoScroll = True
+        Me.pnlParcial.Content.BackColor = System.Drawing.SystemColors.Control
+        Me.pnlParcial.Content.Controls.Add(Me.btnParcialClear)
+        Me.pnlParcial.Content.Controls.Add(Me.lblParcialBtn)
+        Me.pnlParcial.Content.Controls.Add(Me.lblParcial)
+        Me.pnlParcial.Content.Location = New System.Drawing.Point(1, 1)
+        Me.pnlParcial.Content.Name = "Content"
+        Me.pnlParcial.Content.Size = New System.Drawing.Size(212, 37)
+        Me.pnlParcial.Content.TabIndex = 17
+        Me.pnlParcial.CustomScrollersIntersectionColor = System.Drawing.Color.Empty
+        Me.pnlParcial.Location = New System.Drawing.Point(604, 617)
+        Me.pnlParcial.Name = "pnlParcial"
+        Me.pnlParcial.Opacity = 1.0!
+        Me.pnlParcial.PanelBorderColor = System.Drawing.SystemColors.ActiveCaption
+        Me.pnlParcial.Size = New System.Drawing.Size(214, 39)
+        Me.pnlParcial.TabIndex = 17
+        Me.pnlParcial.Text = "VPanel1"
+        Me.pnlParcial.UsePanelBorderColor = True
+        Me.pnlParcial.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
+        Me.pnlParcial.Visible = False
+        '
+        'btnParcialClear
+        '
+        Me.btnParcialClear.AllowAnimations = True
+        Me.btnParcialClear.BackColor = System.Drawing.Color.Transparent
+        Me.btnParcialClear.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.CloseButton
+        Me.btnParcialClear.ForeColor = System.Drawing.Color.Firebrick
+        Me.btnParcialClear.Location = New System.Drawing.Point(7, 11)
+        Me.btnParcialClear.Name = "btnParcialClear"
+        Me.btnParcialClear.RibbonStyle = False
+        Me.btnParcialClear.RoundedCornersMask = CType(15, Byte)
+        Me.btnParcialClear.ShowFocusRectangle = False
+        Me.btnParcialClear.Size = New System.Drawing.Size(15, 15)
+        Me.btnParcialClear.TabIndex = 55
+        Me.btnParcialClear.TabStop = False
+        Me.btnParcialClear.UseVisualStyleBackColor = False
+        Me.btnParcialClear.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICE2003SILVER
+        '
+        'lblParcialBtn
+        '
+        Me.lblParcialBtn.BackColor = System.Drawing.Color.Transparent
+        Me.lblParcialBtn.Location = New System.Drawing.Point(22, 8)
+        Me.lblParcialBtn.Name = "lblParcialBtn"
+        Me.lblParcialBtn.Size = New System.Drawing.Size(57, 21)
+        Me.lblParcialBtn.TabIndex = 16
+        Me.lblParcialBtn.Text = "Parcial:"
+        '
+        'lblParcial
+        '
+        Me.lblParcial.Dock = System.Windows.Forms.DockStyle.Right
+        Me.lblParcial.Font = New System.Drawing.Font("Calibri", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblParcial.Location = New System.Drawing.Point(82, 0)
+        Me.lblParcial.Name = "lblParcial"
+        Me.lblParcial.Size = New System.Drawing.Size(130, 37)
+        Me.lblParcial.TabIndex = 12
+        Me.lblParcial.Text = "R$ 0,00"
+        Me.lblParcial.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.Frozen = True
+        Me.DataGridViewTextBoxColumn1.HeaderText = "IDItem"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.Visible = False
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.Frozen = True
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Reg."
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.Width = 70
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.Frozen = True
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Produto"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.Width = 430
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.Frozen = True
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Qtde"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.Width = 70
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.Frozen = True
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Preço"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.Frozen = True
+        Me.DataGridViewTextBoxColumn6.HeaderText = "SubTotal"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Desc."
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.Width = 80
+        '
+        'DataGridViewTextBoxColumn8
+        '
+        Me.DataGridViewTextBoxColumn8.HeaderText = "Total"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        '
+        'DataGridViewTextBoxColumn9
+        '
+        Me.DataGridViewTextBoxColumn9.HeaderText = "Reg."
+        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        Me.DataGridViewTextBoxColumn9.Width = 90
+        '
+        'DataGridViewTextBoxColumn10
+        '
+        Me.DataGridViewTextBoxColumn10.HeaderText = "Forma"
+        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        Me.DataGridViewTextBoxColumn10.Width = 200
+        '
+        'DataGridViewTextBoxColumn11
+        '
+        DataGridViewCellStyle12.Format = "C2"
+        DataGridViewCellStyle12.NullValue = "0"
+        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle12
+        Me.DataGridViewTextBoxColumn11.HeaderText = "Valor"
+        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        '
         'frmVendaVista
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1049, 667)
+        Me.Controls.Add(Me.pnlParcial)
         Me.Controls.Add(Me.tspMenuAcao)
         Me.Controls.Add(Me.VPanel1)
         Me.Controls.Add(Me.btnFinalizar)
@@ -1029,6 +1184,7 @@ Partial Class frmVendaVista
         Me.Controls.SetChildIndex(Me.VPanel1, 0)
         Me.Controls.SetChildIndex(Me.tspMenuAcao, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
+        Me.Controls.SetChildIndex(Me.pnlParcial, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.tabPrincipal.ResumeLayout(False)
@@ -1051,6 +1207,8 @@ Partial Class frmVendaVista
         Me.tspMenuAcao.ResumeLayout(False)
         Me.tspMenuAcao.PerformLayout()
         Me.mnuContexto.ResumeLayout(False)
+        Me.pnlParcial.Content.ResumeLayout(False)
+        Me.pnlParcial.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1124,4 +1282,19 @@ Partial Class frmVendaVista
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents mnuItemInserir As ToolStripMenuItem
     Friend WithEvents mnuItemExcluir As ToolStripMenuItem
+    Friend WithEvents pnlParcial As VIBlend.WinForms.Controls.vPanel
+    Friend WithEvents lblParcialBtn As Label
+    Friend WithEvents lblParcial As Label
+    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
+    Friend WithEvents btnParcialClear As VIBlend.WinForms.Controls.vFormButton
 End Class
