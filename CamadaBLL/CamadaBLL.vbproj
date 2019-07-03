@@ -81,6 +81,7 @@
     <Compile Include="EstoqueAjusteBLL.vb" />
     <Compile Include="FilialBLL.vb" />
     <Compile Include="FornecedorBLL.vb" />
+    <Compile Include="FreteBLL.vb" />
     <Compile Include="FuncionarioBLL.vb" />
     <Compile Include="MovimentacaoBLL.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

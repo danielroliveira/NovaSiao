@@ -1166,6 +1166,15 @@ Public Class frmPrincipal
         '
     End Sub
     '
+    Private Sub miFretes_Click(sender As Object, e As EventArgs) Handles miFretes.Click
+        '
+        Dim frmF As New frmFreteProcurar()
+        OcultaMenuPrincipal()
+        frmF.MdiParent = Me
+        frmF.Show()
+        '
+    End Sub
+    '
 #End Region
     '
     '========================================================================================================

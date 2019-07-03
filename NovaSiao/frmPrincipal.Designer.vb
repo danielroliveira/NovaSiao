@@ -82,7 +82,6 @@ Partial Class frmPrincipal
         Me.miTipoDeDespesa = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
         Me.miDespesasPeriodicas = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         Me.miAPagarProcurar = New System.Windows.Forms.ToolStripMenuItem()
         Me.miAPagarMovInterna = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsbCaixa = New System.Windows.Forms.ToolStripSplitButton()
@@ -113,14 +112,16 @@ Partial Class frmPrincipal
         Me.PainelInferior = New System.Windows.Forms.Panel()
         Me.lblConta = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
+        Me.lblVersao = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.lblFilial = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.lblDataSis = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblHora = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.lblVersao = New System.Windows.Forms.Label()
+        Me.miFretes = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator21 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsPrincipal.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.SContainerPrincipal, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -544,7 +545,7 @@ Partial Class frmPrincipal
         'tsbAPagar
         '
         Me.tsbAPagar.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbAPagar.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miNovaDespesa, Me.miNovaDespesaQuitada, Me.miProcurarDespesa, Me.miTipoDeDespesa, Me.ToolStripSeparator8, Me.miDespesasPeriodicas, Me.ToolStripSeparator7, Me.miAPagarProcurar, Me.miAPagarMovInterna})
+        Me.tsbAPagar.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miNovaDespesa, Me.miNovaDespesaQuitada, Me.miProcurarDespesa, Me.miTipoDeDespesa, Me.ToolStripSeparator8, Me.miAPagarProcurar, Me.miAPagarMovInterna, Me.ToolStripSeparator21, Me.miDespesasPeriodicas, Me.miFretes})
         Me.tsbAPagar.Image = Global.NovaSiao.My.Resources.Resources.APagar
         Me.tsbAPagar.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbAPagar.Name = "tsbAPagar"
@@ -595,11 +596,6 @@ Partial Class frmPrincipal
         Me.miDespesasPeriodicas.Name = "miDespesasPeriodicas"
         Me.miDespesasPeriodicas.Size = New System.Drawing.Size(241, 36)
         Me.miDespesasPeriodicas.Text = "Despesas Periódicas"
-        '
-        'ToolStripSeparator7
-        '
-        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
-        Me.ToolStripSeparator7.Size = New System.Drawing.Size(238, 6)
         '
         'miAPagarProcurar
         '
@@ -889,6 +885,27 @@ Partial Class frmPrincipal
         Me.Label4.TabIndex = 4
         Me.Label4.Text = "Conta:"
         '
+        'lblVersao
+        '
+        Me.lblVersao.ForeColor = System.Drawing.Color.Transparent
+        Me.lblVersao.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.lblVersao.Location = New System.Drawing.Point(643, 7)
+        Me.lblVersao.Name = "lblVersao"
+        Me.lblVersao.Size = New System.Drawing.Size(102, 19)
+        Me.lblVersao.TabIndex = 3
+        Me.lblVersao.Text = "..."
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.ForeColor = System.Drawing.Color.Transparent
+        Me.Label1.ImeMode = System.Windows.Forms.ImeMode.NoControl
+        Me.Label1.Location = New System.Drawing.Point(590, 7)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(57, 19)
+        Me.Label1.TabIndex = 2
+        Me.Label1.Text = "Versão:"
+        '
         'lblFilial
         '
         Me.lblFilial.ForeColor = System.Drawing.Color.Transparent
@@ -950,26 +967,18 @@ Partial Class frmPrincipal
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 600
         '
-        'Label1
+        'miFretes
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.ForeColor = System.Drawing.Color.Transparent
-        Me.Label1.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.Label1.Location = New System.Drawing.Point(590, 7)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(57, 19)
-        Me.Label1.TabIndex = 2
-        Me.Label1.Text = "Versão:"
+        Me.miFretes.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
+        Me.miFretes.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miFretes.Name = "miFretes"
+        Me.miFretes.Size = New System.Drawing.Size(241, 36)
+        Me.miFretes.Text = "Fretes"
         '
-        'lblVersao
+        'ToolStripSeparator21
         '
-        Me.lblVersao.ForeColor = System.Drawing.Color.Transparent
-        Me.lblVersao.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.lblVersao.Location = New System.Drawing.Point(643, 7)
-        Me.lblVersao.Name = "lblVersao"
-        Me.lblVersao.Size = New System.Drawing.Size(102, 19)
-        Me.lblVersao.TabIndex = 3
-        Me.lblVersao.Text = "..."
+        Me.ToolStripSeparator21.Name = "ToolStripSeparator21"
+        Me.ToolStripSeparator21.Size = New System.Drawing.Size(238, 6)
         '
         'frmPrincipal
         '
@@ -1051,7 +1060,6 @@ Partial Class frmPrincipal
     Friend WithEvents miCredores As ToolStripMenuItem
     Friend WithEvents miTipoDeDespesa As ToolStripMenuItem
     Friend WithEvents miNovaDespesa As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
     Friend WithEvents miProcurarDespesa As ToolStripMenuItem
     Friend WithEvents miAPagarProcurar As ToolStripMenuItem
     Friend WithEvents miDespesasPeriodicas As ToolStripMenuItem
@@ -1099,4 +1107,6 @@ Partial Class frmPrincipal
     Friend WithEvents miProcurarAjusteDeEstoque As ToolStripMenuItem
     Friend WithEvents lblVersao As Label
     Friend WithEvents Label1 As Label
+    Friend WithEvents ToolStripSeparator21 As ToolStripSeparator
+    Friend WithEvents miFretes As ToolStripMenuItem
 End Class

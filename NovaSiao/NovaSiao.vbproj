@@ -531,6 +531,18 @@
     <Compile Include="FormsPrincipais\frmUserAuthorization.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Fretes\frmFrete.designer.vb">
+      <DependentUpon>frmFrete.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Fretes\frmFrete.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Fretes\frmFreteProcurar.designer.vb">
+      <DependentUpon>frmFreteProcurar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Fretes\frmFreteProcurar.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Modals\DialogModal.vb" />
     <Compile Include="Modals\frmDialog.Designer.vb">
       <DependentUpon>frmDialog.vb</DependentUpon>
@@ -1014,6 +1026,12 @@
     <EmbeddedResource Include="FormsPrincipais\frmUserAuthorization.resx">
       <DependentUpon>frmUserAuthorization.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Fretes\frmFrete.resx">
+      <DependentUpon>frmFrete.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fretes\frmFreteProcurar.resx">
+      <DependentUpon>frmFreteProcurar.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Modals\frmDialog.resx">
       <DependentUpon>frmDialog.vb</DependentUpon>
     </EmbeddedResource>
@@ -1374,6 +1392,7 @@
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

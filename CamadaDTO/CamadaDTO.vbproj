@@ -79,6 +79,7 @@
     <Compile Include="clEstoqueAjuste.vb" />
     <Compile Include="clFilial.vb" />
     <Compile Include="clFornecedor.vb" />
+    <Compile Include="clFrete.vb" />
     <Compile Include="clFuncionario.vb" />
     <Compile Include="clMovForma.vb" />
     <Compile Include="clMovimentacao.vb" />
