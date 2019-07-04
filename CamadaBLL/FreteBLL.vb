@@ -6,19 +6,20 @@ Public Class FreteBLL
     '===================================================================================================
     ' ALTERAR FRETE
     '===================================================================================================
-    Public Function Despesa_Alterar(frete As clFrete, dbTran As Object) As Integer
-        Dim db As AcessoDados = dbTran
+    Public Function FreteUpdate(frete As clFrete, Optional dbTran As Object = Nothing) As Integer
+        '
+        Dim db As AcessoDados = If(dbTran, New AcessoDados)
         '
         '--- Adicionar os paramentros
         db.LimparParametros()
         '
-        db.AdicionarParametros("IDTransacao", frete.IDTransacao)
-        db.AdicionarParametros("Conhecimento", If(frete.Conhecimento, DBNull.Value))
-        db.AdicionarParametros("ConhecimentoData", If(frete.ConhecimentoData, DBNull.Value))
-        db.AdicionarParametros("IDTransportadora", frete.IDTransportadora)
-        db.AdicionarParametros("FreteValor", frete.FreteValor)
-        db.AdicionarParametros("IDAPagar", If(frete.IDAPagar, DBNull.Value))
-        db.AdicionarParametros("Volumes", frete.Volumes)
+        db.AdicionarParametros("@IDTransacao", frete.IDTransacao)
+        db.AdicionarParametros("@Conhecimento", If(frete.Conhecimento, DBNull.Value))
+        db.AdicionarParametros("@ConhecimentoData", If(frete.ConhecimentoData, DBNull.Value))
+        db.AdicionarParametros("@IDTransportadora", frete.IDTransportadora)
+        db.AdicionarParametros("@FreteValor", frete.FreteValor)
+        db.AdicionarParametros("@IDFreteDespesa", If(frete.IDFreteDespesa, DBNull.Value))
+        db.AdicionarParametros("@Volumes", frete.Volumes)
         '
         Dim myQuery As String =
             "UPDATE tblFrete SET " &
@@ -26,8 +27,8 @@ Public Class FreteBLL
             "ConhecimentoData = @ConhecimentoData, " &
             "IDTransportadora = @IDTransportadora, " &
             "FreteValor = @FreteValor, " &
-            "IDAPagar = @IDAPagar, " &
-            "Volumes = @Volumes, " &
+            "IDFreteDespesa = @IDFreteDespesa, " &
+            "Volumes = @Volumes " &
             "WHERE IDTransacao = @IDTransacao"
         '
         '-- Update a despesa
@@ -91,9 +92,9 @@ Public Class FreteBLL
         Dim myQuery As String = "SELECT * FROM qryFretes WHERE IDFilial = @IDFilial "
         '
         If Not Cobradas Then
-            myQuery = myQuery & "AND IDAPagar IS NULL "
+            myQuery = myQuery & "AND IDFreteDespesa IS NULL "
         Else
-            myQuery = myQuery & "AND IDAPagar IS NOT NULL "
+            myQuery = myQuery & "AND IDFreteDespesa IS NOT NULL "
         End If
         '
         If Not IsNothing(IDTransportadora) Then
@@ -142,14 +143,91 @@ Public Class FreteBLL
         frete.FreteTipo = IIf(IsDBNull(r("FreteTipo")), Nothing, r("FreteTipo"))
         frete.FreteTipoTexto = IIf(IsDBNull(r("FreteTipoTexto")), String.Empty, r("FreteTipoTexto"))
         frete.FreteValor = IIf(IsDBNull(r("FreteValor")), Nothing, r("FreteValor"))
-        frete.Conhecimento = IIf(IsDBNull(r("Conhecimento")), Nothing, r("Conhecimento"))
+        frete.Conhecimento = IIf(IsDBNull(r("Conhecimento")), String.Empty, r("Conhecimento"))
         frete.ConhecimentoData = IIf(IsDBNull(r("ConhecimentoData")), Nothing, r("ConhecimentoData"))
-        frete.IDAPagar = IIf(IsDBNull(r("IDAPagar")), Nothing, r("IDAPagar"))
+        frete.IDFreteDespesa = IIf(IsDBNull(r("IDFreteDespesa")), Nothing, r("IDFreteDespesa"))
         frete.IDTransportadora = IIf(IsDBNull(r("IDTransportadora")), Nothing, r("IDTransportadora"))
         frete.Transportadora = IIf(IsDBNull(r("Transportadora")), String.Empty, r("Transportadora"))
         frete.Volumes = IIf(IsDBNull(r("Volumes")), Nothing, r("Volumes"))
         '
         Return frete
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' ADD FRETE DESPESA
+    '==========================================================================================
+    Private Function FreteDespesaAdd(FreteDespesaValor As Decimal, dbTran As Object) As Integer
+        '
+        Dim db As AcessoDados = dbTran
+        '
+        db.LimparParametros()
+        db.AdicionarParametros("@FreteDespesaData", Today)
+        db.AdicionarParametros("@FreteDespesaValor", FreteDespesaValor)
+        '
+        Dim myQuery As String = "INSERT INTO tblFreteDespesa " &
+                                "(FreteDespesaData, FreteDespesaValor) " &
+                                "VALUES (@FreteDespesaData, @FreteDespesaValor)"
+        '
+        Try
+            '
+            db.ExecutarManipulacao(CommandType.Text, myQuery)
+            '
+            '--- obter NewID
+            db.LimparParametros()
+            myQuery = "SELECT @@IDENTITY As LastID;"
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, myQuery)
+            '
+            Dim newID As Object = dt.Rows(0)(0)
+            '
+            If IsNumeric(newID) Then
+                Return newID
+            Else
+                Throw New Exception(newID.ToString)
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' FRETE DESPESA APAGAR CREATE
+    '==========================================================================================
+    Public Function FreteDespesaCreate(freteList As List(Of clFrete), aPagar As clAPagar) As Integer
+        '
+        Dim db As New AcessoDados
+        db.BeginTransaction()
+        '
+        Try
+            '
+            '--- CREATE NEW FRETE DESPESA
+            '----------------------------------------------------------------------------------
+            Dim despesaValor As Decimal = freteList.Sum(Function(x) x.FreteValor)
+            Dim newID As Integer = FreteDespesaAdd(despesaValor, db)
+            '
+            '--- UPDATE FRETES WITH NEW ID FRETEDESPESA
+            '----------------------------------------------------------------------------------
+            For Each frete In freteList
+                frete.IDFreteDespesa = newID
+                FreteUpdate(frete, db)
+            Next
+            '
+            '--- CREATE NEW APAGAR
+            '----------------------------------------------------------------------------------
+            Dim pagBLL As New APagarBLL
+            '
+            aPagar.IDOrigem = newID
+            pagBLL.InserirNovo_APagar(aPagar, db)
+            '
+            db.RollBackTransaction()
+            Return newID
+            '
+        Catch ex As Exception
+            db.RollBackTransaction()
+            Throw ex
+        End Try
         '
     End Function
     '

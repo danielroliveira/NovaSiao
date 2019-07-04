@@ -56,6 +56,7 @@ Partial Class frmFreteProcurar
         Me.rbtCobradas = New System.Windows.Forms.RadioButton()
         Me.rbtEmAberto = New System.Windows.Forms.RadioButton()
         Me.Label1 = New System.Windows.Forms.Label()
+        Me.lblValorSelecionado = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.dgvListagem, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -285,7 +286,7 @@ Partial Class frmFreteProcurar
         '
         Me.Label9.AutoSize = True
         Me.Label9.BackColor = System.Drawing.Color.Transparent
-        Me.Label9.Location = New System.Drawing.Point(684, 4)
+        Me.Label9.Location = New System.Drawing.Point(705, 4)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(73, 19)
         Me.Label9.TabIndex = 0
@@ -295,7 +296,7 @@ Partial Class frmFreteProcurar
         '
         Me.Label6.AutoSize = True
         Me.Label6.BackColor = System.Drawing.Color.Transparent
-        Me.Label6.Location = New System.Drawing.Point(533, 4)
+        Me.Label6.Location = New System.Drawing.Point(576, 4)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(102, 19)
         Me.Label6.TabIndex = 5
@@ -457,10 +458,21 @@ Partial Class frmFreteProcurar
         Me.Label1.TabIndex = 3
         Me.Label1.Text = "Situação"
         '
+        'lblValorSelecionado
+        '
+        Me.lblValorSelecionado.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblValorSelecionado.Location = New System.Drawing.Point(360, 557)
+        Me.lblValorSelecionado.Name = "lblValorSelecionado"
+        Me.lblValorSelecionado.Size = New System.Drawing.Size(287, 32)
+        Me.lblValorSelecionado.TabIndex = 13
+        Me.lblValorSelecionado.Text = "Total Selecionado: R$ 0,00 "
+        Me.lblValorSelecionado.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
         'frmFreteProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(944, 601)
+        Me.Controls.Add(Me.lblValorSelecionado)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.btnTransportadora)
         Me.Controls.Add(Me.txtTransportadora)
@@ -488,6 +500,7 @@ Partial Class frmFreteProcurar
         Me.Controls.SetChildIndex(Me.txtTransportadora, 0)
         Me.Controls.SetChildIndex(Me.btnTransportadora, 0)
         Me.Controls.SetChildIndex(Me.Panel3, 0)
+        Me.Controls.SetChildIndex(Me.lblValorSelecionado, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
@@ -536,4 +549,5 @@ Partial Class frmFreteProcurar
     Friend WithEvents clnConhecimento As DataGridViewTextBoxColumn
     Friend WithEvents clnConhecimentoData As DataGridViewTextBoxColumn
     Friend WithEvents clnFreteValor As DataGridViewTextBoxColumn
+    Friend WithEvents lblValorSelecionado As Label
 End Class

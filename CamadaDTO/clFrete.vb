@@ -14,9 +14,9 @@ Public Class clFrete : Implements IEditableObject
         Dim _FreteTipo As Byte
         Dim _FreteTipoTexto As String
         Dim _FreteValor As Double
-        Dim _Conhecimento As Integer?
+        Dim _Conhecimento As String
         Dim _ConhecimentoData As Date?
-        Dim _IDAPagar As Integer?
+        Dim _IDFreteDespesa As Integer?
         Dim _IDTransportadora As Integer
         Dim _Transportadora As String
         Dim _Volumes As Int16
@@ -166,11 +166,11 @@ Public Class clFrete : Implements IEditableObject
     '
     '--- Propriedade Conhecimento
     '------------------------------------------------------
-    Public Property Conhecimento() As Integer?
+    Public Property Conhecimento() As String
         Get
             Return FreteData._Conhecimento
         End Get
-        Set(ByVal value As Integer?)
+        Set(ByVal value As String)
             If value <> FreteData._Conhecimento Then
                 RaiseEvent AoAlterar()
             End If
@@ -188,21 +188,25 @@ Public Class clFrete : Implements IEditableObject
             If value <> FreteData._ConhecimentoData Then
                 RaiseEvent AoAlterar()
             End If
-            FreteData._ConhecimentoData = value
+            If IsDate(value) Then
+                FreteData._ConhecimentoData = value.Value.ToShortDateString
+            Else
+                FreteData._ConhecimentoData = value
+            End If
         End Set
     End Property
     '
-    '--- Propriedade IDAPagar
+    '--- Propriedade IDFreteDespesa
     '------------------------------------------------------
-    Public Property IDAPagar() As Integer?
+    Public Property IDFreteDespesa() As Integer?
         Get
-            Return FreteData._IDAPagar
+            Return FreteData._IDFreteDespesa
         End Get
         Set(ByVal value As Integer?)
-            If value <> FreteData._IDAPagar Then
+            If value <> FreteData._IDFreteDespesa Then
                 RaiseEvent AoAlterar()
             End If
-            FreteData._IDAPagar = value
+            FreteData._IDFreteDespesa = value
         End Set
     End Property
     '

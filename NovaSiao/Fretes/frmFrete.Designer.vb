@@ -19,27 +19,22 @@ Partial Class frmFrete
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
-        Me.MenuFil = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.AtivarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DesativarToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblID = New System.Windows.Forms.Label()
         Me.lbl_IdTexto = New System.Windows.Forms.Label()
         Me.tsMenu = New System.Windows.Forms.ToolStrip()
         Me.btnSalvar = New System.Windows.Forms.ToolStripButton()
         Me.btnCancelar = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton1 = New System.Windows.Forms.ToolStripButton()
+        Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.btnTransportadora = New VIBlend.WinForms.Controls.vButton()
         Me.txtTransportadora = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.txtConhecimento = New System.Windows.Forms.TextBox()
         Me.dtpConhecimentoData = New System.Windows.Forms.DateTimePicker()
         Me.txtFreteValor = New Controles.Text_Monetario()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.txtConhecimento = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
-        Me.MenuFil.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -60,26 +55,6 @@ Partial Class frmFrete
         Me.lblTitulo.Size = New System.Drawing.Size(145, 50)
         Me.lblTitulo.TabIndex = 2
         Me.lblTitulo.Text = "Editar Frete"
-        '
-        'MenuFil
-        '
-        Me.MenuFil.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AtivarToolStripMenuItem, Me.DesativarToolStripMenuItem})
-        Me.MenuFil.Name = "MenuFab"
-        Me.MenuFil.Size = New System.Drawing.Size(150, 48)
-        '
-        'AtivarToolStripMenuItem
-        '
-        Me.AtivarToolStripMenuItem.Image = Global.NovaSiao.My.Resources.Resources.accept
-        Me.AtivarToolStripMenuItem.Name = "AtivarToolStripMenuItem"
-        Me.AtivarToolStripMenuItem.Size = New System.Drawing.Size(149, 22)
-        Me.AtivarToolStripMenuItem.Text = "Ativar Filial"
-        '
-        'DesativarToolStripMenuItem
-        '
-        Me.DesativarToolStripMenuItem.Image = Global.NovaSiao.My.Resources.Resources.block
-        Me.DesativarToolStripMenuItem.Name = "DesativarToolStripMenuItem"
-        Me.DesativarToolStripMenuItem.Size = New System.Drawing.Size(149, 22)
-        Me.DesativarToolStripMenuItem.Text = "Desativar Filial"
         '
         'lblID
         '
@@ -117,13 +92,13 @@ Partial Class frmFrete
         Me.tsMenu.Dock = System.Windows.Forms.DockStyle.None
         Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
-        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSalvar, Me.btnCancelar, Me.ToolStripButton1})
+        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSalvar, Me.btnCancelar, Me.btnFechar})
         Me.tsMenu.Location = New System.Drawing.Point(4, 225)
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
         Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
         Me.tsMenu.Size = New System.Drawing.Size(568, 48)
-        Me.tsMenu.TabIndex = 5
+        Me.tsMenu.TabIndex = 10
         Me.tsMenu.TabStop = True
         Me.tsMenu.Text = "Menu Cliente PF"
         '
@@ -148,14 +123,15 @@ Partial Class frmFrete
         Me.btnCancelar.Text = "&Cancelar"
         Me.btnCancelar.ToolTipText = "Cancelar Edição"
         '
-        'ToolStripButton1
+        'btnFechar
         '
-        Me.ToolStripButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton1.Image = Global.NovaSiao.My.Resources.Resources.Fechar_24x24
-        Me.ToolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton1.Name = "ToolStripButton1"
-        Me.ToolStripButton1.Size = New System.Drawing.Size(86, 45)
-        Me.ToolStripButton1.Text = "&Fechar"
+        Me.btnFechar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar_30px
+        Me.btnFechar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFechar.Margin = New System.Windows.Forms.Padding(0, 1, 3, 2)
+        Me.btnFechar.Name = "btnFechar"
+        Me.btnFechar.Size = New System.Drawing.Size(86, 45)
+        Me.btnFechar.Text = "&Fechar"
         '
         'btnTransportadora
         '
@@ -168,7 +144,7 @@ Partial Class frmFrete
         Me.btnTransportadora.RoundedCornersMask = CType(15, Byte)
         Me.btnTransportadora.RoundedCornersRadius = 0
         Me.btnTransportadora.Size = New System.Drawing.Size(34, 27)
-        Me.btnTransportadora.TabIndex = 8
+        Me.btnTransportadora.TabIndex = 3
         Me.btnTransportadora.TabStop = False
         Me.btnTransportadora.Text = "..."
         Me.btnTransportadora.UseCompatibleTextRendering = True
@@ -178,9 +154,10 @@ Partial Class frmFrete
         'txtTransportadora
         '
         Me.txtTransportadora.Location = New System.Drawing.Point(151, 72)
+        Me.txtTransportadora.MaxLength = 50
         Me.txtTransportadora.Name = "txtTransportadora"
         Me.txtTransportadora.Size = New System.Drawing.Size(355, 27)
-        Me.txtTransportadora.TabIndex = 7
+        Me.txtTransportadora.TabIndex = 2
         '
         'Label11
         '
@@ -190,15 +167,8 @@ Partial Class frmFrete
         Me.Label11.Location = New System.Drawing.Point(38, 75)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(107, 19)
-        Me.Label11.TabIndex = 6
+        Me.Label11.TabIndex = 1
         Me.Label11.Text = "Transportadora"
-        '
-        'txtConhecimento
-        '
-        Me.txtConhecimento.Location = New System.Drawing.Point(151, 105)
-        Me.txtConhecimento.Name = "txtConhecimento"
-        Me.txtConhecimento.Size = New System.Drawing.Size(178, 27)
-        Me.txtConhecimento.TabIndex = 9
         '
         'dtpConhecimentoData
         '
@@ -208,7 +178,8 @@ Partial Class frmFrete
         Me.dtpConhecimentoData.Name = "dtpConhecimentoData"
         Me.dtpConhecimentoData.ShowCheckBox = True
         Me.dtpConhecimentoData.Size = New System.Drawing.Size(178, 27)
-        Me.dtpConhecimentoData.TabIndex = 10
+        Me.dtpConhecimentoData.TabIndex = 7
+        Me.dtpConhecimentoData.Value = New Date(2019, 7, 3, 0, 0, 0, 0)
         '
         'txtFreteValor
         '
@@ -216,7 +187,7 @@ Partial Class frmFrete
         Me.txtFreteValor.Name = "txtFreteValor"
         Me.txtFreteValor.Size = New System.Drawing.Size(123, 27)
         Me.txtFreteValor.SomentePositivos = True
-        Me.txtFreteValor.TabIndex = 11
+        Me.txtFreteValor.TabIndex = 9
         Me.txtFreteValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label1
@@ -227,7 +198,7 @@ Partial Class frmFrete
         Me.Label1.Location = New System.Drawing.Point(17, 108)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(128, 19)
-        Me.Label1.TabIndex = 6
+        Me.Label1.TabIndex = 4
         Me.Label1.Text = "No. Conhecimento"
         '
         'Label2
@@ -249,16 +220,24 @@ Partial Class frmFrete
         Me.Label3.Location = New System.Drawing.Point(46, 174)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(99, 19)
-        Me.Label3.TabIndex = 6
+        Me.Label3.TabIndex = 8
         Me.Label3.Text = "Valor do Frete"
+        '
+        'txtConhecimento
+        '
+        Me.txtConhecimento.Location = New System.Drawing.Point(151, 105)
+        Me.txtConhecimento.MaxLength = 20
+        Me.txtConhecimento.Name = "txtConhecimento"
+        Me.txtConhecimento.Size = New System.Drawing.Size(178, 27)
+        Me.txtConhecimento.TabIndex = 5
         '
         'frmFrete
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(574, 275)
+        Me.Controls.Add(Me.txtConhecimento)
         Me.Controls.Add(Me.txtFreteValor)
         Me.Controls.Add(Me.dtpConhecimentoData)
-        Me.Controls.Add(Me.txtConhecimento)
         Me.Controls.Add(Me.btnTransportadora)
         Me.Controls.Add(Me.txtTransportadora)
         Me.Controls.Add(Me.Label3)
@@ -276,34 +255,30 @@ Partial Class frmFrete
         Me.Controls.SetChildIndex(Me.Label3, 0)
         Me.Controls.SetChildIndex(Me.txtTransportadora, 0)
         Me.Controls.SetChildIndex(Me.btnTransportadora, 0)
-        Me.Controls.SetChildIndex(Me.txtConhecimento, 0)
         Me.Controls.SetChildIndex(Me.dtpConhecimentoData, 0)
         Me.Controls.SetChildIndex(Me.txtFreteValor, 0)
+        Me.Controls.SetChildIndex(Me.txtConhecimento, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.MenuFil.ResumeLayout(False)
         Me.tsMenu.ResumeLayout(False)
         Me.tsMenu.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents MenuFil As ContextMenuStrip
-    Friend WithEvents AtivarToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents DesativarToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents lblID As Label
     Friend WithEvents lbl_IdTexto As Label
     Friend WithEvents tsMenu As ToolStrip
     Friend WithEvents btnSalvar As ToolStripButton
     Friend WithEvents btnCancelar As ToolStripButton
-    Friend WithEvents ToolStripButton1 As ToolStripButton
+    Friend WithEvents btnFechar As ToolStripButton
     Friend WithEvents btnTransportadora As VIBlend.WinForms.Controls.vButton
     Friend WithEvents txtTransportadora As TextBox
     Friend WithEvents Label11 As Label
-    Friend WithEvents txtConhecimento As TextBox
     Friend WithEvents dtpConhecimentoData As DateTimePicker
     Friend WithEvents txtFreteValor As Controles.Text_Monetario
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label3 As Label
+    Friend WithEvents txtConhecimento As TextBox
 End Class

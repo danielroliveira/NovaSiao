@@ -144,7 +144,7 @@ Public Class frmFreteProcurar
             .Visible = True
             .ReadOnly = True
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
         End With
         '
         ' (4) COLUNA CONHECIMENTO
@@ -154,7 +154,7 @@ Public Class frmFreteProcurar
             .Visible = True
             .ReadOnly = True
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
         ' (5) COLUNA CONHECIMENTODATA
@@ -164,7 +164,7 @@ Public Class frmFreteProcurar
             .Visible = True
             .ReadOnly = True
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
         ' (7) COLUNA VALOR
@@ -193,40 +193,53 @@ Public Class frmFreteProcurar
         Get_Dados()
     End Sub
     '
+    Private Sub dgvListagem_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListagem.CellValueChanged
+        '
+        If e.ColumnIndex = 0 Then
+            Dim selFretes As New List(Of clFrete)
+            '
+            For Each row As DataGridViewRow In dgvListagem.Rows
+                If row.Cells(0).Value = True Then
+                    selFretes.Add(row.DataBoundItem)
+                End If
+            Next
+            '
+            Dim total As Decimal = selFretes.Sum(Function(x) x.FreteValor)
+            '
+            If total > 0 Then
+                lblValorSelecionado.Visible = True
+                lblValorSelecionado.Text = "Total Selecionado: " & Format(total, "C")
+            Else
+                lblValorSelecionado.Visible = False
+                lblValorSelecionado.Text = "Total Selecionado: " & Format(0, "C")
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    Private Sub dgvListagem_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListagem.CellContentClick
+        If e.ColumnIndex = 0 Then
+            dgvListagem.CommitEdit(DataGridViewDataErrorContexts.Commit)
+        End If
+    End Sub
+    '
 #End Region
     '
 #Region "ACAO DOS BOTOES"
     '
     Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
         '
-        'If dgvListagem.SelectedRows.Count = 0 Then
-        '    MessageBox.Show("Não existe nenhuma Despesa selecionada na listagem", "Escolher",
-        '                    MessageBoxButtons.OK, MessageBoxIcon.Information)
-        '    Exit Sub
-        'End If
-        ''
-        'Dim clD As clDespesa = dgvListagem.SelectedRows(0).DataBoundItem
-        ''
-        ''--- Verifica se o form Despesa ja esta aberto
-        'Dim frm As Form = Nothing
-        ''
-        'For Each f As Form In Application.OpenForms
-        '    If f.Name = "frmDespesa" Then
-        '        frm = f
-        '    End If
-        'Next
-        ''
-        'If IsNothing(frm) Then '--- o frmDespesa não esta aberto
-        '    frm = New frmDespesa(clD)
-        '    frm.MdiParent = frmPrincipal
-        '    frm.StartPosition = FormStartPosition.CenterScreen
-        '    Close()
-        '    frm.Show()
-        'Else '--- o frmDespesa já esta aberto
-        '    DirectCast(frm, frmDespesa).propDespesa = clD
-        '    frm.Focus()
-        '    Close()
-        'End If
+        If dgvListagem.SelectedRows.Count = 0 Then
+            MessageBox.Show("Não existe nenhum Frete selecionado na listagem", "Escolher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Exit Sub
+        End If
+        '
+        Dim clF As clFrete = dgvListagem.SelectedRows(0).DataBoundItem
+        '
+        Dim frm = New frmFrete(clF)
+        frm.ShowDialog()
         '
     End Sub
     '
@@ -260,7 +273,6 @@ Public Class frmFreteProcurar
         End If
         '
     End Sub
-    '
     '
     Private Sub btnTransportadora_Click(sender As Object, e As EventArgs) Handles btnTransportadora.Click
         '
@@ -326,28 +338,91 @@ Public Class frmFreteProcurar
         '
     End Sub
     '
-    Private Sub btnNova_Click(sender As Object, e As EventArgs) Handles btnDespesa.Click
-        '--- Verifica se o form Despesa ja esta aberto
-        'Dim frm As Form = Nothing
-        'Dim clD As New clDespesa
-        ''
-        'For Each f As Form In Application.OpenForms
-        '    If f.Name = "frmDespesa" Then
-        '        frm = f
-        '    End If
-        'Next
-        ''
-        'If IsNothing(frm) Then '--- o frmDespesa não esta aberto
-        '    '
-        '    frm = New frmDespesa(clD)
-        '    frm.MdiParent = frmPrincipal
-        '    frm.StartPosition = FormStartPosition.CenterScreen
-        '    Close()
-        '    frm.Show()
-        'Else '--- o frmDespesa já esta aberto
-        '    Close()
-        '    DirectCast(frm, frmDespesa).propDespesa = clD
-        'End If
+    Private Sub btnDespesa_Click(sender As Object, e As EventArgs) Handles btnDespesa.Click
+        '
+        '--- check number of items datagrid
+        '--------------------------------------------------------------------------------------
+        If dgvListagem.Rows.Count = 0 Then
+            DialogModal.AbrirDialog("Não foi selecionado nenhum Frete para gerar cobrança... ",
+                                    "Gerar Cobrança",
+                                    frmDialog.DialogType.OK,
+                                    frmDialog.DialogIcon.Exclamation)
+            Exit Sub
+        End If
+        '
+        '--- count selected fretes and check same IDTransportadora
+        '--------------------------------------------------------------------------------------
+        Dim selFretes As New List(Of clFrete)
+        Dim IDTransp As Integer? = Nothing
+        '
+        For Each row As DataGridViewRow In dgvListagem.Rows
+            '
+            If row.Cells(0).Value = True Then
+                Dim frete As clFrete = row.DataBoundItem
+                '
+                If Not IsNothing(IDTransp) Then
+                    If IDTransp <> frete.IDTransportadora Then
+                        AbrirDialog("Todos os fretes selecionados devem ser da mesma transportadora...",
+                                    "Gerar Cobrança",
+                                    frmDialog.DialogType.OK,
+                                    frmDialog.DialogIcon.Exclamation)
+                        selFretes.Clear()
+                        Exit Sub
+                    End If
+                End If
+                '
+                IDTransp = frete.IDTransportadora
+                selFretes.Add(row.DataBoundItem)
+                '
+            End If
+            '
+        Next
+        '
+        '--- check total value
+        '--------------------------------------------------------------------------------------
+        Dim selValor As Decimal = selFretes.Sum(Function(x) x.FreteValor)
+        '
+        If selValor = 0 Then
+            DialogModal.AbrirDialog("Não existe valor ou Não foi selecionado nenhum Frete para gerar cobrança... ",
+                        "Gerar Cobrança",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Exclamation)
+            Exit Sub
+        End If
+        '
+        '--- check same IDTransportadora
+        '--------------------------------------------------------------------------------------
+
+        Dim pag As New clAPagar With {
+            .APagarValor = selValor,
+            .IDFilial = IDFilial,
+            .IDPessoa = IDTransp,
+            .Vencimento = Today,
+            .Origem = 5 '-- tblFreteDespesa    
+        }
+        '
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frmPag As New frmFreteAPagar(Me, selValor, Today, pag, EnumFlagAcao.INSERIR)
+            frmPag.ShowDialog()
+            '
+            If frmPag.DialogResult <> DialogResult.OK Then Exit Sub
+            '
+            Dim freteBLL As New FreteBLL
+            freteBLL.FreteDespesaCreate(selFretes, pag)
+            'Get_Dados()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Abrir formulário de Cobrança..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
         '
     End Sub
     '

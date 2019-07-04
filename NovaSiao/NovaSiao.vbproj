@@ -537,6 +537,12 @@
     <Compile Include="Fretes\frmFrete.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Fretes\frmFreteAPagar.designer.vb">
+      <DependentUpon>frmFreteAPagar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Fretes\frmFreteAPagar.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Fretes\frmFreteProcurar.designer.vb">
       <DependentUpon>frmFreteProcurar.vb</DependentUpon>
     </Compile>
@@ -1028,6 +1034,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Fretes\frmFrete.resx">
       <DependentUpon>frmFrete.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Fretes\frmFreteAPagar.resx">
+      <DependentUpon>frmFreteAPagar.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Fretes\frmFreteProcurar.resx">
       <DependentUpon>frmFreteProcurar.vb</DependentUpon>

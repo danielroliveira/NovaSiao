@@ -189,6 +189,25 @@ End Sub
 
 '
 '---------------------------------------------------------------------------------------
+' SOMENTE NUMEROS E LETRAS UPPER CASE
+'---------------------------------------------------------------------------------------
+Private Sub txtConhecimento_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtConhecimento.KeyPress
+    '
+    If Char.IsNumber(e.KeyChar) Then
+        e.Handled = False
+    ElseIf e.KeyChar = vbBack Then
+        e.Handled = False
+    ElseIf Char.IsLetter(e.KeyChar) Then
+        DirectCast(sender, TextBox).SelectedText = Char.ToUpper(e.KeyChar)
+        e.Handled = True
+    Else
+        e.Handled = True
+    End If
+    '
+End Sub
+
+'
+'---------------------------------------------------------------------------------------
 ' CRIA UM ARQUIVO XSD A PARTIR DE UM XML
 '---------------------------------------------------------------------------------------
     Dim ds As DataSet = New DataSet()

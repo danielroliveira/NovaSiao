@@ -63,6 +63,8 @@ Public Class frmFrete
         '
         If Not IsNothing(_frete.IDTransacao) Then Sit = EnumFlagEstado.RegistroSalvo
         '
+        dtpConhecimentoData.MaxDate = Today
+        '
     End Sub
     '
 #End Region
@@ -81,6 +83,7 @@ Public Class frmFrete
         '
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler lblID.DataBindings("Tag").Format, AddressOf idFormatRG
+        AddHandler txtFreteValor.DataBindings("text").Format, AddressOf idFormatCur
         AddHandler bindFrete.CurrentChanged, AddressOf handler_CurrentChanged
         '
         ' ADD HANDLER PARA DATABINGS
@@ -117,13 +120,29 @@ Public Class frmFrete
         e.Value = Format(e.Value, "0000")
     End Sub
     '
+    Private Sub idFormatCur(sender As Object, e As ConvertEventArgs)
+        If IsDBNull(e.Value) Then Exit Sub
+        e.Value = Format(e.Value, "C")
+    End Sub
+    '
 #End Region
     '
 #Region "ACAO BOTOES"
     '
+    '--- FECHAR
+    '----------------------------------------------------------------------------------
+    Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+        '
+        _frete.CancelEdit()
+        AutoValidate = AutoValidate.Disable
+        DialogResult = DialogResult.Cancel
+        '
+    End Sub
+    '
     '--- BTN CANCELAR
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
         '
+        _frete.CancelEdit()
         AutoValidate = AutoValidate.Disable
         DialogResult = DialogResult.Cancel
         '
@@ -142,14 +161,13 @@ Public Class frmFrete
         '--- Ampulheta OFF
         Cursor = Cursors.Default
         '
-        If frmT.DialogResult = DialogResult.Cancel Then
-            txtTransportadora.Clear()
-            IDTransportadora = Nothing
-        Else
-            Dim Transp As clTransportadora = frmT.propTransportadora_Escolha
-            '
-            txtTransportadora.Text = Transp.Cadastro
-            IDTransportadora = Transp.IDPessoa
+        Dim Transp As clTransportadora = frmT.propTransportadora_Escolha
+        '
+        txtTransportadora.Text = Transp.Cadastro
+        IDTransportadora = Transp.IDPessoa
+        '
+        If If(oldID, 0) <> If(IDTransportadora, 0) Then
+            Sit = EnumFlagEstado.Alterado
         End If
         '
         txtTransportadora.Focus()
@@ -164,7 +182,6 @@ Public Class frmFrete
     '--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
     '---------------------------------------------------------------------------------------
     Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) _
-
         '
         If e.KeyCode = Keys.Enter Then
             e.SuppressKeyPress = True
@@ -174,17 +191,45 @@ Public Class frmFrete
     End Sub
     '
     '---------------------------------------------------------------------------------------
-    ' EVITA DIGITACAO DE TEXTO
+    ' SOMENTE NUMEROS E LETRAS UPPER CASE
     '---------------------------------------------------------------------------------------
-    Private Sub Text_KeyPress(sender As Object, e As KeyPressEventArgs)
+    Private Sub txtConhecimento_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtConhecimento.KeyPress
         '
-        If Char.IsNumber(e.KeyChar) OrElse New Char() {vbBack, ","}.Contains(e.KeyChar) Then
+        If Char.IsNumber(e.KeyChar) Then
             e.Handled = False
-        ElseIf e.KeyChar = "."c Then
-            DirectCast(sender, TextBox).SelectedText = ","
+        ElseIf e.KeyChar = vbBack Then
+            e.Handled = False
+        ElseIf Char.IsLetter(e.KeyChar) Then
+            DirectCast(sender, TextBox).SelectedText = Char.ToUpper(e.KeyChar)
             e.Handled = True
         Else
             e.Handled = True
+        End If
+        '
+    End Sub
+    '
+    Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) Handles txtTransportadora.KeyDown
+        '
+        Dim ctr As Control = DirectCast(sender, Control)
+        '
+        If e.KeyCode = Keys.Add Then
+            e.Handled = True
+            Select Case ctr.Name
+                Case "txtTransportadora"
+                    btnTransportadora_Click(New Object, New EventArgs)
+            End Select
+        ElseIf e.KeyCode = Keys.Delete Then
+            Dim oldID As Integer? = IDTransportadora
+            e.Handled = True
+            Select Case ctr.Name
+                Case "txtTransportadora"
+                    txtTransportadora.Clear()
+                    IDTransportadora = Nothing
+                    If Not IsNothing(oldID) Then Sit = EnumFlagEstado.Alterado
+            End Select
+        Else
+            e.Handled = True
+            e.SuppressKeyPress = True
         End If
         '
     End Sub
@@ -205,34 +250,26 @@ Public Class frmFrete
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Dim db As New PessoaBLL
+            Dim db As New FreteBLL
             '
             If Sit = EnumFlagEstado.NovoRegistro Then '--> SAVE NEW
                 '
-                Dim resolve As Object = db.InsertNewPessoa(_frete, PessoaBLL.EnumPessoaGrupo.FILIAL)
-                '
-                If Not IsNumeric(resolve) Then
-                    Throw New Exception("Uma exceção inesperada ocorreu ao Salvar Registro")
-                    Return
-                End If
-                '
-                _frete.IDPessoa = resolve
-                lblID.DataBindings.Item("Tag").ReadValue()
+                MessageBox.Show("Salvar novo frete ainda não implementado...")
                 '
             ElseIf Sit = EnumFlagEstado.Alterado Then '--> UPDATE
                 '
-                db.UpdatePessoa(_frete, PessoaBLL.EnumPessoaGrupo.FILIAL)
+                db.FreteUpdate(_frete)
                 '
             End If
             '
-            MessageBox.Show("Filial Salva com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            MessageBox.Show("Frete Salvo com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
             bindFrete.EndEdit()
             Sit = EnumFlagEstado.RegistroSalvo
             '
             DialogResult = DialogResult.OK
             '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Inserir Nova Filial..." & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao Salvar Registro..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '--- Ampulheta OFF
@@ -243,55 +280,29 @@ Public Class frmFrete
     '
     Private Function VerificaCampos() As Boolean
         '
-        '--- FILIAL NAME
-        '----------------------------------------------------------------------------------
+        Dim u As New Utilidades
         '
-        '--- Tamanho Mínimo
-        If txtApelidoFilial.Text.Length < 5 Then
-            MessageBox.Show("O Apelido da Filial deve ter no mínimo de 5 caracteres...")
-            txtApelidoFilial.Focus()
+        If Not u.VerificaDadosClasse(txtTransportadora, "Transportadora", _frete) Then
             Return False
         End If
         '
-        '--- Transforma primeira em Maiuscula
-        txtApelidoFilial.Text = Utilidades.PrimeiraLetraMaiuscula(txtApelidoFilial.Text)
-        '
-        '--- PROCURAR MESMO CADASTRO NOME
-        '----------------------------------------------------------------------------------
-        Dim db As New PessoaBLL
-        Dim pes As clPessoa = db.ProcuraPessoaPeloCadastroNome(txtApelidoFilial.Text)
-        '
-        If Not IsNothing(pes) Then
-            '
-            If IsNothing(_frete.IDPessoa) OrElse _frete.IDPessoa = 0 Then '--> NOVO REGISTRO
-                '
-                MessageBox.Show("Já existe um cadastro de 'PESSOA' com esse mesmo 'NOME'...")
-                txtApelidoFilial.Focus()
-                Return False
-                '
-            Else '---> REGISTRO SALVO
-                '
-                If _frete.IDPessoa <> pes.IDPessoa Then
-                    MessageBox.Show("Já existe um cadastro de 'PESSOA' com esse mesmo 'NOME'...")
-                    txtApelidoFilial.Focus()
-                    Return False
-                End If
-                '
-            End If
-            '
+        If Not u.VerificaDadosClasse(txtConhecimento, "Número do Conhecimento", _frete) Then
+            Return False
         End If
         '
-        '--- ALIQUOTA ICMS
-        '----------------------------------------------------------------------------------
+        If Not u.VerificaDadosClasse(dtpConhecimentoData, "Data do Conhecimento", _frete) Then
+            Return False
+        End If
         '
-        If txtAliquotaICMS.Text.Trim.Length = 0 Then txtAliquotaICMS.Text = "0"
+        If Not u.VerificaDadosClasse(txtFreteValor, "Valor do Frete", _frete) Then
+            Return False
+        End If
         '
-        Dim icms As Double = 0
-        Double.TryParse(txtAliquotaICMS.Text, icms)
-        '
-        If icms < 0 OrElse icms > 99 Then
-            MessageBox.Show("O valor da Alíquota do ICMS deve estar entre 0 e 99")
-            txtAliquotaICMS.Focus()
+        If txtFreteValor.Text <= 0 Then
+            MessageBox.Show("O Valor do Frete não pode ser igual a Zero...",
+                            "Valor do Frete",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation)
             Return False
         End If
         '

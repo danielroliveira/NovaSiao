@@ -60,6 +60,8 @@ Public Class Utilidades
             myPropertyName = meuControle.DataBindings("text").BindingMemberInfo.BindingField
         ElseIf Not IsNothing(meuControle.DataBindings("SelectedValue")) Then
             myPropertyName = meuControle.DataBindings("SelectedValue").BindingMemberInfo.BindingField
+        ElseIf Not IsNothing(meuControle.DataBindings("Value")) Then
+            myPropertyName = meuControle.DataBindings("Value").BindingMemberInfo.BindingField
         Else
             MessageBox.Show("Um erro inesperado ocorreu ao verificar os controles...", "Erro Inseperado", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return False
