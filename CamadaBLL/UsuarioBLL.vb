@@ -10,24 +10,40 @@ Public Class UsuarioBLL
     Public Function GetUsuarios() As List(Of clUsuario)
         Dim objdb As New AcessoDados
         Dim strSql As String = ""
-
+        '
         strSql = "SELECT * FROM tblUsuario"
+        '
+        Try
+            '
+            Dim dr As SqlDataReader = objdb.ExecuteAndGetReader(strSql)
+            Dim lista As New List(Of clUsuario)
+            While dr.Read
+                Dim usu As clUsuario = New clUsuario
 
-        Dim dr As SqlDataReader = objdb.ExecuteAndGetReader(strSql)
-        Dim lista As New List(Of clUsuario)
-        While dr.Read
-            Dim usu As clUsuario = New clUsuario
+                usu.IdUser = IIf(IsDBNull(dr("IdUser")), 0, dr("IdUser"))
+                usu.UsuarioApelido = IIf(IsDBNull(dr("UsuarioApelido")), String.Empty, dr("UsuarioApelido"))
+                usu.UsuarioAcesso = IIf(IsDBNull(dr("UsuarioAcesso")), Nothing, dr("UsuarioAcesso"))
+                usu.UsuarioSenha = IIf(IsDBNull(dr("UsuarioSenha")), String.Empty, dr("UsuarioSenha"))
+                usu.UsuarioAtivo = IIf(IsDBNull(dr("UsuarioAtivo")), Nothing, dr("UsuarioAtivo"))
+                lista.Add(usu)
 
-            usu.IdUser = IIf(IsDBNull(dr("IdUser")), 0, dr("IdUser"))
-            usu.UsuarioApelido = IIf(IsDBNull(dr("UsuarioApelido")), String.Empty, dr("UsuarioApelido"))
-            usu.UsuarioAcesso = IIf(IsDBNull(dr("UsuarioAcesso")), Nothing, dr("UsuarioAcesso"))
-            usu.UsuarioSenha = IIf(IsDBNull(dr("UsuarioSenha")), String.Empty, dr("UsuarioSenha"))
-            usu.UsuarioAtivo = IIf(IsDBNull(dr("UsuarioAtivo")), Nothing, dr("UsuarioAtivo"))
-            lista.Add(usu)
+            End While
 
-        End While
-        dr.Close()
-        Return lista
+            '--- CLOSE DATAREADER
+            dr.Close()
+
+            '--- RETURN
+            Return lista
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '
+            '--- CLOSE DB CONNECTION
+            objdb.CloseConn()
+            '
+        End Try
+        '
     End Function
     '
     '--------------------------------------------------------------------------------------------------------------------

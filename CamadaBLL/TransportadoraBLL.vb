@@ -27,43 +27,60 @@ Public Class TransportadoraBLL
     ' GET LISTA COMPLETA COM FILTRO OPCIONAL DE ATIVO
     '-----------------------------------------------------------------------------------------------------
     Public Function GetTransportadoras(Optional Ativo As Boolean? = Nothing) As List(Of clTransportadora)
+        '
         Dim objdb As New AcessoDados
         Dim strSql As String = ""
-
+        '
         If IsNothing(Ativo) Then
             strSql = "SELECT * FROM qryTransportadoras"
         Else
             strSql = "SELECT * FROM qryTransportadoras WHERE Ativo = '" & Ativo & "'"
         End If
         '
-        Dim dr As SqlDataReader = objdb.ExecuteAndGetReader(strSql)
-        Dim lista As New List(Of clTransportadora)
-        While dr.Read
-            Dim tran As New clTransportadora
+        Try
             '
-            tran.IDPessoa = IIf(IsDBNull(dr("IDTransportadora")), Nothing, dr("IDTransportadora"))
-            tran.Ativo = IIf(IsDBNull(dr("Ativo")), 0, dr("Ativo"))
-            tran.Observacao = IIf(IsDBNull(dr("Observacao")), String.Empty, dr("Observacao"))
+            Dim dr As SqlDataReader = objdb.ExecuteAndGetReader(strSql)
+            Dim lista As New List(Of clTransportadora)
+            While dr.Read
+                Dim tran As New clTransportadora
+                '
+                tran.IDPessoa = IIf(IsDBNull(dr("IDTransportadora")), Nothing, dr("IDTransportadora"))
+                tran.Ativo = IIf(IsDBNull(dr("Ativo")), 0, dr("Ativo"))
+                tran.Observacao = IIf(IsDBNull(dr("Observacao")), String.Empty, dr("Observacao"))
+                '
+                tran.Cadastro = IIf(IsDBNull(dr("Cadastro")), String.Empty, dr("Cadastro"))
+                tran.NomeFantasia = IIf(IsDBNull(dr("NomeFantasia")), String.Empty, dr("NomeFantasia"))
+                tran.Endereco = IIf(IsDBNull(dr("Endereco")), String.Empty, dr("Endereco"))
+                tran.Bairro = IIf(IsDBNull(dr("Bairro")), String.Empty, dr("Bairro"))
+                tran.Cidade = IIf(IsDBNull(dr("Cidade")), String.Empty, dr("Cidade"))
+                tran.UF = IIf(IsDBNull(dr("UF")), String.Empty, dr("UF"))
+                tran.CEP = IIf(IsDBNull(dr("CEP")), String.Empty, dr("CEP"))
+                tran.TelefoneA = IIf(IsDBNull(dr("TelefoneA")), String.Empty, dr("TelefoneA"))
+                tran.TelefoneB = IIf(IsDBNull(dr("TelefoneB")), String.Empty, dr("TelefoneB"))
+                tran.Email = IIf(IsDBNull(dr("Email")), String.Empty, dr("Email"))
+                tran.CNPJ = IIf(IsDBNull(dr("CNPJ")), String.Empty, dr("CNPJ"))
+                tran.InscricaoEstadual = IIf(IsDBNull(dr("InscricaoEstadual")), String.Empty, dr("InscricaoEstadual"))
+                tran.ContatoNome = IIf(IsDBNull(dr("ContatoNome")), String.Empty, dr("ContatoNome"))
+                tran.FundacaoData = IIf(IsDBNull(dr("FundacaoData")), Nothing, dr("FundacaoData"))
+                lista.Add(tran)
+                '
+            End While
             '
-            tran.Cadastro = IIf(IsDBNull(dr("Cadastro")), String.Empty, dr("Cadastro"))
-            tran.NomeFantasia = IIf(IsDBNull(dr("NomeFantasia")), String.Empty, dr("NomeFantasia"))
-            tran.Endereco = IIf(IsDBNull(dr("Endereco")), String.Empty, dr("Endereco"))
-            tran.Bairro = IIf(IsDBNull(dr("Bairro")), String.Empty, dr("Bairro"))
-            tran.Cidade = IIf(IsDBNull(dr("Cidade")), String.Empty, dr("Cidade"))
-            tran.UF = IIf(IsDBNull(dr("UF")), String.Empty, dr("UF"))
-            tran.CEP = IIf(IsDBNull(dr("CEP")), String.Empty, dr("CEP"))
-            tran.TelefoneA = IIf(IsDBNull(dr("TelefoneA")), String.Empty, dr("TelefoneA"))
-            tran.TelefoneB = IIf(IsDBNull(dr("TelefoneB")), String.Empty, dr("TelefoneB"))
-            tran.Email = IIf(IsDBNull(dr("Email")), String.Empty, dr("Email"))
-            tran.CNPJ = IIf(IsDBNull(dr("CNPJ")), String.Empty, dr("CNPJ"))
-            tran.InscricaoEstadual = IIf(IsDBNull(dr("InscricaoEstadual")), String.Empty, dr("InscricaoEstadual"))
-            tran.ContatoNome = IIf(IsDBNull(dr("ContatoNome")), String.Empty, dr("ContatoNome"))
-            tran.FundacaoData = IIf(IsDBNull(dr("FundacaoData")), Nothing, dr("FundacaoData"))
-            lista.Add(tran)
+            '--- CLOSE DATAREADER
+            dr.Close()
             '
-        End While
-        dr.Close()
-        Return lista
+            '--- RETURN
+            Return lista
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '
+            '--- CLOSE DB CONNECTION
+            objdb.CloseConn()
+            '
+        End Try
+        '
     End Function
     '
 End Class

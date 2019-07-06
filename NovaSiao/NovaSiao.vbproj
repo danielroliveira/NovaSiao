@@ -718,6 +718,12 @@
     <Compile Include="Produtos\frmProdutoValorDesconto.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Produtos\frmSituacaoProcurar.designer.vb">
+      <DependentUpon>frmSituacaoProcurar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Produtos\frmSituacaoProcurar.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Produtos\Reports\frmProdutoEtiquetaPrint.Designer.vb">
       <DependentUpon>frmProdutoEtiquetaPrint.vb</DependentUpon>
     </Compile>
@@ -1125,6 +1131,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Produtos\frmProdutoValorDesconto.resx">
       <DependentUpon>frmProdutoValorDesconto.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Produtos\frmSituacaoProcurar.resx">
+      <DependentUpon>frmSituacaoProcurar.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Produtos\Reports\frmProdutoEtiquetaPrint.resx">
       <DependentUpon>frmProdutoEtiquetaPrint.vb</DependentUpon>

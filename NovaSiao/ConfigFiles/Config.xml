@@ -35,6 +35,7 @@
   <ServidorDados>
     <StringConexao />
     <ControlaBackup>True</ControlaBackup>
+	<BDAnterior></BDAnterior>
   </ServidorDados>
   <MensagemPedido>
     <MensagemPedidoItem>Mensagem1</MensagemPedidoItem>

@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="AcessoBackup.vb" />
     <Compile Include="AcessoDados.vb" />
+    <Compile Include="AcessoOLEDB.vb" />
     <Compile Include="GetConnection.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

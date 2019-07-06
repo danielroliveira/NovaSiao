@@ -731,30 +731,6 @@ Public Class frmClientePF
     '
 #Region "OPERAÇÕES DE REGISTRO"
     '
-    '-------------------------------------------------------------------------------------------
-    ' FUNÇÃO PUBLICA PROCURAR CLIENTE POR ID
-    '-------------------------------------------------------------------------------------------
-    Public Sub ProcurarClientePorID(RG As Integer)
-
-        Dim cliBLL As New ClientePF_BLL
-
-        _ClientePF = cliBLL.GetClientePF_PorID(RG)
-
-        If IsNothing(BindingCliente.DataSource) Then
-            BindingCliente.DataSource = _ClientePF
-            PreencheDataBindings()
-        Else
-            'RemoveHandler BindingCliente.CurrentItemChanged, AddressOf HandlerAlteraSit
-            BindingCliente.Clear()
-            BindingCliente.DataSource = _ClientePF
-            'AddHandler BindingCliente.CurrentItemChanged, AddressOf HandlerAlteraSit
-            AddHandler _ClientePF.AoAlterar, AddressOf HandlerAoAlterar
-        End If
-
-        Sit = EnumFlagEstado.RegistroSalvo
-
-    End Sub
-    '
     Private Sub btnProcurar_Click(sender As Object, e As EventArgs) Handles btnProcurar.Click
         '
         Dim frm As New frmClienteProcurar(Me)

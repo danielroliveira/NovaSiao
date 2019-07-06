@@ -5,7 +5,6 @@ Public Class frmFrete
     Private _frete As clFrete
     Private _formOrigem As Form
     Private bindFrete As New BindingSource
-    Private IDTransportadora As Integer?
     Dim _Sit As Byte
     '
 #Region "LOAD | NEW"
@@ -154,7 +153,7 @@ Public Class frmFrete
         Cursor = Cursors.WaitCursor
         '
         Dim frmT As New frmTransportadoraProcurar(True, Me)
-        Dim oldID As Integer? = IDTransportadora
+        Dim oldID As Integer = _frete.IDTransportadora
         '
         frmT.ShowDialog()
         '
@@ -164,9 +163,9 @@ Public Class frmFrete
         Dim Transp As clTransportadora = frmT.propTransportadora_Escolha
         '
         txtTransportadora.Text = Transp.Cadastro
-        IDTransportadora = Transp.IDPessoa
+        _frete.IDTransportadora = Transp.IDPessoa
         '
-        If If(oldID, 0) <> If(IDTransportadora, 0) Then
+        If oldID <> _frete.IDTransportadora Then
             Sit = EnumFlagEstado.Alterado
         End If
         '
@@ -219,14 +218,7 @@ Public Class frmFrete
                     btnTransportadora_Click(New Object, New EventArgs)
             End Select
         ElseIf e.KeyCode = Keys.Delete Then
-            Dim oldID As Integer? = IDTransportadora
             e.Handled = True
-            Select Case ctr.Name
-                Case "txtTransportadora"
-                    txtTransportadora.Clear()
-                    IDTransportadora = Nothing
-                    If Not IsNothing(oldID) Then Sit = EnumFlagEstado.Alterado
-            End Select
         Else
             e.Handled = True
             e.SuppressKeyPress = True

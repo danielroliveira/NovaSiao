@@ -2,6 +2,7 @@
 Imports CamadaBLL
 Imports CamadaDTO
 Imports System.Math
+Imports System.IO
 
 Public Class frmProduto
     Private prodBLL As New ProdutoBLL
@@ -41,7 +42,7 @@ Public Class frmProduto
                 btnProcurar.Enabled = False
                 AtivoButtonImage()
             ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
-                txtProduto.Select()
+                txtRGProduto.Select()
                 btnSalvar.Enabled = True
                 btnNovoProduto.Enabled = False
                 btnExcluir.Enabled = False
@@ -107,7 +108,7 @@ Public Class frmProduto
             _acao = value
             If value = EnumFlagAcao.INSERIR Then
                 Sit = EnumFlagEstado.NovoRegistro
-            ElseIf value = enumFlagAcao.EDITAR Then
+            ElseIf value = EnumFlagAcao.EDITAR Then
                 Sit = EnumFlagEstado.RegistroSalvo
             End If
         End Set
@@ -193,21 +194,28 @@ Public Class frmProduto
     '--- COMBO SITUACAO TRIBUTARIA
     Private Sub CarregaComboSitTributaria()
         '
-        Dim dtSexo As New DataTable
-        'Adiciona todas as possibilidades de instrucao
-        dtSexo.Columns.Add("IDSitTributaria")
-        dtSexo.Columns.Add("SitTributaria")
-        dtSexo.Rows.Add(New Object() {0, "Tributação Normal"})
-        dtSexo.Rows.Add(New Object() {40, "Isento"})
-        dtSexo.Rows.Add(New Object() {41, "Não Tributada"})
-        dtSexo.Rows.Add(New Object() {60, "Subst. Tributária"})
+        Dim dtSituacao As DataTable
         '
-        With cmbSitTributaria
-            .DataSource = dtSexo
-            .ValueMember = "IDSitTributaria"
-            .DisplayMember = "SitTributaria"
-            .DataBindings.Add("SelectedValue", bindP, "SitTributaria", True, DataSourceUpdateMode.OnPropertyChanged)
-        End With
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            dtSituacao = prodBLL.GetSituacao()
+            '
+            With cmbSitTributaria
+                .DataSource = dtSituacao
+                .ValueMember = "CodSituacaoTributaria"
+                .DisplayMember = "SituacaoTributaria"
+                .DataBindings.Add("SelectedValue", bindP, "SitTributaria", True, DataSourceUpdateMode.OnPropertyChanged)
+            End With
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao obter a lista de Situação Tributária..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '
@@ -354,9 +362,9 @@ Public Class frmProduto
         If String.IsNullOrWhiteSpace(txtRGProduto.Text) Then
             Dim r As DialogResult
             r = MessageBox.Show("O campo Registro Interno do Produto está vazio..." & vbNewLine &
-                            "Você deseja que o sistema preencha automaticamente o valor desse campo?",
-                            "Campo Vazio", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                            MessageBoxDefaultButton.Button3)
+                                "Você deseja que o sistema preencha automaticamente o valor desse campo?",
+                                "Campo Vazio", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                                MessageBoxDefaultButton.Button3)
             If r = DialogResult.Yes Then
                 '
                 ' Procura o valor para o campo
@@ -374,20 +382,16 @@ Public Class frmProduto
                 Return False
             End If
         End If
-
-        Dim ProdRG As String = ""
-
-        If Sit = EnumFlagEstado.NovoRegistro Then
-            ProdRG = ProcurarProduto_RG(CInt(txtRGProduto.Text))
-        ElseIf Sit = EnumFlagEstado.Alterado Then
-            ProdRG = ProcurarProduto_RG(CInt(txtRGProduto.Text), _produto.RGProduto)
-        End If
-
-        If ProdRG.Length > 0 Then
-            MessageBox.Show("Já foi encontrado um Produto com esse mesmo número de Reg. Interno..." & vbNewLine &
-                                ProdRG.ToUpper & vbNewLine &
-                                "Insira outro Reg. Interno ou altere o registro do outro Produto.",
-                                "Reg. Interno Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '
+        Dim ProdRG As clProduto = Nothing
+        '
+        ProdRG = ProcurarProduto_RG(txtRGProduto.Text)
+        '
+        If Not IsNothing(ProdRG) Then
+            AbrirDialog("Já foi encontrado um Produto com esse mesmo número de Reg. Interno..." & vbNewLine &
+                        ProdRG.Produto.ToUpper & vbNewLine &
+                        "Insira outro Reg. Interno ou altere o registro do outro Produto.",
+                        "Reg. Interno Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Information)
             txtRGProduto.Focus()
             Return False
         Else
@@ -492,6 +496,9 @@ Public Class frmProduto
     '
     ' FECHA O FORMULÁRIO
     Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+        '
+        AutoValidate = AutoValidate.Disable
+        '
         If IsNothing(_formOrigem) Then
             Close()
             MostraMenuPrincipal()
@@ -499,6 +506,7 @@ Public Class frmProduto
             DialogResult = DialogResult.Cancel
             RGEscolhido = Nothing
         End If
+        '
     End Sub
     '
     ' BOTÃO NOVO REGISTRO
@@ -512,27 +520,32 @@ Public Class frmProduto
 #Region "OUTRAS FUNÇÕES"
     '
     ' PROCURAR PRODUTO COM O MESMO RGProduto
-    Private Function ProcurarProduto_RG(myRGProduto As Integer, Optional myID As Long = 0) As String
+    '--------------------------------------------------------------------------------------------------
+    Private Function ProcurarProduto_RG(myRGProduto As Integer) As clProduto
         Dim lista As New List(Of clProduto)
-
+        '
         ' VERIFICA A CONEXÃO COM O SQL
         Try
+            '
             If Sit = EnumFlagEstado.NovoRegistro Then ' nesse caso é um novo registro
                 lista = prodBLL.GetProdutos_Where("RGProduto = " & myRGProduto)
             ElseIf Sit = EnumFlagEstado.RegistroSalvo Then
-                lista = prodBLL.GetProdutos_Where("IDProduto <> " & myID & " AND RGProduto = " & myRGProduto)
+                lista = prodBLL.GetProdutos_Where("IDProduto <> " & _produto.IDProduto & " AND RGProduto = " & myRGProduto)
             End If
+            '
         Catch ex As Exception
+            '
             MessageBox.Show(ex.Message)
-            Return String.Empty
-            Exit Function
+            Return Nothing
+            '
         End Try
-
-        If lista.Count < 1 Then
-            Return String.Empty
+        '
+        If lista.Count = 0 Then
+            Return Nothing
         Else
-            Return lista(0).Produto.ToString
+            Return lista(0)
         End If
+        '
     End Function
     '
     '--- BUSCA UM NOVO NUMERO DE REGISTRO SEM USO
@@ -575,6 +588,11 @@ Public Class frmProduto
             e.Handled = True
         End If
         '
+    End Sub
+    '
+    '--- ENABLE AUTOVALIDATE AGAIN
+    Private Sub txtRGProduto_Leave(sender As Object, e As EventArgs) Handles txtRGProduto.Leave
+        AutoValidate = True
     End Sub
     '
     ' AO ENTRAR NO MENU SELECIONAR O btnProcurar
@@ -687,6 +705,9 @@ Public Class frmProduto
                     If Not IsNothing(_produto.IDFabricante) Then Sit = EnumFlagEstado.Alterado
                     txtFabricante.Clear()
                     _produto.IDFabricante = Nothing
+                Case "txtRGProduto"
+                    txtRGProduto.Clear()
+                    AutoValidate = AutoValidate.Disable
             End Select
             '
         Else
@@ -718,17 +739,52 @@ Public Class frmProduto
         '
     End Sub
     '
+#End Region '// OUTRAS FUNÇÕES
+    '
+#Region "CORRELACAO DB ANTERIOR"
+    '
     '--- PROCURA PELO CADASTRO DADOS ANTERIORES DA NA X_TBLPRODUTOS
     Private Sub txtRGProduto_Validating(sender As Object, e As CancelEventArgs) Handles txtRGProduto.Validating
         '
-        '--- procura no cadastro antigo o registro do produto pelo RG
-        If txtRGProduto.Text.Trim.Length = 0 Then Return
+        '--- VERIFICA VALOR
+        If txtRGProduto.Text.Trim.Length = 0 Then
+            Return
+        End If
         '
+        '--- CHECK IF RGPRODUTO ALREADY IN USE
+        If Not IsNothing(ProcurarProduto_RG(txtRGProduto.Text)) Then
+            '
+            AbrirDialog("Já existe produto cadastrado com esse mesmo número de Reg. Interno...",
+                        "Reg. Interno",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Exclamation)
+            '
+            showToolTip(sender, New EventArgs)
+            e.Cancel = True
+            Return
+            '
+        End If
+        '
+        '--- try obtain BDAnterior
+        Dim pathBD As String = ObterConfigValorNode("BDAnterior")
+        '
+        If String.IsNullOrEmpty(pathBD.Length) OrElse Not File.Exists(pathBD) Then
+            '
+            AbrirDialog("O BD Anterior ainda não foi configurado no CONFIG ou não existe...",
+                        "BD Anterior",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
+            Return
+            '
+        End If
+        '
+        '--- procura no cadastro antigo o registro do produto pelo RG
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Dim clP As clProduto = prodBLL.ProcuraProduto_CadastroAntigo(txtRGProduto.Text)
+            Dim oldProdutoBLL As New ProdutoAntigoBLL(pathBD)
+            Dim clP As clProduto = oldProdutoBLL.ProcuraProduto_CadastroAntigo(txtRGProduto.Text)
             '
             If IsNothing(clP) Then Return
             '
@@ -736,9 +792,11 @@ Public Class frmProduto
                                               "PRODUTO: {0}{4} AUTOR: {1}{4} PREÇO DE VENDA: {2}{4} PREÇO DE COMPRA: {3}",
                                               clP.Produto, clP.Autor, Format(clP.PVenda, "C"), Format(clP.PCompra, "C"), vbNewLine)
             '
-            If MessageBox.Show(msn, "Obter Dados Anteriores",
-                               MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = vbNo Then Return
+            If AbrirDialog(msn, "Obter Dados Anteriores",
+                           frmDialog.DialogType.SIM_NAO, frmDialog.DialogIcon.Question,
+                           frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Return
             '
+            '--- ITEMS WITH SAME OLD VALUE
             _produto.Produto = clP.Produto
             _produto.Autor = clP.Autor
             _produto.PVenda = clP.PVenda
@@ -746,6 +804,24 @@ Public Class frmProduto
             _produto.EstoqueNivel = clP.EstoqueNivel
             _produto.EstoqueIdeal = clP.EstoqueIdeal
             _produto.DescontoCompra = clP.DescontoCompra
+            '
+            '--- CORRELACIONADOS (TIPO | SUBTIPO | CATEGORIA | SIT.TRIBUTARIA)
+            _produto.ProdutoTipo = clP.ProdutoTipo
+            _produto.IDProdutoTipo = clP.IDProdutoTipo
+            _produto.ProdutoSubTipo = clP.ProdutoSubTipo
+            _produto.IDProdutoSubTipo = clP.IDProdutoSubTipo
+            _produto.ProdutoCategoria = clP.ProdutoCategoria
+            _produto.IDCategoria = clP.IDCategoria
+            _produto.IDFabricante = clP.IDFabricante
+            _produto.Fabricante = clP.Fabricante
+            _produto.SitTributaria = clP.SitTributaria
+            _produto.SituacaoTributaria = clP.SituacaoTributaria
+            '
+            '--- MAKE CORRELATION WITH ITEMS DONT RELATED
+            CheckCorrelacaoDBAnterior(oldProdutoBLL)
+            '
+            '--- RECALC MARGEM DESCONTO/LUCRO
+            CalcMargemDescontoLabel()
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao verificar cadastro de produto antigo..." & vbNewLine &
@@ -757,7 +833,278 @@ Public Class frmProduto
         '
     End Sub
     '
-#End Region '// OUTRAS FUNÇÕES
+    '--- CHECK CORRELACAO ITENS
+    '----------------------------------------------------------------------------------
+    Private Sub CheckCorrelacaoDBAnterior(oldProdutoBLL As ProdutoAntigoBLL)
+        '
+        Try
+            '
+            '--- TIPO
+            If _produto.IDProdutoTipo = 0 Then
+                CheckCorrelacaoTipo(oldProdutoBLL)
+            End If
+            '
+            '--- SUBTIPO
+            If _produto.IDProdutoSubTipo = 0 AndAlso Not IsNothing(_produto.IDProdutoTipo) Then
+                CheckCorrelacaoSubTipo(oldProdutoBLL)
+            ElseIf IsNothing(_produto.IDProdutoTipo) Then
+                _produto.ProdutoSubTipo = Nothing
+            End If
+            '
+            '--- CATEGORIA
+            If _produto.IDCategoria = 0 AndAlso Not IsNothing(_produto.IDProdutoTipo) Then
+                CheckCorrelacaoCategoria(oldProdutoBLL)
+            ElseIf IsNothing(_produto.IDProdutoTipo) Then
+                _produto.ProdutoCategoria = Nothing
+            End If
+            '
+            '--- FABRICANTE
+            If _produto.IDFabricante = 0 Then
+                CheckCorrelacaoFabricante(oldProdutoBLL)
+            End If
+            '
+            '--- SITUACAO
+            If _produto.SitTributaria = 0 Then
+                CheckCorrelacaoSituacao(oldProdutoBLL)
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+    '--- CHECK CORRELACAO TIPO
+    '----------------------------------------------------------------------------------
+    Private Sub CheckCorrelacaoTipo(oldProdutoBLL As ProdutoAntigoBLL)
+        '
+        Try
+            '
+            Dim separator As Char() = New Char() {":", ":"}
+            Dim idAnterior As Integer = _produto.ProdutoTipo.Split(separator)(0)
+            Dim descricaoAnterior As String = _produto.ProdutoTipo.Split(separator)(2).ToUpper
+            '
+            If AbrirDialog("Não foi encontrada correlação de TIPO" & vbCrLf &
+                           "Deseja selecionar um TIPO cadastrado para correlacionar com:" &
+                           vbCrLf & vbCrLf &
+                           descricaoAnterior,
+                           "Inserir Correlação",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                '
+                Dim frmC As New frmProdutoProcurarTipo(Me)
+                '
+                frmC.ShowDialog()
+                '
+                If frmC.DialogResult = DialogResult.OK Then
+                    Dim idInterno As Integer = frmC.propIdTipo_Escolha
+                    '
+                    '--- SAVE REFERENCE
+                    oldProdutoBLL.MakeCorrelacaoDB(ProdutoAntigoBLL.EnumReferencia.Tipo, idInterno, idAnterior)
+                    _produto.IDProdutoTipo = idInterno
+                    _produto.ProdutoTipo = frmC.propTipo_Escolha
+                    '
+                Else
+                    _produto.IDProdutoTipo = Nothing
+                    _produto.ProdutoTipo = Nothing
+                End If
+                '
+            Else
+                _produto.IDProdutoTipo = Nothing
+                _produto.ProdutoTipo = Nothing
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+    '--- CHECK CORRELACAO SUBTIPO
+    '----------------------------------------------------------------------------------
+    Private Sub CheckCorrelacaoSubTipo(oldProdutoBLL As ProdutoAntigoBLL)
+        '
+        Try
+            '
+            Dim separator As Char() = New Char() {":", ":"}
+            Dim idAnterior As Integer = _produto.ProdutoSubTipo.Split(separator)(0)
+            Dim descricaoAnterior As String = _produto.ProdutoSubTipo.Split(separator)(2).ToUpper
+            '
+            If AbrirDialog("Não foi encontrada correlação de SUBTIPO" & vbCrLf &
+                           "Deseja selecionar um SUBTIPO cadastrado para correlacionar com:" &
+                           vbCrLf & vbCrLf &
+                           descricaoAnterior,
+                           "Inserir Correlação",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                '
+                Dim frmC As New frmProdutoProcurarSubTipo(Me, , _produto.IDProdutoTipo)
+                '
+                frmC.ShowDialog()
+                '
+                If frmC.DialogResult = DialogResult.OK Then
+                    Dim idInterno As Integer = frmC.propIdSubTipo_Escolha
+                    '
+                    '--- SAVE REFERENCE
+                    oldProdutoBLL.MakeCorrelacaoDB(ProdutoAntigoBLL.EnumReferencia.Subtipo, idInterno, idAnterior)
+                    _produto.IDProdutoSubTipo = idInterno
+                    _produto.ProdutoSubTipo = frmC.propSubTipo_Escolha
+                    '
+                Else
+                    _produto.IDProdutoSubTipo = Nothing
+                    _produto.ProdutoSubTipo = Nothing
+                End If
+                '
+            Else
+                _produto.IDProdutoSubTipo = Nothing
+                _produto.ProdutoSubTipo = Nothing
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+    '--- CHECK CORRELACAO CATEGORIA
+    '----------------------------------------------------------------------------------
+    Private Sub CheckCorrelacaoCategoria(oldProdutoBLL As ProdutoAntigoBLL)
+        '
+        Try
+            '
+            Dim separator As Char() = New Char() {":", ":"}
+            Dim idAnterior As Integer = _produto.ProdutoCategoria.Split(separator)(0)
+            Dim descricaoAnterior As String = _produto.ProdutoCategoria.Split(separator)(2).ToUpper
+            '
+            If AbrirDialog("Não foi encontrada correlação de CATEGORIA" & vbCrLf &
+                           "Deseja selecionar uma CATEGORIA cadastrado para correlacionar com:" &
+                           vbCrLf & vbCrLf &
+                           descricaoAnterior,
+                           "Inserir Correlação",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                '
+                Dim frmC As New frmProdutoProcurarCategoria(Me, , _produto.IDProdutoTipo)
+                '
+                frmC.ShowDialog()
+                '
+                If frmC.DialogResult = DialogResult.OK Then
+                    Dim idInterno As Integer = frmC.propIdCategoria_Escolha
+                    '
+                    '--- SAVE REFERENCE
+                    oldProdutoBLL.MakeCorrelacaoDB(ProdutoAntigoBLL.EnumReferencia.Categoria, idInterno, idAnterior)
+                    _produto.IDCategoria = idInterno
+                    _produto.ProdutoCategoria = frmC.propCategoria_Escolha
+                    '
+                Else
+                    _produto.IDCategoria = Nothing
+                    _produto.ProdutoCategoria = Nothing
+                End If
+                '
+            Else
+                _produto.IDCategoria = Nothing
+                _produto.ProdutoCategoria = Nothing
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+    '--- CHECK CORRELACAO FABRICANTE
+    '----------------------------------------------------------------------------------
+    Private Sub CheckCorrelacaoFabricante(oldProdutoBLL As ProdutoAntigoBLL)
+        '
+        Try
+            '
+            Dim separator As Char() = New Char() {":", ":"}
+            Dim idAnterior As Integer = _produto.Fabricante.Split(separator)(0)
+            Dim descricaoAnterior As String = _produto.Fabricante.Split(separator)(2).ToUpper
+            '
+            If AbrirDialog("Não foi encontrada correlação de FABRICANTE" & vbCrLf &
+                           "Deseja selecionar um FABRICANTE cadastrado para correlacionar com:" &
+                           vbCrLf & vbCrLf &
+                           descricaoAnterior,
+                           "Inserir Correlação",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                '
+                Dim frmC As New frmFabricanteProcurar(Me)
+                '
+                frmC.ShowDialog()
+                '
+                If frmC.DialogResult = DialogResult.OK Then
+                    Dim idInterno As Integer = frmC.propIDFab_Escolha
+                    '
+                    '--- SAVE REFERENCE
+                    oldProdutoBLL.MakeCorrelacaoDB(ProdutoAntigoBLL.EnumReferencia.Fabricante, idInterno, idAnterior)
+                    _produto.IDFabricante = idInterno
+                    _produto.Fabricante = frmC.propFab_Escolha
+                    '
+                Else
+                    _produto.IDFabricante = Nothing
+                    _produto.Fabricante = Nothing
+                End If
+                '
+            Else
+                _produto.IDFabricante = Nothing
+                _produto.Fabricante = Nothing
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+    '--- CHECK CORRELACAO SITUACAO TRIBUTARIA
+    '----------------------------------------------------------------------------------
+    Private Sub CheckCorrelacaoSituacao(oldProdutoBLL As ProdutoAntigoBLL)
+        '
+        Try
+            '
+            Dim separator As Char() = New Char() {":", ":"}
+            Dim idAnterior As Integer = _produto.SituacaoTributaria.Split(separator)(0)
+            Dim descricaoAnterior As String = _produto.SituacaoTributaria.Split(separator)(2).ToUpper
+            '
+            If AbrirDialog("Não foi encontrada correlação de SITUAÇÃO TRIBUTÁRIA" & vbCrLf &
+                           "Deseja selecionar uma SITUAÇÃO TRIBUTÁRIA cadastrada para correlacionar com:" &
+                           vbCrLf & vbCrLf &
+                           descricaoAnterior,
+                           "Inserir Correlação",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                '
+                Dim frmC As New frmSituacaoProcurar(Me)
+                '
+                frmC.ShowDialog()
+                '
+                If frmC.DialogResult = DialogResult.OK Then
+                    Dim idInterno As Integer = frmC.propCodSit_Escolha
+                    '
+                    '--- SAVE REFERENCE
+                    oldProdutoBLL.MakeCorrelacaoDB(ProdutoAntigoBLL.EnumReferencia.Situacao, idInterno, idAnterior)
+                    _produto.SitTributaria = CByte(idInterno)
+                    _produto.SituacaoTributaria = frmC.propSituacao_Escolha
+                    '
+                Else
+                    _produto.SitTributaria = Nothing
+                    _produto.SituacaoTributaria = Nothing
+                End If
+                '                
+            Else
+                _produto.SitTributaria = Nothing
+                _produto.SituacaoTributaria = Nothing
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+#End Region '/ CORRELACAO DB ANTERIOR
     '
 #Region "CONTROLE PAINEL MARGEM"
     '
@@ -949,7 +1296,7 @@ Public Class frmProduto
         '
     End Sub
     '
-    Private Sub txtPVenda_Validated(sender As Object, e As EventArgs) Handles txtPVenda.Validated
+    Private Sub txtPVenda_Validated(sender As Object, e As EventArgs) Handles txtPVenda.Validated, txtPCompra.Validated
         CalcMargemDescontoLabel()
     End Sub
     '
@@ -966,6 +1313,7 @@ Public Class frmProduto
     Private Sub btnFabricantes_Click(sender As Object, e As EventArgs) Handles btnFabricantes.Click
         ProcurarEscolherTipo(txtFabricante)
     End Sub
+    '
     '--- ESCOLHER TIPO DE PRODUTO | SUBTIPO DE PRODUTO | CATEGORIA
     Private Sub ProcurarEscolherTipo(sender As Control)
         '

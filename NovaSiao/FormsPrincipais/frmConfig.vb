@@ -77,6 +77,7 @@ Public Class frmConfig
         '
         '--- Add Handlers
         HandlerChangedControles()
+        HandlerKeyDownControl()
         _VerAlteracao = True
         addToolTipHandler()
         '
@@ -242,6 +243,8 @@ Public Class frmConfig
                 rbtServRemoto.Checked = True
             End If
             '
+            txtBDAnterior.Text = .SelectSingleNode("ServidorDados").ChildNodes(3).InnerText
+            '
         End With
         Return True
         '
@@ -322,6 +325,7 @@ Error_Handler:
                 .WriteElementString("StringConexao", txtStringConexao.Text)
                 .WriteElementString("ControlaBackup", chkVerBackup.Checked.ToString)
                 .WriteElementString("ServidorLocal", rbtServLocal.Checked.ToString)
+                .WriteElementString("BDAnterior", txtBDAnterior.Text)
                 'encerra o elemento
                 .WriteEndElement()
                 '
@@ -461,30 +465,140 @@ Error_Handler:
         '
     End Sub
     '
+    '---------------------------------------------------------------------------------------
+    ' ADD HANDLER EVENTO KEYDOWN DOS CONTROLES COM VTAB
+    '---------------------------------------------------------------------------------------
+    Private Sub HandlerKeyDownControl()
+        '
+        '--- Tipos de Controles
+        Dim myTypes As Type() = {GetType(TextBox),
+                                 GetType(ComboBox),
+                                 GetType(MaskedTextBox),
+                                 GetType(Controles.Text_Monetario)}
+        '
+        '--- para cada TabPage no tabPrincipal
+        For Each t As vTabPage In TabPrincipal.TabPages
+            '
+            '--- para cada Controle no TabPage
+            For Each c As Control In t.Controls '--- se o controle for textbox então
+                '
+                If myTypes.Contains(c.GetType) Then
+                    AddHandler c.KeyDown, AddressOf txtControl_KeyDown
+                End If
+                '
+            Next
+            '
+        Next
+        '
+    End Sub
+    '
+    '---------------------------------------------------------------------------------------
+    '--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
+    '---------------------------------------------------------------------------------------
+    Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) Handles txtPermanencia.KeyDown,
+            txtDescontoMaximo.KeyDown, chkEstoqueNegativo.KeyDown, chkVerBackup.KeyDown,
+            dtpDataPadrao.KeyDown
+        '
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            SendKeys.Send("{Tab}")
+        End If
+        '
+    End Sub
+    '
+    '---------------------------------------------------------------------------------------
+    '--- BLOQUEIA PRESS A TECLA (+)
+    '---------------------------------------------------------------------------------------
+    Private Sub me_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
+        '
+        If e.KeyChar = "+" Then
+            '--- cria uma lista de controles que serao impedidos de receber '+'
+            Dim controlesBloqueados As String() = {
+            "txtLogoColorCaminho",
+            "txtLogoMonoCaminho",
+            "txtBDAnterior",
+            "txtFilialPadrao",
+            "txtContaPadrao"
+        }
+            '
+            If controlesBloqueados.Contains(ActiveControl.Name) Then
+                e.Handled = True
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    '---------------------------------------------------------------------------------------
     '--- EXECUTAR A FUNCAO DO BOTAO QUANDO PRESSIONA A TECLA (+) NO CONTROLE
-    Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) Handles txtFilialPadrao.KeyDown, txtContaPadrao.KeyDown
+    '--- ACIONA ATALHO TECLA (+) E (DEL) | IMPEDE INSERIR TEXTO NOS CONTROLES
+    '---------------------------------------------------------------------------------------
+    Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) _
+    Handles txtLogoColorCaminho.KeyDown,
+            txtLogoMonoCaminho.KeyDown,
+            txtBDAnterior.KeyDown,
+            txtFilialPadrao.KeyDown,
+            txtContaPadrao.KeyDown
         '
         Dim ctr As Control = DirectCast(sender, Control)
         '
         If e.KeyCode = Keys.Add Then
             e.Handled = True
+            '
             Select Case ctr.Name
                 Case "txtFilialPadrao"
                     btnAlteraFilial_Click(New Object, New EventArgs)
-                    txtFilialPadrao.Text = txtFilialPadrao.Text.Replace("+", "")
                     txtFilialPadrao.SelectAll()
                 Case "txtContaPadrao"
                     btnAlteraConta_Click(New Object, New EventArgs)
-                    txtContaPadrao.Text = txtContaPadrao.Text.Replace("+", "")
                     txtContaPadrao.SelectAll()
+                Case "txtLogoColorCaminho"
+                    btnProcLogoColor_Click(New Object, New EventArgs)
+                Case "txtLogoMonoCaminho"
+                    btnProcurarImagem_Click(sender, New EventArgs)
+                Case "txtBDAnterior"
+                    btnBDAnterior_Click(sender, New EventArgs)
             End Select
-        ElseIf e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Tab Then
+            '
+        ElseIf e.KeyCode = Keys.Delete Then
             e.Handled = True
-            SendKeys.Send("{Tab}")
+            Select Case ctr.Name
+                Case "txtLogoColorCaminho"
+                    Sit = EnumFlagEstado.Alterado
+                    txtLogoColorCaminho.Clear()
+                Case "txtLogoMonoCaminho"
+                    Sit = EnumFlagEstado.Alterado
+                    txtLogoMonoCaminho.Clear()
+                Case "txtBDAnterior"
+                    Sit = EnumFlagEstado.Alterado
+                    txtBDAnterior.Clear()
+            End Select
+            '
         Else
-            e.Handled = True
-            e.SuppressKeyPress = True
+            '--- cria uma lista de controles que serão bloqueados de alteracao
+            Dim controlesBloqueados As New List(Of String)
+            controlesBloqueados.AddRange({"txtLogoColorCaminho",
+                                         "txtLogoMonoCaminho",
+                                         "txtBDAnterior",
+                                         "txtFilialPadrao",
+                                         "txtContaPadrao"})
+            '
+            If controlesBloqueados.Contains(ctr.Name) Then
+                e.Handled = True
+                e.SuppressKeyPress = True
+            End If
         End If
+        '
+    End Sub
+    '
+    Private Sub btnBDAnterior_Click(sender As Object, e As EventArgs) Handles btnBDAnterior.Click
+        '
+        Using OFD As New OpenFileDialog With {.Filter = "MDB (*.mdb)|*.mdb"}
+            If OFD.ShowDialog = DialogResult.OK Then
+                txtBDAnterior.Text = OFD.FileName
+                Sit = EnumFlagEstado.Alterado
+            End If
+        End Using
         '
     End Sub
     '

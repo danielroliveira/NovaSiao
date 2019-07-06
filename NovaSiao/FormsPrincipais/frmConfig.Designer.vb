@@ -84,6 +84,9 @@ Partial Class frmConfig
         Me.txtLogoColorCaminho = New System.Windows.Forms.TextBox()
         Me.txtLogoMonoCaminho = New System.Windows.Forms.TextBox()
         Me.Tab3 = New VIBlend.WinForms.Controls.vTabPage()
+        Me.btnBDAnterior = New VIBlend.WinForms.Controls.vButton()
+        Me.Label23 = New System.Windows.Forms.Label()
+        Me.txtBDAnterior = New System.Windows.Forms.TextBox()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.rbtServRemoto = New System.Windows.Forms.RadioButton()
         Me.rbtServLocal = New System.Windows.Forms.RadioButton()
@@ -145,6 +148,7 @@ Partial Class frmConfig
         Me.TabPrincipal.Location = New System.Drawing.Point(8, 69)
         Me.TabPrincipal.Name = "TabPrincipal"
         Me.TabPrincipal.Padding = New System.Windows.Forms.Padding(0, 40, 0, 0)
+        Me.TabPrincipal.ShowFocusRectangle = True
         Me.TabPrincipal.Size = New System.Drawing.Size(728, 482)
         Me.TabPrincipal.TabAlignment = VIBlend.WinForms.Controls.vTabPageAlignment.Top
         Me.TabPrincipal.TabIndex = 1
@@ -154,6 +158,7 @@ Partial Class frmConfig
         Me.TabPrincipal.TabPages.Add(Me.Tab3)
         Me.TabPrincipal.TabsAreaBackColor = System.Drawing.Color.Linen
         Me.TabPrincipal.TabsInitialOffset = 15
+        Me.TabPrincipal.TabStop = True
         Me.TabPrincipal.TitleHeight = 40
         Me.TabPrincipal.UseTabsAreaBackColor = True
         Me.TabPrincipal.UseTabsAreaBorderColor = True
@@ -217,6 +222,7 @@ Partial Class frmConfig
         Me.btnEditarFilial.Name = "btnEditarFilial"
         Me.btnEditarFilial.Size = New System.Drawing.Size(81, 30)
         Me.btnEditarFilial.TabIndex = 6
+        Me.btnEditarFilial.TabStop = False
         Me.btnEditarFilial.Text = "Editar"
         Me.btnEditarFilial.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnEditarFilial.UseVisualStyleBackColor = False
@@ -232,6 +238,7 @@ Partial Class frmConfig
         Me.btnContaAdd.Name = "btnContaAdd"
         Me.btnContaAdd.Size = New System.Drawing.Size(81, 30)
         Me.btnContaAdd.TabIndex = 10
+        Me.btnContaAdd.TabStop = False
         Me.btnContaAdd.Text = "Nova"
         Me.btnContaAdd.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnContaAdd.UseVisualStyleBackColor = False
@@ -247,6 +254,7 @@ Partial Class frmConfig
         Me.btnAlteraConta.Name = "btnAlteraConta"
         Me.btnAlteraConta.Size = New System.Drawing.Size(81, 30)
         Me.btnAlteraConta.TabIndex = 9
+        Me.btnAlteraConta.TabStop = False
         Me.btnAlteraConta.Text = "Alterar"
         Me.btnAlteraConta.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnAlteraConta.UseVisualStyleBackColor = False
@@ -262,6 +270,7 @@ Partial Class frmConfig
         Me.btnFilialAdd.Name = "btnFilialAdd"
         Me.btnFilialAdd.Size = New System.Drawing.Size(81, 30)
         Me.btnFilialAdd.TabIndex = 5
+        Me.btnFilialAdd.TabStop = False
         Me.btnFilialAdd.Text = "Nova"
         Me.btnFilialAdd.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnFilialAdd.UseVisualStyleBackColor = False
@@ -277,6 +286,7 @@ Partial Class frmConfig
         Me.btnAlteraFilial.Name = "btnAlteraFilial"
         Me.btnAlteraFilial.Size = New System.Drawing.Size(81, 30)
         Me.btnAlteraFilial.TabIndex = 4
+        Me.btnAlteraFilial.TabStop = False
         Me.btnAlteraFilial.Text = "Alterar"
         Me.btnAlteraFilial.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnAlteraFilial.UseVisualStyleBackColor = False
@@ -804,6 +814,7 @@ Partial Class frmConfig
         Me.btnProcLogoColor.RoundedCornersRadius = 0
         Me.btnProcLogoColor.Size = New System.Drawing.Size(34, 30)
         Me.btnProcLogoColor.TabIndex = 10
+        Me.btnProcLogoColor.TabStop = False
         Me.btnProcLogoColor.Text = "..."
         Me.btnProcLogoColor.UseCompatibleTextRendering = True
         Me.btnProcLogoColor.UseVisualStyleBackColor = False
@@ -821,6 +832,7 @@ Partial Class frmConfig
         Me.btnProcurarImagem.RoundedCornersRadius = 0
         Me.btnProcurarImagem.Size = New System.Drawing.Size(34, 30)
         Me.btnProcurarImagem.TabIndex = 10
+        Me.btnProcurarImagem.TabStop = False
         Me.btnProcurarImagem.Text = "..."
         Me.btnProcurarImagem.UseCompatibleTextRendering = True
         Me.btnProcurarImagem.UseVisualStyleBackColor = False
@@ -870,6 +882,9 @@ Partial Class frmConfig
         '
         Me.Tab3.ContentBackColor = System.Drawing.Color.Azure
         Me.Tab3.ContentBorderColor = System.Drawing.Color.Transparent
+        Me.Tab3.Controls.Add(Me.btnBDAnterior)
+        Me.Tab3.Controls.Add(Me.Label23)
+        Me.Tab3.Controls.Add(Me.txtBDAnterior)
         Me.Tab3.Controls.Add(Me.GroupBox1)
         Me.Tab3.Controls.Add(Me.chkVerBackup)
         Me.Tab3.Controls.Add(Me.Label16)
@@ -888,6 +903,44 @@ Partial Class frmConfig
         Me.Tab3.UseContentBackColor = True
         Me.Tab3.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE
         Me.Tab3.Visible = False
+        '
+        'btnBDAnterior
+        '
+        Me.btnBDAnterior.AllowAnimations = True
+        Me.btnBDAnterior.BackColor = System.Drawing.Color.Transparent
+        Me.btnBDAnterior.FlatAppearance.BorderColor = System.Drawing.Color.Black
+        Me.btnBDAnterior.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnBDAnterior.Location = New System.Drawing.Point(637, 304)
+        Me.btnBDAnterior.Name = "btnBDAnterior"
+        Me.btnBDAnterior.RoundedCornersMask = CType(15, Byte)
+        Me.btnBDAnterior.RoundedCornersRadius = 0
+        Me.btnBDAnterior.Size = New System.Drawing.Size(34, 30)
+        Me.btnBDAnterior.TabIndex = 13
+        Me.btnBDAnterior.TabStop = False
+        Me.btnBDAnterior.Text = "..."
+        Me.btnBDAnterior.UseCompatibleTextRendering = True
+        Me.btnBDAnterior.UseVisualStyleBackColor = False
+        Me.btnBDAnterior.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
+        '
+        'Label23
+        '
+        Me.Label23.AutoSize = True
+        Me.Label23.BackColor = System.Drawing.Color.Transparent
+        Me.Label23.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label23.Location = New System.Drawing.Point(99, 308)
+        Me.Label23.Name = "Label23"
+        Me.Label23.Size = New System.Drawing.Size(109, 18)
+        Me.Label23.TabIndex = 12
+        Me.Label23.Text = "BD Anterior:"
+        '
+        'txtBDAnterior
+        '
+        Me.txtBDAnterior.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtBDAnterior.Location = New System.Drawing.Point(214, 305)
+        Me.txtBDAnterior.MaxLength = 200
+        Me.txtBDAnterior.Name = "txtBDAnterior"
+        Me.txtBDAnterior.Size = New System.Drawing.Size(417, 27)
+        Me.txtBDAnterior.TabIndex = 14
         '
         'GroupBox1
         '
@@ -981,6 +1034,7 @@ Partial Class frmConfig
         Me.btnCancelar.Name = "btnCancelar"
         Me.btnCancelar.Size = New System.Drawing.Size(149, 52)
         Me.btnCancelar.TabIndex = 1
+        Me.btnCancelar.TabStop = False
         Me.btnCancelar.Text = "&Cancelar"
         Me.btnCancelar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnCancelar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -1143,4 +1197,7 @@ Partial Class frmConfig
     Friend WithEvents btnAlteraFilial As Button
     Friend WithEvents btnContaAdd As Button
     Friend WithEvents btnAlteraConta As Button
+    Friend WithEvents btnBDAnterior As VIBlend.WinForms.Controls.vButton
+    Friend WithEvents Label23 As Label
+    Friend WithEvents txtBDAnterior As TextBox
 End Class

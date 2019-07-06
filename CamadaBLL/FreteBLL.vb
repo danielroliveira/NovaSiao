@@ -221,7 +221,7 @@ Public Class FreteBLL
             aPagar.IDOrigem = newID
             pagBLL.InserirNovo_APagar(aPagar, db)
             '
-            db.RollBackTransaction()
+            db.CommitTransaction()
             Return newID
             '
         Catch ex As Exception

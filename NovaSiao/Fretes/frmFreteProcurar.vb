@@ -190,7 +190,11 @@ Public Class frmFreteProcurar
     End Sub
     '
     Private Sub rbtEmAberto_CheckedChanged(sender As Object, e As EventArgs)
+        '
+        btnDespesa.Enabled = rbtEmAberto.Checked
+        btnEditar.Enabled = rbtEmAberto.Checked
         Get_Dados()
+        '
     End Sub
     '
     Private Sub dgvListagem_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListagem.CellValueChanged
@@ -219,9 +223,11 @@ Public Class frmFreteProcurar
     End Sub
     '
     Private Sub dgvListagem_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListagem.CellContentClick
+        '
         If e.ColumnIndex = 0 Then
             dgvListagem.CommitEdit(DataGridViewDataErrorContexts.Commit)
         End If
+        '
     End Sub
     '
 #End Region
@@ -244,7 +250,10 @@ Public Class frmFreteProcurar
     End Sub
     '
     Private Sub dgvListagem_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListagem.CellDoubleClick
+        '
+        If rbtCobradas.Checked Then Exit Sub '--- do not allow change fretes cobrados
         btnEditar_Click(New Object, New EventArgs)
+        '
     End Sub
     '
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click, btnClose.Click
@@ -256,11 +265,14 @@ Public Class frmFreteProcurar
     '
     '--- SELECIONAR ITEM QUANDO PRESSIONA A TECLA (ENTER)
     Private Sub dgvListagem_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvListagem.KeyDown
+        '
         If e.KeyCode = Keys.Enter Then
             e.Handled = True
             '
+            If rbtCobradas.Checked Then Exit Sub '--- do not allow change fretes cobrados
             btnEditar_Click(New Object, New EventArgs)
         End If
+        '
     End Sub
     '
     '--- AO PRESSIONAR A TECLA (ENTER) ENVIAR (TAB)
@@ -343,10 +355,10 @@ Public Class frmFreteProcurar
         '--- check number of items datagrid
         '--------------------------------------------------------------------------------------
         If dgvListagem.Rows.Count = 0 Then
-            DialogModal.AbrirDialog("Não foi selecionado nenhum Frete para gerar cobrança... ",
-                                    "Gerar Cobrança",
-                                    frmDialog.DialogType.OK,
-                                    frmDialog.DialogIcon.Exclamation)
+            AbrirDialog("Não foi selecionado nenhum Frete para gerar cobrança... ",
+                        "Gerar Cobrança",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Exclamation)
             Exit Sub
         End If
         '
@@ -383,7 +395,7 @@ Public Class frmFreteProcurar
         Dim selValor As Decimal = selFretes.Sum(Function(x) x.FreteValor)
         '
         If selValor = 0 Then
-            DialogModal.AbrirDialog("Não existe valor ou Não foi selecionado nenhum Frete para gerar cobrança... ",
+            AbrirDialog("Não existe valor ou Não foi selecionado nenhum Frete para gerar cobrança... ",
                         "Gerar Cobrança",
                         frmDialog.DialogType.OK,
                         frmDialog.DialogIcon.Exclamation)
@@ -392,7 +404,6 @@ Public Class frmFreteProcurar
         '
         '--- check same IDTransportadora
         '--------------------------------------------------------------------------------------
-
         Dim pag As New clAPagar With {
             .APagarValor = selValor,
             .IDFilial = IDFilial,
@@ -401,7 +412,8 @@ Public Class frmFreteProcurar
             .Origem = 5 '-- tblFreteDespesa    
         }
         '
-        '
+        '--- Create Despesa
+        '--------------------------------------------------------------------------------------
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
@@ -413,7 +425,7 @@ Public Class frmFreteProcurar
             '
             Dim freteBLL As New FreteBLL
             freteBLL.FreteDespesaCreate(selFretes, pag)
-            'Get_Dados()
+            Get_Dados()
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Abrir formulário de Cobrança..." & vbNewLine &
@@ -422,7 +434,6 @@ Public Class frmFreteProcurar
             '--- Ampulheta OFF
             Cursor = Cursors.Default
         End Try
-        '
         '
     End Sub
     '

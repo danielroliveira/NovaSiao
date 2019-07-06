@@ -123,10 +123,10 @@ Partial Class frmProduto
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(82, 106)
+        Me.Label1.Location = New System.Drawing.Point(82, 139)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(125, 19)
-        Me.Label1.TabIndex = 2
+        Me.Label1.TabIndex = 7
         Me.Label1.Text = "Descrição | Título"
         '
         'lblIDProduto
@@ -249,11 +249,11 @@ Partial Class frmProduto
         'txtProduto
         '
         Me.txtProduto.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtProduto.Location = New System.Drawing.Point(213, 103)
+        Me.txtProduto.Location = New System.Drawing.Point(213, 136)
         Me.txtProduto.MaxLength = 50
         Me.txtProduto.Name = "txtProduto"
         Me.txtProduto.Size = New System.Drawing.Size(511, 27)
-        Me.txtProduto.TabIndex = 3
+        Me.txtProduto.TabIndex = 8
         '
         'txtAutor
         '
@@ -513,36 +513,37 @@ Partial Class frmProduto
         'Label16
         '
         Me.Label16.AutoSize = True
-        Me.Label16.Location = New System.Drawing.Point(119, 140)
+        Me.Label16.Location = New System.Drawing.Point(119, 106)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(88, 19)
-        Me.Label16.TabIndex = 4
+        Me.Label16.TabIndex = 2
         Me.Label16.Text = "Reg. Interno"
         '
         'txtRGProduto
         '
-        Me.txtRGProduto.Location = New System.Drawing.Point(213, 137)
+        Me.txtRGProduto.Location = New System.Drawing.Point(213, 103)
         Me.txtRGProduto.MaxLength = 10
         Me.txtRGProduto.Name = "txtRGProduto"
         Me.txtRGProduto.Size = New System.Drawing.Size(79, 27)
-        Me.txtRGProduto.TabIndex = 5
+        Me.txtRGProduto.TabIndex = 3
+        Me.txtRGProduto.Tag = "Pressione DELETE para limpar"
         '
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Location = New System.Drawing.Point(435, 140)
+        Me.Label17.Location = New System.Drawing.Point(435, 106)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(84, 19)
-        Me.Label17.TabIndex = 7
+        Me.Label17.TabIndex = 5
         Me.Label17.Text = "Cod. Barras"
         '
         'txtCodBarrasA
         '
-        Me.txtCodBarrasA.Location = New System.Drawing.Point(525, 137)
+        Me.txtCodBarrasA.Location = New System.Drawing.Point(525, 103)
         Me.txtCodBarrasA.MaxLength = 15
         Me.txtCodBarrasA.Name = "txtCodBarrasA"
         Me.txtCodBarrasA.Size = New System.Drawing.Size(199, 27)
-        Me.txtCodBarrasA.TabIndex = 8
+        Me.txtCodBarrasA.TabIndex = 6
         '
         'EProvider
         '
@@ -554,12 +555,12 @@ Partial Class frmProduto
         Me.btnProcuraRG.BackColor = System.Drawing.Color.Transparent
         Me.btnProcuraRG.FlatAppearance.BorderColor = System.Drawing.Color.Black
         Me.btnProcuraRG.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnProcuraRG.Location = New System.Drawing.Point(298, 137)
+        Me.btnProcuraRG.Location = New System.Drawing.Point(298, 103)
         Me.btnProcuraRG.Name = "btnProcuraRG"
         Me.btnProcuraRG.RoundedCornersMask = CType(15, Byte)
         Me.btnProcuraRG.RoundedCornersRadius = 0
         Me.btnProcuraRG.Size = New System.Drawing.Size(34, 27)
-        Me.btnProcuraRG.TabIndex = 6
+        Me.btnProcuraRG.TabIndex = 4
         Me.btnProcuraRG.TabStop = False
         Me.btnProcuraRG.Text = "..."
         Me.btnProcuraRG.UseCompatibleTextRendering = True

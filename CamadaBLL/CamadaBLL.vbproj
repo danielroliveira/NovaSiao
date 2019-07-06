@@ -103,6 +103,7 @@
     <Compile Include="ObservacaoBLL.vb" />
     <Compile Include="PedidoBLL.vb" />
     <Compile Include="PessoaBLL.vb" />
+    <Compile Include="ProdutoAntigoBLL.vb" />
     <Compile Include="ProdutoBLL.vb" />
     <Compile Include="ReservaBLL.vb" />
     <Compile Include="SimplesMovimentacaoBLL.vb" />

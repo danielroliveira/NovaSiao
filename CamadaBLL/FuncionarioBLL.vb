@@ -14,41 +14,56 @@ Public Class FuncionarioBLL
 
         strSql = "SELECT * FROM qryFuncionario"
 
-        Dim dr As SqlDataReader = objdb.ExecuteAndGetReader(strSql)
-        Dim lista As New List(Of clFuncionario)
-        While dr.Read
-            Dim func As clFuncionario = New clFuncionario
+        Try
             '
-            func.IDPessoa = IIf(IsDBNull(dr("IDFuncionario")), Nothing, dr("IDFuncionario"))
-            func.Cadastro = IIf(IsDBNull(dr("Cadastro")), String.Empty, dr("Cadastro"))
-            func.CPF = IIf(IsDBNull(dr("CPF")), String.Empty, dr("CPF"))
-            func.NascimentoData = IIf(IsDBNull(dr("NascimentoData")), Nothing, dr("NascimentoData"))
-            func.Sexo = IIf(IsDBNull(dr("Sexo")), Nothing, dr("Sexo"))
-            func.Identidade = IIf(IsDBNull(dr("Identidade")), String.Empty, dr("Identidade"))
-            func.IdentidadeOrgao = IIf(IsDBNull(dr("IdentidadeOrgao")), String.Empty, dr("IdentidadeOrgao"))
-            func.IdentidadeData = IIf(IsDBNull(dr("IdentidadeData")), Nothing, dr("IdentidadeData"))
-            func.Endereco = IIf(IsDBNull(dr("Endereco")), String.Empty, dr("Endereco"))
-            func.Bairro = IIf(IsDBNull(dr("Bairro")), String.Empty, dr("Bairro"))
-            func.Cidade = IIf(IsDBNull(dr("Cidade")), String.Empty, dr("Cidade"))
-            func.UF = IIf(IsDBNull(dr("UF")), String.Empty, dr("UF"))
-            func.CEP = IIf(IsDBNull(dr("CEP")), String.Empty, dr("CEP"))
-            func.TelefoneA = IIf(IsDBNull(dr("TelefoneA")), String.Empty, dr("TelefoneA"))
-            func.TelefoneB = IIf(IsDBNull(dr("TelefoneB")), String.Empty, dr("TelefoneB"))
-            func.Email = IIf(IsDBNull(dr("Email")), String.Empty, dr("Email"))
-            func.AdmissaoData = IIf(IsDBNull(dr("AdmissaoData")), Nothing, dr("AdmissaoData"))
-            func.Ativo = IIf(IsDBNull(dr("Ativo")), 0, dr("Ativo"))
-            func.Vendedor = IIf(IsDBNull(dr("Vendedor")), Nothing, dr("Vendedor"))
-            func.ApelidoFuncionario = IIf(IsDBNull(dr("ApelidoFuncionario")), String.Empty, dr("ApelidoFuncionario"))
-            func.IDFilial = IIf(IsDBNull(dr("IDFilial")), Nothing, dr("IDFilial"))
-            func.ApelidoFilial = IIf(IsDBNull(dr("ApelidoFilial")), String.Empty, dr("ApelidoFilial"))
-            func.Comissao = IIf(IsDBNull(dr("Comissao")), Nothing, dr("Comissao"))
-            func.VendaTipo = IIf(IsDBNull(dr("VendaTipo")), Nothing, dr("VendaTipo"))
-            func.VendedorAtivo = IIf(IsDBNull(dr("VendedorAtivo")), Nothing, dr("VendedorAtivo"))
-            lista.Add(func)
+            Dim dr As SqlDataReader = objdb.ExecuteAndGetReader(strSql)
+            Dim lista As New List(Of clFuncionario)
+            While dr.Read
+                Dim func As clFuncionario = New clFuncionario
+                '
+                func.IDPessoa = IIf(IsDBNull(dr("IDFuncionario")), Nothing, dr("IDFuncionario"))
+                func.Cadastro = IIf(IsDBNull(dr("Cadastro")), String.Empty, dr("Cadastro"))
+                func.CPF = IIf(IsDBNull(dr("CPF")), String.Empty, dr("CPF"))
+                func.NascimentoData = IIf(IsDBNull(dr("NascimentoData")), Nothing, dr("NascimentoData"))
+                func.Sexo = IIf(IsDBNull(dr("Sexo")), Nothing, dr("Sexo"))
+                func.Identidade = IIf(IsDBNull(dr("Identidade")), String.Empty, dr("Identidade"))
+                func.IdentidadeOrgao = IIf(IsDBNull(dr("IdentidadeOrgao")), String.Empty, dr("IdentidadeOrgao"))
+                func.IdentidadeData = IIf(IsDBNull(dr("IdentidadeData")), Nothing, dr("IdentidadeData"))
+                func.Endereco = IIf(IsDBNull(dr("Endereco")), String.Empty, dr("Endereco"))
+                func.Bairro = IIf(IsDBNull(dr("Bairro")), String.Empty, dr("Bairro"))
+                func.Cidade = IIf(IsDBNull(dr("Cidade")), String.Empty, dr("Cidade"))
+                func.UF = IIf(IsDBNull(dr("UF")), String.Empty, dr("UF"))
+                func.CEP = IIf(IsDBNull(dr("CEP")), String.Empty, dr("CEP"))
+                func.TelefoneA = IIf(IsDBNull(dr("TelefoneA")), String.Empty, dr("TelefoneA"))
+                func.TelefoneB = IIf(IsDBNull(dr("TelefoneB")), String.Empty, dr("TelefoneB"))
+                func.Email = IIf(IsDBNull(dr("Email")), String.Empty, dr("Email"))
+                func.AdmissaoData = IIf(IsDBNull(dr("AdmissaoData")), Nothing, dr("AdmissaoData"))
+                func.Ativo = IIf(IsDBNull(dr("Ativo")), 0, dr("Ativo"))
+                func.Vendedor = IIf(IsDBNull(dr("Vendedor")), Nothing, dr("Vendedor"))
+                func.ApelidoFuncionario = IIf(IsDBNull(dr("ApelidoFuncionario")), String.Empty, dr("ApelidoFuncionario"))
+                func.IDFilial = IIf(IsDBNull(dr("IDFilial")), Nothing, dr("IDFilial"))
+                func.ApelidoFilial = IIf(IsDBNull(dr("ApelidoFilial")), String.Empty, dr("ApelidoFilial"))
+                func.Comissao = IIf(IsDBNull(dr("Comissao")), Nothing, dr("Comissao"))
+                func.VendaTipo = IIf(IsDBNull(dr("VendaTipo")), Nothing, dr("VendaTipo"))
+                func.VendedorAtivo = IIf(IsDBNull(dr("VendedorAtivo")), Nothing, dr("VendedorAtivo"))
+                lista.Add(func)
+                '
+            End While
             '
-        End While
-        dr.Close()
-        Return lista
+            '--- CLOSE DATAREADER
+            dr.Close()
+            '
+            '--- RETURN
+            Return lista
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '
+            '--- CLOSE DB CONNECTION
+            objdb.CloseConn()
+            '
+        End Try
         '
     End Function
     '

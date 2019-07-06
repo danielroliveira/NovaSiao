@@ -76,7 +76,6 @@ Partial Class frmDialog
         'btnCancel
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnCancel.FlatAppearance.BorderColor = System.Drawing.Color.Maroon
         Me.btnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.NavajoWhite
         Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat

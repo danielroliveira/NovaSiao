@@ -6,7 +6,6 @@ Public Class AcessoDados
     '-------------------------------------------------------------------------------------------------------
     Dim conn As SqlConnection
     Dim cmd As SqlCommand
-    Dim connStr As String
     Dim isTran As Boolean = False
     Private trans As SqlTransaction
     Public ParamList As New List(Of SqlParameter)
@@ -152,8 +151,16 @@ Public Class AcessoDados
             ParamList.ForEach(Sub(p) cmd.Parameters.Add(p))
             '
             If Not isTran Then
-                Return cmd.ExecuteScalar
+                '
+                '--- EXECUTE
+                Dim obj As Object = cmd.ExecuteScalar
+                '
+                '--- CLOSE DB CONNECTION
                 CloseConn()
+                '
+                '--- RETURN
+                Return obj
+                '
             Else
                 cmd.Transaction = trans
                 Return cmd.ExecuteScalar
@@ -191,10 +198,12 @@ Public Class AcessoDados
             '
             Dim dtTable As New DataTable
             sqlDA.Fill(dtTable)
-            Return dtTable
             '
             '--- Close connection if NOT active Transaction
             If Not isTran Then CloseConn()
+            '
+            '--- return
+            Return dtTable
             '
         Catch ex As Exception
             '
@@ -268,7 +277,6 @@ Public Class AcessoDados
             '
             If Not isTran Then
                 Return cmd.ExecuteReader
-                CloseConn()
             Else
                 cmd.Transaction = trans
                 Return cmd.ExecuteReader
@@ -311,7 +319,6 @@ Public Class AcessoDados
             '
             If Not isTran Then
                 Return cmd.ExecuteScalar
-                CloseConn()
             Else
                 cmd.Transaction = trans
                 Return cmd.ExecuteScalar
@@ -320,6 +327,11 @@ Public Class AcessoDados
         Catch ex As SqlException
             '
             Throw ex
+            '
+        Finally
+            '
+            '--- CLOSE DB CONNECTION
+            CloseConn()
             '
         End Try
         '
@@ -347,7 +359,6 @@ Public Class AcessoDados
             '
             If Not isTran Then
                 Return cmd.ExecuteScalar
-                CloseConn()
             Else
                 cmd.Transaction = trans
                 Return cmd.ExecuteScalar
@@ -356,6 +367,11 @@ Public Class AcessoDados
         Catch ex As Exception
             '
             Throw ex
+            '
+        Finally
+            '
+            '--- CLOSE DB CONNECTION
+            CloseConn()
             '
         End Try
         '
@@ -394,11 +410,11 @@ Public Class AcessoDados
             '--- preenche o DataTable
             sqlDtAdapter.Fill(dtTable)
             '
-            '--- Retorna
-            Return dtTable
-            '
             '--- close Connection if not Transaction
             If Not isTran Then CloseConn()
+            '
+            '--- Retorna
+            Return dtTable
             '
         Catch ex As Exception
             '

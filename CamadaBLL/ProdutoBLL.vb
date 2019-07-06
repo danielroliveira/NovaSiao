@@ -392,6 +392,7 @@ Public Class ProdutoBLL
         Catch ex As Exception
             Throw ex
         End Try
+        '
     End Function
     '
     '-----------------------------------------------------------------------------------------------------------------
@@ -406,6 +407,30 @@ Public Class ProdutoBLL
         If Not Ativo Is Nothing Then
             strSQL = strSQL & " WHERE FabricanteAtivo = '" & CBool(Ativo).ToString & "'"
         End If
+        '
+        Try
+            SQL.ExecQuery(strSQL)
+            '
+            If SQL.HasException(True) Then
+                Throw New Exception(SQL.Exception)
+            End If
+            '
+            Return SQL.DBDT
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '-----------------------------------------------------------------------------------------------------------------
+    ' RETORNA UMA DATATABLE DE SITUACAO TRIBUTARIA DE PRODUTO
+    '-----------------------------------------------------------------------------------------------------------------
+    Public Function GetSituacao() As DataTable
+        '
+        Dim SQL As New SQLControl
+        '
+        Dim strSQL As String = "SELECT * FROM tblProdutoSituacaoTributaria"
         '
         Try
             SQL.ExecQuery(strSQL)
@@ -498,58 +523,6 @@ Public Class ProdutoBLL
                 End If
             Else
                 Return 0
-            End If
-            '
-        Catch ex As Exception
-            Throw ex
-        End Try
-        '
-    End Function
-    '
-    '---------------------------------------------------------------------------------------------------------
-    ' BUSCA OS DADOS DO PRODUTO ANTERIOR NA X_TBLPRODUTOS
-    '---------------------------------------------------------------------------------------------------------
-    Public Function ProcuraProduto_CadastroAntigo(RGProduto As Integer) As clProduto
-        '
-        Dim SQL As New SQLControl
-        '
-        Try
-            '--- verifica se existe a X_tblProdutos
-            Dim sqlstr As String = "SELECT OBJECT_ID('X_tblProdutos') AS RETORNO"
-            SQL.ExecQuery(sqlstr)
-            '
-            If SQL.HasException(True) Then
-                Throw New Exception(SQL.Exception)
-            End If
-            '
-            If Not IsDBNull(SQL.DBDT.Rows(0)("RETORNO")) Then '--- procura na X_TBLPRODUTOS
-                SQL.AddParam("@RGProduto", RGProduto)
-                SQL.ExecQuery("SELECT * FROM X_tblProdutos WHERE RGProduto = @RGProduto")
-                '
-                If SQL.HasException(True) Then
-                    Throw New Exception(SQL.Exception)
-                End If
-                '
-                If SQL.RecordCount > 0 Then
-                    Dim r As DataRow = SQL.DBDT.Rows(0)
-                    Dim myProd As New clProduto
-                    '
-                    myProd.RGProduto = IIf(IsDBNull(r("RGProduto")), Nothing, r("RGProduto"))
-                    myProd.Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto"))
-                    myProd.Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor"))
-                    myProd.PVenda = IIf(IsDBNull(r("Venda")), Nothing, r("Venda"))
-                    myProd.PCompra = IIf(IsDBNull(r("Compra")), Nothing, r("Compra"))
-                    myProd.EstoqueNivel = IIf(IsDBNull(r("EstoqueNivel")), Nothing, r("EstoqueNivel"))
-                    myProd.EstoqueIdeal = IIf(IsDBNull(r("EstoqueIdeal")), Nothing, r("EstoqueIdeal"))
-                    myProd.DescontoCompra = 0
-                    '
-                    Return myProd
-                    '
-                Else
-                    Return Nothing
-                End If
-            Else '--- não encontrou a X_tblProdutos
-                Return Nothing
             End If
             '
         Catch ex As Exception

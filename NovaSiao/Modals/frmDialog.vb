@@ -2,6 +2,7 @@
     '
     Private _dialogType As DialogType
     Private _icon As DialogIcon
+    Private _buttonDefault As DialogDefaultButton = DialogDefaultButton.First
     '
     Public Enum DialogType
         SIM_NAO
@@ -17,7 +18,17 @@
         Warning
     End Enum
     '
-    Sub New(mensagem As String, titulo As String, dialogType As DialogType, Icon As MessageBoxIcon)
+    Public Enum DialogDefaultButton
+        First
+        Second
+        Third
+    End Enum
+    '
+    Sub New(mensagem As String,
+            titulo As String,
+            dialogType As DialogType,
+            Icon As MessageBoxIcon,
+            Optional buttonDefault As DialogDefaultButton = Nothing)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -28,6 +39,23 @@
         '
         propIcon = Icon
         propDialogType = dialogType
+        '
+        '--- Define Default Button
+        If Not IsNothing(buttonDefault) Then
+            _buttonDefault = buttonDefault
+        End If
+        '
+    End Sub
+    '
+    Private Sub frmDialog_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        '
+        If _buttonDefault = DialogDefaultButton.First Then
+            btnSim.Focus()
+        ElseIf _buttonDefault = DialogDefaultButton.Second Then
+            If btnNao.Visible Then btnNao.Focus()
+        ElseIf _buttonDefault = DialogDefaultButton.Third Then
+            If btnCancel.Visible Then btnCancel.Focus()
+        End If
         '
     End Sub
     '
