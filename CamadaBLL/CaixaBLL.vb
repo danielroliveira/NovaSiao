@@ -175,18 +175,45 @@ Public Class CaixaBLL
     '============================================================================================
     ' EXCLUIR TODOS NIVELAMENTOS NO CAIXA
     '============================================================================================
-    Public Function ExcluirNivelamentos(IDCaixa As Integer) As Boolean
-        Dim db As New AcessoDados
+    Public Function ExcluirNivelamentos(Movs As List(Of clMovimentacao)) As Boolean
         '
-        db.LimparParametros()
-        db.AdicionarParametros("@IDCaixa", IDCaixa)
+        Dim db As New AcessoDados
+        db.BeginTransaction()
+        '
+        Dim query As String = ""
         '
         Try
-            db.ExecutarManipulacao(CommandType.StoredProcedure, "uspCaixa_ExcluirNivelamentos")
             '
+            For Each mov As clMovimentacao In Movs.Where(Function(x) x.Origem = 3)
+                '
+                db.LimparParametros()
+                db.AdicionarParametros("@IDCredito", mov.IDOrigem)
+                '
+                '-- EXCLUI O REGISTRO DE CREDITO
+                query = "DELETE tblCaixaCreditos " &
+                        "OUTPUT deleted.IDCredito " &
+                        "WHERE IDCredito = @IDCredito AND IDCreditoTipo = 1"
+                '
+                Dim resp As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+                '
+                If resp.Rows.Count > 0 Then
+                    '
+                    db.LimparParametros()
+                    db.AdicionarParametros("@IDMov", mov.IDMovimentacao)
+                    '
+                    query = "DELETE tblCaixaMovimentacao WHERE IDMovimentacao = @IDMov"
+                    '
+                    db.ExecutarManipulacao(CommandType.Text, query)
+                    '
+                End If
+                '
+            Next
+            '
+            db.CommitTransaction()
             Return True
             '
         Catch ex As Exception
+            db.RollBackTransaction()
             Throw ex
         End Try
         '
@@ -620,6 +647,84 @@ Public Class CaixaBLL
                                     "WHERE IDCaixa = @IDCaixa"
             '
             db.ExecutarManipulacao(CommandType.Text, myQuery)
+            '
+            db.CommitTransaction()
+            Return True
+            '
+        Catch ex As Exception
+            db.RollBackTransaction()
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' INSERIR ENTRADA SIMPLES DE CAIXA
+    '==========================================================================================
+    Public Function InserirEntradaSimplesCaixa(IDCaixa As Integer,
+                                               EntradaValor As Double,
+                                               Descricao As String) As clMovimentacao
+        Dim db As New AcessoDados
+        '
+        db.LimparParametros()
+        db.AdicionarParametros("@IDCaixa", IDCaixa)
+        db.AdicionarParametros("@Valor", EntradaValor)
+        db.AdicionarParametros("@Descricao", Descricao)
+        '
+        Try
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.StoredProcedure, "uspCaixa_InserirEntradaSimples")
+            '
+            If dt.Rows.Count = 0 Then
+                Throw New Exception("ERRO: Não foi adicionada ENTRADA...")
+            End If
+            '
+            Dim mBLL As New MovimentacaoBLL
+            '
+            Return mBLL.Convert_DT_ListOF_Movimentacao(dt)(0)
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' EXCLUIR ENTRADA SIMPLES DE CAIXA
+    '==========================================================================================
+    Public Function ExcluirEntradaSimplesCaixa(mov As clMovimentacao) As Boolean
+        '
+        Dim db As New AcessoDados
+        db.BeginTransaction()
+        '
+        Dim query As String = ""
+        '
+        Try
+            '
+            If mov.Origem <> 3 Then
+                Return False
+            End If
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDCredito", mov.IDOrigem)
+            '
+            '-- EXCLUI O REGISTRO DE CREDITO
+            query = "DELETE tblCaixaCreditos " &
+                    "OUTPUT deleted.IDCredito " &
+                    "WHERE IDCredito = @IDCredito AND IDCreditoTipo = 3" '--> CreditoTipo: ENTRADA
+            '
+            Dim resp As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If resp.Rows.Count > 0 Then
+                '
+                db.LimparParametros()
+                db.AdicionarParametros("@IDMov", mov.IDMovimentacao)
+                '
+                query = "DELETE tblCaixaMovimentacao WHERE IDMovimentacao = @IDMov"
+                '
+                db.ExecutarManipulacao(CommandType.Text, query)
+                '
+            End If
+            '
             '
             db.CommitTransaction()
             Return True

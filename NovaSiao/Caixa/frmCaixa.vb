@@ -1,6 +1,6 @@
 ﻿Imports CamadaBLL
 Imports CamadaDTO
-
+'
 Public Class frmCaixa
     Private lstMov As List(Of clMovimentacao)
     Private bindMovs As New BindingSource
@@ -56,7 +56,6 @@ Public Class frmCaixa
                 Case 1 ' INICIADO
                     btnAlterar.Enabled = True
                     btnFinalizar.Enabled = True
-                    btnInserirDespesa.Enabled = True
                     btnExcluirCaixa.Enabled = True
                     '
                     txtObservacao.ReadOnly = False
@@ -67,7 +66,6 @@ Public Class frmCaixa
                 Case 2 ' FINALIZADO
                     btnAlterar.Enabled = False
                     btnFinalizar.Enabled = True
-                    btnInserirDespesa.Enabled = False
                     btnExcluirCaixa.Enabled = False
                     '
                     txtObservacao.ReadOnly = True
@@ -78,7 +76,6 @@ Public Class frmCaixa
                 Case 3 ' BLOQUEADO
                     btnAlterar.Enabled = False
                     btnFinalizar.Enabled = False
-                    btnInserirDespesa.Enabled = False
                     btnExcluirCaixa.Enabled = False
                     '
                     txtObservacao.ReadOnly = True
@@ -197,7 +194,7 @@ Public Class frmCaixa
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = DataGridViewColumnSortMode.Automatic
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft
         End With
@@ -210,7 +207,7 @@ Public Class frmCaixa
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = DataGridViewColumnSortMode.Automatic
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft
 
@@ -554,7 +551,7 @@ Public Class frmCaixa
         MostraMenuPrincipal()
     End Sub
     '
-    Private Sub btnInserirDespesa_Click(sender As Object, e As EventArgs) Handles btnInserirDespesa.Click
+    Private Sub btnInserirDespesa_Click(sender As Object, e As EventArgs)
         '
         '--- abre o form de DespesaSimples
         Dim f As New frmDespesaSimples(_Caixa.DataInicial,
@@ -1074,9 +1071,9 @@ Public Class frmCaixa
         Dim ValorAtual As Double = r("SaldoFinal") - If(IsDBNull(r("ATransferir")), 0, r("ATransferir"))
         '
         If ValorAtual = 0 Then
-            MessageBox.Show("Todo o valor do saldo desse item será transferido para outra Conta..." & vbNewLine &
-                            "Não é possível realizar Nivelamento, porque o saldo restante será Nulo.",
-                            "Saldo Transferido", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            AbrirDialog("Todo o valor do saldo desse item será transferido para outra Conta..." & vbNewLine &
+                        "Não é possível realizar Nivelamento, porque o saldo restante será Nulo.",
+                        "Saldo Transferido", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             Return
         End If
         '
@@ -1087,9 +1084,9 @@ Public Class frmCaixa
             For Each c As clMovimentacao In lstMov
                 If c.Descricao.ToString.Contains("Nivelamento") Then
                     If c.IDMovTipo = r("IDMeio") Then
-                        MessageBox.Show("Já existe um Nivelamento efetuado nesse mesmo Meio de Movimentação." & vbNewLine &
-                                        "Se deseja realizar Novo Nivelamento, exclua todos os outros anteriores...",
-                                        "Nivelamento Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                        AbrirDialog("Já existe um Nivelamento efetuado nesse mesmo Meio de Movimentação." & vbNewLine &
+                                    "Se deseja realizar Novo Nivelamento, exclua todos os outros anteriores...",
+                                    "Nivelamento Duplicado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
                         '
                         '--- selçeciona a row com o nivelamento duplicado
                         Dim i As Integer = lstMov.IndexOf(c)
@@ -1162,13 +1159,13 @@ Public Class frmCaixa
                            MessageBoxButtons.YesNo, MessageBoxIcon.Question,
                            MessageBoxDefaultButton.Button2) = vbNo Then Exit Sub
         '
-        '--- salva o nivelamento
+        '--- DELETE NIVELAMENTO
         Try
             '
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Dim resp As Boolean = cxBLL.ExcluirNivelamentos(_Caixa.IDCaixa)
+            Dim resp As Boolean = cxBLL.ExcluirNivelamentos(lstMov)
             '
             '--- retorna os valores e insere na listagem
             If resp = False Then Exit Sub
@@ -1194,5 +1191,243 @@ Public Class frmCaixa
     End Sub
     '
 #End Region
+    '
+#Region "MENU SUSPENSO INSERIR"
+    '
+    ' CONTROLE DO MENU SUSPENSO
+    Private Sub dgvListagem_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvListagem.MouseDown
+        '
+        If e.Button = MouseButtons.Right Then
+            '
+            Dim c As Control = DirectCast(sender, Control)
+            Dim hit As DataGridView.HitTestInfo = dgvListagem.HitTest(e.X, e.Y)
+            dgvListagem.ClearSelection()
+            '
+            '---VERIFICAÇÕES NECESSÁRIAS
+            If Not hit.Type = DataGridViewHitTestType.Cell Then Exit Sub
+            '
+            ' seleciona o ROW
+            dgvListagem.Rows(hit.RowIndex).Cells(0).Selected = True
+            dgvListagem.Rows(hit.RowIndex).Selected = True
+            '
+            ' mostra o menu nivelamento
+            Dim mov As clMovimentacao = dgvListagem.Rows(hit.RowIndex).DataBoundItem
+            '
+            ' mostra o menu nivelamento
+            '
+            If propIDSituacao = 1 Then '--- Enabled IF only Situacao = 1 
+                '
+                If mov.Origem <> 3 Then '--- ORIGEM <> 3 => NOT Origem Caixa
+                    '
+                    miInserirEntrada.Enabled = True
+                    miInserirDespesas.Enabled = True
+                    miExcluirEntrada.Enabled = False
+                    miExcluirNivelamentoLista.Enabled = False
+                    '
+                Else '--- ORIGEM = 3 => Origem Caixa
+                    '
+                    miInserirEntrada.Enabled = False
+                    miInserirDespesas.Enabled = False
+                    '
+                    '--- check if is ENTRADA or NIVELAMENTO
+                    If mov.Mov = "E" AndAlso Not mov.Descricao.ToString.Contains("Nivelamento") Then
+                        miExcluirEntrada.Enabled = True '--- ENABLE Excluir Entrada
+                        miExcluirNivelamentoLista.Enabled = False '--- DISABLE Excluir Nivelamento
+                    Else
+                        miExcluirEntrada.Enabled = False '--- DISABLE Excluir Entrada
+                        miExcluirNivelamentoLista.Enabled = True '--- ENABLE Excluir Nivelamento
+                    End If
+                    '
+                End If
+                '
+            Else
+                '
+                miInserirEntrada.Enabled = False
+                miInserirDespesas.Enabled = False
+                '
+            End If
+            '
+            ' revela menu
+            mnuInserir.Show(c.PointToScreen(e.Location))
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- INSERIR ENTRADA SIMPLES
+    '----------------------------------------------------------------------------------
+    Private Sub miInserirEntrada_Click(sender As Object, e As EventArgs) Handles miInserirEntrada.Click
+        '
+        '--- abre o frmEntrada
+        Dim frmE As New frmCaixaEntradaSimples(_Caixa.Conta)
+        '
+        frmE.ShowDialog()
+        '
+        '--- verifica o resultado do form
+        If frmE.DialogResult <> DialogResult.OK Then Exit Sub
+        '
+        '--- recupera os valores
+        Dim myEntradaValor As Decimal = frmE.PropValor_Escolhido
+        Dim myDescricao As String = frmE.PropDescricao
+        '
+        '--- insere a Entrada
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim newMov As clMovimentacao = cxBLL.InserirEntradaSimplesCaixa(_Caixa.IDCaixa, myEntradaValor, myDescricao)
+            '
+            '--- retorna os valores e insere na listagem
+            bindMovs.Add(newMov)
+            ObterSaldos()
+            CalculaTotais()
+            '
+            '--- seleciona a row com o NOVA entrada
+            Dim i As Integer = lstMov.FindIndex(Function(x) x.Descricao = newMov.Descricao)
+            dgvListagem.CurrentCell = dgvListagem.Rows(i).Cells(0)
+            '
+            '--- seleciona o entrada no datagrid
+            dgvSaldos.CurrentCell = dgvSaldos.Rows(dgvSaldos.Rows.Count - 1).Cells(0)
+
+        Catch ex As Exception
+            MessageBox.Show("Uma execeção ocorreu ao Inserir Entrada..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
+    '
+    '--- INSERIR DESPESA
+    '----------------------------------------------------------------------------------
+    Private Sub miInserirDespesas_Click(sender As Object, e As EventArgs) Handles miInserirDespesas.Click
+        '
+        '--- abre o form de DespesaSimples
+        Dim f As New frmDespesaSimples(_Caixa.DataInicial,
+                                       _Caixa.DataFinal,
+                                       _Caixa.IDConta,
+                                       _Caixa.IDFilial,
+                                       _Caixa.ApelidoFilial,
+                                       _Caixa.IDCaixa,
+                                       Me)
+        '
+        f.ShowDialog()
+        '
+        '--- se a resultado for cancel então exit
+        If f.DialogResult = DialogResult.Cancel Then Exit Sub
+        '
+        Dim newMov As clMovimentacao = f.propMovSaida
+        '
+        '--- retorna os valores e insere na listagem
+        bindMovs.Add(newMov)
+        ObterSaldos()
+        CalculaTotais()
+        '
+        '--- seleciona a row com o NOVO nivelamento
+        Dim i As Integer = lstMov.FindIndex(Function(x) x.Descricao = newMov.Descricao)
+        dgvListagem.CurrentCell = dgvListagem.Rows(i).Cells(0)
+        '
+    End Sub
+    '
+    '--- EXCLUIR NIVELAMENTO ESPECIFICO
+    '----------------------------------------------------------------------------------
+    Private Sub miExcluirNivelamentoLista_Click(sender As Object, e As EventArgs) Handles miExcluirNivelamentoLista.Click
+        '
+        '--- pergunta ao usuário
+        '
+        Dim mov As clMovimentacao = dgvListagem.CurrentRow.DataBoundItem
+        '
+        If AbrirDialog("Você deseja EXCLUIR o seguinte NIVELAMENTO de CAIXA?" & vbNewLine & vbNewLine &
+                        mov.Descricao & vbNewLine &
+                        Format(mov.MovValor, "C"), "Excluir Nivelamento",
+                        frmDialog.DialogType.SIM_NAO, frmDialog.DialogIcon.Question,
+                        frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Exit Sub
+        '
+        '--- DELETE NIVELAMENTO
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim resp As Boolean = cxBLL.ExcluirNivelamentos(lstMov.FindAll(Function(x) x.IDMovimentacao = mov.IDMovimentacao))
+            '
+            '--- retorna os valores e insere na listagem
+            If resp = False Then Exit Sub
+            '
+            obterMovimentacoes()
+            bindMovs.ResetBindings(False)
+            CalculaTotais()
+            ObterSaldos()
+            '
+            MessageBox.Show("Nivelamentos removidos com sucesso...",
+                            "Nivelamento", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma execeção ocorreu ao Excluir Nivelamentos..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
+    '
+    '--- EXCLUIR ENTRADA
+    '----------------------------------------------------------------------------------
+    Private Sub miExcluirEntrada_Click(sender As Object, e As EventArgs) Handles miExcluirEntrada.Click
+        '
+        '--- pergunta ao usuário
+        Dim mov As clMovimentacao = dgvListagem.CurrentRow.DataBoundItem
+        '
+        If AbrirDialog("Você deseja EXCLUIR a seguinte ENTRADA de CAIXA?" & vbNewLine & vbNewLine &
+                        mov.Descricao & vbNewLine &
+                        Format(mov.MovValor, "C"), "Excluir Entrada",
+                        frmDialog.DialogType.SIM_NAO, frmDialog.DialogIcon.Question,
+                        frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Exit Sub
+        '
+        '--- DELETE ENTRADA
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim resp As Boolean = cxBLL.ExcluirEntradaSimplesCaixa(mov)
+            '
+            '--- retorna os valores e insere na listagem
+            If resp = False Then
+                AbrirDialog("Por algum motivo desconhecido, nenhuma entrada foi removida...",
+                            "Exceção",
+                            frmDialog.DialogType.OK,
+                            frmDialog.DialogIcon.Exclamation)
+                Exit Sub
+            End If
+            '
+            obterMovimentacoes()
+            bindMovs.ResetBindings(False)
+            CalculaTotais()
+            ObterSaldos()
+            '
+            MessageBox.Show("Entrada removida com sucesso...",
+                            "Entrada", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma execeção ocorreu ao Remover Entrada..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
+    '
+#End Region '/ MENU SUSPENSO INSERIR
     '
 End Class

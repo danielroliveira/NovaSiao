@@ -60,7 +60,6 @@ Partial Class frmCaixa
         Me.lblSaldoAnterior = New System.Windows.Forms.Label()
         Me.lblSaldoFinal = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.btnInserirDespesa = New System.Windows.Forms.Button()
         Me.btnAlterar = New System.Windows.Forms.Button()
         Me.btnFinalizar = New System.Windows.Forms.Button()
         Me.btnFechar = New System.Windows.Forms.Button()
@@ -76,10 +75,19 @@ Partial Class frmCaixa
         Me.lblApelidoFuncionario = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.btnFuncionarioAlterar = New System.Windows.Forms.Button()
+        Me.mnuInserir = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.miInserirEntrada = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miInserirDespesas = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.miExcluirEntrada = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.miExcluirNivelamentoLista = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvListagem, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvSaldos, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuSaldos.SuspendLayout()
+        Me.mnuInserir.SuspendLayout()
+        Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -91,7 +99,7 @@ Partial Class frmCaixa
         Me.Panel1.Controls.Add(Me.lblSituacao)
         Me.Panel1.Controls.Add(Me.lblApelidoFilial)
         Me.Panel1.Controls.Add(Me.btnClose)
-        Me.Panel1.Size = New System.Drawing.Size(1118, 50)
+        Me.Panel1.Size = New System.Drawing.Size(1134, 50)
         Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.btnClose, 0)
@@ -104,7 +112,7 @@ Partial Class frmCaixa
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(857, 0)
+        Me.lblTitulo.Location = New System.Drawing.Point(873, 0)
         Me.lblTitulo.Size = New System.Drawing.Size(261, 50)
         Me.lblTitulo.TabIndex = 6
         Me.lblTitulo.Text = "Fechamento de Caixa"
@@ -114,6 +122,8 @@ Partial Class frmCaixa
         '
         Me.dgvListagem.AllowUserToAddRows = False
         Me.dgvListagem.AllowUserToDeleteRows = False
+        Me.dgvListagem.AllowUserToResizeColumns = False
+        Me.dgvListagem.AllowUserToResizeRows = False
         Me.dgvListagem.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke
@@ -142,7 +152,7 @@ Partial Class frmCaixa
         Me.dgvListagem.RowHeadersWidth = 36
         Me.dgvListagem.RowTemplate.Height = 30
         Me.dgvListagem.Size = New System.Drawing.Size(910, 318)
-        Me.dgvListagem.TabIndex = 7
+        Me.dgvListagem.TabIndex = 10
         '
         'clnMov
         '
@@ -222,7 +232,7 @@ Partial Class frmCaixa
         Me.dgvSaldos.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvSaldos.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.dgvSaldos.Size = New System.Drawing.Size(546, 140)
-        Me.dgvSaldos.TabIndex = 8
+        Me.dgvSaldos.TabIndex = 11
         '
         'clnTipo
         '
@@ -262,7 +272,7 @@ Partial Class frmCaixa
         Me.btnClose.BorderStyle = VIBlend.WinForms.Controls.ButtonBorderStyle.NONE
         Me.btnClose.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.CloseButton
         Me.btnClose.CausesValidation = False
-        Me.btnClose.Location = New System.Drawing.Point(1089, 13)
+        Me.btnClose.Location = New System.Drawing.Point(1105, 13)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.RibbonStyle = False
         Me.btnClose.RoundedCornersMask = CType(15, Byte)
@@ -422,7 +432,7 @@ Partial Class frmCaixa
         Me.Label5.Location = New System.Drawing.Point(679, 475)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(85, 24)
-        Me.Label5.TabIndex = 11
+        Me.Label5.TabIndex = 14
         Me.Label5.Text = "Entradas:"
         Me.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -432,7 +442,7 @@ Partial Class frmCaixa
         Me.lblTEntradas.Location = New System.Drawing.Point(766, 475)
         Me.lblTEntradas.Name = "lblTEntradas"
         Me.lblTEntradas.Size = New System.Drawing.Size(121, 24)
-        Me.lblTEntradas.TabIndex = 12
+        Me.lblTEntradas.TabIndex = 15
         Me.lblTEntradas.Text = "R$ 0,00"
         Me.lblTEntradas.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -442,7 +452,7 @@ Partial Class frmCaixa
         Me.Label7.Location = New System.Drawing.Point(679, 504)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(85, 24)
-        Me.Label7.TabIndex = 13
+        Me.Label7.TabIndex = 16
         Me.Label7.Text = "Saídas:"
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -452,7 +462,7 @@ Partial Class frmCaixa
         Me.lblTSaidas.Location = New System.Drawing.Point(766, 504)
         Me.lblTSaidas.Name = "lblTSaidas"
         Me.lblTSaidas.Size = New System.Drawing.Size(121, 24)
-        Me.lblTSaidas.TabIndex = 14
+        Me.lblTSaidas.TabIndex = 17
         Me.lblTSaidas.Text = "R$ 0,00"
         Me.lblTSaidas.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -462,7 +472,7 @@ Partial Class frmCaixa
         Me.Label8.Location = New System.Drawing.Point(626, 446)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(138, 24)
-        Me.Label8.TabIndex = 9
+        Me.Label8.TabIndex = 12
         Me.Label8.Text = "Saldo Anterior:"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -472,7 +482,7 @@ Partial Class frmCaixa
         Me.lblSaldoAnterior.Location = New System.Drawing.Point(766, 446)
         Me.lblSaldoAnterior.Name = "lblSaldoAnterior"
         Me.lblSaldoAnterior.Size = New System.Drawing.Size(121, 24)
-        Me.lblSaldoAnterior.TabIndex = 10
+        Me.lblSaldoAnterior.TabIndex = 13
         Me.lblSaldoAnterior.Text = "R$ 0,00"
         Me.lblSaldoAnterior.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -482,7 +492,7 @@ Partial Class frmCaixa
         Me.lblSaldoFinal.Location = New System.Drawing.Point(766, 562)
         Me.lblSaldoFinal.Name = "lblSaldoFinal"
         Me.lblSaldoFinal.Size = New System.Drawing.Size(121, 24)
-        Me.lblSaldoFinal.TabIndex = 16
+        Me.lblSaldoFinal.TabIndex = 21
         Me.lblSaldoFinal.Text = "R$ 0,00"
         Me.lblSaldoFinal.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -492,24 +502,9 @@ Partial Class frmCaixa
         Me.Label10.Location = New System.Drawing.Point(626, 562)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(138, 24)
-        Me.Label10.TabIndex = 15
+        Me.Label10.TabIndex = 20
         Me.Label10.Text = "Saldo Final Total:"
         Me.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'btnInserirDespesa
-        '
-        Me.btnInserirDespesa.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.btnInserirDespesa.BackColor = System.Drawing.Color.SeaShell
-        Me.btnInserirDespesa.FlatAppearance.BorderSize = 0
-        Me.btnInserirDespesa.Image = Global.NovaSiao.My.Resources.Resources.APagar_30px
-        Me.btnInserirDespesa.Location = New System.Drawing.Point(940, 282)
-        Me.btnInserirDespesa.Name = "btnInserirDespesa"
-        Me.btnInserirDespesa.Size = New System.Drawing.Size(159, 45)
-        Me.btnInserirDespesa.TabIndex = 20
-        Me.btnInserirDespesa.Text = "&Inserir Despesa"
-        Me.btnInserirDespesa.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnInserirDespesa.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnInserirDespesa.UseVisualStyleBackColor = False
         '
         'btnAlterar
         '
@@ -517,10 +512,10 @@ Partial Class frmCaixa
         Me.btnAlterar.BackColor = System.Drawing.Color.Honeydew
         Me.btnAlterar.FlatAppearance.BorderSize = 0
         Me.btnAlterar.Image = Global.NovaSiao.My.Resources.Resources.refresh1
-        Me.btnAlterar.Location = New System.Drawing.Point(940, 333)
+        Me.btnAlterar.Location = New System.Drawing.Point(14, 294)
         Me.btnAlterar.Name = "btnAlterar"
         Me.btnAlterar.Size = New System.Drawing.Size(159, 45)
-        Me.btnAlterar.TabIndex = 21
+        Me.btnAlterar.TabIndex = 3
         Me.btnAlterar.Text = "&Alterar Período"
         Me.btnAlterar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnAlterar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -532,10 +527,10 @@ Partial Class frmCaixa
         Me.btnFinalizar.BackColor = System.Drawing.Color.AliceBlue
         Me.btnFinalizar.FlatAppearance.BorderSize = 0
         Me.btnFinalizar.Image = Global.NovaSiao.My.Resources.Resources.accept
-        Me.btnFinalizar.Location = New System.Drawing.Point(940, 448)
+        Me.btnFinalizar.Location = New System.Drawing.Point(14, 396)
         Me.btnFinalizar.Name = "btnFinalizar"
-        Me.btnFinalizar.Size = New System.Drawing.Size(159, 72)
-        Me.btnFinalizar.TabIndex = 23
+        Me.btnFinalizar.Size = New System.Drawing.Size(159, 63)
+        Me.btnFinalizar.TabIndex = 5
         Me.btnFinalizar.Text = "Finalizar &Caixa"
         Me.btnFinalizar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnFinalizar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -547,10 +542,10 @@ Partial Class frmCaixa
         Me.btnFechar.BackColor = System.Drawing.SystemColors.ButtonFace
         Me.btnFechar.FlatAppearance.BorderSize = 0
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar_30px
-        Me.btnFechar.Location = New System.Drawing.Point(940, 541)
+        Me.btnFechar.Location = New System.Drawing.Point(14, 491)
         Me.btnFechar.Name = "btnFechar"
         Me.btnFechar.Size = New System.Drawing.Size(159, 45)
-        Me.btnFechar.TabIndex = 24
+        Me.btnFechar.TabIndex = 6
         Me.btnFechar.Text = "&Fechar"
         Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -558,32 +553,33 @@ Partial Class frmCaixa
         '
         'MenuSaldos
         '
+        Me.MenuSaldos.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.MenuSaldos.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miInserirNivelamento, Me.miExcluirNivelamento})
         Me.MenuSaldos.Name = "MenuFab"
-        Me.MenuSaldos.Size = New System.Drawing.Size(180, 48)
+        Me.MenuSaldos.Size = New System.Drawing.Size(202, 48)
         '
         'miInserirNivelamento
         '
         Me.miInserirNivelamento.Image = Global.NovaSiao.My.Resources.Resources.add
         Me.miInserirNivelamento.Name = "miInserirNivelamento"
-        Me.miInserirNivelamento.Size = New System.Drawing.Size(179, 22)
+        Me.miInserirNivelamento.Size = New System.Drawing.Size(201, 22)
         Me.miInserirNivelamento.Text = "Inserir Nivelamento"
         '
         'miExcluirNivelamento
         '
         Me.miExcluirNivelamento.Image = Global.NovaSiao.My.Resources.Resources.delete
         Me.miExcluirNivelamento.Name = "miExcluirNivelamento"
-        Me.miExcluirNivelamento.Size = New System.Drawing.Size(179, 22)
+        Me.miExcluirNivelamento.Size = New System.Drawing.Size(201, 22)
         Me.miExcluirNivelamento.Text = "Excluir Nivelamento"
         '
         'Label9
         '
         Me.Label9.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(974, 89)
+        Me.Label9.Location = New System.Drawing.Point(48, 38)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(90, 19)
-        Me.Label9.TabIndex = 17
+        Me.Label9.TabIndex = 0
         Me.Label9.Text = "Observação:"
         Me.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -591,11 +587,11 @@ Partial Class frmCaixa
         '
         Me.txtObservacao.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.txtObservacao.BackColor = System.Drawing.SystemColors.Control
-        Me.txtObservacao.Location = New System.Drawing.Point(940, 111)
+        Me.txtObservacao.Location = New System.Drawing.Point(14, 61)
         Me.txtObservacao.Multiline = True
         Me.txtObservacao.Name = "txtObservacao"
-        Me.txtObservacao.Size = New System.Drawing.Size(159, 160)
-        Me.txtObservacao.TabIndex = 18
+        Me.txtObservacao.Size = New System.Drawing.Size(159, 197)
+        Me.txtObservacao.TabIndex = 1
         Me.txtObservacao.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'btnExcluirCaixa
@@ -603,11 +599,11 @@ Partial Class frmCaixa
         Me.btnExcluirCaixa.Anchor = System.Windows.Forms.AnchorStyles.Right
         Me.btnExcluirCaixa.BackColor = System.Drawing.Color.MistyRose
         Me.btnExcluirCaixa.FlatAppearance.BorderSize = 0
-        Me.btnExcluirCaixa.Image = Global.NovaSiao.My.Resources.Resources.Fechar_24x24
-        Me.btnExcluirCaixa.Location = New System.Drawing.Point(940, 384)
+        Me.btnExcluirCaixa.Image = Global.NovaSiao.My.Resources.Resources.delete_24px
+        Me.btnExcluirCaixa.Location = New System.Drawing.Point(14, 345)
         Me.btnExcluirCaixa.Name = "btnExcluirCaixa"
         Me.btnExcluirCaixa.Size = New System.Drawing.Size(159, 45)
-        Me.btnExcluirCaixa.TabIndex = 22
+        Me.btnExcluirCaixa.TabIndex = 4
         Me.btnExcluirCaixa.Text = "&Excluir Caixa"
         Me.btnExcluirCaixa.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnExcluirCaixa.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -616,10 +612,10 @@ Partial Class frmCaixa
         'btnSalvarObservacao
         '
         Me.btnSalvarObservacao.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.btnSalvarObservacao.Location = New System.Drawing.Point(978, 238)
+        Me.btnSalvarObservacao.Location = New System.Drawing.Point(52, 220)
         Me.btnSalvarObservacao.Name = "btnSalvarObservacao"
         Me.btnSalvarObservacao.Size = New System.Drawing.Size(86, 27)
-        Me.btnSalvarObservacao.TabIndex = 19
+        Me.btnSalvarObservacao.TabIndex = 2
         Me.btnSalvarObservacao.Text = "Salvar"
         Me.btnSalvarObservacao.UseVisualStyleBackColor = True
         Me.btnSalvarObservacao.Visible = False
@@ -630,7 +626,7 @@ Partial Class frmCaixa
         Me.Label11.Location = New System.Drawing.Point(626, 533)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(138, 24)
-        Me.Label11.TabIndex = 15
+        Me.Label11.TabIndex = 18
         Me.Label11.Text = "Transferências:"
         Me.Label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -640,7 +636,7 @@ Partial Class frmCaixa
         Me.lblTTransf.Location = New System.Drawing.Point(766, 533)
         Me.lblTTransf.Name = "lblTTransf"
         Me.lblTTransf.Size = New System.Drawing.Size(121, 24)
-        Me.lblTTransf.TabIndex = 16
+        Me.lblTTransf.TabIndex = 19
         Me.lblTTransf.Text = "R$ 0,00"
         Me.lblTTransf.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -651,7 +647,7 @@ Partial Class frmCaixa
         Me.lblApelidoFuncionario.Location = New System.Drawing.Point(535, 74)
         Me.lblApelidoFuncionario.Name = "lblApelidoFuncionario"
         Me.lblApelidoFuncionario.Size = New System.Drawing.Size(229, 28)
-        Me.lblApelidoFuncionario.TabIndex = 4
+        Me.lblApelidoFuncionario.TabIndex = 8
         Me.lblApelidoFuncionario.Text = "Funcionário"
         Me.lblApelidoFuncionario.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -663,7 +659,7 @@ Partial Class frmCaixa
         Me.Label13.Location = New System.Drawing.Point(536, 57)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(110, 14)
-        Me.Label13.TabIndex = 3
+        Me.Label13.TabIndex = 7
         Me.Label13.Text = "Operador de Caixa:"
         '
         'btnFuncionarioAlterar
@@ -676,25 +672,74 @@ Partial Class frmCaixa
         Me.btnFuncionarioAlterar.Location = New System.Drawing.Point(770, 74)
         Me.btnFuncionarioAlterar.Name = "btnFuncionarioAlterar"
         Me.btnFuncionarioAlterar.Size = New System.Drawing.Size(28, 28)
-        Me.btnFuncionarioAlterar.TabIndex = 25
+        Me.btnFuncionarioAlterar.TabIndex = 9
         Me.btnFuncionarioAlterar.TabStop = False
         Me.btnFuncionarioAlterar.UseVisualStyleBackColor = True
+        '
+        'mnuInserir
+        '
+        Me.mnuInserir.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.mnuInserir.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miInserirEntrada, Me.miInserirDespesas, Me.ToolStripSeparator1, Me.miExcluirEntrada, Me.miExcluirNivelamentoLista})
+        Me.mnuInserir.Name = "mnuInserir"
+        Me.mnuInserir.Size = New System.Drawing.Size(208, 106)
+        '
+        'miInserirEntrada
+        '
+        Me.miInserirEntrada.Image = Global.NovaSiao.My.Resources.Resources.AReceber_30px
+        Me.miInserirEntrada.Name = "miInserirEntrada"
+        Me.miInserirEntrada.Size = New System.Drawing.Size(207, 24)
+        Me.miInserirEntrada.Text = "Inserir Entrada"
+        Me.miInserirEntrada.ToolTipText = "Insere uma nova Entrada"
+        '
+        'miInserirDespesas
+        '
+        Me.miInserirDespesas.Image = Global.NovaSiao.My.Resources.Resources.APagar_30px
+        Me.miInserirDespesas.Name = "miInserirDespesas"
+        Me.miInserirDespesas.Size = New System.Drawing.Size(207, 24)
+        Me.miInserirDespesas.Text = "Inserir Despesa"
+        Me.miInserirDespesas.ToolTipText = "Insere uma nova Despesa"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(204, 6)
+        '
+        'miExcluirEntrada
+        '
+        Me.miExcluirEntrada.Image = Global.NovaSiao.My.Resources.Resources.delete
+        Me.miExcluirEntrada.Name = "miExcluirEntrada"
+        Me.miExcluirEntrada.Size = New System.Drawing.Size(207, 24)
+        Me.miExcluirEntrada.Text = "Excluir Entrada"
+        '
+        'Panel2
+        '
+        Me.Panel2.BackColor = System.Drawing.Color.Gainsboro
+        Me.Panel2.Controls.Add(Me.btnSalvarObservacao)
+        Me.Panel2.Controls.Add(Me.btnExcluirCaixa)
+        Me.Panel2.Controls.Add(Me.txtObservacao)
+        Me.Panel2.Controls.Add(Me.Label9)
+        Me.Panel2.Controls.Add(Me.btnFechar)
+        Me.Panel2.Controls.Add(Me.btnFinalizar)
+        Me.Panel2.Controls.Add(Me.btnAlterar)
+        Me.Panel2.Location = New System.Drawing.Point(941, 50)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(191, 547)
+        Me.Panel2.TabIndex = 22
+        '
+        'miExcluirNivelamentoLista
+        '
+        Me.miExcluirNivelamentoLista.Image = Global.NovaSiao.My.Resources.Resources.delete
+        Me.miExcluirNivelamentoLista.Name = "miExcluirNivelamentoLista"
+        Me.miExcluirNivelamentoLista.Size = New System.Drawing.Size(207, 24)
+        Me.miExcluirNivelamentoLista.Text = "Excluir Nivelamento"
         '
         'frmCaixa
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(1118, 599)
+        Me.ClientSize = New System.Drawing.Size(1134, 599)
         Me.Controls.Add(Me.btnFuncionarioAlterar)
         Me.Controls.Add(Me.lblApelidoFuncionario)
         Me.Controls.Add(Me.Label13)
-        Me.Controls.Add(Me.btnSalvarObservacao)
-        Me.Controls.Add(Me.btnExcluirCaixa)
-        Me.Controls.Add(Me.txtObservacao)
-        Me.Controls.Add(Me.Label9)
-        Me.Controls.Add(Me.btnFechar)
-        Me.Controls.Add(Me.btnFinalizar)
-        Me.Controls.Add(Me.btnAlterar)
-        Me.Controls.Add(Me.btnInserirDespesa)
         Me.Controls.Add(Me.lblTTransf)
         Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.lblSaldoFinal)
@@ -713,8 +758,10 @@ Partial Class frmCaixa
         Me.Controls.Add(Me.dgvSaldos)
         Me.Controls.Add(Me.dgvListagem)
         Me.Controls.Add(Me.lblConta)
+        Me.Controls.Add(Me.Panel2)
         Me.Name = "frmCaixa"
         Me.Controls.SetChildIndex(Me.Panel1, 0)
+        Me.Controls.SetChildIndex(Me.Panel2, 0)
         Me.Controls.SetChildIndex(Me.lblConta, 0)
         Me.Controls.SetChildIndex(Me.dgvListagem, 0)
         Me.Controls.SetChildIndex(Me.dgvSaldos, 0)
@@ -733,14 +780,6 @@ Partial Class frmCaixa
         Me.Controls.SetChildIndex(Me.lblSaldoFinal, 0)
         Me.Controls.SetChildIndex(Me.Label11, 0)
         Me.Controls.SetChildIndex(Me.lblTTransf, 0)
-        Me.Controls.SetChildIndex(Me.btnInserirDespesa, 0)
-        Me.Controls.SetChildIndex(Me.btnAlterar, 0)
-        Me.Controls.SetChildIndex(Me.btnFinalizar, 0)
-        Me.Controls.SetChildIndex(Me.btnFechar, 0)
-        Me.Controls.SetChildIndex(Me.Label9, 0)
-        Me.Controls.SetChildIndex(Me.txtObservacao, 0)
-        Me.Controls.SetChildIndex(Me.btnExcluirCaixa, 0)
-        Me.Controls.SetChildIndex(Me.btnSalvarObservacao, 0)
         Me.Controls.SetChildIndex(Me.Label13, 0)
         Me.Controls.SetChildIndex(Me.lblApelidoFuncionario, 0)
         Me.Controls.SetChildIndex(Me.btnFuncionarioAlterar, 0)
@@ -749,6 +788,9 @@ Partial Class frmCaixa
         CType(Me.dgvListagem, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvSaldos, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuSaldos.ResumeLayout(False)
+        Me.mnuInserir.ResumeLayout(False)
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -777,7 +819,6 @@ Partial Class frmCaixa
     Friend WithEvents lblSaldoAnterior As Label
     Friend WithEvents lblSaldoFinal As Label
     Friend WithEvents Label10 As Label
-    Friend WithEvents btnInserirDespesa As Button
     Friend WithEvents btnAlterar As Button
     Friend WithEvents btnFinalizar As Button
     Friend WithEvents btnFechar As Button
@@ -803,4 +844,11 @@ Partial Class frmCaixa
     Friend WithEvents clnSaldoAnterior As DataGridViewTextBoxColumn
     Friend WithEvents clnSaldoFinal As DataGridViewTextBoxColumn
     Friend WithEvents clnTransferir As DataGridViewTextBoxColumn
+    Friend WithEvents mnuInserir As ContextMenuStrip
+    Friend WithEvents miInserirEntrada As ToolStripMenuItem
+    Friend WithEvents miInserirDespesas As ToolStripMenuItem
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents miExcluirEntrada As ToolStripMenuItem
+    Friend WithEvents miExcluirNivelamentoLista As ToolStripMenuItem
 End Class

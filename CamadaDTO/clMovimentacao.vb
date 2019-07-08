@@ -371,3 +371,127 @@ Public Class clMovimentacao : Implements IEditableObject
 #End Region
     '
 End Class
+
+Public Class MyIBindingList
+    Inherits CollectionBase
+    Implements IBindingList
+
+
+    Public Sub AddIndex(ByVal [property] As PropertyDescriptor) _
+          Implements IBindingList.AddIndex
+
+    End Sub
+
+    Public Function AddNew() As Object Implements IBindingList.AddNew
+        Dim w As New clMovimentacao
+        Me.List.Add(w)
+        Return w
+    End Function
+
+    'Public Function AddNew() As clMovimentacao
+
+    '    Dim w As New clMovimentacao
+    '    Me.List.Add(w)
+    '    Return w
+
+    'End Function
+
+    Public Function Find(ByVal [property] As _
+          System.ComponentModel.PropertyDescriptor, ByVal key As Object) _
+          As Integer Implements System.ComponentModel.IBindingList.Find
+        Return 0
+    End Function
+
+    Public Sub ApplySort(ByVal [property] As _
+          System.ComponentModel.PropertyDescriptor, ByVal direction As _
+          System.ComponentModel.ListSortDirection) _
+          Implements System.ComponentModel.IBindingList.ApplySort
+
+    End Sub
+
+    Public Sub RemoveSort() _
+          Implements System.ComponentModel.IBindingList.RemoveSort
+
+    End Sub
+
+    Public ReadOnly Property SupportsSorting() As Boolean _
+          Implements System.ComponentModel.IBindingList.SupportsSorting
+        Get
+            Return True
+        End Get
+    End Property
+
+    Public Sub RemoveIndex(ByVal [property] As _
+          System.ComponentModel.PropertyDescriptor) _
+          Implements System.ComponentModel.IBindingList.RemoveIndex
+
+    End Sub
+
+    Public ReadOnly Property SupportsSearching() As Boolean _
+          Implements System.ComponentModel.IBindingList.SupportsSearching
+        Get
+            Return True
+        End Get
+    End Property
+
+    Public ReadOnly Property SupportsChangeNotification() As Boolean _
+          Implements System.ComponentModel.IBindingList.SupportsChangeNotification
+        Get
+            Return True
+        End Get
+    End Property
+
+    Public ReadOnly Property SortDirection() As _
+          System.ComponentModel.ListSortDirection _
+          Implements System.ComponentModel.IBindingList.SortDirection
+        Get
+            Return New System.ComponentModel.ListSortDirection()
+        End Get
+    End Property
+
+    Public ReadOnly Property SortProperty() As _
+          System.ComponentModel.PropertyDescriptor _
+          Implements System.ComponentModel.IBindingList.SortProperty
+        Get
+            Return Nothing
+        End Get
+    End Property
+
+    Public ReadOnly Property IsSorted() As Boolean _
+          Implements IBindingList.IsSorted
+        Get
+            Return True
+        End Get
+    End Property
+
+    Public ReadOnly Property AllowNew() As Boolean _
+          Implements IBindingList.AllowNew
+        Get
+            Return True
+        End Get
+    End Property
+
+    Public ReadOnly Property AllowEdit() As Boolean _
+        Implements IBindingList.AllowEdit
+        Get
+            Return True
+        End Get
+    End Property
+
+    Public ReadOnly Property AllowRemove() As Boolean _
+          Implements IBindingList.AllowRemove
+        Get
+            Return True
+        End Get
+    End Property
+
+    Public Event ListChanged(ByVal sender As Object, ByVal e As _
+         ListChangedEventArgs) Implements IBindingList.ListChanged
+
+    Default Public ReadOnly Property Item(ByVal index As Integer) As clCaixa
+        Get
+            Return CType(Me.List(index), clCaixa)
+        End Get
+    End Property
+
+End Class
