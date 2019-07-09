@@ -133,7 +133,7 @@ Public Class CompraBLL
         '@Volumes AS SMALLINT = 1,
         objDB.AdicionarParametros("@Volumes", _compra.Volumes)
         '@IDAPagar AS INT = NULL
-        objDB.AdicionarParametros("@IDAPagar", _compra.IDApagar)
+        objDB.AdicionarParametros("@IDFreteDespesa", _compra.IDFreteDespesa)
         '
         '
         Try
@@ -176,48 +176,36 @@ Public Class CompraBLL
         objDB.LimparParametros()
         '
         '-- PARAMETROS DA TBLTRANSACAO
-        '@IDPessoaDestino AS INT, 
         objDB.AdicionarParametros("@IDPessoaDestino", _compra.IDPessoaDestino)
-        '@IDPessoaOrigem AS INT, 
         objDB.AdicionarParametros("@IDPessoaOrigem", _compra.IDPessoaOrigem)
-        '@IDOperacao AS BYTE, 
         objDB.AdicionarParametros("@IDOperacao", _compra.IDOperacao)
-        '@IDSituacao AS TINYINT = 0, --0|INSERIDA ; 1|VERIFICADA ; 2|FECHADA 
         objDB.AdicionarParametros("@IDSituacao", _compra.IDSituacao)
-        '@IDUser AS INT,
         objDB.AdicionarParametros("@IDUser", _compra.IDUser)
-        '@CFOP AS INT(16), 
         objDB.AdicionarParametros("@CFOP", _compra.CFOP)
-        '@compraData AS SMALLDATETIME, 
         objDB.AdicionarParametros("@TransacaoData", _compra.TransacaoData)
         '
         '-- PARAMETROS DA TBLCompra
-        objDB.AdicionarParametros("@FreteTipo", _compra.FreteTipo) '-- 0|SEM FRETE ; 1|EMITENTE; 2|DESTINATARIO; 3|REEMBOLSO ; 4|A COBRAR 
-        objDB.AdicionarParametros("@FreteCobrado", _compra.FreteCobrado)
-        objDB.AdicionarParametros("@ICMSValor", _compra.ICMSValor)
-        objDB.AdicionarParametros("@Despesas", _compra.Despesas)
-        objDB.AdicionarParametros("@Descontos", _compra.Descontos)
-        objDB.AdicionarParametros("@CobrancaTipo", _compra.CobrancaTipo)
-        objDB.AdicionarParametros("@TotalCompra", _compra.TotalCompra)
+        'objDB.AdicionarParametros("@FreteTipo", _compra.FreteTipo) '-- 0|SEM FRETE ; 1|EMITENTE; 2|DESTINATARIO; 3|REEMBOLSO ; 4|A COBRAR 
+        'objDB.AdicionarParametros("@FreteCobrado", _compra.FreteCobrado)
+        'objDB.AdicionarParametros("@ICMSValor", _compra.ICMSValor)
+        'objDB.AdicionarParametros("@Despesas", _compra.Despesas)
+        'objDB.AdicionarParametros("@Descontos", _compra.Descontos)
+        'objDB.AdicionarParametros("@CobrancaTipo", _compra.CobrancaTipo)
+        'objDB.AdicionarParametros("@TotalCompra", _compra.TotalCompra)
         '
         '-- PARAMETROS DA TBLOBSERVACAO
-        '@Observacao AS VARCHAR(max) = null, 
-        objDB.AdicionarParametros("@Observacao", _compra.Observacao)
+        'objDB.AdicionarParametros("@Observacao", _compra.Observacao)
         '
         '-- PARAMETROS DA TBLcompraFRETE
-        '@IDTransportadora AS INT = NULL,
-        objDB.AdicionarParametros("@IDTransportadora", _compra.IDTransportadora)
-        '@FreteValor AS MONEY = 0,
-        objDB.AdicionarParametros("@FreteValor", _compra.FreteValor)
-        '@Volumes AS SMALLINT = 1,
-        objDB.AdicionarParametros("@Volumes", _compra.Volumes)
-        '@IDAPagar AS INT = NULL
-        objDB.AdicionarParametros("@IDAPagar", _compra.IDApagar)
+        'objDB.AdicionarParametros("@IDTransportadora", _compra.IDTransportadora)
+        'objDB.AdicionarParametros("@FreteValor", _compra.FreteValor)
+        'objDB.AdicionarParametros("@Volumes", _compra.Volumes)
+        'objDB.AdicionarParametros("@IDAPagar", _compra.IDFreteDespesa)
         '
         Try
             Dim dtV As DataTable = objDB.ExecutarConsulta(CommandType.StoredProcedure, "uspCompra_Inserir")
             If dtV.Rows.Count = 0 Then
-                Throw New Exception("Um erro ineperado ocorreu na uspCompra_Inserir")
+                Throw New Exception("Um erro inesperado ocorreu na uspCompra_Inserir")
             End If
             '
             If IsNumeric(dtV.Rows(0).Item(0)) Then
@@ -318,15 +306,19 @@ Public Class CompraBLL
         '
         '--- DELETE APAGAR OF THE TBLVENDAFRETE RELATED
         '==================================================================
+
+        Throw New Exception("INCOMPLETO")
+
+
         '
         '--- FRETE -> APAGAR -> MOVIMENTACAO | FRETE -> APAGAR
-        If Not IsNothing(clCmp.IDApagar) Then
+        If Not IsNothing(clCmp.IDFreteDespesa) Then
             '
             Try
                 '
                 '--- DELETE MOVIMENTACOES DE FRETE
                 ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDAPagar", clCmp.IDApagar)
+                ObjDB.AdicionarParametros("@IDAPagar", clCmp.IDFreteDespesa)
                 '
                 myQuery = "DELETE FROM tblMovimentacoes WHERE Origem = 10 AND IDOrigem = @IDAPagar"
                 '
@@ -334,7 +326,7 @@ Public Class CompraBLL
                 '
                 '--- DELETE A PAGAR DE FRETE
                 ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDAPagar", clCmp.IDApagar)
+                ObjDB.AdicionarParametros("@IDAPagar", clCmp.IDFreteDespesa)
                 '
                 myQuery = "DELETE FROM tblAPagar WHERE IDAPagar = @IDAPagar"
                 '
@@ -464,12 +456,12 @@ Public Class CompraBLL
         '
         ' 2. --- verifica movimentacao de saida do frete antes de excluir
         ' FRETE => TBLAPAGAR => TBLMOVIMENTACAO
-        If IsNothing(clCmp.IDApagar) Then Return True
+        If IsNothing(clCmp.IDFreteDespesa) Then Return True
         '
         Try
             '
             SQL.ClearParams()
-            SQL.AddParam("@IDAPagar", clCmp.IDApagar)
+            SQL.AddParam("@IDAPagar", clCmp.IDFreteDespesa)
             '
             myQuery = "SELECT COUNT(*) FROM tblCaixaMovimentacao
                        WHERE Origem = 10 AND IDOrigem = @IDAPagar AND NOT IDCaixa IS NULL"
@@ -583,7 +575,7 @@ Public Class CompraBLL
         cmp.IDTransportadora = IIf(IsDBNull(r("IDTransportadora")), Nothing, r("IDTransportadora"))
         cmp.FreteValor = IIf(IsDBNull(r("FreteValor")), Nothing, r("FreteValor"))
         cmp.Volumes = IIf(IsDBNull(r("Volumes")), Nothing, r("Volumes"))
-        cmp.IDApagar = IIf(IsDBNull(r("IDApagar")), Nothing, r("IDApagar"))
+        cmp.IDFreteDespesa = IIf(IsDBNull(r("IDFreteDespesa")), Nothing, r("IDFreteDespesa"))
         '
         Return cmp
         '

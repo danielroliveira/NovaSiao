@@ -10,6 +10,7 @@ Public Class frmCaixa
     Private _TEntradas As Double
     Private _TSaidas As Double
     Private _TTransf As Double
+    Private _myOrdem As Integer '--- Control order/sorting of LIST MOVS
     Private WithEvents bindCaixa As New BindingSource
 
 #Region "SUB NEW | PROPERTIES"
@@ -312,6 +313,130 @@ Public Class frmCaixa
         End If
         '
     End Sub
+    '
+    '--- CONTROLA O SORTING DA LISTAGEM
+    '----------------------------------------------------------------------------------
+    Private Sub dgvListagem_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvListagem.ColumnHeaderMouseClick
+        '
+        propOrdem = e.ColumnIndex + 1
+        AlteraCorHeader(e.ColumnIndex)
+        '
+    End Sub
+    '
+    Private Sub AlteraCorHeader(index As Integer)
+
+        For i = 0 To dgvListagem.Columns.Count - 1
+            '
+            If i = index Then
+                dgvListagem.Columns(i).HeaderCell.Style.BackColor = Color.LightGray
+            Else
+                dgvListagem.Columns(i).HeaderCell.Style.BackColor = Color.WhiteSmoke
+            End If
+            '
+        Next
+        '
+    End Sub
+    '
+    Private Property propOrdem As Integer
+        Get
+            Return _myOrdem
+        End Get
+        Set(value As Integer)
+            '
+            Dim sort As Comparison(Of clMovimentacao) = Nothing
+            '
+            Select Case value
+                Case 1 '-- coluna TIPO
+                    '
+                    If Math.Abs(_myOrdem) = value Then
+                        '
+                        _myOrdem = _myOrdem * -1
+                        '
+                        If _myOrdem > 0 Then
+                            sort = Function(x, y) String.Compare(x.Mov, y.Mov)
+                        ElseIf _myOrdem < 0 Then
+                            sort = Function(x, y) String.Compare(y.Mov, x.Mov)
+                        End If
+                    Else
+                        _myOrdem = value
+                        sort = Function(x, y) String.Compare(x.Mov, y.Mov)
+                    End If
+                    '
+                Case 2 '-- coluna DATA
+                    '
+                    If Math.Abs(_myOrdem) = value Then
+                        '
+                        _myOrdem = _myOrdem * -1
+                        '
+                        If _myOrdem > 0 Then
+                            sort = Function(x, y) x.MovData.CompareTo(y.MovData)
+                        ElseIf _myOrdem < 0 Then
+                            sort = Function(x, y) y.MovData.CompareTo(x.MovData)
+                        End If
+                    Else
+                        _myOrdem = value
+                        sort = Function(x, y) x.MovData.CompareTo(y.MovData)
+                    End If
+                    '
+                Case 3 '-- coluna DESCRICAO
+                    '
+                    If Math.Abs(_myOrdem) = value Then
+                        '
+                        _myOrdem = _myOrdem * -1
+                        '
+                        If _myOrdem > 0 Then
+                            sort = Function(x, y) String.Compare(x.Descricao, y.Descricao)
+                        ElseIf _myOrdem < 0 Then
+                            sort = Function(x, y) String.Compare(y.Descricao, x.Descricao)
+                        End If
+                        '
+                    Else
+                        _myOrdem = value
+                        sort = Function(x, y) String.Compare(x.Descricao, y.Descricao)
+                    End If
+                    '
+                Case 4 '--- coluna FORMA
+                    '
+                    If Math.Abs(_myOrdem) = value Then
+                        '
+                        _myOrdem = _myOrdem * -1
+                        '
+                        If _myOrdem > 0 Then
+                            sort = Function(x, y) String.Compare(x.MovForma, y.MovForma)
+                        ElseIf _myOrdem < 0 Then
+                            sort = Function(x, y) String.Compare(y.MovForma, x.MovForma)
+                        End If
+                        '
+                    Else
+                        _myOrdem = value
+                        sort = Function(x, y) String.Compare(x.MovForma, y.MovForma)
+                    End If
+                    '
+                Case 5 '--- coluna VALOR
+                    '
+                    If Math.Abs(_myOrdem) = value Then
+                        '
+                        _myOrdem = _myOrdem * -1
+                        '
+                        If _myOrdem > 0 Then
+                            sort = Function(x, y) x.MovValor.CompareTo(y.MovValor)
+                        ElseIf _myOrdem < 0 Then
+                            sort = Function(x, y) y.MovValor.CompareTo(x.MovValor)
+                        End If
+                        '
+                    Else
+                        _myOrdem = value
+                        sort = Function(x, y) x.MovValor.CompareTo(y.MovValor)
+                    End If
+                    '
+            End Select
+            '
+            lstMov.Sort(sort)
+            bindMovs.ResetBindings(False)
+            '
+        End Set
+        '
+    End Property
     '
 #End Region
     '
@@ -1244,6 +1369,8 @@ Public Class frmCaixa
                 '
                 miInserirEntrada.Enabled = False
                 miInserirDespesas.Enabled = False
+                miExcluirEntrada.Enabled = False
+                miExcluirNivelamentoLista.Enabled = False
                 '
             End If
             '

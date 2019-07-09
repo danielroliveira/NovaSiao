@@ -159,7 +159,7 @@ Public Class VendaBLL
         '@Volumes AS SMALLINT = 1,
         objDB.AdicionarParametros("@Volumes", _vnd.Volumes)
         '@IDAPagar AS INT = NULL
-        objDB.AdicionarParametros("@IDAPagar", _vnd.IDApagar)
+        objDB.AdicionarParametros("@IDAPagar", _vnd.IDFreteDespesa)
         '
         '
         Try
@@ -342,14 +342,16 @@ Public Class VendaBLL
         '--- DELETE APAGAR OF THE TBLVENDAFRETE RELATED
         '==================================================================
         '
-        '--- FRETE -> APAGAR -> MOVIMENTACAO | FRETE -> APAGAR
-        If Not IsNothing(clV.IDApagar) Then
+        '--- FRETE -> FRETEDESPESA -> APAGAR -> MOVIMENTACAO | FRETE -> APAGAR
+        If Not IsNothing(clV.IDFreteDespesa) Then
+            '
+            Throw New Exception("INCOMPLETO")
             '
             Try
                 '
                 '--- DELETE MOVIMENTACOES DE FRETE
                 ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDAPagar", clV.IDApagar)
+                ObjDB.AdicionarParametros("@IDAPagar", clV.IDFreteDespesa)
                 '
                 myQuery = "DELETE FROM tblMovimentacoes WHERE Origem = 10 AND IDOrigem = @IDAPagar"
                 '
@@ -357,7 +359,7 @@ Public Class VendaBLL
                 '
                 '--- DELETE A PAGAR DE FRETE
                 ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDAPagar", clV.IDApagar)
+                ObjDB.AdicionarParametros("@IDAPagar", clV.IDFreteDespesa)
                 '
                 myQuery = "DELETE FROM tblAPagar WHERE IDAPagar = @IDAPagar"
                 '
@@ -571,17 +573,22 @@ Public Class VendaBLL
         End Try
         '
         ' 3. --- verifica movimentacao de saida do frete antes de excluir
-        ' FRETE => TBLAPAGAR => TBLMOVIMENTACAO
+        ' FRETE => FRETEDESPESA => TBLAPAGAR => TBLMOVIMENTACAO
         '
-        If IsNothing(clV.IDApagar) Then Return True
+        If IsNothing(clV.IDFreteDespesa) Then Return True
         '
+
+        Throw New Exception("INCOMPLETO")
+
+
+
         Try
             '
             SQL.ClearParams()
-            SQL.AddParam("@IDAPagar", clV.IDApagar)
+            SQL.AddParam("@IDFreteDespesa", clV.IDFreteDespesa)
             '
             myQuery = "SELECT COUNT(*) FROM tblCaixaMovimentacao
-                       WHERE Origem = 10 AND IDOrigem = @IDAPagar AND NOT IDCaixa IS NULL"
+                       WHERE Origem = 10 AND IDOrigem = @IDFreteDespesa AND NOT IDCaixa IS NULL"
             '
             '--- execute query
             SQL.ExecQuery(myQuery)
@@ -683,7 +690,7 @@ Public Class VendaBLL
         vnd.FreteTipo = IIf(IsDBNull(r("FreteTipo")), Nothing, r("FreteTipo"))
         vnd.FreteValor = IIf(IsDBNull(r("FreteValor")), Nothing, r("FreteValor"))
         vnd.Volumes = IIf(IsDBNull(r("Volumes")), Nothing, r("Volumes"))
-        vnd.IDApagar = IIf(IsDBNull(r("IDApagar")), Nothing, r("IDApagar"))
+        vnd.IDFreteDespesa = IIf(IsDBNull(r("IDFreteDespesa")), Nothing, r("IDFreteDespesa"))
         '--- Dados Adicionais
         vnd.ApelidoFuncionario = IIf(IsDBNull(r("ApelidoFuncionario")), String.Empty, r("ApelidoFuncionario"))
         '

@@ -34,7 +34,7 @@ Public Class clCompra : Implements IEditableObject
         ' Transportadora As String
         Dim _FreteValor As Decimal?
         Dim _Volumes As Int16?
-        Dim _IDAPagar As Integer?
+        Dim _IDFreteDespesa As Integer?
         '
     End Structure
 #End Region
@@ -367,18 +367,18 @@ Public Class clCompra : Implements IEditableObject
         End Set
     End Property
     '
-    '--- Propriedade IDApagar do Frete
-    Public Property IDApagar() As Integer?
+    '--- Propriedade IDFreteDespesa do Frete
+    Public Property IDFreteDespesa() As Integer?
         Get
-            Return CData._IDAPagar
+            Return CData._IDFreteDespesa
         End Get
         Set(ByVal value As Integer?)
-            If Not IsNothing(CData._IDAPagar) Then
-                If value <> CData._IDAPagar Then
+            If Not IsNothing(CData._IDFreteDespesa) Then
+                If value <> CData._IDFreteDespesa Then
                     RaiseEvent AoAlterar()
                 End If
             End If
-            CData._IDAPagar = value
+            CData._IDFreteDespesa = value
         End Set
     End Property
     '
