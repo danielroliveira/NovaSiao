@@ -158,8 +158,8 @@ Public Class VendaBLL
         objDB.AdicionarParametros("@FreteValor", _vnd.FreteValor)
         '@Volumes AS SMALLINT = 1,
         objDB.AdicionarParametros("@Volumes", _vnd.Volumes)
-        '@IDAPagar AS INT = NULL
-        objDB.AdicionarParametros("@IDAPagar", _vnd.IDFreteDespesa)
+        '@IDFreteDespesa AS INT = NULL
+        objDB.AdicionarParametros("@IDFreteDespesa", _vnd.IDFreteDespesa)
         '
         '
         Try
@@ -345,26 +345,33 @@ Public Class VendaBLL
         '--- FRETE -> FRETEDESPESA -> APAGAR -> MOVIMENTACAO | FRETE -> APAGAR
         If Not IsNothing(clV.IDFreteDespesa) Then
             '
-            Throw New Exception("INCOMPLETO")
-            '
             Try
                 '
                 '--- DELETE MOVIMENTACOES DE FRETE
                 ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDAPagar", clV.IDFreteDespesa)
+                ObjDB.AdicionarParametros("@IDFreteDespesa", clV.IDFreteDespesa)
                 '
-                myQuery = "DELETE FROM tblMovimentacoes WHERE Origem = 10 AND IDOrigem = @IDAPagar"
+                myQuery = "DELETE FROM tblMovimentacoes WHERE Origem = 10 AND " &
+                          "IDOrigem = (SELECT IDAPagar FROM tblAPagar WHERE Origem = 5 AND " &
+                          "IDOrigem = @IDFreteDespesa)"
                 '
                 ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
                 '
                 '--- DELETE A PAGAR DE FRETE
                 ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDAPagar", clV.IDFreteDespesa)
+                ObjDB.AdicionarParametros("@IDFreteDespesa", clV.IDFreteDespesa)
                 '
-                myQuery = "DELETE FROM tblAPagar WHERE IDAPagar = @IDAPagar"
+                myQuery = "DELETE FROM tblAPagar WHERE Origem = 5 AND IDOrigem = @IDFreteDespesa"
                 '
                 ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
                 '
+                '--- DELETE FRETE DESPESA
+                ObjDB.LimparParametros()
+                ObjDB.AdicionarParametros("@IDFreteDespesa", clV.IDFreteDespesa)
+                '
+                myQuery = "DELETE FROM tblFreteDespesa WHERE IDFreteDespesa = @IDFreteDespesa"
+                '
+                ObjDB.ExecutarManipulacao(CommandType.Text, myQuery) '
             Catch ex As Exception
                 '
                 ObjDB.RollBackTransaction()
@@ -499,7 +506,7 @@ Public Class VendaBLL
         '------------------------------------------------------------------
         '--- 1 - Venda => AReceber => Movimentacoes
         '--- 2 - Venda => AReceber => AReceberParcelas => Movimentacoes
-        '--- 3 - Venda => Frete => APagar => Movimentacoes
+        '--- 3 - Venda => Frete => FreteDespesa => APagar => Movimentacoes
         '==================================================================
         '
         ' 1. --- verifica movimentacao de entrada da Venda antes de excluir
@@ -577,18 +584,14 @@ Public Class VendaBLL
         '
         If IsNothing(clV.IDFreteDespesa) Then Return True
         '
-
-        Throw New Exception("INCOMPLETO")
-
-
-
         Try
             '
             SQL.ClearParams()
             SQL.AddParam("@IDFreteDespesa", clV.IDFreteDespesa)
             '
             myQuery = "SELECT COUNT(*) FROM tblCaixaMovimentacao
-                       WHERE Origem = 10 AND IDOrigem = @IDFreteDespesa AND NOT IDCaixa IS NULL"
+                       WHERE NOT IDCaixa IS NULL AND Origem = 10 AND IDOrigem = (" &
+                       "SELECT IDAPagar FROM tblAPagar WHERE Origem = 5 AND IDOrigem = @IDFreteDespesa)"
             '
             '--- execute query
             SQL.ExecQuery(myQuery)

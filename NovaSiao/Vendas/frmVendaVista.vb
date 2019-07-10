@@ -1857,9 +1857,9 @@ Public Class frmVendaVista
             MessageBox.Show("Esse registro de Venda está BLOQUEADO para alterações..." & vbNewLine &
                             "Não é possível adicionar produtos ou alterar algum dado!",
                             "Registro Bloqueado", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            RegistroBloqueado = True
+            Return True
         Else
-            RegistroBloqueado = False
+            Return False
         End If
         '
     End Function
