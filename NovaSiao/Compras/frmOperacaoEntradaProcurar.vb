@@ -664,6 +664,7 @@ Public Class frmOperacaoEntradaProcurar
         '
         '--- obtem a nova listagem source e altera o DataGrid
         GetList_AlteraListagem()
+        AlteraEtiquetas()
         '
     End Sub
     '

@@ -1403,7 +1403,7 @@ Public Class frmCompra
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            pagBLL.Excluir_APagar_Origem(_Compra.IDCompra, clAPagar.Origem_APagar.Compra)
+            pagBLL.APagarDeletePorOrigem(_Compra.IDCompra, clAPagar.Origem_APagar.Compra, False)
             '
             '--- Insere cada um APagar no BD
             For Each pag As clAPagar In _APagarList

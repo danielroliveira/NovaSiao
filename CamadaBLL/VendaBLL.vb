@@ -1,6 +1,5 @@
 ﻿Imports CamadaDTO
 Imports CamadaDAL
-Imports System.Data.SqlClient
 '
 Public Class VendaBLL
     '
@@ -277,16 +276,12 @@ Public Class VendaBLL
             '
             '--- GET TROCA ITENS
             If Not IsNothing(Troca) Then
-                '
                 lstItensTroca = ItemBLL.GetTransacaoItens_List(Troca.IDTransacaoEntrada, IDFilial)
-                '
             End If
             '
         Catch ex As Exception
-            '
             Throw ex
             Return False
-            '
         End Try
         '
         '--- INIT TRANSACTION
@@ -346,32 +341,9 @@ Public Class VendaBLL
         If Not IsNothing(clV.IDFreteDespesa) Then
             '
             Try
+                Dim fBLL As New FreteBLL
+                fBLL.FreteDespesaDelete(clV.IDFreteDespesa, ObjDB)
                 '
-                '--- DELETE MOVIMENTACOES DE FRETE
-                ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDFreteDespesa", clV.IDFreteDespesa)
-                '
-                myQuery = "DELETE FROM tblMovimentacoes WHERE Origem = 10 AND " &
-                          "IDOrigem = (SELECT IDAPagar FROM tblAPagar WHERE Origem = 5 AND " &
-                          "IDOrigem = @IDFreteDespesa)"
-                '
-                ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
-                '
-                '--- DELETE A PAGAR DE FRETE
-                ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDFreteDespesa", clV.IDFreteDespesa)
-                '
-                myQuery = "DELETE FROM tblAPagar WHERE Origem = 5 AND IDOrigem = @IDFreteDespesa"
-                '
-                ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
-                '
-                '--- DELETE FRETE DESPESA
-                ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDFreteDespesa", clV.IDFreteDespesa)
-                '
-                myQuery = "DELETE FROM tblFreteDespesa WHERE IDFreteDespesa = @IDFreteDespesa"
-                '
-                ObjDB.ExecutarManipulacao(CommandType.Text, myQuery) '
             Catch ex As Exception
                 '
                 ObjDB.RollBackTransaction()
@@ -458,15 +430,12 @@ Public Class VendaBLL
         '==================================================================
         Try
             Dim oBLL As New ObservacaoBLL
-            '
             oBLL.DeleteObservacao(9, clV.IDVenda)
             '
         Catch ex As Exception
-            '
             ObjDB.RollBackTransaction()
             Throw ex
             Return False
-            '
         End Try
         '
         '--- DELETE VENDA FINNALY AND COMMIT
@@ -485,11 +454,9 @@ Public Class VendaBLL
             Return True
             '
         Catch ex As Exception
-            '
             ObjDB.RollBackTransaction()
             Throw ex
             Return False
-            '
         End Try
         '
     End Function

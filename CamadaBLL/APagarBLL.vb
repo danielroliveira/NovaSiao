@@ -74,22 +74,51 @@ Public Class APagarBLL
     '===================================================================================================
     ' EXCLUIR TODOS APAGAR DE UMA TRANSACAO PELO ID
     '===================================================================================================
-    Public Function Excluir_APagar_Origem(IDOrigem As Integer,
+    Public Function APagarDeletePorOrigem(IDOrigem As Integer,
                                           Origem As clAPagar.Origem_APagar,
+                                          VerificaMovimentacao As Boolean,
                                           Optional dbTran As Object = Nothing) As Boolean
         '
         Dim db As AcessoDados = If(dbTran, New AcessoDados)
-        '
-        '--- Limpa os paramentros
-        db.LimparParametros()
-        '
-        '--- Adiciona os paramentros
-        db.AdicionarParametros("@Origem", Origem)
-        db.AdicionarParametros("@IDOrigem", IDOrigem)
+        Dim query As String = ""
         '
         Try
-            Dim obj As Object = db.ExecutarManipulacao(CommandType.StoredProcedure, "uspAPagar_Excluir_PorOrigem")
-            Return CBool(obj)
+            '--- Verifica Movimentacao
+            If VerificaMovimentacao Then
+                '
+                db.LimparParametros()
+                db.AdicionarParametros("@IDOrigem", IDOrigem)
+                db.AdicionarParametros("@Origem", Origem)
+                '
+                query = "SELECT COUNT(*) FROM tblMovimentacao WHERE Origem = 10 AND IDOrigem = (" &
+                        "SELECT IDAPagar FROM tblAPagar WHERE IDOrigem = @IDOrigem AND Origem = @Origem)"
+                '
+                Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+                Dim count As Integer = dt.Rows(0)(0)
+                '
+                If count > 0 Then
+                    Throw New Exception("Não foi possível excluir APAGAR, ainda existem movimentações associadas...")
+                End If
+                '
+            End If
+            '
+            '--- Limpa os paramentros
+            db.LimparParametros()
+            '
+            '--- Adiciona os paramentros
+            db.AdicionarParametros("@Origem", Origem)
+            db.AdicionarParametros("@IDOrigem", IDOrigem)
+            '
+            query = "DELETE tblAPagar WHERE Origem = @Origem AND IDOrigem = @IDOrigem"
+            '
+            Dim obj As Object = db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            If Not IsNothing(obj) Then
+                Throw New Exception(obj.ToString)
+            End If
+            '
+            Return True
+            '
         Catch ex As Exception
             Throw ex
         End Try

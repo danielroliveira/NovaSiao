@@ -1075,7 +1075,7 @@ Public Class frmDespesa
             Cursor = Cursors.WaitCursor
             '
             If Not IsNothing(_Despesa.IDDespesa) Then
-                pagBLL.Excluir_APagar_Origem(_Despesa.IDDespesa, clAPagar.Origem_APagar.Despesa, dbTran)
+                pagBLL.APagarDeletePorOrigem(_Despesa.IDDespesa, clAPagar.Origem_APagar.Despesa, True, dbTran)
             End If
             '
             '--- Insere cada um AReceber no BD

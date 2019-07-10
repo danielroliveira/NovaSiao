@@ -231,4 +231,77 @@ Public Class FreteBLL
         '
     End Function
     '
+    '==========================================================================================
+    ' DELETE FRETE DESPESA
+    '==========================================================================================
+    Public Sub FreteDespesaDelete(IDFreteDespesa As Integer,
+                                  Optional dbTran As AcessoDados = Nothing)
+        '
+        Dim db As AcessoDados = If(dbTran, New AcessoDados)
+        Dim localTran As Boolean = False
+        Dim query As String = ""
+        '
+        If db.isTransaction Then
+            localTran = False
+        Else
+            db.BeginTransaction()
+            localTran = True
+        End If
+        '
+        Try
+            '
+            '--- GET IDAPAGAR
+            '------------------------------------------------------------------------------------
+            db.LimparParametros()
+            db.AdicionarParametros("@IDFreteDespesa", IDFreteDespesa)
+            '
+            query = "SELECT IDAPagar FROM tblAPagar WHERE Origem = 5 AND " &
+                    "IDOrigem = @IDFreteDespesa)"
+            '
+            Dim IDAPagar As Integer? = Nothing
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count > 0 Then
+                IDAPagar = dt.Rows(0)("IDAPagar")
+            End If
+            '
+            If Not IsNothing(IDAPagar) Then
+                '
+                '--- DELETE MOVIMENTACOES DE FRETE IF EXISTS
+                '------------------------------------------------------------------------------------
+                Dim movBLL As New MovimentacaoBLL
+                movBLL.MovimentacaoDeletePorOrigem(IDAPagar, EnumMovimentacaoOrigem.APagar, db)
+                '
+                '--- DELETE A PAGAR DE FRETE
+                '------------------------------------------------------------------------------------
+                Dim pagBLL As New APagarBLL
+                pagBLL.APagarDeletePorOrigem(IDFreteDespesa,
+                                             clAPagar.Origem_APagar.FreteDespesa,
+                                             False, db)
+                '
+            End If
+            '
+            '--- CLEAR IDFRETEDESPESA OF ALL RECORDS TBLFRETE
+            '------------------------------------------------------------------------------------
+            db.LimparParametros()
+            db.AdicionarParametros("@IDFreteDespesa", IDFreteDespesa)
+            '
+            query = "UPDATE IDFreteDespesa FROM tblFrete SET NULL WHERE IDFreteDespesa = @IDFreteDespesa"
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            '--- DELETE FRETE DESPESA
+            '------------------------------------------------------------------------------------
+            db.LimparParametros()
+            db.AdicionarParametros("@IDFreteDespesa", IDFreteDespesa)
+            '
+            query = "DELETE FROM tblFreteDespesa WHERE IDFreteDespesa = @IDFreteDespesa"
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
 End Class

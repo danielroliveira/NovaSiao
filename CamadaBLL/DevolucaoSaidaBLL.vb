@@ -430,7 +430,7 @@ Public Class DevolucaoSaidaBLL
                 ObjDB.LimparParametros()
                 ObjDB.AdicionarParametros("@IDAPagar", clDev.IDApagar)
                 '
-                myQuery = "DELETE FROM tblMovimentacoes WHERE Origem = 10 AND IDOrigem = @IDAPagar"
+                myQuery = "DELETE FROM tblCaixaMovimentacao WHERE Origem = 10 AND IDOrigem = @IDAPagar"
                 '
                 ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
                 '

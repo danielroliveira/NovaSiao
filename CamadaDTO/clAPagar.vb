@@ -35,6 +35,7 @@ Public Class clAPagar : Implements IEditableObject
         Despesa = 2
         DespesaPeriodica = 3
         SimplesEntrada = 4
+        FreteDespesa = 5
     End Enum
     '
 #End Region

@@ -183,23 +183,52 @@ Public Class MovimentacaoBLL
     End Function
     '
     '===================================================================================================
-    ' LIMPA/EXCLUI TODOS OS REGISTROS DE PAGAMENTOS/ENTRADAS DA TRANSACAO
+    ' EXCLUI TODOS OS REGISTROS DE MOVIMENTACAO DA ORIGEM
     '===================================================================================================
-    Public Function MovEntrada_Delete_PorTransacao(IDTransacao As Integer,
-                                                   Optional myDB As Object = Nothing) As Boolean
+    Public Function MovimentacaoDeletePorOrigem(IDOrigem As Integer, Origem As EnumMovimentacaoOrigem,
+                                                Optional dbTran As Object = Nothing) As Boolean
         '
-        Dim db As AcessoDados = If(myDB, New AcessoDados)
-        '
-        db.LimparParametros()
-        db.AdicionarParametros("@IDTransacao", IDTransacao)
-        '
-        Dim myQuery As String = "DELETE FROM tblCaixaMovimentacao WHERE Origem = 1 AND IDOrigem = @IDTransacao"
+        Dim db As AcessoDados = If(dbTran, New AcessoDados)
         '
         Try
-            '--- executa query
-            db.ExecutarManipulacao(CommandType.Text, myQuery)
             '
-            '--- return
+            db.LimparParametros()
+            db.AdicionarParametros("@IDOrigem", IDOrigem)
+            db.AdicionarParametros("@Origem", Origem)
+            '
+            Dim query As String = "SELECT * FROM tblCaixaMovimentacao WHERE Origem = @Origem AND IDOrigem = @IDOrigem"
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count > 0 Then
+                '
+                '--- get list of IDMOVIMENTACAO to Delete OBSERVACAO associated    
+                Dim IDMovs As List(Of Integer) = Nothing
+                '
+                '--- CHECK IF EXISTS CAIXA DONE
+                '---------------------------------------------------------------------------
+                For Each r In dt.Rows
+                    '
+                    IDMovs.Add(r("IDMovimentacao")) '--> add to list
+                    '
+                    If Not IsDBNull(r("IDCaixa")) Then
+                        Throw New Exception("Não é possível excluir a Movimentação quando está associada a um caixa.")
+                    End If
+                Next
+                '
+                '--- DELETE MOVIMENTACAO
+                '---------------------------------------------------------------------------
+                query = "DELETE FROM tblCaixaMovimentacao WHERE Origem = @Origem AND IDOrigem = @IDOrigem"
+                db.ExecutarManipulacao(CommandType.Text, query)
+                '
+                '--- DELETE OBSERVACAO ASSOCIATED
+                '------------------------------------------------------------------
+                Dim oBLL As New ObservacaoBLL
+                For Each id In IDMovs
+                    oBLL.DeleteObservacao(3, id, db)
+                Next
+                '
+            End If
+            '
             Return True
             '
         Catch ex As Exception

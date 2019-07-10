@@ -1351,10 +1351,10 @@ Public Class frmVendaVista
         '--- PASSO 1
         '----------------------------------------
         Try
-            Dim entBLL As New MovimentacaoBLL
+            Dim movBLL As New MovimentacaoBLL
             '
             '--- 1. Excluir todas as MOVIMENTACOES DE ENTRADA da Venda Atual
-            entBLL.MovEntrada_Delete_PorTransacao(_Venda.IDVenda, myDBTran)
+            movBLL.MovimentacaoDeletePorOrigem(_Venda.IDVenda, EnumMovimentacaoOrigem.Venda, myDBTran)
             '
         Catch ex As Exception
             Throw ex
@@ -1518,13 +1518,13 @@ Public Class frmVendaVista
         '
         '--- LIMPA TODOS OS PAGAMENTOS DA VENDA
         '----------------------------------------------------------------
-        Dim eBLL As New MovimentacaoBLL
+        Dim movBLL As New MovimentacaoBLL
         '
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            eBLL.MovEntrada_Delete_PorTransacao(_Venda.IDVenda)
+            movBLL.MovimentacaoDeletePorOrigem(_Venda.IDVenda, EnumMovimentacaoOrigem.Venda)
             '
             For i = 0 To _MovEntradaList.Count - 1
                 If _MovEntradaList.Item(i).IDMovimentacao <> 0 Then _MovEntradaList.RemoveAt(i)

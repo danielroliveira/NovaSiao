@@ -294,7 +294,7 @@ Public Class CompraBLL
             Dim pBLL As New APagarBLL
             '
             '--- DELETA APAGAR
-            pBLL.Excluir_APagar_Origem(IDCompra, clAPagar.Origem_APagar.Compra, ObjDB)
+            pBLL.APagarDeletePorOrigem(IDCompra, clAPagar.Origem_APagar.Compra, False, ObjDB)
             '
         Catch ex As Exception
             '
@@ -306,31 +306,13 @@ Public Class CompraBLL
         '
         '--- DELETE APAGAR OF THE TBLVENDAFRETE RELATED
         '==================================================================
-
-        Throw New Exception("INCOMPLETO")
-
-
         '
         '--- FRETE -> APAGAR -> MOVIMENTACAO | FRETE -> APAGAR
         If Not IsNothing(clCmp.IDFreteDespesa) Then
             '
             Try
-                '
-                '--- DELETE MOVIMENTACOES DE FRETE
-                ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDAPagar", clCmp.IDFreteDespesa)
-                '
-                myQuery = "DELETE FROM tblMovimentacoes WHERE Origem = 10 AND IDOrigem = @IDAPagar"
-                '
-                ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
-                '
-                '--- DELETE A PAGAR DE FRETE
-                ObjDB.LimparParametros()
-                ObjDB.AdicionarParametros("@IDAPagar", clCmp.IDFreteDespesa)
-                '
-                myQuery = "DELETE FROM tblAPagar WHERE IDAPagar = @IDAPagar"
-                '
-                ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
+                Dim fBLL As New FreteBLL
+                fBLL.FreteDespesaDelete(clCmp.IDFreteDespesa, ObjDB)
                 '
             Catch ex As Exception
                 '
