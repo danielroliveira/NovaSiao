@@ -181,7 +181,7 @@ Public Class ProdutoAntigoBLL
                 '
             Case EnumReferencia.Categoria
                 '
-                Dim IDExterno As Integer? = If(IsDBNull(dadoAnterior("RGCat")), Nothing, dadoAnterior("RGCat"))
+                Dim IDExterno As Integer? = If(IsDBNull(dadoAnterior("RGCat")), Nothing, CInt(dadoAnterior("RGCat")))
                 If IsNothing(IDExterno) Then Return
                 '
                 Dim ref As New clRef(referenciaTipo, IDExterno)

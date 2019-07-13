@@ -222,6 +222,37 @@ Public Module GlobalPrincipal
         '
     End Function
     '
+    Public Function ObterDadosEmpresa() As clDadosEmpresa
+        '
+        Try
+            '
+            Dim DadosEmpresa As New clDadosEmpresa With {
+            .RazaoSocial = ObterConfigValorNode("RazaoSocial"),
+            .NomeFantasia = ObterConfigValorNode("NomeFantasia"),
+            .TelefoneFinanceiro = ObterConfigValorNode("TelefoneFinanceiro"),
+            .TelefoneGerencia = ObterConfigValorNode("TelefoneGerencia"),
+            .TelefonePrincipal = ObterConfigValorNode("TelefonePrincipal"),
+            .InscricaoSocial = ObterConfigValorNode("InscricaoSocial"),
+            .CNPJ = ObterConfigValorNode("CNPJ"),
+            .ContatoFinanceiro = ObterConfigValorNode("ContatoFinanceiro"),
+            .ContatoGerencia = ObterConfigValorNode("ContatoGerencia"),
+            .Endereco = ObterConfigValorNode("Endereco"),
+            .Bairro = ObterConfigValorNode("Bairro"),
+            .Cidade = ObterConfigValorNode("Cidade"),
+            .UF = ObterConfigValorNode("UF"),
+            .CEP = ObterConfigValorNode("CEP"),
+            .ArquivoLogoColor = ObterConfigValorNode("ArquivoLogoColor"),
+            .ArquivoLogoMono = ObterConfigValorNode("ArquivoLogoMono")
+            }
+            '
+            Return DadosEmpresa
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
 #End Region ' /CONFIG XML - OBTER DADOS
     '
 #Region "CONFIG XML - CONTROLE"

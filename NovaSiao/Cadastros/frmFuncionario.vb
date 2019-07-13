@@ -44,8 +44,8 @@ Public Class frmFuncionario
                 txtCPF.ReadOnly = False
                 lblIDFuncionario.Text = "NOVO"
                 ' OBTER OS VALORES DEFAULT DOS CAMPOS
-                txtCidade.Text = ObterDefault("Cidade")
-                txtUF.Text = ObterDefault("UF")
+                txtCidade.Text = ObterDefault("CidadePadrao")
+                txtUF.Text = ObterDefault("UFPadrao")
                 AtivoButtonImage()
             End If
         End Set

@@ -321,11 +321,13 @@ Partial Class frmProdutoListagem
         Me.lstListagem.Columns.Add(Me.clnFabricante)
         Me.lstListagem.Font = New System.Drawing.Font("Pathway Gothic One", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lstListagem.ForeColorColumns = System.Drawing.Color.Black
+        Me.lstListagem.HeaderStyle = ComponentOwl.BetterListView.BetterListViewHeaderStyle.Sortable
         Me.lstListagem.Location = New System.Drawing.Point(12, 102)
         Me.lstListagem.Margin = New System.Windows.Forms.Padding(3, 3, 3, 10)
         Me.lstListagem.MultiSelect = False
         Me.lstListagem.Name = "lstListagem"
         Me.lstListagem.Size = New System.Drawing.Size(998, 320)
+        Me.lstListagem.SmoothScroll = False
         Me.lstListagem.TabIndex = 19
         '
         'clnRGProduto

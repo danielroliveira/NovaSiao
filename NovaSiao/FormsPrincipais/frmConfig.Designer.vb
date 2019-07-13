@@ -23,16 +23,19 @@ Partial Class frmConfig
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lblTitulo = New System.Windows.Forms.Label()
         Me.TabPrincipal = New VIBlend.WinForms.Controls.vTabControl()
         Me.Tab1 = New VIBlend.WinForms.Controls.vTabPage()
+        Me.cmbEstoqueNegativo = New Controles.ComboBox_OnlyValues()
+        Me.dgvMensagens = New System.Windows.Forms.DataGridView()
+        Me.clnMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btnEditarFilial = New System.Windows.Forms.Button()
         Me.btnContaAdd = New System.Windows.Forms.Button()
         Me.btnAlteraConta = New System.Windows.Forms.Button()
         Me.btnFilialAdd = New System.Windows.Forms.Button()
         Me.btnAlteraFilial = New System.Windows.Forms.Button()
-        Me.chkEstoqueNegativo = New System.Windows.Forms.CheckBox()
         Me.lblDataBloqueio = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.txtContaPadrao = New System.Windows.Forms.TextBox()
@@ -43,6 +46,7 @@ Partial Class frmConfig
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
+        Me.Label29 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -51,11 +55,20 @@ Partial Class frmConfig
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.txtMensagem = New System.Windows.Forms.TextBox()
         Me.txtNaturalidade = New System.Windows.Forms.TextBox()
-        Me.txtUF = New System.Windows.Forms.TextBox()
-        Me.txtCidade = New System.Windows.Forms.TextBox()
+        Me.txtUFPadrao = New System.Windows.Forms.TextBox()
+        Me.txtCidadePadrao = New System.Windows.Forms.TextBox()
         Me.Tab2 = New VIBlend.WinForms.Controls.vTabPage()
+        Me.Label24 = New System.Windows.Forms.Label()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label26 = New System.Windows.Forms.Label()
+        Me.Label25 = New System.Windows.Forms.Label()
+        Me.txtUF = New System.Windows.Forms.TextBox()
+        Me.txtEndereco = New System.Windows.Forms.TextBox()
+        Me.txtBairro = New System.Windows.Forms.TextBox()
+        Me.txtCidade = New System.Windows.Forms.TextBox()
+        Me.txtCEP = New Controles.MaskText_Telefone()
         Me.txtTelFinanceiro = New Controles.MaskText_Telefone()
         Me.txtTelGerencia = New Controles.MaskText_Telefone()
         Me.txtTelPrincipal = New Controles.MaskText_Telefone()
@@ -103,6 +116,7 @@ Partial Class frmConfig
         Me.Panel1.SuspendLayout()
         Me.TabPrincipal.SuspendLayout()
         Me.Tab1.SuspendLayout()
+        CType(Me.dgvMensagens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Tab2.SuspendLayout()
         Me.Tab4.SuspendLayout()
         CType(Me.picLogoColor, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -139,6 +153,9 @@ Partial Class frmConfig
         'TabPrincipal
         '
         Me.TabPrincipal.AllowAnimations = True
+        Me.TabPrincipal.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabPrincipal.Controls.Add(Me.Tab1)
         Me.TabPrincipal.Controls.Add(Me.Tab2)
         Me.TabPrincipal.Controls.Add(Me.Tab4)
@@ -149,7 +166,7 @@ Partial Class frmConfig
         Me.TabPrincipal.Name = "TabPrincipal"
         Me.TabPrincipal.Padding = New System.Windows.Forms.Padding(0, 40, 0, 0)
         Me.TabPrincipal.ShowFocusRectangle = True
-        Me.TabPrincipal.Size = New System.Drawing.Size(728, 482)
+        Me.TabPrincipal.Size = New System.Drawing.Size(728, 544)
         Me.TabPrincipal.TabAlignment = VIBlend.WinForms.Controls.vTabPageAlignment.Top
         Me.TabPrincipal.TabIndex = 1
         Me.TabPrincipal.TabPages.Add(Me.Tab1)
@@ -168,12 +185,13 @@ Partial Class frmConfig
         '
         Me.Tab1.ContentBackColor = System.Drawing.Color.Azure
         Me.Tab1.ContentBorderColor = System.Drawing.Color.Transparent
+        Me.Tab1.Controls.Add(Me.cmbEstoqueNegativo)
+        Me.Tab1.Controls.Add(Me.dgvMensagens)
         Me.Tab1.Controls.Add(Me.btnEditarFilial)
         Me.Tab1.Controls.Add(Me.btnContaAdd)
         Me.Tab1.Controls.Add(Me.btnAlteraConta)
         Me.Tab1.Controls.Add(Me.btnFilialAdd)
         Me.Tab1.Controls.Add(Me.btnAlteraFilial)
-        Me.Tab1.Controls.Add(Me.chkEstoqueNegativo)
         Me.Tab1.Controls.Add(Me.lblDataBloqueio)
         Me.Tab1.Controls.Add(Me.Label22)
         Me.Tab1.Controls.Add(Me.txtContaPadrao)
@@ -184,6 +202,7 @@ Partial Class frmConfig
         Me.Tab1.Controls.Add(Me.Label35)
         Me.Tab1.Controls.Add(Me.Label34)
         Me.Tab1.Controls.Add(Me.Label15)
+        Me.Tab1.Controls.Add(Me.Label29)
         Me.Tab1.Controls.Add(Me.Label14)
         Me.Tab1.Controls.Add(Me.Label19)
         Me.Tab1.Controls.Add(Me.Label13)
@@ -192,17 +211,16 @@ Partial Class frmConfig
         Me.Tab1.Controls.Add(Me.Label21)
         Me.Tab1.Controls.Add(Me.Label12)
         Me.Tab1.Controls.Add(Me.Label11)
-        Me.Tab1.Controls.Add(Me.txtMensagem)
         Me.Tab1.Controls.Add(Me.txtNaturalidade)
-        Me.Tab1.Controls.Add(Me.txtUF)
-        Me.Tab1.Controls.Add(Me.txtCidade)
+        Me.Tab1.Controls.Add(Me.txtUFPadrao)
+        Me.Tab1.Controls.Add(Me.txtCidadePadrao)
         Me.Tab1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Tab1.Font = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Tab1.Location = New System.Drawing.Point(0, 40)
         Me.Tab1.Name = "Tab1"
         Me.Tab1.Padding = New System.Windows.Forms.Padding(0)
         Me.Tab1.SelectedTextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Tab1.Size = New System.Drawing.Size(728, 442)
+        Me.Tab1.Size = New System.Drawing.Size(728, 504)
         Me.Tab1.TabIndex = 0
         Me.Tab1.Text = "Valores Padrão"
         Me.Tab1.TextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -210,6 +228,48 @@ Partial Class frmConfig
         Me.Tab1.UseContentBackColor = True
         Me.Tab1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE
         Me.Tab1.Visible = False
+        '
+        'cmbEstoqueNegativo
+        '
+        Me.cmbEstoqueNegativo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.cmbEstoqueNegativo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cmbEstoqueNegativo.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cmbEstoqueNegativo.FormattingEnabled = True
+        Me.cmbEstoqueNegativo.Items.AddRange(New Object() {"SIM", "NÃO"})
+        Me.cmbEstoqueNegativo.Location = New System.Drawing.Point(214, 321)
+        Me.cmbEstoqueNegativo.Margin = New System.Windows.Forms.Padding(6)
+        Me.cmbEstoqueNegativo.Name = "cmbEstoqueNegativo"
+        Me.cmbEstoqueNegativo.RestrictContentToListItems = True
+        Me.cmbEstoqueNegativo.Size = New System.Drawing.Size(69, 26)
+        Me.cmbEstoqueNegativo.TabIndex = 27
+        '
+        'dgvMensagens
+        '
+        Me.dgvMensagens.BackgroundColor = System.Drawing.Color.LightGray
+        Me.dgvMensagens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvMensagens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.dgvMensagens.ColumnHeadersHeight = 30
+        Me.dgvMensagens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnMensagem})
+        Me.dgvMensagens.EnableHeadersVisualStyles = False
+        Me.dgvMensagens.Location = New System.Drawing.Point(214, 361)
+        Me.dgvMensagens.Name = "dgvMensagens"
+        Me.dgvMensagens.RowHeadersWidth = 35
+        Me.dgvMensagens.RowTemplate.Height = 30
+        Me.dgvMensagens.Size = New System.Drawing.Size(476, 122)
+        Me.dgvMensagens.TabIndex = 29
+        '
+        'clnMensagem
+        '
+        Me.clnMensagem.HeaderText = "Avisos"
+        Me.clnMensagem.Name = "clnMensagem"
+        Me.clnMensagem.Width = 400
         '
         'btnEditarFilial
         '
@@ -291,17 +351,6 @@ Partial Class frmConfig
         Me.btnAlteraFilial.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnAlteraFilial.UseVisualStyleBackColor = False
         '
-        'chkEstoqueNegativo
-        '
-        Me.chkEstoqueNegativo.AutoSize = True
-        Me.chkEstoqueNegativo.BackColor = System.Drawing.Color.Transparent
-        Me.chkEstoqueNegativo.Location = New System.Drawing.Point(214, 408)
-        Me.chkEstoqueNegativo.Name = "chkEstoqueNegativo"
-        Me.chkEstoqueNegativo.Size = New System.Drawing.Size(202, 20)
-        Me.chkEstoqueNegativo.TabIndex = 27
-        Me.chkEstoqueNegativo.Text = "Permitir Estoque Negativo!"
-        Me.chkEstoqueNegativo.UseVisualStyleBackColor = False
-        '
         'lblDataBloqueio
         '
         Me.lblDataBloqueio.BackColor = System.Drawing.Color.Transparent
@@ -347,7 +396,7 @@ Partial Class frmConfig
         Me.txtDescontoMaximo.Margin = New System.Windows.Forms.Padding(6)
         Me.txtDescontoMaximo.Name = "txtDescontoMaximo"
         Me.txtDescontoMaximo.Size = New System.Drawing.Size(69, 27)
-        Me.txtDescontoMaximo.TabIndex = 23
+        Me.txtDescontoMaximo.TabIndex = 24
         Me.txtDescontoMaximo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txtPermanencia
@@ -404,16 +453,27 @@ Partial Class frmConfig
         Me.Label15.TabIndex = 2
         Me.Label15.Text = "Filial Padrão:"
         '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.BackColor = System.Drawing.Color.Transparent
+        Me.Label29.Font = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label29.Location = New System.Drawing.Point(24, 326)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(183, 16)
+        Me.Label29.TabIndex = 26
+        Me.Label29.Text = "Permitir Estoque Negativo!"
+        '
         'Label14
         '
         Me.Label14.AutoSize = True
         Me.Label14.BackColor = System.Drawing.Color.Transparent
         Me.Label14.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(50, 326)
+        Me.Label14.Location = New System.Drawing.Point(35, 371)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(158, 18)
-        Me.Label14.TabIndex = 25
-        Me.Label14.Text = "Mensagem Inicial:"
+        Me.Label14.Size = New System.Drawing.Size(173, 18)
+        Me.Label14.TabIndex = 28
+        Me.Label14.Text = "Avisos nos Pedidos:"
         '
         'Label19
         '
@@ -423,7 +483,7 @@ Partial Class frmConfig
         Me.Label19.Location = New System.Drawing.Point(49, 285)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(159, 18)
-        Me.Label19.TabIndex = 22
+        Me.Label19.TabIndex = 23
         Me.Label19.Text = "Desconto Máximo:"
         '
         'Label13
@@ -446,7 +506,7 @@ Partial Class frmConfig
         Me.Label1.Margin = New System.Windows.Forms.Padding(0)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(302, 16)
-        Me.Label1.TabIndex = 24
+        Me.Label1.TabIndex = 25
         Me.Label1.Text = "(% - Insira 0 para permitir todos descontos)"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
@@ -496,17 +556,6 @@ Partial Class frmConfig
         Me.Label11.TabIndex = 13
         Me.Label11.Text = "Cidade Padrão:"
         '
-        'txtMensagem
-        '
-        Me.txtMensagem.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtMensagem.Location = New System.Drawing.Point(214, 323)
-        Me.txtMensagem.Margin = New System.Windows.Forms.Padding(6)
-        Me.txtMensagem.MaxLength = 1000
-        Me.txtMensagem.Multiline = True
-        Me.txtMensagem.Name = "txtMensagem"
-        Me.txtMensagem.Size = New System.Drawing.Size(477, 68)
-        Me.txtMensagem.TabIndex = 26
-        '
         'txtNaturalidade
         '
         Me.txtNaturalidade.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -517,30 +566,40 @@ Partial Class frmConfig
         Me.txtNaturalidade.Size = New System.Drawing.Size(212, 27)
         Me.txtNaturalidade.TabIndex = 18
         '
-        'txtUF
+        'txtUFPadrao
         '
-        Me.txtUF.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtUF.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUF.Location = New System.Drawing.Point(556, 165)
-        Me.txtUF.Margin = New System.Windows.Forms.Padding(6)
-        Me.txtUF.MaxLength = 2
-        Me.txtUF.Name = "txtUF"
-        Me.txtUF.Size = New System.Drawing.Size(51, 27)
-        Me.txtUF.TabIndex = 16
+        Me.txtUFPadrao.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
+        Me.txtUFPadrao.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtUFPadrao.Location = New System.Drawing.Point(556, 165)
+        Me.txtUFPadrao.Margin = New System.Windows.Forms.Padding(6)
+        Me.txtUFPadrao.MaxLength = 2
+        Me.txtUFPadrao.Name = "txtUFPadrao"
+        Me.txtUFPadrao.Size = New System.Drawing.Size(51, 27)
+        Me.txtUFPadrao.TabIndex = 16
         '
-        'txtCidade
+        'txtCidadePadrao
         '
-        Me.txtCidade.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtCidade.Location = New System.Drawing.Point(214, 165)
-        Me.txtCidade.Margin = New System.Windows.Forms.Padding(6)
-        Me.txtCidade.MaxLength = 50
-        Me.txtCidade.Name = "txtCidade"
-        Me.txtCidade.Size = New System.Drawing.Size(212, 27)
-        Me.txtCidade.TabIndex = 14
+        Me.txtCidadePadrao.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtCidadePadrao.Location = New System.Drawing.Point(214, 165)
+        Me.txtCidadePadrao.Margin = New System.Windows.Forms.Padding(6)
+        Me.txtCidadePadrao.MaxLength = 50
+        Me.txtCidadePadrao.Name = "txtCidadePadrao"
+        Me.txtCidadePadrao.Size = New System.Drawing.Size(212, 27)
+        Me.txtCidadePadrao.TabIndex = 14
         '
         'Tab2
         '
         Me.Tab2.ContentBackColor = System.Drawing.Color.Azure
+        Me.Tab2.Controls.Add(Me.Label24)
+        Me.Tab2.Controls.Add(Me.Label27)
+        Me.Tab2.Controls.Add(Me.Label28)
+        Me.Tab2.Controls.Add(Me.Label26)
+        Me.Tab2.Controls.Add(Me.Label25)
+        Me.Tab2.Controls.Add(Me.txtUF)
+        Me.Tab2.Controls.Add(Me.txtEndereco)
+        Me.Tab2.Controls.Add(Me.txtBairro)
+        Me.Tab2.Controls.Add(Me.txtCidade)
+        Me.Tab2.Controls.Add(Me.txtCEP)
         Me.Tab2.Controls.Add(Me.txtTelFinanceiro)
         Me.Tab2.Controls.Add(Me.txtTelGerencia)
         Me.Tab2.Controls.Add(Me.txtTelPrincipal)
@@ -565,7 +624,7 @@ Partial Class frmConfig
         Me.Tab2.Name = "Tab2"
         Me.Tab2.Padding = New System.Windows.Forms.Padding(0)
         Me.Tab2.SelectedTextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Tab2.Size = New System.Drawing.Size(728, 442)
+        Me.Tab2.Size = New System.Drawing.Size(728, 504)
         Me.Tab2.TabIndex = 2
         Me.Tab2.Text = "Dados da Empresa"
         Me.Tab2.TextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -574,51 +633,161 @@ Partial Class frmConfig
         Me.Tab2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE
         Me.Tab2.Visible = False
         '
+        'Label24
+        '
+        Me.Label24.AutoSize = True
+        Me.Label24.BackColor = System.Drawing.Color.Transparent
+        Me.Label24.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label24.Location = New System.Drawing.Point(442, 382)
+        Me.Label24.Name = "Label24"
+        Me.Label24.Size = New System.Drawing.Size(36, 18)
+        Me.Label24.TabIndex = 26
+        Me.Label24.Text = "UF:"
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = True
+        Me.Label27.BackColor = System.Drawing.Color.Transparent
+        Me.Label27.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label27.Location = New System.Drawing.Point(159, 382)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(46, 18)
+        Me.Label27.TabIndex = 24
+        Me.Label27.Text = "CEP:"
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.BackColor = System.Drawing.Color.Transparent
+        Me.Label28.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label28.Location = New System.Drawing.Point(116, 304)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(89, 18)
+        Me.Label28.TabIndex = 18
+        Me.Label28.Text = "Endereço:"
+        '
+        'Label26
+        '
+        Me.Label26.AutoSize = True
+        Me.Label26.BackColor = System.Drawing.Color.Transparent
+        Me.Label26.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label26.Location = New System.Drawing.Point(142, 343)
+        Me.Label26.Name = "Label26"
+        Me.Label26.Size = New System.Drawing.Size(63, 18)
+        Me.Label26.TabIndex = 20
+        Me.Label26.Text = "Bairro:"
+        '
+        'Label25
+        '
+        Me.Label25.AutoSize = True
+        Me.Label25.BackColor = System.Drawing.Color.Transparent
+        Me.Label25.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label25.Location = New System.Drawing.Point(404, 343)
+        Me.Label25.Name = "Label25"
+        Me.Label25.Size = New System.Drawing.Size(71, 18)
+        Me.Label25.TabIndex = 22
+        Me.Label25.Text = "Cidade:"
+        '
+        'txtUF
+        '
+        Me.txtUF.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
+        Me.txtUF.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtUF.Location = New System.Drawing.Point(484, 379)
+        Me.txtUF.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
+        Me.txtUF.MaxLength = 2
+        Me.txtUF.Name = "txtUF"
+        Me.txtUF.Size = New System.Drawing.Size(51, 27)
+        Me.txtUF.TabIndex = 27
+        '
+        'txtEndereco
+        '
+        Me.txtEndereco.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtEndereco.Location = New System.Drawing.Point(214, 301)
+        Me.txtEndereco.Margin = New System.Windows.Forms.Padding(6)
+        Me.txtEndereco.MaxLength = 50
+        Me.txtEndereco.Name = "txtEndereco"
+        Me.txtEndereco.Size = New System.Drawing.Size(457, 27)
+        Me.txtEndereco.TabIndex = 19
+        '
+        'txtBairro
+        '
+        Me.txtBairro.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtBairro.Location = New System.Drawing.Point(214, 340)
+        Me.txtBairro.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
+        Me.txtBairro.MaxLength = 50
+        Me.txtBairro.Name = "txtBairro"
+        Me.txtBairro.Size = New System.Drawing.Size(175, 27)
+        Me.txtBairro.TabIndex = 21
+        '
+        'txtCidade
+        '
+        Me.txtCidade.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtCidade.Location = New System.Drawing.Point(484, 340)
+        Me.txtCidade.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
+        Me.txtCidade.MaxLength = 50
+        Me.txtCidade.Name = "txtCidade"
+        Me.txtCidade.Size = New System.Drawing.Size(187, 27)
+        Me.txtCidade.TabIndex = 23
+        '
+        'txtCEP
+        '
+        Me.txtCEP.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtCEP.Location = New System.Drawing.Point(214, 379)
+        Me.txtCEP.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
+        Me.txtCEP.Mask = "99999-999"
+        Me.txtCEP.Name = "txtCEP"
+        Me.txtCEP.Size = New System.Drawing.Size(117, 27)
+        Me.txtCEP.TabIndex = 25
+        '
         'txtTelFinanceiro
         '
         Me.txtTelFinanceiro.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTelFinanceiro.Location = New System.Drawing.Point(214, 343)
+        Me.txtTelFinanceiro.Location = New System.Drawing.Point(214, 262)
+        Me.txtTelFinanceiro.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
         Me.txtTelFinanceiro.Mask = "(99) 99000-0000"
         Me.txtTelFinanceiro.Name = "txtTelFinanceiro"
         Me.txtTelFinanceiro.Size = New System.Drawing.Size(164, 27)
-        Me.txtTelFinanceiro.TabIndex = 7
+        Me.txtTelFinanceiro.TabIndex = 15
         '
         'txtTelGerencia
         '
         Me.txtTelGerencia.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTelGerencia.Location = New System.Drawing.Point(214, 253)
+        Me.txtTelGerencia.Location = New System.Drawing.Point(214, 223)
+        Me.txtTelGerencia.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
         Me.txtTelGerencia.Mask = "(99) 99000-0000"
         Me.txtTelGerencia.Name = "txtTelGerencia"
         Me.txtTelGerencia.Size = New System.Drawing.Size(164, 27)
-        Me.txtTelGerencia.TabIndex = 5
+        Me.txtTelGerencia.TabIndex = 11
         '
         'txtTelPrincipal
         '
         Me.txtTelPrincipal.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtTelPrincipal.Location = New System.Drawing.Point(214, 208)
+        Me.txtTelPrincipal.Location = New System.Drawing.Point(214, 184)
+        Me.txtTelPrincipal.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
         Me.txtTelPrincipal.Mask = "(99) 99000-0000"
         Me.txtTelPrincipal.Name = "txtTelPrincipal"
         Me.txtTelPrincipal.Size = New System.Drawing.Size(164, 27)
-        Me.txtTelPrincipal.TabIndex = 4
+        Me.txtTelPrincipal.TabIndex = 9
         '
         'txtCNPJ
         '
         Me.txtCNPJ.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtCNPJ.Location = New System.Drawing.Point(214, 118)
+        Me.txtCNPJ.Location = New System.Drawing.Point(214, 106)
+        Me.txtCNPJ.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
         Me.txtCNPJ.Mask = "00,000,000/0000-00"
         Me.txtCNPJ.Name = "txtCNPJ"
         Me.txtCNPJ.Size = New System.Drawing.Size(214, 27)
-        Me.txtCNPJ.TabIndex = 2
+        Me.txtCNPJ.TabIndex = 5
         '
         'Label10
         '
         Me.Label10.AutoSize = True
         Me.Label10.BackColor = System.Drawing.Color.Transparent
         Me.Label10.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(35, 346)
+        Me.Label10.Location = New System.Drawing.Point(32, 265)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(173, 18)
-        Me.Label10.TabIndex = 1
+        Me.Label10.TabIndex = 14
         Me.Label10.Text = "Telefone Financeiro:"
         '
         'Label4
@@ -626,10 +795,10 @@ Partial Class frmConfig
         Me.Label4.AutoSize = True
         Me.Label4.BackColor = System.Drawing.Color.Transparent
         Me.Label4.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(153, 121)
+        Me.Label4.Location = New System.Drawing.Point(150, 109)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(55, 18)
-        Me.Label4.TabIndex = 1
+        Me.Label4.TabIndex = 4
         Me.Label4.Text = "CNPJ:"
         '
         'Label9
@@ -637,10 +806,10 @@ Partial Class frmConfig
         Me.Label9.AutoSize = True
         Me.Label9.BackColor = System.Drawing.Color.Transparent
         Me.Label9.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(47, 256)
+        Me.Label9.Location = New System.Drawing.Point(44, 226)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(161, 18)
-        Me.Label9.TabIndex = 1
+        Me.Label9.TabIndex = 10
         Me.Label9.Text = "Telefone Gerência:"
         '
         'Label6
@@ -648,10 +817,10 @@ Partial Class frmConfig
         Me.Label6.AutoSize = True
         Me.Label6.BackColor = System.Drawing.Color.Transparent
         Me.Label6.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(49, 211)
+        Me.Label6.Location = New System.Drawing.Point(46, 187)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(159, 18)
-        Me.Label6.TabIndex = 1
+        Me.Label6.TabIndex = 8
         Me.Label6.Text = "Telefone Principal:"
         '
         'Label5
@@ -659,10 +828,10 @@ Partial Class frmConfig
         Me.Label5.AutoSize = True
         Me.Label5.BackColor = System.Drawing.Color.Transparent
         Me.Label5.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(43, 166)
+        Me.Label5.Location = New System.Drawing.Point(40, 148)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(165, 18)
-        Me.Label5.TabIndex = 1
+        Me.Label5.TabIndex = 6
         Me.Label5.Text = "Inscrição Estadual:"
         '
         'Label8
@@ -670,32 +839,32 @@ Partial Class frmConfig
         Me.Label8.AutoSize = True
         Me.Label8.BackColor = System.Drawing.Color.Transparent
         Me.Label8.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(39, 391)
+        Me.Label8.Location = New System.Drawing.Point(412, 265)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(169, 18)
-        Me.Label8.TabIndex = 1
-        Me.Label8.Text = "Contato Financeiro:"
+        Me.Label8.Size = New System.Drawing.Size(96, 18)
+        Me.Label8.TabIndex = 16
+        Me.Label8.Text = "Falar Com:"
         '
         'Label7
         '
         Me.Label7.AutoSize = True
         Me.Label7.BackColor = System.Drawing.Color.Transparent
         Me.Label7.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(51, 301)
+        Me.Label7.Location = New System.Drawing.Point(422, 226)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(157, 18)
-        Me.Label7.TabIndex = 1
-        Me.Label7.Text = "Contato Gerência:"
+        Me.Label7.Size = New System.Drawing.Size(86, 18)
+        Me.Label7.TabIndex = 12
+        Me.Label7.Text = "Gerência:"
         '
         'Label3
         '
         Me.Label3.AutoSize = True
         Me.Label3.BackColor = System.Drawing.Color.Transparent
         Me.Label3.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(71, 76)
+        Me.Label3.Location = New System.Drawing.Point(68, 70)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(137, 18)
-        Me.Label3.TabIndex = 1
+        Me.Label3.TabIndex = 2
         Me.Label3.Text = "Nome Fantasia:"
         '
         'Label2
@@ -703,56 +872,61 @@ Partial Class frmConfig
         Me.Label2.AutoSize = True
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(89, 31)
+        Me.Label2.Location = New System.Drawing.Point(86, 31)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(119, 18)
-        Me.Label2.TabIndex = 1
+        Me.Label2.TabIndex = 0
         Me.Label2.Text = "Razão Social:"
         '
         'txtIncricao
         '
         Me.txtIncricao.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtIncricao.Location = New System.Drawing.Point(214, 163)
+        Me.txtIncricao.Location = New System.Drawing.Point(214, 145)
+        Me.txtIncricao.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
         Me.txtIncricao.MaxLength = 50
         Me.txtIncricao.Name = "txtIncricao"
         Me.txtIncricao.Size = New System.Drawing.Size(214, 27)
-        Me.txtIncricao.TabIndex = 3
+        Me.txtIncricao.TabIndex = 7
         '
         'txtContatoFinanceiro
         '
         Me.txtContatoFinanceiro.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtContatoFinanceiro.Location = New System.Drawing.Point(214, 388)
+        Me.txtContatoFinanceiro.Location = New System.Drawing.Point(514, 262)
+        Me.txtContatoFinanceiro.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
         Me.txtContatoFinanceiro.MaxLength = 30
         Me.txtContatoFinanceiro.Name = "txtContatoFinanceiro"
-        Me.txtContatoFinanceiro.Size = New System.Drawing.Size(164, 27)
-        Me.txtContatoFinanceiro.TabIndex = 8
+        Me.txtContatoFinanceiro.Size = New System.Drawing.Size(157, 27)
+        Me.txtContatoFinanceiro.TabIndex = 17
         '
         'txtContatoGerencia
         '
         Me.txtContatoGerencia.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtContatoGerencia.Location = New System.Drawing.Point(214, 298)
+        Me.txtContatoGerencia.Location = New System.Drawing.Point(514, 223)
+        Me.txtContatoGerencia.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
         Me.txtContatoGerencia.MaxLength = 30
         Me.txtContatoGerencia.Name = "txtContatoGerencia"
-        Me.txtContatoGerencia.Size = New System.Drawing.Size(164, 27)
-        Me.txtContatoGerencia.TabIndex = 6
+        Me.txtContatoGerencia.Size = New System.Drawing.Size(157, 27)
+        Me.txtContatoGerencia.TabIndex = 13
         '
         'txtFantasia
         '
         Me.txtFantasia.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFantasia.Location = New System.Drawing.Point(214, 73)
+        Me.txtFantasia.Location = New System.Drawing.Point(214, 67)
+        Me.txtFantasia.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
         Me.txtFantasia.MaxLength = 50
         Me.txtFantasia.Name = "txtFantasia"
         Me.txtFantasia.Size = New System.Drawing.Size(457, 27)
-        Me.txtFantasia.TabIndex = 1
+        Me.txtFantasia.TabIndex = 3
         '
         'txtRazao
         '
         Me.txtRazao.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.txtRazao.Location = New System.Drawing.Point(214, 28)
+        Me.txtRazao.Margin = New System.Windows.Forms.Padding(3, 6, 3, 6)
         Me.txtRazao.MaxLength = 100
         Me.txtRazao.Name = "txtRazao"
         Me.txtRazao.Size = New System.Drawing.Size(457, 27)
-        Me.txtRazao.TabIndex = 0
+        Me.txtRazao.TabIndex = 1
         '
         'Tab4
         '
@@ -771,7 +945,7 @@ Partial Class frmConfig
         Me.Tab4.Name = "Tab4"
         Me.Tab4.Padding = New System.Windows.Forms.Padding(0)
         Me.Tab4.SelectedTextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Tab4.Size = New System.Drawing.Size(728, 442)
+        Me.Tab4.Size = New System.Drawing.Size(728, 504)
         Me.Tab4.TabIndex = 3
         Me.Tab4.Text = "Logomarcas"
         Me.Tab4.TextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -895,7 +1069,7 @@ Partial Class frmConfig
         Me.Tab3.Name = "Tab3"
         Me.Tab3.Padding = New System.Windows.Forms.Padding(0)
         Me.Tab3.SelectedTextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Tab3.Size = New System.Drawing.Size(728, 442)
+        Me.Tab3.Size = New System.Drawing.Size(728, 504)
         Me.Tab3.TabIndex = 4
         Me.Tab3.Text = "Servidor de Dados"
         Me.Tab3.TextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1014,11 +1188,12 @@ Partial Class frmConfig
         '
         'Panel2
         '
+        Me.Panel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel2.BackColor = System.Drawing.Color.Linen
         Me.Panel2.Controls.Add(Me.btnCancelar)
         Me.Panel2.Controls.Add(Me.btnSalvar)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 554)
+        Me.Panel2.Location = New System.Drawing.Point(0, 616)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(744, 59)
         Me.Panel2.TabIndex = 2
@@ -1087,7 +1262,7 @@ Partial Class frmConfig
         Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 18.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Linen
-        Me.ClientSize = New System.Drawing.Size(744, 613)
+        Me.ClientSize = New System.Drawing.Size(744, 675)
         Me.ControlBox = False
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.TabPrincipal)
@@ -1106,6 +1281,7 @@ Partial Class frmConfig
         Me.TabPrincipal.ResumeLayout(False)
         Me.Tab1.ResumeLayout(False)
         Me.Tab1.PerformLayout()
+        CType(Me.dgvMensagens, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Tab2.ResumeLayout(False)
         Me.Tab2.PerformLayout()
         Me.Tab4.ResumeLayout(False)
@@ -1154,11 +1330,10 @@ Partial Class frmConfig
     Friend WithEvents Label12 As Label
     Friend WithEvents Label11 As Label
     Friend WithEvents txtNaturalidade As TextBox
-    Friend WithEvents txtUF As TextBox
-    Friend WithEvents txtCidade As TextBox
+    Friend WithEvents txtUFPadrao As TextBox
+    Friend WithEvents txtCidadePadrao As TextBox
     Friend WithEvents dtpDataPadrao As DateTimePicker
     Friend WithEvents Label14 As Label
-    Friend WithEvents txtMensagem As TextBox
     Friend WithEvents Label15 As Label
     Friend WithEvents Label16 As Label
     Friend WithEvents txtStringConexao As TextBox
@@ -1188,7 +1363,6 @@ Partial Class frmConfig
     Friend WithEvents rbtServLocal As RadioButton
     Friend WithEvents lblDataBloqueio As Label
     Friend WithEvents Label22 As Label
-    Friend WithEvents chkEstoqueNegativo As CheckBox
     Friend WithEvents txtDescontoMaximo As Controles.Text_SoNumeros
     Friend WithEvents Label19 As Label
     Friend WithEvents Label1 As Label
@@ -1200,4 +1374,18 @@ Partial Class frmConfig
     Friend WithEvents btnBDAnterior As VIBlend.WinForms.Controls.vButton
     Friend WithEvents Label23 As Label
     Friend WithEvents txtBDAnterior As TextBox
+    Friend WithEvents Label24 As Label
+    Friend WithEvents Label27 As Label
+    Friend WithEvents Label28 As Label
+    Friend WithEvents Label26 As Label
+    Friend WithEvents Label25 As Label
+    Friend WithEvents txtUF As TextBox
+    Friend WithEvents txtEndereco As TextBox
+    Friend WithEvents txtBairro As TextBox
+    Friend WithEvents txtCidade As TextBox
+    Friend WithEvents txtCEP As Controles.MaskText_Telefone
+    Friend WithEvents dgvMensagens As DataGridView
+    Friend WithEvents clnMensagem As DataGridViewTextBoxColumn
+    Friend WithEvents cmbEstoqueNegativo As Controles.ComboBox_OnlyValues
+    Friend WithEvents Label29 As Label
 End Class

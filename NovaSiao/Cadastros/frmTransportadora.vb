@@ -73,8 +73,8 @@ Public Class frmTransportadora
         Else
             Sit = EnumFlagEstado.NovoRegistro
             ' OBTER OS VALORES DEFAULT DOS CAMPOS
-            _Transp.Cidade = ObterDefault("Cidade")
-            _Transp.UF = ObterDefault("UF")
+            _Transp.Cidade = ObterDefault("CidadePadrao")
+            _Transp.UF = ObterDefault("UFPadrao")
         End If
         '
     End Sub

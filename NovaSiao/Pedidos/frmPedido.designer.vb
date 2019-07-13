@@ -93,8 +93,6 @@ Partial Class frmPedido
         Me.clnSubTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.vtab2 = New VIBlend.WinForms.Controls.vTabPage()
         Me.dgvMensagens = New System.Windows.Forms.DataGridView()
-        Me.clnMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnIDMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btnMensagemPadrao = New VIBlend.WinForms.Controls.vButton()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -120,6 +118,8 @@ Partial Class frmPedido
         Me.lblSituacaoDescricao = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
+        Me.clnMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnIDMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -146,7 +146,7 @@ Partial Class frmPedido
         Me.Panel1.Controls.Add(Me.Label6)
         Me.Panel1.Controls.Add(Me.lblID)
         Me.Panel1.Controls.Add(Me.lbl_IdTexto)
-        Me.Panel1.Size = New System.Drawing.Size(1238, 50)
+        Me.Panel1.Size = New System.Drawing.Size(1350, 50)
         Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.lbl_IdTexto, 0)
@@ -161,14 +161,13 @@ Partial Class frmPedido
         '
         'lblTitulo
         '
-        Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTitulo.Dock = System.Windows.Forms.DockStyle.None
         Me.lblTitulo.Font = New System.Drawing.Font("Calibri", 20.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblTitulo.Location = New System.Drawing.Point(3894, 0)
+        Me.lblTitulo.Location = New System.Drawing.Point(1218, 0)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblTitulo.Size = New System.Drawing.Size(250, 50)
+        Me.lblTitulo.Size = New System.Drawing.Size(132, 50)
         Me.lblTitulo.TabIndex = 4
-        Me.lblTitulo.Text = "Pedido de Produtos"
+        Me.lblTitulo.Text = "PEDIDO"
+        Me.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'tsMenu
         '
@@ -184,7 +183,7 @@ Partial Class frmPedido
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
         Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional
-        Me.tsMenu.Size = New System.Drawing.Size(1234, 48)
+        Me.tsMenu.Size = New System.Drawing.Size(1346, 48)
         Me.tsMenu.TabIndex = 5
         Me.tsMenu.TabStop = True
         Me.tsMenu.Text = "Menu Cliente PF"
@@ -562,6 +561,9 @@ Partial Class frmPedido
         '
         Me.tabPrincipal.AllowAnimations = True
         Me.tabPrincipal.AllPagesHeight = 28
+        Me.tabPrincipal.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tabPrincipal.Controls.Add(Me.vtab1)
         Me.tabPrincipal.Controls.Add(Me.vtab2)
         Me.tabPrincipal.CornerRadius = 5
@@ -569,7 +571,7 @@ Partial Class frmPedido
         Me.tabPrincipal.Location = New System.Drawing.Point(12, 152)
         Me.tabPrincipal.Name = "tabPrincipal"
         Me.tabPrincipal.Padding = New System.Windows.Forms.Padding(0, 38, 0, 0)
-        Me.tabPrincipal.Size = New System.Drawing.Size(1214, 469)
+        Me.tabPrincipal.Size = New System.Drawing.Size(1326, 469)
         Me.tabPrincipal.TabAlignment = VIBlend.WinForms.Controls.vTabPageAlignment.Top
         Me.tabPrincipal.TabIndex = 4
         Me.tabPrincipal.TabPages.Add(Me.vtab1)
@@ -600,7 +602,7 @@ Partial Class frmPedido
         Me.vtab1.Name = "vtab1"
         Me.vtab1.Padding = New System.Windows.Forms.Padding(0)
         Me.vtab1.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.vtab1.Size = New System.Drawing.Size(1214, 431)
+        Me.vtab1.Size = New System.Drawing.Size(1326, 431)
         Me.vtab1.TabIndex = 0
         Me.vtab1.Text = "Produtos"
         Me.vtab1.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -674,9 +676,10 @@ Partial Class frmPedido
         '
         'Label4
         '
+        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = True
         Me.Label4.BackColor = System.Drawing.Color.Transparent
-        Me.Label4.Location = New System.Drawing.Point(921, 393)
+        Me.Label4.Location = New System.Drawing.Point(1022, 393)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(93, 19)
         Me.Label4.TabIndex = 2
@@ -684,9 +687,10 @@ Partial Class frmPedido
         '
         'lblValorTotal
         '
+        Me.lblValorTotal.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblValorTotal.BackColor = System.Drawing.Color.Transparent
         Me.lblValorTotal.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblValorTotal.Location = New System.Drawing.Point(1020, 387)
+        Me.lblValorTotal.Location = New System.Drawing.Point(1121, 387)
         Me.lblValorTotal.Name = "lblValorTotal"
         Me.lblValorTotal.Size = New System.Drawing.Size(145, 28)
         Me.lblValorTotal.TabIndex = 1
@@ -699,6 +703,9 @@ Partial Class frmPedido
         Me.dgvItens.AllowUserToResizeRows = False
         DataGridViewCellStyle1.BackColor = System.Drawing.Color.Azure
         Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvItens.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvItens.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
         Me.dgvItens.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
@@ -743,7 +750,7 @@ Partial Class frmPedido
         Me.dgvItens.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black
         Me.dgvItens.RowTemplate.Height = 33
         Me.dgvItens.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvItens.Size = New System.Drawing.Size(1200, 372)
+        Me.dgvItens.Size = New System.Drawing.Size(1312, 372)
         Me.dgvItens.TabIndex = 0
         '
         'clnIDPedidoItem
@@ -774,7 +781,7 @@ Partial Class frmPedido
         Me.clnAutor.HeaderText = "Autor/Artista"
         Me.clnAutor.MaxInputLength = 50
         Me.clnAutor.Name = "clnAutor"
-        Me.clnAutor.Width = 250
+        Me.clnAutor.Width = 220
         '
         'clnIDProdutoTipo
         '
@@ -844,7 +851,7 @@ Partial Class frmPedido
         Me.vtab2.Name = "vtab2"
         Me.vtab2.Padding = New System.Windows.Forms.Padding(0)
         Me.vtab2.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.vtab2.Size = New System.Drawing.Size(1214, 431)
+        Me.vtab2.Size = New System.Drawing.Size(1326, 431)
         Me.vtab2.TabIndex = 0
         Me.vtab2.Text = "Avisos e Informações"
         Me.vtab2.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -866,24 +873,13 @@ Partial Class frmPedido
         DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvMensagens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
         Me.dgvMensagens.ColumnHeadersHeight = 30
+        Me.dgvMensagens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvMensagens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnMensagem, Me.clnIDMensagem})
         Me.dgvMensagens.EnableHeadersVisualStyles = False
         Me.dgvMensagens.Location = New System.Drawing.Point(20, 200)
         Me.dgvMensagens.Name = "dgvMensagens"
-        Me.dgvMensagens.Size = New System.Drawing.Size(514, 196)
+        Me.dgvMensagens.Size = New System.Drawing.Size(639, 196)
         Me.dgvMensagens.TabIndex = 3
-        '
-        'clnMensagem
-        '
-        Me.clnMensagem.HeaderText = "Avisos"
-        Me.clnMensagem.Name = "clnMensagem"
-        Me.clnMensagem.Width = 300
-        '
-        'clnIDMensagem
-        '
-        Me.clnIDMensagem.HeaderText = "ID"
-        Me.clnIDMensagem.Name = "clnIDMensagem"
-        Me.clnIDMensagem.Visible = False
         '
         'btnMensagemPadrao
         '
@@ -926,13 +922,14 @@ Partial Class frmPedido
         '
         'Panel3
         '
+        Me.Panel3.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel3.BackColor = System.Drawing.Color.FromArgb(CType(CType(202, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(233, Byte), Integer))
         Me.Panel3.Controls.Add(Me.Label14)
         Me.Panel3.Controls.Add(Me.txtTransportadora)
         Me.Panel3.Controls.Add(Me.btnProcTransportadora)
         Me.Panel3.Controls.Add(Me.txtTelefoneATransportadora)
         Me.Panel3.Controls.Add(Me.Label8)
-        Me.Panel3.Location = New System.Drawing.Point(745, 62)
+        Me.Panel3.Location = New System.Drawing.Point(857, 62)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(482, 81)
         Me.Panel3.TabIndex = 1
@@ -1125,7 +1122,7 @@ Partial Class frmPedido
         Me.btnClose.BackColor = System.Drawing.Color.Transparent
         Me.btnClose.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.CloseButton
         Me.btnClose.ForeColor = System.Drawing.Color.Firebrick
-        Me.btnClose.Location = New System.Drawing.Point(1207, 15)
+        Me.btnClose.Location = New System.Drawing.Point(1319, 15)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.RibbonStyle = False
         Me.btnClose.RoundedCornersMask = CType(15, Byte)
@@ -1136,19 +1133,32 @@ Partial Class frmPedido
         Me.btnClose.UseVisualStyleBackColor = False
         Me.btnClose.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICE2003SILVER
         '
+        'clnMensagem
+        '
+        Me.clnMensagem.HeaderText = "Avisos"
+        Me.clnMensagem.Name = "clnMensagem"
+        Me.clnMensagem.Width = 550
+        '
+        'clnIDMensagem
+        '
+        Me.clnIDMensagem.HeaderText = "ID"
+        Me.clnIDMensagem.Name = "clnIDMensagem"
+        Me.clnIDMensagem.Visible = False
+        '
         'frmPedido
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(1238, 680)
+        Me.ClientSize = New System.Drawing.Size(1350, 680)
         Me.Controls.Add(Me.tsMenu)
         Me.Controls.Add(Me.tabPrincipal)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel3)
         Me.KeyPreview = True
         Me.Name = "frmPedido"
+        Me.Text = "Formulário de Pedido"
+        Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.Panel3, 0)
         Me.Controls.SetChildIndex(Me.Panel2, 0)
-        Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.tabPrincipal, 0)
         Me.Controls.SetChildIndex(Me.tsMenu, 0)
         Me.Panel1.ResumeLayout(False)
@@ -1222,18 +1232,6 @@ Partial Class frmPedido
     Friend WithEvents lblSituacaoDescricao As Label
     Friend WithEvents Label11 As Label
     Friend WithEvents btnClose As VIBlend.WinForms.Controls.vFormButton
-    Friend WithEvents clnIDPedidoItem As DataGridViewTextBoxColumn
-    Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
-    Friend WithEvents clnProduto As DataGridViewTextBoxColumn
-    Friend WithEvents clnAutor As DataGridViewTextBoxColumn
-    Friend WithEvents clnIDProdutoTipo As DataGridViewComboBoxColumn
-    Friend WithEvents clnEstoque As DataGridViewTextBoxColumn
-    Friend WithEvents clnEstoqueNivel As DataGridViewTextBoxColumn
-    Friend WithEvents clnEstoqueIdeal As DataGridViewTextBoxColumn
-    Friend WithEvents clnQuantidade As DataGridViewTextBoxColumn
-    Friend WithEvents clnPreco As DataGridViewTextBoxColumn
-    Friend WithEvents clnDesconto As DataGridViewTextBoxColumn
-    Friend WithEvents clnSubTotal As DataGridViewTextBoxColumn
     Friend WithEvents btnExcluir As ToolStripButton
     Friend WithEvents btnVerificarEstoque As ToolStripSplitButton
     Friend WithEvents miPeloEstoquePorFornecedor As ToolStripMenuItem
@@ -1247,8 +1245,6 @@ Partial Class frmPedido
     Friend WithEvents lblValorTotal As Label
     Friend WithEvents Label4 As Label
     Friend WithEvents dgvMensagens As DataGridView
-    Friend WithEvents clnMensagem As DataGridViewTextBoxColumn
-    Friend WithEvents clnIDMensagem As DataGridViewTextBoxColumn
     Friend WithEvents btnMensagemPadrao As VIBlend.WinForms.Controls.vButton
     Friend WithEvents btnFechar As ToolStripButton
     Friend WithEvents Panel2 As Panel
@@ -1265,4 +1261,18 @@ Partial Class frmPedido
     Friend WithEvents Label13 As Label
     Friend WithEvents Label12 As Label
     Friend WithEvents PictureBox3 As PictureBox
+    Friend WithEvents clnIDPedidoItem As DataGridViewTextBoxColumn
+    Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
+    Friend WithEvents clnProduto As DataGridViewTextBoxColumn
+    Friend WithEvents clnAutor As DataGridViewTextBoxColumn
+    Friend WithEvents clnIDProdutoTipo As DataGridViewComboBoxColumn
+    Friend WithEvents clnEstoque As DataGridViewTextBoxColumn
+    Friend WithEvents clnEstoqueNivel As DataGridViewTextBoxColumn
+    Friend WithEvents clnEstoqueIdeal As DataGridViewTextBoxColumn
+    Friend WithEvents clnQuantidade As DataGridViewTextBoxColumn
+    Friend WithEvents clnPreco As DataGridViewTextBoxColumn
+    Friend WithEvents clnDesconto As DataGridViewTextBoxColumn
+    Friend WithEvents clnSubTotal As DataGridViewTextBoxColumn
+    Friend WithEvents clnMensagem As DataGridViewTextBoxColumn
+    Friend WithEvents clnIDMensagem As DataGridViewTextBoxColumn
 End Class

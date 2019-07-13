@@ -295,7 +295,7 @@ Public Class frmPedido
         ' (1) COLUNA RGProduto
         With clnRGProduto
             .DataPropertyName = "RGProduto"
-            .Width = 60
+            '.Width = 60
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = False
@@ -308,7 +308,7 @@ Public Class frmPedido
         ' (2) COLUNA PRODUTO
         With clnProduto
             .DataPropertyName = "Produto"
-            .Width = 400
+            '.Width = 400
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = False
@@ -319,7 +319,7 @@ Public Class frmPedido
         ' (3) COLUNA AUTOR
         With clnAutor
             .DataPropertyName = "Autor"
-            .Width = 250
+            '.Width = 220
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = False
@@ -330,7 +330,7 @@ Public Class frmPedido
         ' (4) COLUNA PRODUTO TIPO
         With clnIDProdutoTipo
             .DataPropertyName = "IDProdutoTipo"
-            .Width = 120
+            '.Width = 120
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = False
@@ -342,7 +342,7 @@ Public Class frmPedido
         With clnEstoque
             .DataPropertyName = "Estoque"
             .HeaderText = "Est."
-            .Width = 50
+            '.Width = 50
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
@@ -356,7 +356,7 @@ Public Class frmPedido
         With clnEstoqueNivel
             .DataPropertyName = "EstoqueNivel"
             .HeaderText = "Niv."
-            .Width = 50
+            '.Width = 50
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = False
@@ -370,7 +370,7 @@ Public Class frmPedido
         With clnEstoqueIdeal
             .DataPropertyName = "EstoqueIdeal"
             .HeaderText = "Alvo"
-            .Width = 50
+            '.Width = 50
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = False
@@ -384,7 +384,7 @@ Public Class frmPedido
         With clnQuantidade
             .DataPropertyName = "Quantidade"
             .HeaderText = "Quant."
-            .Width = 70
+            '.Width = 70
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = False
@@ -397,7 +397,7 @@ Public Class frmPedido
         ' (8) COLUNA PRECO
         With clnPreco
             .DataPropertyName = "Preco"
-            .Width = 70
+            '.Width = 70
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
@@ -411,7 +411,7 @@ Public Class frmPedido
         With clnDesconto
             .DataPropertyName = "Desconto"
             .HeaderText = "Desc(%)"
-            .Width = 70
+            '.Width = 70
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = False
@@ -424,7 +424,7 @@ Public Class frmPedido
         ' (9) COLUNA SUB TOTAL
         With clnSubTotal
             .DataPropertyName = "SubTotal"
-            .Width = 80
+            '.Width = 80
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
@@ -559,6 +559,13 @@ Public Class frmPedido
         '
     End Sub
     '
+    Private Sub miImprimir_Click(sender As Object, e As EventArgs) Handles miImprimir.Click
+        Dim frm As New frmReportPedido(_pedido, _ItensList, _MensagensList)
+        '
+        frm.ShowDialog()
+        '
+    End Sub
+    '
 #End Region
     '
 #Region "BOTOES DE PROCURA"
@@ -642,6 +649,10 @@ Public Class frmPedido
         Dim NewID As Long
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             '--- Salva mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
             If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
                 NewID = _pedBLL.Pedido_Inserir(_pedido)
@@ -652,16 +663,26 @@ Public Class frmPedido
             MessageBox.Show("Um erro ocorreu ao salvar o registro!" & vbCrLf &
                             ex.Message, "Erro ao Salvar Registro",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
         '--- Verifica se houve Retorno da Função de Salvar
         If IsNumeric(NewID) AndAlso NewID <> 0 Then
+            '
             '--- Retorna o número de Registro
             If Sit = EnumFlagEstado.NovoRegistro Then
                 _pedido.IDPedido = NewID
                 lblID.DataBindings("Tag").ReadValue()
+                '
+                '--- get Mensagens Padrao
+                ObterMensagensPadrao()
+                '
             End If
-
+            '
             '--- Altera a Situação
             bindPedido.EndEdit()
             bindPedido.CurrencyManager.Refresh()
@@ -1288,11 +1309,21 @@ Public Class frmPedido
     Private Sub GetMensagens()
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             _MensagensList = _pedBLL.GetPedidoMensagens_IDPedido_List(_pedido.IDPedido)
             bindMensagem.DataSource = _MensagensList
+            '
         Catch ex As Exception
             MessageBox.Show("Um execeção ocorreu ao obter as Mensagens do Pedido:" & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -1308,7 +1339,8 @@ Public Class frmPedido
         dgvMensagens.SelectionMode = DataGridViewSelectionMode.RowHeaderSelect
         dgvMensagens.ColumnHeadersVisible = True
         dgvMensagens.AllowUserToResizeRows = False
-        dgvMensagens.AllowUserToResizeColumns = False
+        dgvMensagens.AllowUserToResizeColumns = True
+        'dgvMensagens.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         dgvMensagens.RowHeadersVisible = True
         dgvMensagens.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
         dgvMensagens.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
@@ -1333,8 +1365,8 @@ Public Class frmPedido
         With clnMensagem
             .DataPropertyName = "Mensagem"
             .HeaderText = "Avisos | Mensagens"
-            .Width = 300
-            .Resizable = DataGridViewTriState.False
+            .Width = 550
+            .Resizable = DataGridViewTriState.True
             .Visible = True
             .ReadOnly = False
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1416,6 +1448,10 @@ Public Class frmPedido
     Private Function MensagemInserir(myMsn As clPedidoMensagem) As Integer
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Dim myM As Object = _pedBLL.PedidoMensagem_Inserir(myMsn)
             '
             If IsNumeric(myM) Then
@@ -1430,6 +1466,11 @@ Public Class frmPedido
                             ex.Message, "Exceção",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return Nothing
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Function
@@ -1495,11 +1536,20 @@ Public Class frmPedido
         Dim myXML As New XmlDocument
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             myXML.Load(Application.StartupPath & "\ConfigFiles\Config.xml")
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu na tentativa de abrir abrir o CONFIG XML", "Exceção",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return False
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
         '--- verifica se existe node MENSAGEM PEDIDO
@@ -1521,6 +1571,7 @@ Public Class frmPedido
         End If
         '
         For Each m As XmlNode In node.ChildNodes
+            '
             Dim newMensag As New clPedidoMensagem
             '
             newMensag.IDPedido = _pedido.IDPedido
@@ -1529,9 +1580,9 @@ Public Class frmPedido
             MensagemInserir(newMensag)
             _MensagensList.Add(newMensag)
             '
-            GetMensagens()
         Next
         '
+        GetMensagens()
         Return True
         '
     End Function

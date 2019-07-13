@@ -44,9 +44,9 @@ Public Class frmClientePF
                 btnCancelar.Enabled = False
                 lblIDCliente.Text = "NOVO"
                 ' OBTER OS VALORES DEFAULT DOS CAMPOS
-                txtCidade.Text = ObterDefault("Cidade")
-                txtNaturalidade.Text = ObterDefault("Naturalidade")
-                txtUF.Text = ObterDefault("UF")
+                txtCidade.Text = ObterDefault("CidadePadrao")
+                txtNaturalidade.Text = ObterDefault("NaturalidadePadrao")
+                txtUF.Text = ObterDefault("UFPadrao")
                 AtivoButtonImage()
             End If
         End Set

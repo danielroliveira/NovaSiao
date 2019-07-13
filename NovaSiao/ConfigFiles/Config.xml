@@ -1,20 +1,22 @@
 <?xml version="1.0"?>
 <Configuracao>
   <ValoresPadrao>
-    <DataPadrao>22/02/2017</DataPadrao>
+    <DataPadrao>18/06/2019</DataPadrao>
     <FilialPadrao>21</FilialPadrao>
     <FilialDescricao>Nova Sião</FilialDescricao>
     <ContaPadrao>1</ContaPadrao>
     <ContaDescricao>Caixa Geral</ContaDescricao>
-    <Cidade>Juiz de Fora</Cidade>
-    <UF>MG</UF>
-    <Naturalidade>Juiz de Fora - MG</Naturalidade>
-    <MensagemInicial />
+    <DataBloqueada>18/06/2019</DataBloqueada>
+    <CidadePadrao>Juiz de Fora</CidadePadrao>
+    <UFPadrao>MG</UFPadrao>
+    <NaturalidadePadrao>Juiz de Fora - MG</NaturalidadePadrao>
     <IDProdutoTipoPadrao />
     <ProdutoTipoPadrao />
     <IDProdutoSubTipoPadrao />
     <ProdutoSubTipoPadrao />
-    <TaxaPermanencia>3,00</TaxaPermanencia>
+    <TaxaPermanencia>3.00</TaxaPermanencia>
+    <EstoqueNegativo>False</EstoqueNegativo>
+    <DescontoMaximo>30</DescontoMaximo>
   </ValoresPadrao>
   <DadosEmpresa>
     <RazaoSocial>Livraria Evangélica Nova Sião LTDA</RazaoSocial>
@@ -26,20 +28,21 @@
     <ContatoGerencia>Rachel</ContatoGerencia>
     <TelefoneFinanceiro>(32)  3212-7248</TelefoneFinanceiro>
     <ContatoFinanceiro>Dany</ContatoFinanceiro>
+    <Endereco>Rua Jarbas de Lery Santos, 1651</Endereco>
+    <Bairro>Centro</Bairro>
+    <Cidade>Juiz de Fora</Cidade>
+    <UF>MG</UF>
+    <CEP>36015-150</CEP>
   </DadosEmpresa>
   <ArquivoLogo>
-    <ArquivoLogoMono>D:\VB Projetos\NovaSiao\Material\LogoNovaSiao_Mono.png</ArquivoLogoMono>
-    <ArquivoLogoColor>D:\VB Projetos\NovaSiao\Material\LogoNovaSiao_Color.png</ArquivoLogoColor>
+    <ArquivoLogoMono>D:\VB Projetos\NovaSiao\NovaSiao\bin\Debug\Imagens\LogoMono.png</ArquivoLogoMono>
+    <ArquivoLogoColor>D:\VB Projetos\NovaSiao\NovaSiao\bin\Debug\Imagens\LogoColor.png</ArquivoLogoColor>
     <BackupDir />
   </ArquivoLogo>
   <ServidorDados>
-    <StringConexao />
+    <StringConexao>Server=tcp:novasiaoserver.database.windows.net,1433;Initial Catalog=ProgramaLoja;Persist Security Info=False;User ID=Daniel;Password=!1qaz@2wsx;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;</StringConexao>
     <ControlaBackup>True</ControlaBackup>
-	<BDAnterior></BDAnterior>
+    <ServidorLocal>True</ServidorLocal>
+    <BDAnterior>E:\Desktop\Programa\NSD.mdb</BDAnterior>
   </ServidorDados>
-  <MensagemPedido>
-    <MensagemPedidoItem>Mensagem1</MensagemPedidoItem>
-    <MensagemPedidoItem>Mensagem2</MensagemPedidoItem>
-    <MensagemPedidoItem>Mensagem3</MensagemPedidoItem>
-  </MensagemPedido>
 </Configuracao>

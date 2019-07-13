@@ -200,16 +200,19 @@ Public Class frmConfig
                 IDConta_Config = If(String.IsNullOrEmpty(.SelectSingleNode("ContaPadrao").InnerText), Nothing, .SelectSingleNode("ContaPadrao").InnerText)
                 txtContaPadrao.Text = .SelectSingleNode("ContaDescricao").InnerText
                 lblDataBloqueio.Text = .SelectSingleNode("DataBloqueada").InnerText
-                txtCidade.Text = .SelectSingleNode("Cidade").InnerText
-                txtUF.Text = .SelectSingleNode("UF").InnerText
-                txtNaturalidade.Text = .SelectSingleNode("Naturalidade").InnerText
-                txtMensagem.Text = .SelectSingleNode("MensagemInicial").InnerText
+                txtCidadePadrao.Text = .SelectSingleNode("CidadePadrao").InnerText
+                txtUFPadrao.Text = .SelectSingleNode("UFPadrao").InnerText
+                txtNaturalidade.Text = .SelectSingleNode("NaturalidadePadrao").InnerText
                 'IDProdutoTipoPadrao = .SelectSingleNode("IDProdutoTipoPadrao").InnerText
                 'ProdutoTipoPadrao = .SelectSingleNode("ProdutoTipoPadrao").InnerText
                 'IDProdutoSubTipoPadrao = .SelectSingleNode("IDProdutoSubTipoPadrao").InnerText
                 'ProdutoSubTipoPadrao = .SelectSingleNode("ProdutoSubTipoPadrao").InnerText
                 txtPermanencia.Text = .SelectSingleNode("TaxaPermanencia").InnerText.Replace(".", ",")
-                chkEstoqueNegativo.Checked = .SelectSingleNode("EstoqueNegativo").InnerText
+                If .SelectSingleNode("EstoqueNegativo").InnerText = "True" Then
+                    cmbEstoqueNegativo.SelectedItem = "SIM"
+                Else
+                    cmbEstoqueNegativo.SelectedItem = "NÃO"
+                End If
                 txtDescontoMaximo.Text = .SelectSingleNode("DescontoMaximo").InnerText.Replace(".", ",")
                 '
             End With
@@ -226,6 +229,11 @@ Public Class frmConfig
                 txtContatoGerencia.Text = .SelectSingleNode("ContatoGerencia").InnerText
                 txtTelFinanceiro.Text = .SelectSingleNode("TelefoneFinanceiro").InnerText
                 txtContatoFinanceiro.Text = .SelectSingleNode("ContatoFinanceiro").InnerText
+                txtEndereco.Text = .SelectSingleNode("Endereco").InnerText
+                txtBairro.Text = .SelectSingleNode("Bairro").InnerText
+                txtCidade.Text = .SelectSingleNode("Cidade").InnerText
+                txtUF.Text = .SelectSingleNode("UF").InnerText
+                txtCEP.Text = .SelectSingleNode("CEP").InnerText
                 '
             End With
 
@@ -240,10 +248,13 @@ Public Class frmConfig
             If .SelectSingleNode("ServidorDados").ChildNodes(2).InnerText Then
                 rbtServLocal.Checked = True
             Else
-                rbtServRemoto.Checked = True
+                rbtServRemoto.Checked = False
             End If
             '
             txtBDAnterior.Text = .SelectSingleNode("ServidorDados").ChildNodes(3).InnerText
+            '
+            ' Lendo as MENSAGENS DE PEDIDO
+            LerPedidoMensagemXML(.SelectSingleNode("MensagemPedido"))
             '
         End With
         Return True
@@ -278,16 +289,19 @@ Error_Handler:
                 .WriteElementString("ContaPadrao", _Conta.IDConta)
                 .WriteElementString("ContaDescricao", _Conta.Conta)
                 .WriteElementString("DataBloqueada", If(_Conta.BloqueioData, ""))
-                .WriteElementString("Cidade", txtCidade.Text)
-                .WriteElementString("UF", txtUF.Text)
-                .WriteElementString("Naturalidade", txtNaturalidade.Text)
-                .WriteElementString("MensagemInicial", txtMensagem.Text)
+                .WriteElementString("CidadePadrao", txtCidadePadrao.Text)
+                .WriteElementString("UFPadrao", txtUFPadrao.Text)
+                .WriteElementString("NaturalidadePadrao", txtNaturalidade.Text)
                 .WriteElementString("IDProdutoTipoPadrao", "")
                 .WriteElementString("ProdutoTipoPadrao", "")
                 .WriteElementString("IDProdutoSubTipoPadrao", "")
                 .WriteElementString("ProdutoSubTipoPadrao", "")
                 .WriteElementString("TaxaPermanencia", txtPermanencia.Text.Replace(",", "."))
-                .WriteElementString("EstoqueNegativo", chkEstoqueNegativo.Checked)
+                If cmbEstoqueNegativo.SelectedItem = "SIM" Then
+                    .WriteElementString("EstoqueNegativo", "True")
+                Else
+                    .WriteElementString("EstoqueNegativo", "False")
+                End If
                 .WriteElementString("DescontoMaximo", txtDescontoMaximo.Text.Replace(",", "."))
                 'encerra o elemento
                 .WriteEndElement()
@@ -305,6 +319,11 @@ Error_Handler:
                 .WriteElementString("ContatoGerencia", txtContatoGerencia.Text)
                 .WriteElementString("TelefoneFinanceiro", txtTelFinanceiro.Text)
                 .WriteElementString("ContatoFinanceiro", txtContatoFinanceiro.Text)
+                .WriteElementString("Endereco", txtEndereco.Text)
+                .WriteElementString("Bairro", txtBairro.Text)
+                .WriteElementString("Cidade", txtCidade.Text)
+                .WriteElementString("UF", txtUF.Text)
+                .WriteElementString("CEP", txtCEP.Text)
                 'encerra o elemento
                 .WriteEndElement()
 
@@ -334,6 +353,8 @@ Error_Handler:
                 'escreve o xml para o arquivo e fecha o objeto escritor
                 .Close()
                 '
+                '--- SAVE MENSAGEMS PEDIDO
+                SalvaPedidoMensagemPadrao()
                 '--- return
                 Return True
                 '
@@ -345,6 +366,66 @@ Error_Handler:
             Return False
             '
         End Try
+        '
+    End Function
+    '
+    ' LER MENSAGENS PEDIDO PADRAO
+    '-----------------------------------------------------------------------------------------------
+    Private Function LerPedidoMensagemXML(node As XmlNode) As Boolean
+        '
+        If IsNothing(node) OrElse Not node.HasChildNodes Then Return True
+        '
+        For Each m As XmlNode In node.ChildNodes
+            dgvMensagens.Rows.Add({m.InnerText})
+        Next
+        '
+        Return True
+        '
+    End Function
+    '
+    '--- SALVA MENSAGENS PEDIDO PADRAO
+    '----------------------------------------------------------------------------------
+    Private Function SalvaPedidoMensagemPadrao() As Boolean
+        Dim myXML As New XmlDocument
+        myXML.Load(Application.StartupPath & "\ConfigFiles\Config.xml")
+        '
+        '--- verifica se existe node MENSAGEM PEDIDO
+        Dim elemList As XmlNodeList = myXML.GetElementsByTagName("MensagemPedido")
+        '
+        '--- se não existir o node PAI entao cria
+        If elemList.Count = 0 Then
+            'Create a new node.
+            Dim newNodeOrigem As XmlElement = myXML.CreateElement("MensagemPedido")
+            myXML.SelectSingleNode("Configuracao").AppendChild(newNodeOrigem)
+        End If
+        '
+        '--- seleciona o node PAI
+        Dim node As XmlNode = myXML.SelectSingleNode("Configuracao").SelectSingleNode("MensagemPedido")
+        '
+        '--- exclui todas as mensagens anteriores do node PAI
+        node.RemoveAll()
+        '
+        '--- adiciona novos nodes filhos pelo datagrid
+        '--- verifica se existem alguma ROW
+        If dgvMensagens.Rows.Count = 0 Then
+            Return True
+        End If
+        '
+        '--- percorre pelas ROWS e cria novos nodes filhos
+        For Each r As DataGridViewRow In dgvMensagens.Rows
+            'pula caso for nova row
+            If r.IsNewRow Then Continue For
+            '
+            'Create a new node.
+            Dim newNode As XmlElement = myXML.CreateElement("MensagemPedidoItem")
+            newNode.InnerText = r.Cells("clnMensagem").Value.ToString
+            node.AppendChild(newNode)
+            '
+        Next
+        '
+        '--- grava o arquivo XML
+        myXML.Save(Application.StartupPath & "\ConfigFiles\Config.xml")
+        Return True
         '
     End Function
     '
@@ -496,7 +577,7 @@ Error_Handler:
     '--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
     '---------------------------------------------------------------------------------------
     Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) Handles txtPermanencia.KeyDown,
-            txtDescontoMaximo.KeyDown, chkEstoqueNegativo.KeyDown, chkVerBackup.KeyDown,
+            txtDescontoMaximo.KeyDown, cmbEstoqueNegativo.KeyDown, chkVerBackup.KeyDown,
             dtpDataPadrao.KeyDown
         '
         If e.KeyCode = Keys.Enter Then
@@ -686,21 +767,23 @@ Error_Handler:
     End Sub
     '
     ' CAMPO UF SOMENTE MAIUSCULAS COM 2 CARACTERES
-    Private Sub txtUF_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtUF.KeyPress
+    Private Sub txtUF_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtUFPadrao.KeyPress, txtUF.KeyPress
+        '
         ' MAXIMO DE 2 CARACTERES
-        If Len(txtUF.Text) >= 2 And Not e.KeyChar = vbBack Then
+        If Len(DirectCast(sender, TextBox).Text) >= 2 And Not e.KeyChar = vbBack Then
             e.Handled = True
             Exit Sub
         End If
-
+        '
         ' SOMENTE LETRAS MAIUSCULA
         If Not Char.IsLetter(e.KeyChar) And Not e.KeyChar = vbBack Then
             e.Handled = True
         ElseIf Char.IsLower(e.KeyChar) Then
             'Converte o texto para caixa alta
-            txtUF.SelectedText = Char.ToUpper(e.KeyChar)
+            DirectCast(sender, TextBox).SelectedText = Char.ToUpper(e.KeyChar)
             e.Handled = True
         End If
+        '
     End Sub
     '
     ' EVENTO CHANGE DOS CONTROLES
@@ -735,11 +818,20 @@ Error_Handler:
     Private Sub chkVerBackup_CheckedChanged(sender As Object, e As EventArgs) Handles _
         chkVerBackup.CheckedChanged,
         rbtServLocal.CheckedChanged,
-        rbtServRemoto.CheckedChanged,
-        chkEstoqueNegativo.CheckedChanged
+        rbtServRemoto.CheckedChanged
         '
         If Sit = EnumFlagEstado.RegistroSalvo Then
             Sit = EnumFlagEstado.Alterado
+        End If
+        '
+    End Sub
+    '
+    Private Sub cmbEstoqueNegativo_SelectedValueChanged(sender As Object, e As EventArgs) Handles cmbEstoqueNegativo.SelectedValueChanged
+        '
+        If DirectCast(sender, Control).Focused Then
+            If Sit = EnumFlagEstado.RegistroSalvo Then
+                Sit = EnumFlagEstado.Alterado
+            End If
         End If
         '
     End Sub
@@ -824,11 +916,11 @@ Error_Handler:
             Return False
         End If
         '
-        If Not f.VerificaControlesForm(txtCidade, "Cidade Padrão", EProvider) Then
+        If Not f.VerificaControlesForm(txtCidadePadrao, "Cidade Padrão", EProvider) Then
             Return False
         End If
         '
-        If Not f.VerificaControlesForm(txtUF, "Estado/UF Padrão", EProvider) Then
+        If Not f.VerificaControlesForm(txtUFPadrao, "Estado/UF Padrão", EProvider) Then
             Return False
         End If
         '
@@ -1034,13 +1126,13 @@ Error_Handler:
         ' Define o texto da ToolTip para o Button, TextBox, Checkbox e Label
         txtPermanencia.Tag = "Taxa de permanência padrão aplicada na Venda Crédito"
         txtDescontoMaximo.Tag = "Desconto Máximo permitido ao usuário padrão na Venda"
-        chkEstoqueNegativo.Tag = "Permite produtos com estoque negativo..."
+        cmbEstoqueNegativo.Tag = "Permite produtos com estoque negativo..."
         '
         Dim listControles As New List(Of Control)
         '
         listControles.Add(txtPermanencia)
         listControles.Add(txtDescontoMaximo)
-        listControles.Add(chkEstoqueNegativo)
+        listControles.Add(cmbEstoqueNegativo)
         listControles.Add(txtFilialPadrao)
         listControles.Add(txtContaPadrao)
         '
@@ -1080,5 +1172,22 @@ Error_Handler:
     End Sub
     '
 #End Region '// TOOLTIPS
+    '
+#Region "DATAGRID MENSAGENS PEDIDO"
+    '
+    '--- HABILITA O BTNSALVAR E ATUALIZA O SIT
+    Private Sub dgvMensagens_RowValidating(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvMensagens.RowValidating
+        If dgvMensagens.IsCurrentRowDirty Then
+            btnSalvar.Enabled = True
+            Sit = EnumFlagEstado.Alterado
+        End If
+    End Sub
+    '
+    Private Sub dgvMensagens_UserDeletedRow(sender As Object, e As DataGridViewRowEventArgs) Handles dgvMensagens.UserDeletedRow
+        btnSalvar.Enabled = True
+        Sit = EnumFlagEstado.Alterado
+    End Sub
+    '
+#End Region '/ DATAGRID MENSAGENS PEDIDO
     '
 End Class

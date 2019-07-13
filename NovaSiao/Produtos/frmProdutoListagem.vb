@@ -824,16 +824,19 @@ Public Class frmProdutoListagem
         '
         ' Estoque
         clnEstoque.DisplayMember = "Estoque"
+        clnEstoque.ValueMember = "Estoque"
         clnEstoque.Width = 70
         clnEstoque.AllowResize = False
         '
         ' EstoqueNivel
         clnEstoqueMinimo.DisplayMember = "EstoqueNivel"
+        clnEstoqueMinimo.ValueMember = "EstoqueNivel"
         clnEstoqueMinimo.Width = 70
         clnEstoqueMinimo.AllowResize = False
         '
         ' EstoqueIdeal
         clnEstoqueIdeal.DisplayMember = "EstoqueIdeal"
+        clnEstoqueIdeal.ValueMember = "EstoqueIdeal"
         clnEstoqueIdeal.Width = 70
         clnEstoqueIdeal.AllowResize = False
         '

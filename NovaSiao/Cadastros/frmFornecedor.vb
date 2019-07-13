@@ -70,8 +70,8 @@ Public Class frmFornecedor
         Else
             Sit = EnumFlagEstado.NovoRegistro
             ' OBTER OS VALORES DEFAULT DOS CAMPOS
-            _forn.Cidade = ObterDefault("Cidade")
-            _forn.UF = ObterDefault("UF")
+            _forn.Cidade = ObterDefault("CidadePadrao")
+            _forn.UF = ObterDefault("UFPadrao")
         End If
         '
     End Sub

@@ -640,6 +640,12 @@
     <Compile Include="Pedidos\frmPedidoProcurar.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Pedidos\Reports\frmReportPedido.designer.vb">
+      <DependentUpon>frmReportPedido.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Pedidos\Reports\frmReportPedido.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Produtos\frmAutoresProcurar.Designer.vb">
       <DependentUpon>frmAutoresProcurar.vb</DependentUpon>
     </Compile>
@@ -1099,6 +1105,10 @@
     <EmbeddedResource Include="Pedidos\frmPedidoProcurar.resx">
       <DependentUpon>frmPedidoProcurar.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Pedidos\Reports\frmReportPedido.resx">
+      <DependentUpon>frmReportPedido.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pedidos\Reports\rptPedido.rdlc" />
     <EmbeddedResource Include="Produtos\frmAutoresProcurar.resx">
       <DependentUpon>frmAutoresProcurar.vb</DependentUpon>
     </EmbeddedResource>
@@ -1223,8 +1233,13 @@
     </None>
     <None Include="My Project\DataSources\CamadaDTO.clAPagar.datasource" />
     <None Include="My Project\DataSources\CamadaDTO.clClientePF.datasource" />
+    <None Include="My Project\DataSources\CamadaDTO.clDadosEmpresa.datasource" />
     <None Include="My Project\DataSources\CamadaDTO.clMovForma.datasource" />
+    <None Include="My Project\DataSources\CamadaDTO.clPedido.datasource" />
+    <None Include="My Project\DataSources\CamadaDTO.clPedidoItem.datasource" />
+    <None Include="My Project\DataSources\CamadaDTO.clPedidoMensagem.datasource" />
     <None Include="My Project\DataSources\CamadaDTO.clProdutoEtiqueta.datasource" />
+    <None Include="My Project\DataSources\frmReportPedido.datasource" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CustomToolNamespace>My</CustomToolNamespace>
