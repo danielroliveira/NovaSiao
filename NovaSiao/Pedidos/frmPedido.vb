@@ -115,8 +115,8 @@ Public Class frmPedido
         ' Add any initialization after the InitializeComponent() call.
         '
         '--- define o tamanho
-        Dim tamMaxH = My.Application.OpenForms("frmPrincipal").Height
-        Height = tamMaxH - (tamMaxH * 10) / 100
+        Dim tamMaxH = My.Application.OpenForms("frmPrincipal").Height - 73
+        Height = tamMaxH - (tamMaxH * 3) / 100
         fHeight = Height
         '
         If IsNothing(myPedido) Then
@@ -1304,8 +1304,7 @@ Public Class frmPedido
             End If
         Else
             tabPrincipal.Visible = False
-            'fHeight - tabPrincipal.Height
-            If Me.Height >= fHeight - (fHeight * 78) / 100 Then
+            If Me.Height >= 210 Then
                 Me.Top += 8
                 Me.Height -= 16
             Else
