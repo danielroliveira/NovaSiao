@@ -56,13 +56,9 @@ Public Class frmReportPedido
         rptvPadrao.RefreshReport()
         '
         '--- define o tamanho
-        'Me.Width = Application.OpenForms("frmPrincipal").Width - 200
-        Dim tamMaxH = Application.OpenForms("frmPrincipal").Height
-        Height = tamMaxH - (tamMaxH * 20) / 100
-        '
-        '--- define a posicao
-        Dim posX As Integer = Width / 2 - 30
-        Location = New Point(posX, 50)
+        Dim tamMaxH = Screen.PrimaryScreen.Bounds.Height
+        Height = tamMaxH - (tamMaxH * 10) / 100
+        Me.CenterToScreen()
         '
     End Sub
     '

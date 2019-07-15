@@ -21,7 +21,7 @@ Public Class frmPedido
     Private bindMensagem As New BindingSource
     '
     '--- contantes para alterar o tamanho do form
-    Const fHeight As Integer = 680
+    Private fHeight As Integer = 680
     Private _formAmpliado As Boolean = True
     '
 #Region "LOAD E PROPERTIES"
@@ -113,6 +113,11 @@ Public Class frmPedido
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
+        '
+        '--- define o tamanho
+        Dim tamMaxH = My.Application.OpenForms("frmPrincipal").Height
+        Height = tamMaxH - (tamMaxH * 10) / 100
+        fHeight = Height
         '
         If IsNothing(myPedido) Then
             MessageBox.Show("Esse formulário não pode ser aberto assim...", "Erro ao abrir")
@@ -552,6 +557,7 @@ Public Class frmPedido
         Try
             _pedBLL.Pedido_Excluir(_pedido.IDPedido)
             Close()
+            MostraMenuPrincipal()
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Excluir registro de Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -560,9 +566,18 @@ Public Class frmPedido
     End Sub
     '
     Private Sub miImprimir_Click(sender As Object, e As EventArgs) Handles miImprimir.Click
+        '
         Dim frm As New frmReportPedido(_pedido, _ItensList, _MensagensList)
         '
+        '--- Ampulheta ON
+        Cursor = Cursors.WaitCursor
+        Me.Visible = False
+        '
         frm.ShowDialog()
+        '
+        Me.Visible = True
+        '--- Ampulheta OFF
+        Cursor = Cursors.Default
         '
     End Sub
     '
@@ -1289,8 +1304,8 @@ Public Class frmPedido
             End If
         Else
             tabPrincipal.Visible = False
-            '
-            If Me.Height >= fHeight - tabPrincipal.Height Then
+            'fHeight - tabPrincipal.Height
+            If Me.Height >= fHeight - (fHeight * 78) / 100 Then
                 Me.Top += 8
                 Me.Height -= 16
             Else

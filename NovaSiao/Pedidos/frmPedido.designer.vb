@@ -93,6 +93,8 @@ Partial Class frmPedido
         Me.clnSubTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.vtab2 = New VIBlend.WinForms.Controls.vTabPage()
         Me.dgvMensagens = New System.Windows.Forms.DataGridView()
+        Me.clnMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnIDMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btnMensagemPadrao = New VIBlend.WinForms.Controls.vButton()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -118,8 +120,6 @@ Partial Class frmPedido
         Me.lblSituacaoDescricao = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
-        Me.clnMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnIDMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -613,6 +613,7 @@ Partial Class frmPedido
         '
         'Label13
         '
+        Me.Label13.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label13.AutoSize = True
         Me.Label13.BackColor = System.Drawing.Color.Transparent
         Me.Label13.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -624,6 +625,7 @@ Partial Class frmPedido
         '
         'Label12
         '
+        Me.Label12.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label12.AutoSize = True
         Me.Label12.BackColor = System.Drawing.Color.Transparent
         Me.Label12.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -635,6 +637,7 @@ Partial Class frmPedido
         '
         'PictureBox3
         '
+        Me.PictureBox3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.PictureBox3.BackColor = System.Drawing.Color.MistyRose
         Me.PictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.PictureBox3.Location = New System.Drawing.Point(307, 392)
@@ -645,6 +648,7 @@ Partial Class frmPedido
         '
         'Label3
         '
+        Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label3.AutoSize = True
         Me.Label3.BackColor = System.Drawing.Color.Transparent
         Me.Label3.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -656,6 +660,7 @@ Partial Class frmPedido
         '
         'PictureBox2
         '
+        Me.PictureBox2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.PictureBox2.BackColor = System.Drawing.Color.LightCyan
         Me.PictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.PictureBox2.Location = New System.Drawing.Point(167, 392)
@@ -666,6 +671,7 @@ Partial Class frmPedido
         '
         'PictureBox1
         '
+        Me.PictureBox1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.PictureBox1.BackColor = System.Drawing.Color.White
         Me.PictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.PictureBox1.Location = New System.Drawing.Point(30, 392)
@@ -880,6 +886,18 @@ Partial Class frmPedido
         Me.dgvMensagens.Name = "dgvMensagens"
         Me.dgvMensagens.Size = New System.Drawing.Size(639, 196)
         Me.dgvMensagens.TabIndex = 3
+        '
+        'clnMensagem
+        '
+        Me.clnMensagem.HeaderText = "Avisos"
+        Me.clnMensagem.Name = "clnMensagem"
+        Me.clnMensagem.Width = 550
+        '
+        'clnIDMensagem
+        '
+        Me.clnIDMensagem.HeaderText = "ID"
+        Me.clnIDMensagem.Name = "clnIDMensagem"
+        Me.clnIDMensagem.Visible = False
         '
         'btnMensagemPadrao
         '
@@ -1132,18 +1150,6 @@ Partial Class frmPedido
         Me.btnClose.TabStop = False
         Me.btnClose.UseVisualStyleBackColor = False
         Me.btnClose.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICE2003SILVER
-        '
-        'clnMensagem
-        '
-        Me.clnMensagem.HeaderText = "Avisos"
-        Me.clnMensagem.Name = "clnMensagem"
-        Me.clnMensagem.Width = 550
-        '
-        'clnIDMensagem
-        '
-        Me.clnIDMensagem.HeaderText = "ID"
-        Me.clnIDMensagem.Name = "clnIDMensagem"
-        Me.clnIDMensagem.Visible = False
         '
         'frmPedido
         '
