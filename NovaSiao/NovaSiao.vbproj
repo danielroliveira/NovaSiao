@@ -525,6 +525,18 @@
     <Compile Include="FormsPrincipais\frmDataInformar.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FormsPrincipais\frmEmail.designer.vb">
+      <DependentUpon>frmEmail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormsPrincipais\frmEmail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormsPrincipais\frmEmailServer.designer.vb">
+      <DependentUpon>frmEmailServer.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormsPrincipais\frmEmailServer.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormsPrincipais\frmLogin.Designer.vb">
       <DependentUpon>frmLogin.vb</DependentUpon>
     </Compile>
@@ -1046,6 +1058,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormsPrincipais\frmDataInformar.resx">
       <DependentUpon>frmDataInformar.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsPrincipais\frmEmail.resx">
+      <DependentUpon>frmEmail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsPrincipais\frmEmailServer.resx">
+      <DependentUpon>frmEmailServer.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormsPrincipais\frmLogin.resx">
       <DependentUpon>frmLogin.vb</DependentUpon>

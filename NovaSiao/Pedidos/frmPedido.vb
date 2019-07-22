@@ -581,6 +581,22 @@ Public Class frmPedido
         '
     End Sub
     '
+    Private Sub miEnviarPorEmail_Click(sender As Object, e As EventArgs) Handles miEnviarPorEmail.Click
+        '
+        Dim frm As New frmReportPedido(_pedido, _ItensList, _MensagensList)
+        '
+        '--- Ampulheta ON
+        Cursor = Cursors.WaitCursor
+        Me.Visible = False
+        '
+        frm.EnviarEmail()
+        '
+        Me.Visible = True
+        '--- Ampulheta OFF
+        Cursor = Cursors.Default
+        '
+    End Sub
+    '
 #End Region
     '
 #Region "BOTOES DE PROCURA"
@@ -1573,10 +1589,10 @@ Public Class frmPedido
         If elemList.Count = 0 Then
             'Create a new node.
             Dim newNodeOrigem As XmlElement = myXML.CreateElement("MensagemPedido")
-            myXML.SelectSingleNode("Configuracao").AppendChild(newNodeOrigem)
+            myXML.SelectSingleNode("Configuracao").SelectSingleNode("PedidoConfig").AppendChild(newNodeOrigem)
         End If
         '
-        Dim node As XmlNode = myXML.SelectSingleNode("Configuracao").SelectSingleNode("MensagemPedido")
+        Dim node As XmlNode = myXML.SelectSingleNode("Configuracao").SelectSingleNode("PedidoConfig").SelectSingleNode("MensagemPedido")
         '
         If Not node.HasChildNodes Then
             MessageBox.Show("Não há nenhuma mensagem padrão salva...", "Obter Mensagem Padrão",

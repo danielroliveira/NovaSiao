@@ -129,6 +129,22 @@ Public Class AcessoDados
         ParamList.Add(New SqlParameter(nomeParametro, valorParametro))
     End Sub
     '
+    '==========================================================================================
+    ' GET CONFIG DB - CONNECTION XML PATH
+    '==========================================================================================
+    Public Shared Function GetConfigXMLPath() As String
+        '
+        Try
+            Dim connFile As String = My.MySettings.Default.ConexaoStringFile
+            '
+            Return connFile
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
 #End Region '/ GET CONNECTION | OPEN | CLOSE
     '
 #Region "COMMANDS QUERY | INSERT | UPDATE | DELETE"

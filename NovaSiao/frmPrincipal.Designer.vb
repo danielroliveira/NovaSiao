@@ -81,9 +81,11 @@ Partial Class frmPrincipal
         Me.miProcurarDespesa = New System.Windows.Forms.ToolStripMenuItem()
         Me.miTipoDeDespesa = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
-        Me.miDespesasPeriodicas = New System.Windows.Forms.ToolStripMenuItem()
         Me.miAPagarProcurar = New System.Windows.Forms.ToolStripMenuItem()
         Me.miAPagarMovInterna = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator21 = New System.Windows.Forms.ToolStripSeparator()
+        Me.miDespesasPeriodicas = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miFretes = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsbCaixa = New System.Windows.Forms.ToolStripSplitButton()
         Me.miProcurarCaixa = New System.Windows.Forms.ToolStripMenuItem()
         Me.miFinalizarCaixa = New System.Windows.Forms.ToolStripMenuItem()
@@ -100,6 +102,7 @@ Partial Class frmPrincipal
         Me.miConfiguracaoDataPadrao = New System.Windows.Forms.ToolStripMenuItem()
         Me.miConfiguracaoSistema = New System.Windows.Forms.ToolStripMenuItem()
         Me.miCFOP = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miEmailServer = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
         Me.miConfiguracaoUsuarios = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator15 = New System.Windows.Forms.ToolStripSeparator()
@@ -120,8 +123,7 @@ Partial Class frmPrincipal
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblHora = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.miFretes = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator21 = New System.Windows.Forms.ToolStripSeparator()
+        Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsPrincipal.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.SContainerPrincipal, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -589,14 +591,6 @@ Partial Class frmPrincipal
         Me.ToolStripSeparator8.Name = "ToolStripSeparator8"
         Me.ToolStripSeparator8.Size = New System.Drawing.Size(238, 6)
         '
-        'miDespesasPeriodicas
-        '
-        Me.miDespesasPeriodicas.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
-        Me.miDespesasPeriodicas.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.miDespesasPeriodicas.Name = "miDespesasPeriodicas"
-        Me.miDespesasPeriodicas.Size = New System.Drawing.Size(241, 36)
-        Me.miDespesasPeriodicas.Text = "Despesas Periódicas"
-        '
         'miAPagarProcurar
         '
         Me.miAPagarProcurar.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
@@ -612,6 +606,27 @@ Partial Class frmPrincipal
         Me.miAPagarMovInterna.Name = "miAPagarMovInterna"
         Me.miAPagarMovInterna.Size = New System.Drawing.Size(241, 36)
         Me.miAPagarMovInterna.Text = "A Pagar - Mov. Interna"
+        '
+        'ToolStripSeparator21
+        '
+        Me.ToolStripSeparator21.Name = "ToolStripSeparator21"
+        Me.ToolStripSeparator21.Size = New System.Drawing.Size(238, 6)
+        '
+        'miDespesasPeriodicas
+        '
+        Me.miDespesasPeriodicas.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
+        Me.miDespesasPeriodicas.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miDespesasPeriodicas.Name = "miDespesasPeriodicas"
+        Me.miDespesasPeriodicas.Size = New System.Drawing.Size(241, 36)
+        Me.miDespesasPeriodicas.Text = "Despesas Periódicas"
+        '
+        'miFretes
+        '
+        Me.miFretes.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
+        Me.miFretes.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miFretes.Name = "miFretes"
+        Me.miFretes.Size = New System.Drawing.Size(241, 36)
+        Me.miFretes.Text = "Fretes"
         '
         'tsbCaixa
         '
@@ -708,7 +723,7 @@ Partial Class frmPrincipal
         'tsbConfig
         '
         Me.tsbConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbConfig.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miConfiguracaoDataPadrao, Me.miConfiguracaoSistema, Me.miCFOP, Me.ToolStripSeparator2, Me.miConfiguracaoUsuarios, Me.ToolStripSeparator15, Me.miFazerBackup})
+        Me.tsbConfig.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miConfiguracaoDataPadrao, Me.ToolStripSeparator7, Me.miConfiguracaoSistema, Me.miCFOP, Me.miEmailServer, Me.ToolStripSeparator2, Me.miConfiguracaoUsuarios, Me.ToolStripSeparator15, Me.miFazerBackup})
         Me.tsbConfig.Image = Global.NovaSiao.My.Resources.Resources.Controles
         Me.tsbConfig.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsbConfig.Name = "tsbConfig"
@@ -742,6 +757,14 @@ Partial Class frmPrincipal
         Me.miCFOP.Name = "miCFOP"
         Me.miCFOP.Size = New System.Drawing.Size(246, 30)
         Me.miCFOP.Text = "CFOP das Operações"
+        '
+        'miEmailServer
+        '
+        Me.miEmailServer.Image = Global.NovaSiao.My.Resources.Resources.Controles_24x24
+        Me.miEmailServer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miEmailServer.Name = "miEmailServer"
+        Me.miEmailServer.Size = New System.Drawing.Size(246, 30)
+        Me.miEmailServer.Text = "Configuração do Email"
         '
         'ToolStripSeparator2
         '
@@ -967,18 +990,10 @@ Partial Class frmPrincipal
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 600
         '
-        'miFretes
+        'ToolStripSeparator7
         '
-        Me.miFretes.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
-        Me.miFretes.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.miFretes.Name = "miFretes"
-        Me.miFretes.Size = New System.Drawing.Size(241, 36)
-        Me.miFretes.Text = "Fretes"
-        '
-        'ToolStripSeparator21
-        '
-        Me.ToolStripSeparator21.Name = "ToolStripSeparator21"
-        Me.ToolStripSeparator21.Size = New System.Drawing.Size(238, 6)
+        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
+        Me.ToolStripSeparator7.Size = New System.Drawing.Size(243, 6)
         '
         'frmPrincipal
         '
@@ -1109,4 +1124,6 @@ Partial Class frmPrincipal
     Friend WithEvents Label1 As Label
     Friend WithEvents ToolStripSeparator21 As ToolStripSeparator
     Friend WithEvents miFretes As ToolStripMenuItem
+    Friend WithEvents miEmailServer As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
 End Class

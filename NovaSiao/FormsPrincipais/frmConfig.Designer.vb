@@ -23,14 +23,12 @@ Partial Class frmConfig
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lblTitulo = New System.Windows.Forms.Label()
         Me.TabPrincipal = New VIBlend.WinForms.Controls.vTabControl()
         Me.Tab1 = New VIBlend.WinForms.Controls.vTabPage()
         Me.cmbEstoqueNegativo = New Controles.ComboBox_OnlyValues()
-        Me.dgvMensagens = New System.Windows.Forms.DataGridView()
-        Me.clnMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.btnEditarFilial = New System.Windows.Forms.Button()
         Me.btnContaAdd = New System.Windows.Forms.Button()
         Me.btnAlteraConta = New System.Windows.Forms.Button()
@@ -47,7 +45,6 @@ Partial Class frmConfig
         Me.Label34 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.Label29 = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -106,6 +103,13 @@ Partial Class frmConfig
         Me.chkVerBackup = New System.Windows.Forms.CheckBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.txtStringConexao = New System.Windows.Forms.TextBox()
+        Me.Tab5 = New VIBlend.WinForms.Controls.vTabPage()
+        Me.btnPedidoFolder = New VIBlend.WinForms.Controls.vButton()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.txtPedidoFolder = New System.Windows.Forms.TextBox()
+        Me.dgvMensagens = New System.Windows.Forms.DataGridView()
+        Me.clnMensagem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Label14 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.btnCancelar = New System.Windows.Forms.Button()
         Me.btnSalvar = New System.Windows.Forms.Button()
@@ -116,13 +120,14 @@ Partial Class frmConfig
         Me.Panel1.SuspendLayout()
         Me.TabPrincipal.SuspendLayout()
         Me.Tab1.SuspendLayout()
-        CType(Me.dgvMensagens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Tab2.SuspendLayout()
         Me.Tab4.SuspendLayout()
         CType(Me.picLogoColor, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.picLogoMono, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Tab3.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        Me.Tab5.SuspendLayout()
+        CType(Me.dgvMensagens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.menuCFOP.SuspendLayout()
@@ -135,7 +140,7 @@ Partial Class frmConfig
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(744, 63)
+        Me.Panel1.Size = New System.Drawing.Size(746, 63)
         Me.Panel1.TabIndex = 0
         '
         'lblTitulo
@@ -144,7 +149,7 @@ Partial Class frmConfig
         Me.lblTitulo.AutoSize = True
         Me.lblTitulo.Font = New System.Drawing.Font("Verdana", 24.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblTitulo.ForeColor = System.Drawing.Color.White
-        Me.lblTitulo.Location = New System.Drawing.Point(274, 11)
+        Me.lblTitulo.Location = New System.Drawing.Point(276, 11)
         Me.lblTitulo.Name = "lblTitulo"
         Me.lblTitulo.Size = New System.Drawing.Size(464, 38)
         Me.lblTitulo.TabIndex = 0
@@ -153,13 +158,11 @@ Partial Class frmConfig
         'TabPrincipal
         '
         Me.TabPrincipal.AllowAnimations = True
-        Me.TabPrincipal.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TabPrincipal.Controls.Add(Me.Tab1)
         Me.TabPrincipal.Controls.Add(Me.Tab2)
         Me.TabPrincipal.Controls.Add(Me.Tab4)
         Me.TabPrincipal.Controls.Add(Me.Tab3)
+        Me.TabPrincipal.Controls.Add(Me.Tab5)
         Me.TabPrincipal.CornerRadius = 0
         Me.TabPrincipal.Font = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TabPrincipal.Location = New System.Drawing.Point(8, 69)
@@ -173,6 +176,7 @@ Partial Class frmConfig
         Me.TabPrincipal.TabPages.Add(Me.Tab2)
         Me.TabPrincipal.TabPages.Add(Me.Tab4)
         Me.TabPrincipal.TabPages.Add(Me.Tab3)
+        Me.TabPrincipal.TabPages.Add(Me.Tab5)
         Me.TabPrincipal.TabsAreaBackColor = System.Drawing.Color.Linen
         Me.TabPrincipal.TabsInitialOffset = 15
         Me.TabPrincipal.TabStop = True
@@ -186,7 +190,6 @@ Partial Class frmConfig
         Me.Tab1.ContentBackColor = System.Drawing.Color.Azure
         Me.Tab1.ContentBorderColor = System.Drawing.Color.Transparent
         Me.Tab1.Controls.Add(Me.cmbEstoqueNegativo)
-        Me.Tab1.Controls.Add(Me.dgvMensagens)
         Me.Tab1.Controls.Add(Me.btnEditarFilial)
         Me.Tab1.Controls.Add(Me.btnContaAdd)
         Me.Tab1.Controls.Add(Me.btnAlteraConta)
@@ -203,7 +206,6 @@ Partial Class frmConfig
         Me.Tab1.Controls.Add(Me.Label34)
         Me.Tab1.Controls.Add(Me.Label15)
         Me.Tab1.Controls.Add(Me.Label29)
-        Me.Tab1.Controls.Add(Me.Label14)
         Me.Tab1.Controls.Add(Me.Label19)
         Me.Tab1.Controls.Add(Me.Label13)
         Me.Tab1.Controls.Add(Me.Label1)
@@ -242,34 +244,6 @@ Partial Class frmConfig
         Me.cmbEstoqueNegativo.RestrictContentToListItems = True
         Me.cmbEstoqueNegativo.Size = New System.Drawing.Size(69, 26)
         Me.cmbEstoqueNegativo.TabIndex = 27
-        '
-        'dgvMensagens
-        '
-        Me.dgvMensagens.BackgroundColor = System.Drawing.Color.LightGray
-        Me.dgvMensagens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvMensagens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvMensagens.ColumnHeadersHeight = 30
-        Me.dgvMensagens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnMensagem})
-        Me.dgvMensagens.EnableHeadersVisualStyles = False
-        Me.dgvMensagens.Location = New System.Drawing.Point(214, 361)
-        Me.dgvMensagens.Name = "dgvMensagens"
-        Me.dgvMensagens.RowHeadersWidth = 35
-        Me.dgvMensagens.RowTemplate.Height = 30
-        Me.dgvMensagens.Size = New System.Drawing.Size(476, 122)
-        Me.dgvMensagens.TabIndex = 29
-        '
-        'clnMensagem
-        '
-        Me.clnMensagem.HeaderText = "Avisos"
-        Me.clnMensagem.Name = "clnMensagem"
-        Me.clnMensagem.Width = 400
         '
         'btnEditarFilial
         '
@@ -463,17 +437,6 @@ Partial Class frmConfig
         Me.Label29.Size = New System.Drawing.Size(183, 16)
         Me.Label29.TabIndex = 26
         Me.Label29.Text = "Permitir Estoque Negativo!"
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.BackColor = System.Drawing.Color.Transparent
-        Me.Label14.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(35, 371)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(173, 18)
-        Me.Label14.TabIndex = 28
-        Me.Label14.Text = "Avisos nos Pedidos:"
         '
         'Label19
         '
@@ -1054,6 +1017,7 @@ Partial Class frmConfig
         '
         'Tab3
         '
+        Me.Tab3.BackColor = System.Drawing.Color.Linen
         Me.Tab3.ContentBackColor = System.Drawing.Color.Azure
         Me.Tab3.ContentBorderColor = System.Drawing.Color.Transparent
         Me.Tab3.Controls.Add(Me.btnBDAnterior)
@@ -1186,6 +1150,106 @@ Partial Class frmConfig
         Me.txtStringConexao.Size = New System.Drawing.Size(457, 123)
         Me.txtStringConexao.TabIndex = 3
         '
+        'Tab5
+        '
+        Me.Tab5.ContentBackColor = System.Drawing.Color.Azure
+        Me.Tab5.Controls.Add(Me.btnPedidoFolder)
+        Me.Tab5.Controls.Add(Me.Label30)
+        Me.Tab5.Controls.Add(Me.txtPedidoFolder)
+        Me.Tab5.Controls.Add(Me.dgvMensagens)
+        Me.Tab5.Controls.Add(Me.Label14)
+        Me.Tab5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Tab5.Font = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Tab5.Location = New System.Drawing.Point(0, 40)
+        Me.Tab5.Name = "Tab5"
+        Me.Tab5.Padding = New System.Windows.Forms.Padding(0)
+        Me.Tab5.SelectedTextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Tab5.Size = New System.Drawing.Size(728, 504)
+        Me.Tab5.TabIndex = 5
+        Me.Tab5.Text = "Pedidos"
+        Me.Tab5.TextFont = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Tab5.TooltipText = "TabPage"
+        Me.Tab5.UseContentBackColor = True
+        Me.Tab5.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE
+        Me.Tab5.Visible = False
+        '
+        'btnPedidoFolder
+        '
+        Me.btnPedidoFolder.AllowAnimations = True
+        Me.btnPedidoFolder.BackColor = System.Drawing.Color.Transparent
+        Me.btnPedidoFolder.FlatAppearance.BorderColor = System.Drawing.Color.Black
+        Me.btnPedidoFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnPedidoFolder.Location = New System.Drawing.Point(656, 216)
+        Me.btnPedidoFolder.Name = "btnPedidoFolder"
+        Me.btnPedidoFolder.RoundedCornersMask = CType(15, Byte)
+        Me.btnPedidoFolder.RoundedCornersRadius = 0
+        Me.btnPedidoFolder.Size = New System.Drawing.Size(34, 30)
+        Me.btnPedidoFolder.TabIndex = 31
+        Me.btnPedidoFolder.TabStop = False
+        Me.btnPedidoFolder.Text = "..."
+        Me.btnPedidoFolder.UseCompatibleTextRendering = True
+        Me.btnPedidoFolder.UseVisualStyleBackColor = False
+        Me.btnPedidoFolder.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.BackColor = System.Drawing.Color.Transparent
+        Me.Label30.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label30.Location = New System.Drawing.Point(38, 220)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(166, 18)
+        Me.Label30.TabIndex = 30
+        Me.Label30.Text = "Pasta dos Pedidos:"
+        '
+        'txtPedidoFolder
+        '
+        Me.txtPedidoFolder.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtPedidoFolder.Location = New System.Drawing.Point(214, 217)
+        Me.txtPedidoFolder.MaxLength = 200
+        Me.txtPedidoFolder.Name = "txtPedidoFolder"
+        Me.txtPedidoFolder.Size = New System.Drawing.Size(436, 27)
+        Me.txtPedidoFolder.TabIndex = 32
+        '
+        'dgvMensagens
+        '
+        Me.dgvMensagens.BackgroundColor = System.Drawing.Color.LightGray
+        Me.dgvMensagens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvMensagens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvMensagens.ColumnHeadersHeight = 30
+        Me.dgvMensagens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnMensagem})
+        Me.dgvMensagens.EnableHeadersVisualStyles = False
+        Me.dgvMensagens.Location = New System.Drawing.Point(214, 28)
+        Me.dgvMensagens.Name = "dgvMensagens"
+        Me.dgvMensagens.RowHeadersWidth = 35
+        Me.dgvMensagens.RowTemplate.Height = 30
+        Me.dgvMensagens.Size = New System.Drawing.Size(476, 173)
+        Me.dgvMensagens.TabIndex = 29
+        '
+        'clnMensagem
+        '
+        Me.clnMensagem.HeaderText = "Avisos"
+        Me.clnMensagem.Name = "clnMensagem"
+        Me.clnMensagem.Width = 400
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.BackColor = System.Drawing.Color.Transparent
+        Me.Label14.Font = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label14.Location = New System.Drawing.Point(35, 37)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(173, 18)
+        Me.Label14.TabIndex = 28
+        Me.Label14.Text = "Avisos nos Pedidos:"
+        '
         'Panel2
         '
         Me.Panel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
@@ -1195,7 +1259,7 @@ Partial Class frmConfig
         Me.Panel2.Controls.Add(Me.btnSalvar)
         Me.Panel2.Location = New System.Drawing.Point(0, 616)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(744, 59)
+        Me.Panel2.Size = New System.Drawing.Size(746, 59)
         Me.Panel2.TabIndex = 2
         '
         'btnCancelar
@@ -1205,7 +1269,7 @@ Partial Class frmConfig
         Me.btnCancelar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.BurlyWood
         Me.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnCancelar.Image = Global.NovaSiao.My.Resources.Resources.cancelar_edicao
-        Me.btnCancelar.Location = New System.Drawing.Point(588, 3)
+        Me.btnCancelar.Location = New System.Drawing.Point(590, 3)
         Me.btnCancelar.Name = "btnCancelar"
         Me.btnCancelar.Size = New System.Drawing.Size(149, 52)
         Me.btnCancelar.TabIndex = 1
@@ -1262,7 +1326,7 @@ Partial Class frmConfig
         Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 18.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.Linen
-        Me.ClientSize = New System.Drawing.Size(744, 675)
+        Me.ClientSize = New System.Drawing.Size(746, 675)
         Me.ControlBox = False
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.TabPrincipal)
@@ -1281,7 +1345,6 @@ Partial Class frmConfig
         Me.TabPrincipal.ResumeLayout(False)
         Me.Tab1.ResumeLayout(False)
         Me.Tab1.PerformLayout()
-        CType(Me.dgvMensagens, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Tab2.ResumeLayout(False)
         Me.Tab2.PerformLayout()
         Me.Tab4.ResumeLayout(False)
@@ -1292,6 +1355,9 @@ Partial Class frmConfig
         Me.Tab3.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        Me.Tab5.ResumeLayout(False)
+        Me.Tab5.PerformLayout()
+        CType(Me.dgvMensagens, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).EndInit()
         Me.menuCFOP.ResumeLayout(False)
@@ -1333,7 +1399,6 @@ Partial Class frmConfig
     Friend WithEvents txtUFPadrao As TextBox
     Friend WithEvents txtCidadePadrao As TextBox
     Friend WithEvents dtpDataPadrao As DateTimePicker
-    Friend WithEvents Label14 As Label
     Friend WithEvents Label15 As Label
     Friend WithEvents Label16 As Label
     Friend WithEvents txtStringConexao As TextBox
@@ -1384,8 +1449,13 @@ Partial Class frmConfig
     Friend WithEvents txtBairro As TextBox
     Friend WithEvents txtCidade As TextBox
     Friend WithEvents txtCEP As Controles.MaskText_Telefone
-    Friend WithEvents dgvMensagens As DataGridView
-    Friend WithEvents clnMensagem As DataGridViewTextBoxColumn
     Friend WithEvents cmbEstoqueNegativo As Controles.ComboBox_OnlyValues
     Friend WithEvents Label29 As Label
+    Friend WithEvents Tab5 As VIBlend.WinForms.Controls.vTabPage
+    Friend WithEvents dgvMensagens As DataGridView
+    Friend WithEvents clnMensagem As DataGridViewTextBoxColumn
+    Friend WithEvents Label14 As Label
+    Friend WithEvents btnPedidoFolder As VIBlend.WinForms.Controls.vButton
+    Friend WithEvents Label30 As Label
+    Friend WithEvents txtPedidoFolder As TextBox
 End Class

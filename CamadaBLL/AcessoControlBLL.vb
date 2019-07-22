@@ -129,4 +129,18 @@ Public Class AcessoControlBLL
         '
     End Function
     '
+    '--------------------------------------------------------------------------------------------
+    ' GET CONFIG DB - CONNECTION XML PATH
+    '--------------------------------------------------------------------------------------------
+    Public Function GetConfigXMLPath() As String
+        '
+        Try
+            Dim path As String = If(AcessoDados.GetConfigXMLPath, "")
+            Return path
+        Catch ex As Exception
+            Return Nothing
+        End Try
+        '
+    End Function
+    '
 End Class

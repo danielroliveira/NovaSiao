@@ -273,9 +273,23 @@ Public Class frmConnString
                     '
                 Next
                 '
-                .WriteEndElement() ' MySettings
-                .WriteEndElement() ' userSettings
-                .WriteEndElement() ' configuration
+                .WriteEndElement() ' END: MySettings
+                .WriteEndElement() ' END: userSettings
+                '
+                '--- CONFIG EMAIL ELEMENTS
+                .WriteStartElement("emailServerSettings") 'START
+                '
+                .WriteElementString("emailUserName", "")
+                .WriteElementString("emailPassword", "")
+                .WriteElementString("smtpPort", "")
+                .WriteElementString("smtpHost", "")
+                .WriteElementString("smtpEnableSSL", "")
+                .WriteElementString("logoRemotaURL", "")
+                .WriteElementString("sitePadraoURL", "")
+
+                .WriteEndElement() ' END: emailServerSettings
+                '
+                .WriteEndElement() ' END: configuration
                 .Close()
                 '
             End With

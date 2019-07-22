@@ -254,7 +254,8 @@ Public Class frmConfig
             txtBDAnterior.Text = .SelectSingleNode("ServidorDados").ChildNodes(3).InnerText
             '
             ' Lendo as MENSAGENS DE PEDIDO
-            LerPedidoMensagemXML(.SelectSingleNode("MensagemPedido"))
+            txtPedidoFolder.Text = .SelectSingleNode("PedidoConfig").SelectSingleNode("PedidosFolder").InnerText
+            LerPedidoMensagemXML(.SelectSingleNode("PedidoConfig").SelectSingleNode("MensagemPedido"))
             '
         End With
         Return True
@@ -347,13 +348,24 @@ Error_Handler:
                 .WriteElementString("BDAnterior", txtBDAnterior.Text)
                 'encerra o elemento
                 .WriteEndElement()
+
+                ' Quinta Seção: PEDIDO
+                '----------------------------------------------------------------------------------
+                .WriteStartElement("PedidoConfig")
+                ' Sub Elementos
+                .WriteElementString("PedidosFolder", txtPedidoFolder.Text)
+                'encerra o elemento
+                .WriteEndElement()
+
                 '
                 'FECHA CONFIGURAÇÃO
+                '----------------------------------------------------------------------------------
                 .WriteEndElement()
                 'escreve o xml para o arquivo e fecha o objeto escritor
                 .Close()
                 '
                 '--- SAVE MENSAGEMS PEDIDO
+                '----------------------------------------------------------------------------------
                 SalvaPedidoMensagemPadrao()
                 '--- return
                 Return True
@@ -373,6 +385,8 @@ Error_Handler:
     '-----------------------------------------------------------------------------------------------
     Private Function LerPedidoMensagemXML(node As XmlNode) As Boolean
         '
+        dgvMensagens.Rows.Clear()
+        '
         If IsNothing(node) OrElse Not node.HasChildNodes Then Return True
         '
         For Each m As XmlNode In node.ChildNodes
@@ -386,21 +400,32 @@ Error_Handler:
     '--- SALVA MENSAGENS PEDIDO PADRAO
     '----------------------------------------------------------------------------------
     Private Function SalvaPedidoMensagemPadrao() As Boolean
+        '
         Dim myXML As New XmlDocument
         myXML.Load(Application.StartupPath & "\ConfigFiles\Config.xml")
         '
+        '--- verifica se existe node PEDIDO CONFIG
+        Dim elemList As XmlNodeList = myXML.GetElementsByTagName("PedidoConfig")
+        '
+        '--- se não existir o node PEDIDO CONFIG entao cria
+        If elemList.Count = 0 Then
+            'Create a new node.
+            Dim newNodeOrigem As XmlElement = myXML.CreateElement("PedidoConfig")
+            myXML.SelectSingleNode("Configuracao").AppendChild(newNodeOrigem)
+        End If
+        '
         '--- verifica se existe node MENSAGEM PEDIDO
-        Dim elemList As XmlNodeList = myXML.GetElementsByTagName("MensagemPedido")
+        elemList = myXML.GetElementsByTagName("MensagemPedido")
         '
         '--- se não existir o node PAI entao cria
         If elemList.Count = 0 Then
             'Create a new node.
             Dim newNodeOrigem As XmlElement = myXML.CreateElement("MensagemPedido")
-            myXML.SelectSingleNode("Configuracao").AppendChild(newNodeOrigem)
+            myXML.SelectSingleNode("Configuracao").SelectSingleNode("PedidoConfig").AppendChild(newNodeOrigem)
         End If
         '
         '--- seleciona o node PAI
-        Dim node As XmlNode = myXML.SelectSingleNode("Configuracao").SelectSingleNode("MensagemPedido")
+        Dim node As XmlNode = myXML.SelectSingleNode("Configuracao").SelectSingleNode("PedidoConfig").SelectSingleNode("MensagemPedido")
         '
         '--- exclui todas as mensagens anteriores do node PAI
         node.RemoveAll()
@@ -619,7 +644,8 @@ Error_Handler:
             txtLogoMonoCaminho.KeyDown,
             txtBDAnterior.KeyDown,
             txtFilialPadrao.KeyDown,
-            txtContaPadrao.KeyDown
+            txtContaPadrao.KeyDown,
+            txtPedidoFolder.KeyDown
         '
         Dim ctr As Control = DirectCast(sender, Control)
         '
@@ -1186,6 +1212,17 @@ Error_Handler:
     Private Sub dgvMensagens_UserDeletedRow(sender As Object, e As DataGridViewRowEventArgs) Handles dgvMensagens.UserDeletedRow
         btnSalvar.Enabled = True
         Sit = EnumFlagEstado.Alterado
+    End Sub
+    '
+    Private Sub btnPedidoFolder_Click(sender As Object, e As EventArgs) Handles btnPedidoFolder.Click
+        '
+        Using OFD As New FolderBrowserDialog 'With {.Filter = "MDB (*.mdb)|*.mdb"}
+            If OFD.ShowDialog = DialogResult.OK Then
+                txtPedidoFolder.Text = OFD.SelectedPath
+                Sit = EnumFlagEstado.Alterado
+            End If
+        End Using
+        '
     End Sub
     '
 #End Region '/ DATAGRID MENSAGENS PEDIDO

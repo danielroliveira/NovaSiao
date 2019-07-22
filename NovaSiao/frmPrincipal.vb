@@ -1424,6 +1424,21 @@ Public Class frmPrincipal
         '
     End Sub
     '
+    Private Sub miEmailServer_Click(sender As Object, e As EventArgs) Handles miEmailServer.Click
+        '
+        If UsuarioAtual.UsuarioAcesso > 1 Then ' não é administrador do sistema
+            '
+            MessageBox.Show("Seu LOGIN não tem acesso aos arquivos de Configuração..." & vbNewLine &
+                            "Comunique-se com o administrador do sistema.",
+                            "Acesso Negado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            '
+        Else
+            Dim frmC As New frmEmailServer
+            frmC.ShowDialog()
+        End If
+        '
+    End Sub
+    '
 #End Region
     '
 End Class

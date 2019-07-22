@@ -38,7 +38,7 @@ Public Class frmPedidoMensagens
             Return False
         End Try
         '
-        Dim node As XmlNode = myXML.SelectSingleNode("Configuracao").SelectSingleNode("MensagemPedido")
+        Dim node As XmlNode = myXML.SelectSingleNode("Configuracao").SelectSingleNode("PedidoConfig").SelectSingleNode("MensagemPedido")
         '
         If IsNothing(node) OrElse Not node.HasChildNodes Then Return True
         '
@@ -64,18 +64,28 @@ Public Class frmPedidoMensagens
             Return False
         End Try
         '
+        '--- verifica se existe node PEDIDO CONFIG
+        Dim elemList As XmlNodeList = myXML.GetElementsByTagName("PedidoConfig")
+        '
+        '--- se não existir o node PEDIDO CONFIG entao cria
+        If elemList.Count = 0 Then
+            'Create a new node.
+            Dim newNodeOrigem As XmlElement = myXML.CreateElement("PedidoConfig")
+            myXML.SelectSingleNode("Configuracao").AppendChild(newNodeOrigem)
+        End If
+        '
         '--- verifica se existe node MENSAGEM PEDIDO
-        Dim elemList As XmlNodeList = myXML.GetElementsByTagName("MensagemPedido")
+        elemList = myXML.GetElementsByTagName("MensagemPedido")
         '
         '--- se não existir o node PAI entao cria
         If elemList.Count = 0 Then
             'Create a new node.
             Dim newNodeOrigem As XmlElement = myXML.CreateElement("MensagemPedido")
-            myXML.SelectSingleNode("Configuracao").AppendChild(newNodeOrigem)
+            myXML.SelectSingleNode("Configuracao").SelectSingleNode("PedidoConfig").AppendChild(newNodeOrigem)
         End If
         '
         '--- seleciona o node PAI
-        Dim node As XmlNode = myXML.SelectSingleNode("Configuracao").SelectSingleNode("MensagemPedido")
+        Dim node As XmlNode = myXML.SelectSingleNode("Configuracao").SelectSingleNode("PedidoConfig").SelectSingleNode("MensagemPedido")
         '
         '--- exclui todas as mensagens anteriores do node PAI
         node.RemoveAll()
