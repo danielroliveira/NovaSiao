@@ -1876,7 +1876,55 @@ Public Class frmPedido
         Return True
         '
     End Function
+
     '
 #End Region
+    '
+#Region "VERIFICACAO DE ESTOQUE E DE RESERVAS"
+    '
+    Private Sub miPeloEstoquePorTipo_Click(sender As Object, e As EventArgs) Handles miPeloEstoquePorTipo.Click
+        '
+        Dim form As New frmProdutoProcurarTipo(Me)
+        '
+        form.ShowDialog()
+        If form.DialogResult <> DialogResult.OK Then Exit Sub
+        '
+        Dim IDTipo As Integer = form.propIdTipo_Escolha
+        '
+        'If AbrirDialog("Deseja incluir todos os produtos do Tipo: " +
+        '               form.propTipo_Escolha.ToUpper +
+        '               " que estão com estoque abaixo do nível, no pedido",
+        '               "Incluir Produtos por Tipo",
+        '               frmDialog.DialogType.SIM_NAO,
+        '               frmDialog.DialogIcon.Question,
+        '               frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Exit Sub
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim newItems As List(Of clPedidoItem) = _pedBLL.VerificaProdutoEstoqueTipo(IDTipo, _pedido)
+            '
+            If newItems.Count = 0 Then
+                AbrirDialog("Não há produtos que estejam abaixo do Estoque Nível...",
+                            "Nenhum produto selecionado",
+                            frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Exit Sub
+            End If
+            '
+            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, _ItensList, Me)
+            formSelecionados.ShowDialog()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao pesquisar e inserir produtos no pedido..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+#End Region '/ VERIFICACAO DE ESTOQUE E DE RESERVAS
     '
 End Class

@@ -90,7 +90,7 @@ Partial Class frmProdutoListagem
         Me.Panel1.Controls.Add(Me.lblFilial)
         Me.Panel1.Controls.Add(Me.Label6)
         Me.Panel1.Controls.Add(Me.btnClose)
-        Me.Panel1.Size = New System.Drawing.Size(1022, 50)
+        Me.Panel1.Size = New System.Drawing.Size(1350, 50)
         Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.btnClose, 0)
@@ -99,8 +99,9 @@ Partial Class frmProdutoListagem
         '
         'lblTitulo
         '
+        Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTitulo.Dock = System.Windows.Forms.DockStyle.None
-        Me.lblTitulo.Location = New System.Drawing.Point(654, 9)
+        Me.lblTitulo.Location = New System.Drawing.Point(982, 9)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(330, 34)
         Me.lblTitulo.TabIndex = 2
@@ -108,15 +109,17 @@ Partial Class frmProdutoListagem
         '
         'txtAutor
         '
-        Me.txtAutor.Location = New System.Drawing.Point(84, 468)
+        Me.txtAutor.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtAutor.Location = New System.Drawing.Point(84, 508)
         Me.txtAutor.Name = "txtAutor"
         Me.txtAutor.Size = New System.Drawing.Size(346, 27)
         Me.txtAutor.TabIndex = 4
         '
         'Label2
         '
+        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(34, 471)
+        Me.Label2.Location = New System.Drawing.Point(34, 511)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(44, 19)
         Me.Label2.TabIndex = 3
@@ -124,13 +127,12 @@ Partial Class frmProdutoListagem
         '
         'btnFechar
         '
-        Me.btnFechar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnFechar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnFechar.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnFechar.ForeColor = System.Drawing.Color.DarkRed
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar_24x24
         Me.btnFechar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnFechar.Location = New System.Drawing.Point(859, 5)
+        Me.btnFechar.Location = New System.Drawing.Point(1187, 5)
         Me.btnFechar.Name = "btnFechar"
         Me.btnFechar.Size = New System.Drawing.Size(153, 41)
         Me.btnFechar.TabIndex = 4
@@ -140,8 +142,7 @@ Partial Class frmProdutoListagem
         '
         'btnEditar
         '
-        Me.btnEditar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnEditar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnEditar.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnEditar.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnEditar.Image = Global.NovaSiao.My.Resources.Resources.editar
@@ -157,10 +158,11 @@ Partial Class frmProdutoListagem
         'btnClose
         '
         Me.btnClose.AllowAnimations = True
+        Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnClose.BackColor = System.Drawing.Color.Transparent
         Me.btnClose.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.CloseButton
         Me.btnClose.ForeColor = System.Drawing.Color.Firebrick
-        Me.btnClose.Location = New System.Drawing.Point(991, 14)
+        Me.btnClose.Location = New System.Drawing.Point(1319, 14)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.RibbonStyle = False
         Me.btnClose.RoundedCornersMask = CType(15, Byte)
@@ -173,17 +175,19 @@ Partial Class frmProdutoListagem
         '
         'txtProdutoTipo
         '
-        Me.txtProdutoTipo.Location = New System.Drawing.Point(639, 435)
+        Me.txtProdutoTipo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtProdutoTipo.Location = New System.Drawing.Point(639, 475)
         Me.txtProdutoTipo.Name = "txtProdutoTipo"
         Me.txtProdutoTipo.Size = New System.Drawing.Size(199, 27)
         Me.txtProdutoTipo.TabIndex = 6
         '
         'Label12
         '
+        Me.Label12.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label12.AutoSize = True
         Me.Label12.BackColor = System.Drawing.Color.Transparent
         Me.Label12.ForeColor = System.Drawing.Color.Black
-        Me.Label12.Location = New System.Drawing.Point(522, 438)
+        Me.Label12.Location = New System.Drawing.Point(522, 478)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(111, 19)
         Me.Label12.TabIndex = 5
@@ -191,8 +195,7 @@ Partial Class frmProdutoListagem
         '
         'btnNovo
         '
-        Me.btnNovo.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNovo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnNovo.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnNovo.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnNovo.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
@@ -260,17 +263,19 @@ Partial Class frmProdutoListagem
         '
         'txtProduto
         '
-        Me.txtProduto.Location = New System.Drawing.Point(84, 435)
+        Me.txtProduto.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtProduto.Location = New System.Drawing.Point(84, 475)
         Me.txtProduto.Name = "txtProduto"
         Me.txtProduto.Size = New System.Drawing.Size(346, 27)
         Me.txtProduto.TabIndex = 2
         '
         'Label3
         '
+        Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label3.AutoSize = True
         Me.Label3.BackColor = System.Drawing.Color.Transparent
         Me.Label3.ForeColor = System.Drawing.Color.Black
-        Me.Label3.Location = New System.Drawing.Point(19, 438)
+        Me.Label3.Location = New System.Drawing.Point(19, 478)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(59, 19)
         Me.Label3.TabIndex = 1
@@ -305,6 +310,9 @@ Partial Class frmProdutoListagem
         '
         'lstListagem
         '
+        Me.lstListagem.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lstListagem.BackColor = System.Drawing.Color.White
         Me.lstListagem.CheckBoxes = ComponentOwl.BetterListView.BetterListViewCheckBoxes.TwoState
         Me.lstListagem.Columns.Add(Me.clnRGProduto)
@@ -326,7 +334,7 @@ Partial Class frmProdutoListagem
         Me.lstListagem.Margin = New System.Windows.Forms.Padding(3, 3, 3, 10)
         Me.lstListagem.MultiSelect = False
         Me.lstListagem.Name = "lstListagem"
-        Me.lstListagem.Size = New System.Drawing.Size(998, 320)
+        Me.lstListagem.Size = New System.Drawing.Size(1326, 360)
         Me.lstListagem.SmoothScroll = False
         Me.lstListagem.TabIndex = 19
         '
@@ -414,22 +422,25 @@ Partial Class frmProdutoListagem
         '
         'txtProdutoCategoria
         '
-        Me.txtProdutoCategoria.Location = New System.Drawing.Point(639, 501)
+        Me.txtProdutoCategoria.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtProdutoCategoria.Location = New System.Drawing.Point(639, 541)
         Me.txtProdutoCategoria.Name = "txtProdutoCategoria"
         Me.txtProdutoCategoria.Size = New System.Drawing.Size(199, 27)
         Me.txtProdutoCategoria.TabIndex = 10
         '
         'txtProdutoSubTipo
         '
-        Me.txtProdutoSubTipo.Location = New System.Drawing.Point(639, 468)
+        Me.txtProdutoSubTipo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtProdutoSubTipo.Location = New System.Drawing.Point(639, 508)
         Me.txtProdutoSubTipo.Name = "txtProdutoSubTipo"
         Me.txtProdutoSubTipo.Size = New System.Drawing.Size(199, 27)
         Me.txtProdutoSubTipo.TabIndex = 8
         '
         'Label5
         '
+        Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(476, 471)
+        Me.Label5.Location = New System.Drawing.Point(476, 511)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(157, 19)
         Me.Label5.TabIndex = 7
@@ -437,8 +448,9 @@ Partial Class frmProdutoListagem
         '
         'Label4
         '
+        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(561, 504)
+        Me.Label4.Location = New System.Drawing.Point(561, 544)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(72, 19)
         Me.Label4.TabIndex = 9
@@ -446,8 +458,7 @@ Partial Class frmProdutoListagem
         '
         'btnPrintListagem
         '
-        Me.btnPrintListagem.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnPrintListagem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnPrintListagem.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnPrintListagem.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnPrintListagem.Image = Global.NovaSiao.My.Resources.Resources.print
@@ -462,8 +473,9 @@ Partial Class frmProdutoListagem
         '
         'Label7
         '
+        Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(556, 537)
+        Me.Label7.Location = New System.Drawing.Point(556, 577)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(77, 19)
         Me.Label7.TabIndex = 11
@@ -471,7 +483,8 @@ Partial Class frmProdutoListagem
         '
         'txtFabricante
         '
-        Me.txtFabricante.Location = New System.Drawing.Point(639, 534)
+        Me.txtFabricante.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.txtFabricante.Location = New System.Drawing.Point(639, 574)
         Me.txtFabricante.Name = "txtFabricante"
         Me.txtFabricante.Size = New System.Drawing.Size(199, 27)
         Me.txtFabricante.TabIndex = 12
@@ -499,8 +512,7 @@ Partial Class frmProdutoListagem
         '
         'chkAlterarProdutos
         '
-        Me.chkAlterarProdutos.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkAlterarProdutos.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.chkAlterarProdutos.Appearance = System.Windows.Forms.Appearance.Button
         Me.chkAlterarProdutos.Enabled = False
         Me.chkAlterarProdutos.Image = Global.NovaSiao.My.Resources.Resources.refresh1
@@ -515,13 +527,12 @@ Partial Class frmProdutoListagem
         '
         'btnLimpar
         '
-        Me.btnLimpar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnLimpar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnLimpar.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnLimpar.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnLimpar.ForeColor = System.Drawing.Color.Brown
         Me.btnLimpar.Image = Global.NovaSiao.My.Resources.Resources.limpar_24x24
-        Me.btnLimpar.Location = New System.Drawing.Point(288, 526)
+        Me.btnLimpar.Location = New System.Drawing.Point(288, 566)
         Me.btnLimpar.Name = "btnLimpar"
         Me.btnLimpar.Size = New System.Drawing.Size(142, 41)
         Me.btnLimpar.TabIndex = 14
@@ -600,20 +611,23 @@ Partial Class frmProdutoListagem
         '
         'Panel2
         '
+        Me.Panel2.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel2.BackColor = System.Drawing.Color.Silver
         Me.Panel2.Controls.Add(Me.btnFechar)
         Me.Panel2.Controls.Add(Me.btnNovo)
         Me.Panel2.Controls.Add(Me.btnPrintListagem)
         Me.Panel2.Controls.Add(Me.btnEditar)
         Me.Panel2.Controls.Add(Me.chkAlterarProdutos)
-        Me.Panel2.Location = New System.Drawing.Point(3, 586)
+        Me.Panel2.Location = New System.Drawing.Point(3, 626)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(1016, 51)
+        Me.Panel2.Size = New System.Drawing.Size(1344, 51)
         Me.Panel2.TabIndex = 15
         '
         'lblTotalProdutos
         '
-        Me.lblTotalProdutos.Location = New System.Drawing.Point(863, 468)
+        Me.lblTotalProdutos.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblTotalProdutos.Location = New System.Drawing.Point(1191, 508)
         Me.lblTotalProdutos.Name = "lblTotalProdutos"
         Me.lblTotalProdutos.Size = New System.Drawing.Size(148, 19)
         Me.lblTotalProdutos.TabIndex = 24
@@ -621,8 +635,9 @@ Partial Class frmProdutoListagem
         '
         'Label8
         '
+        Me.Label8.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label8.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(863, 443)
+        Me.Label8.Location = New System.Drawing.Point(1191, 483)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(78, 19)
         Me.Label8.TabIndex = 24
@@ -630,7 +645,8 @@ Partial Class frmProdutoListagem
         '
         'lblSelecionados
         '
-        Me.lblSelecionados.Location = New System.Drawing.Point(863, 526)
+        Me.lblSelecionados.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblSelecionados.Location = New System.Drawing.Point(1191, 566)
         Me.lblSelecionados.Name = "lblSelecionados"
         Me.lblSelecionados.Size = New System.Drawing.Size(148, 19)
         Me.lblSelecionados.TabIndex = 24
@@ -638,8 +654,9 @@ Partial Class frmProdutoListagem
         '
         'lblSelTitulo
         '
+        Me.lblSelTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSelTitulo.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSelTitulo.Location = New System.Drawing.Point(863, 501)
+        Me.lblSelTitulo.Location = New System.Drawing.Point(1191, 541)
         Me.lblSelTitulo.Name = "lblSelTitulo"
         Me.lblSelTitulo.Size = New System.Drawing.Size(121, 19)
         Me.lblSelTitulo.TabIndex = 24
@@ -647,13 +664,12 @@ Partial Class frmProdutoListagem
         '
         'btnPesquisar
         '
-        Me.btnPesquisar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnPesquisar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnPesquisar.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnPesquisar.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnPesquisar.ForeColor = System.Drawing.Color.DarkSlateGray
         Me.btnPesquisar.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
-        Me.btnPesquisar.Location = New System.Drawing.Point(140, 526)
+        Me.btnPesquisar.Location = New System.Drawing.Point(140, 566)
         Me.btnPesquisar.Name = "btnPesquisar"
         Me.btnPesquisar.Size = New System.Drawing.Size(142, 41)
         Me.btnPesquisar.TabIndex = 13
@@ -665,7 +681,7 @@ Partial Class frmProdutoListagem
         'frmProdutoListagem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(1022, 640)
+        Me.ClientSize = New System.Drawing.Size(1350, 680)
         Me.Controls.Add(Me.lblSelTitulo)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.lblSelecionados)

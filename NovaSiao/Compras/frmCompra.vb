@@ -1230,19 +1230,22 @@ Public Class frmCompra
                 Next
             End If
             '
-            '
+            '--- DEFINE TOTAL GERAL
             Dim TGeral As Decimal = TotalGeral
             '
             '--- SALVA O APAGAR PARCELAS NO BD
             If Salvar_APagar() = False Then
+                '--- If FALSE cancel SAVE
                 _Compra.IDSituacao = 1
+                _Compra.TotalCompra = TGeral
                 SalvaRegistroCompra()
                 Sit = EnumFlagEstado.Alterado
                 Return
+                '
             End If
             '
-            '--- EFETUA O RATEIO DO FRETE NOS ITENS
-            EfetuarRateio()
+            '--- EFETUA O RATEIO DO FRETE NOS ITENS | REGISTRA O FORNECEDOR AOS PRODUTOS
+            EfetuarFinalizacao()
             '
             '--- altera a situacao da transacao atual
             _Compra.IDSituacao = 2 'CONCLUÍDA
@@ -1425,11 +1428,11 @@ Public Class frmCompra
     End Function
     '
     '==========================================================================================
-    ' DO RATEIO
+    ' RATEIO DO FRETE PARA OS ITENS | REGISTRA O FORNECEDOR DO PRODUTO
     '==========================================================================================
-    Private Sub EfetuarRateio()
+    Private Sub EfetuarFinalizacao()
         '
-        Dim Rateio As Object = Nothing
+        Dim Response As Object = Nothing
         Dim TProdutos As Decimal = TotalProdutos
         '
         Try
@@ -1438,15 +1441,16 @@ Public Class frmCompra
             Cursor = Cursors.WaitCursor
             '
             Dim FreteTotal As Decimal = IIf(IsNothing(_Compra.FreteCobrado), 0, _Compra.FreteCobrado)
-            FreteTotal = FreteTotal + IIf(IsNothing(_Compra.FreteValor), 0, _Compra.FreteValor)
+            FreteTotal += IIf(IsNothing(_Compra.FreteValor), 0, _Compra.FreteValor)
             '
-            Rateio = cBLL.CompraItens_ReteioFrete(_Compra.IDCompra, FreteTotal, TProdutos)
+            Response = cBLL.CompraFinalizar(_Compra.IDCompra, _Compra.TransacaoData, _Compra.IDPessoaOrigem, FreteTotal, TProdutos)
             '
-            If Not IsNumeric(Rateio) Then
-                Throw New Exception(Rateio.ToString)
+            If Not IsNumeric(Response) Then
+                Throw New Exception(Response.ToString)
             End If
+            '
         Catch ex As Exception
-            MessageBox.Show("Houve uma exceção no Rateio do Frete..." & vbNewLine &
+            MessageBox.Show("Houve uma exceção na Finalização dessa Compra..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '

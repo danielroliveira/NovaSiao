@@ -618,22 +618,29 @@ Public Class CompraBLL
     End Function
     '
     '--------------------------------------------------------------------------------------------
-    ' EFETUA O RATEIO DO FRETE NOS ITENS DA COMPRA
+    ' EFETUA O RATEIO DO FRETE NOS ITENS DA COMPRA E REGISTRA O FORNECEDOR DOS PRODUTOS
     '--------------------------------------------------------------------------------------------
-    Public Function CompraItens_ReteioFrete(IDCompra As Integer, FreteValor As Decimal, TotalProdutos As Decimal) As Integer?
+    Public Function CompraFinalizar(IDTransacao As Integer,
+                                    TransacaoData As Date,
+                                    IDFornecedor As Integer,
+                                    FreteValor As Decimal,
+                                    TotalProdutos As Decimal) As Integer?
+        '
         Dim objdb As New AcessoDados
         '
         '--- limpar os parâmetros
         objdb.LimparParametros()
         '--- adicionar os parâmetros
-        objdb.AdicionarParametros("@IDCompra", IDCompra)
+        objdb.AdicionarParametros("@IDTransacao", IDTransacao)
+        objdb.AdicionarParametros("@TransacaoData", TransacaoData)
+        objdb.AdicionarParametros("@IDFornecedor", IDFornecedor)
         objdb.AdicionarParametros("@FreteValor", FreteValor)
         objdb.AdicionarParametros("@TotalProdutos", TotalProdutos)
         '
         Try
             Dim obj As Object
             '
-            obj = objdb.ExecutarManipulacao(CommandType.StoredProcedure, "uspCompraRatearFrete")
+            obj = objdb.ExecutarManipulacao(CommandType.StoredProcedure, "uspCompraFinalizar")
             '
             '--- verifica o resultado
             If Not IsNothing(obj) AndAlso IsNumeric(obj) Then
@@ -647,4 +654,5 @@ Public Class CompraBLL
         End Try
         '
     End Function
+    '
 End Class

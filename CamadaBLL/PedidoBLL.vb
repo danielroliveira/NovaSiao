@@ -523,5 +523,69 @@ Public Class PedidoBLL
         '
     End Function
     '
+    '==========================================================================================
+    ' VERIFICA E OBTEM PRODUTOS PELO ESTOQUE NIVEL
+    '==========================================================================================
+    Public Function VerificaProdutoEstoqueTipo(IDTipo As Integer, Pedido As clPedido) As List(Of clPedidoItem)
+        '
+        Try
+            '
+            If IsNothing(Pedido.IDFilial) Then
+                Throw New Exception("O pedido ainda não tem Filial...")
+                Return Nothing
+            End If
+            '
+            Dim itemsList As New List(Of clPedidoItem)
+            Dim db As New AcessoDados
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDTipo", IDTipo)
+            db.AdicionarParametros("@IDFilial", Pedido.IDFilial)
+            '
+            Dim query As String = "SELECT * FROM qryProdutosEstoque " +
+            "WHERE IDProdutoTipo = @IDTipo AND " +
+            "IDFilial = @IDFilial AND  " +
+            "Estoque < EstoqueNivel"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return itemsList
+            '
+            For Each r In dt.Rows
+                '
+                Dim item As New clPedidoItem With {
+                    .ApelidoFilial = Pedido.ApelidoFilial,
+                    .Autor = If(IsDBNull(r("Autor")), String.Empty, r("Autor")),
+                    .Desconto = If(IsDBNull(r("DescontoCompra")), 0, r("DescontoCompra")),
+                    .Estoque = r("Estoque"),
+                    .EstoqueIdeal = r("EstoqueIdeal"),
+                    .EstoqueNivel = r("EstoqueNivel"),
+                    .IDFilialOrigem = Pedido.IDFilial,
+                    .IDOrigem = Nothing,
+                    .IDPedido = Pedido.IDPedido,
+                    .IDPedidoItem = Nothing,
+                    .IDProduto = r("IDProduto"),
+                    .IDProdutoTipo = r("IDProdutoTipo"),
+                    .Origem = 0,
+                    .OrigemDescricao = "Pedido Local",
+                    .Preco = r("PCompra"),
+                    .Produto = r("Produto"),
+                    .ProdutoTipo = r("ProdutoTipo"),
+                    .Quantidade = r("EstoqueIdeal") - r("Estoque"),
+                    .RGProduto = r("RGProduto")
+                    }
+                '
+                itemsList.Add(item)
+                '
+            Next
+            '
+            Return itemsList
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
 End Class
 '

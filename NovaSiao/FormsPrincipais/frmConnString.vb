@@ -93,38 +93,44 @@ Public Class frmConnString
         '
         Dim doc As New XmlDocument()
         '
-        '--- Try open XML document
         Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             doc.Load(SourceXMLFile)
-        Catch ex As Exception
             '
-            Throw New Exception("Uma exceção ocorreu ao Ler o arquivo XML..." &
-                                vbNewLine &
-                                ex.Message)
-            Return False
+            '--- CHECK XML FILE
+            Dim check1 As Boolean = doc.GetElementsByTagName("userSettings").Count = 1
+            Dim check2 As Boolean = doc.GetElementsByTagName("MySettings").Count = 1
+            Dim check3 As Boolean = doc.GetElementsByTagName("setting").Count > 0
             '
-        End Try
-        '
-        '--- CHECK XML FILE
-        Dim check1 As Boolean = doc.GetElementsByTagName("userSettings").Count = 1
-        Dim check2 As Boolean = doc.GetElementsByTagName("MySettings").Count = 1
-        Dim check3 As Boolean = doc.GetElementsByTagName("setting").Count > 0
-        '
-        If Not (check1 And check2 And check3) Then
-            MessageBox.Show("Arquivo XML Inválido", "XML Inválido",
+            If Not (check1 And check2 And check3) Then
+                MessageBox.Show("Arquivo XML Inválido", "XML Inválido",
                             MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            SourceXMLFile = ""
-            lblCaminho.Text = SourceXMLFile
-            Return False
-        End If
-        '
-        '--- FILL LIST ITEMS
-        lstConn.Items.Clear()
-        Dim stringsConn As XmlNodeList = doc.GetElementsByTagName("setting")
+                SourceXMLFile = ""
+                lblCaminho.Text = SourceXMLFile
+                Return False
+            End If
+            '
+            '--- FILL LIST ITEMS
+            lstConn.Items.Clear()
+            Dim stringsConn As XmlNodeList = doc.GetElementsByTagName("setting")
 
-        For Each conn As XmlNode In stringsConn
-            lstConn.Items.Add(New String() {conn.Attributes("name").Value, conn.SelectSingleNode("value").InnerText})
-        Next
+            For Each conn As XmlNode In stringsConn
+                lstConn.Items.Add(New String() {conn.Attributes("name").Value, conn.SelectSingleNode("value").InnerText})
+            Next
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Ler arquivo XML..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
         '--- RETURN
         Return True

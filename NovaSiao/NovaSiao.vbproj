@@ -640,6 +640,12 @@
     <Compile Include="Pedidos\frmPedido.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Pedidos\frmPedidoItemsEncontrados.Designer.vb">
+      <DependentUpon>frmPedidoItemsEncontrados.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Pedidos\frmPedidoItemsEncontrados.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Pedidos\frmPedidoMensagens.Designer.vb">
       <DependentUpon>frmPedidoMensagens.vb</DependentUpon>
     </Compile>
@@ -1116,6 +1122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Pedidos\frmPedido.resx">
       <DependentUpon>frmPedido.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pedidos\frmPedidoItemsEncontrados.resx">
+      <DependentUpon>frmPedidoItemsEncontrados.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Pedidos\frmPedidoMensagens.resx">
       <DependentUpon>frmPedidoMensagens.vb</DependentUpon>
