@@ -26,7 +26,7 @@ Partial Class frmPedidoItemsEncontrados
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvItens = New Controles.ctrlDataGridView()
-        Me.clnIDPedidoItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnSelect = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnAutor = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -44,6 +44,8 @@ Partial Class frmPedidoItemsEncontrados
         Me.PictureBox3 = New System.Windows.Forms.PictureBox()
         Me.lblEncontrados = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.btnInserirSelecionados = New System.Windows.Forms.Button()
+        Me.lblSelecionados = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -61,7 +63,7 @@ Partial Class frmPedidoItemsEncontrados
         '
         Me.lblTitulo.Location = New System.Drawing.Point(1060, 0)
         Me.lblTitulo.Size = New System.Drawing.Size(280, 50)
-        Me.lblTitulo.Text = "Produtos Selecionados"
+        Me.lblTitulo.Text = "Produtos Encontrados"
         Me.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'dgvItens
@@ -87,7 +89,7 @@ Partial Class frmPedidoItemsEncontrados
         Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvItens.ColumnHeadersHeight = 30
         Me.dgvItens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDPedidoItem, Me.clnRGProduto, Me.clnProduto, Me.clnAutor, Me.clnIDProdutoTipo, Me.clnEstoque, Me.clnEstoqueNivel, Me.clnEstoqueIdeal, Me.clnQuantidade, Me.clnPreco, Me.clnDesconto, Me.clnSubTotal})
+        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnSelect, Me.clnRGProduto, Me.clnProduto, Me.clnAutor, Me.clnIDProdutoTipo, Me.clnEstoque, Me.clnEstoqueNivel, Me.clnEstoqueIdeal, Me.clnQuantidade, Me.clnPreco, Me.clnDesconto, Me.clnSubTotal})
         DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -121,11 +123,13 @@ Partial Class frmPedidoItemsEncontrados
         Me.dgvItens.Size = New System.Drawing.Size(1315, 503)
         Me.dgvItens.TabIndex = 2
         '
-        'clnIDPedidoItem
+        'clnSelect
         '
-        Me.clnIDPedidoItem.HeaderText = "IDItem"
-        Me.clnIDPedidoItem.Name = "clnIDPedidoItem"
-        Me.clnIDPedidoItem.Visible = False
+        Me.clnSelect.HeaderText = "S"
+        Me.clnSelect.Name = "clnSelect"
+        Me.clnSelect.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.clnSelect.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.clnSelect.Width = 30
         '
         'clnRGProduto
         '
@@ -284,24 +288,54 @@ Partial Class frmPedidoItemsEncontrados
         Me.PictureBox1.TabIndex = 7
         Me.PictureBox1.TabStop = False
         '
+        'btnInserirSelecionados
+        '
+        Me.btnInserirSelecionados.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnInserirSelecionados.Image = Global.NovaSiao.My.Resources.Resources.accept
+        Me.btnInserirSelecionados.Location = New System.Drawing.Point(965, 576)
+        Me.btnInserirSelecionados.Margin = New System.Windows.Forms.Padding(6)
+        Me.btnInserirSelecionados.Name = "btnInserirSelecionados"
+        Me.btnInserirSelecionados.Size = New System.Drawing.Size(203, 50)
+        Me.btnInserirSelecionados.TabIndex = 3
+        Me.btnInserirSelecionados.Text = "&Inserir Selecionados"
+        Me.btnInserirSelecionados.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnInserirSelecionados.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnInserirSelecionados.UseVisualStyleBackColor = True
+        Me.btnInserirSelecionados.Visible = False
+        '
+        'lblSelecionados
+        '
+        Me.lblSelecionados.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSelecionados.Location = New System.Drawing.Point(733, 586)
+        Me.lblSelecionados.Name = "lblSelecionados"
+        Me.lblSelecionados.Size = New System.Drawing.Size(215, 24)
+        Me.lblSelecionados.TabIndex = 11
+        Me.lblSelecionados.Text = "00 Itens Selecionados"
+        Me.lblSelecionados.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.lblSelecionados.Visible = False
+        '
         'frmPedidoItemsEncontrados
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1340, 637)
+        Me.Controls.Add(Me.lblSelecionados)
         Me.Controls.Add(Me.lblInseridos)
         Me.Controls.Add(Me.PictureBox3)
         Me.Controls.Add(Me.lblEncontrados)
         Me.Controls.Add(Me.PictureBox1)
+        Me.Controls.Add(Me.btnInserirSelecionados)
         Me.Controls.Add(Me.btnFechar)
         Me.Controls.Add(Me.dgvItens)
         Me.Name = "frmPedidoItemsEncontrados"
         Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.dgvItens, 0)
         Me.Controls.SetChildIndex(Me.btnFechar, 0)
+        Me.Controls.SetChildIndex(Me.btnInserirSelecionados, 0)
         Me.Controls.SetChildIndex(Me.PictureBox1, 0)
         Me.Controls.SetChildIndex(Me.lblEncontrados, 0)
         Me.Controls.SetChildIndex(Me.PictureBox3, 0)
         Me.Controls.SetChildIndex(Me.lblInseridos, 0)
+        Me.Controls.SetChildIndex(Me.lblSelecionados, 0)
         Me.Panel1.ResumeLayout(False)
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
@@ -312,7 +346,13 @@ Partial Class frmPedidoItemsEncontrados
     End Sub
 
     Friend WithEvents dgvItens As Controles.ctrlDataGridView
-    Friend WithEvents clnIDPedidoItem As DataGridViewTextBoxColumn
+    Friend WithEvents btnClose As VIBlend.WinForms.Controls.vFormButton
+    Friend WithEvents btnFechar As Button
+    Friend WithEvents lblInseridos As Label
+    Friend WithEvents PictureBox3 As PictureBox
+    Friend WithEvents lblEncontrados As Label
+    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents clnSelect As DataGridViewCheckBoxColumn
     Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
     Friend WithEvents clnProduto As DataGridViewTextBoxColumn
     Friend WithEvents clnAutor As DataGridViewTextBoxColumn
@@ -324,10 +364,6 @@ Partial Class frmPedidoItemsEncontrados
     Friend WithEvents clnPreco As DataGridViewTextBoxColumn
     Friend WithEvents clnDesconto As DataGridViewTextBoxColumn
     Friend WithEvents clnSubTotal As DataGridViewTextBoxColumn
-    Friend WithEvents btnClose As VIBlend.WinForms.Controls.vFormButton
-    Friend WithEvents btnFechar As Button
-    Friend WithEvents lblInseridos As Label
-    Friend WithEvents PictureBox3 As PictureBox
-    Friend WithEvents lblEncontrados As Label
-    Friend WithEvents PictureBox1 As PictureBox
+    Friend WithEvents btnInserirSelecionados As Button
+    Friend WithEvents lblSelecionados As Label
 End Class

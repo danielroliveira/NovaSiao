@@ -3,15 +3,19 @@ Imports CamadaBLL
 
 Public Class frmPedidoItemsEncontrados
     '
-    Private _ItensList As List(Of clPedidoItem)
+    Private _ItensList As List(Of clPedidoItem) '--- itens encontrados na procura
+    Private _ItensInseridos As List(Of clPedidoItem) '--- itens presentes no pedido
     Private bindItens As New BindingSource
     Const rowHeight As Integer = 25 '--- define o tamanho da row no DataGridView
-    Private _formOrigem As Form
+    Private _formOrigem As frmPedido
     Private ItensInseridos As Integer = 0
+    Private currentEditRow As Integer? = Nothing
+    Private _rowSit As EnumFlagEstado = EnumFlagEstado.RegistroSalvo
     '
 #Region "SUB NEW"
     '
-    Sub New(ItensList As List(Of clPedidoItem), ItensInseridos As List(Of clPedidoItem), formOrigem As Form)
+    Sub New(ItensList As List(Of clPedidoItem),
+            formOrigem As frmPedido)
         '
         ' This call is required by the designer.
         InitializeComponent()
@@ -22,7 +26,8 @@ Public Class frmPedidoItemsEncontrados
         bindItens.DataSource = _ItensList
         '
         '--- verify items inserted
-        VerificaItemsInseridos(ItensInseridos)
+        _ItensInseridos = formOrigem.ItensList
+        VerificaItemsInseridos(_ItensInseridos)
         PreencheItens()
         ControlaLegenda()
         '
@@ -64,17 +69,12 @@ Public Class frmPedidoItemsEncontrados
     '
     Private Sub FormataColunas_Itens()
         '
-        ' (0) COLUNA IDItem
-        With clnIDPedidoItem
-            .DataPropertyName = "IDPedidoItem"
-            .Width = 0
+        With clnSelect
+            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
             .Resizable = DataGridViewTriState.False
-            .Visible = False
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
         '
-        ' (1) COLUNA RGProduto
+        ' (2) COLUNA RGProduto
         With clnRGProduto
             .DataPropertyName = "RGProduto"
             '.Width = 60
@@ -87,7 +87,7 @@ Public Class frmPedidoItemsEncontrados
             '.DefaultCellStyle.Font = New Font("Arial Narrow", 12)
         End With
         '
-        ' (2) COLUNA PRODUTO
+        ' (3) COLUNA PRODUTO
         With clnProduto
             .DataPropertyName = "Produto"
             '.Width = 400
@@ -98,7 +98,7 @@ Public Class frmPedidoItemsEncontrados
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
         End With
         '
-        ' (3) COLUNA AUTOR
+        ' (4) COLUNA AUTOR
         With clnAutor
             .DataPropertyName = "Autor"
             '.Width = 220
@@ -109,7 +109,7 @@ Public Class frmPedidoItemsEncontrados
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
         End With
         '
-        ' (4) COLUNA PRODUTO TIPO
+        ' (5) COLUNA PRODUTO TIPO
         With clnIDProdutoTipo
             .DataPropertyName = "ProdutoTipo"
             '.Width = 120
@@ -120,7 +120,7 @@ Public Class frmPedidoItemsEncontrados
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
         End With
         '
-        ' (5) COLUNA ESTOQUE
+        ' (6) COLUNA ESTOQUE
         With clnEstoque
             .DataPropertyName = "Estoque"
             .HeaderText = "Est."
@@ -134,7 +134,7 @@ Public Class frmPedidoItemsEncontrados
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (6) COLUNA ESTOQUE NIVEL
+        ' (7) COLUNA ESTOQUE NIVEL
         With clnEstoqueNivel
             .DataPropertyName = "EstoqueNivel"
             .HeaderText = "Niv."
@@ -148,7 +148,7 @@ Public Class frmPedidoItemsEncontrados
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (6) COLUNA ESTOQUE IDEAL
+        ' (8) COLUNA ESTOQUE IDEAL
         With clnEstoqueIdeal
             .DataPropertyName = "EstoqueIdeal"
             .HeaderText = "Alvo"
@@ -162,7 +162,7 @@ Public Class frmPedidoItemsEncontrados
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (7) COLUNA QUANTIDADE
+        ' (9) COLUNA QUANTIDADE
         With clnQuantidade
             .DataPropertyName = "Quantidade"
             .HeaderText = "Quant."
@@ -176,7 +176,7 @@ Public Class frmPedidoItemsEncontrados
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (8) COLUNA PRECO
+        ' (10) COLUNA PRECO
         With clnPreco
             .DataPropertyName = "Preco"
             '.Width = 70
@@ -189,7 +189,7 @@ Public Class frmPedidoItemsEncontrados
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (6) COLUNA DESCONTO
+        ' (11) COLUNA DESCONTO
         With clnDesconto
             .DataPropertyName = "Desconto"
             .HeaderText = "Desc(%)"
@@ -203,7 +203,7 @@ Public Class frmPedidoItemsEncontrados
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (9) COLUNA SUB TOTAL
+        ' (12) COLUNA SUB TOTAL
         With clnSubTotal
             .DataPropertyName = "SubTotal"
             '.Width = 80
@@ -217,7 +217,7 @@ Public Class frmPedidoItemsEncontrados
         End With
         '
         '--- adiciona as colunas editadas
-        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnIDPedidoItem, clnRGProduto,
+        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnSelect, clnRGProduto,
                                                             clnProduto, clnAutor, clnIDProdutoTipo, clnEstoque, clnEstoqueNivel,
                                                             clnEstoqueIdeal, clnQuantidade, clnPreco, clnDesconto, clnSubTotal})
         '
@@ -252,161 +252,9 @@ Public Class frmPedidoItemsEncontrados
     Private Sub dgvItens_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvItens.CellBeginEdit
         '
         currentEditRow = e.RowIndex
-        '
-        If dgvItens.Rows(e.RowIndex).IsNewRow Then
-            _rowSit = EnumFlagEstado.NovoRegistro
-        Else
-            _rowSit = EnumFlagEstado.Alterado
-        End If
-        '
-        If e.ColumnIndex = clnEstoqueIdeal.Index Then
-            '--- obtem o item do dgv
-            Dim item As clPedidoItem = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clPedidoItem)
-            '
-            If IsNothing(item) OrElse IsNothing(item.IDProduto) Then
-                e.Cancel = True
-                MessageBox.Show("Esse item contém um produto novo..." & vbNewLine &
-                                "O Estoque Nivel e Ideal não podem ser alterados de um produto que ainda não foi inserido.",
-                                "Produto Novo", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
-            '
-        ElseIf e.ColumnIndex = clnEstoqueNivel.Index Then
-            '--- obtem o item do dgv
-            Dim item As clPedidoItem = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clPedidoItem)
-            '
-            If IsNothing(item) OrElse IsNothing(item.IDProduto) Then
-                e.Cancel = True
-                MessageBox.Show("Esse item contém um produto novo..." & vbNewLine &
-                                "O Estoque Nivel e Ideal não podem ser alterados de um produto que ainda não foi inserido.",
-                                "Produto Novo", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
-            '
-        End If
+        _rowSit = EnumFlagEstado.Alterado
         '
     End Sub
-    '
-    '--- VALIDA O ROW E INSERE/ALTERA O ITEM DO PEDIDO
-    Private Sub dgvItens_RowValidating(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvItens.RowValidating
-        '
-        '--- verifica se é um ROW editado ou novo
-        If _rowSit = EnumFlagEstado.NovoRegistro OrElse _rowSit = EnumFlagEstado.Alterado Then
-            '
-            '--- Verifica os valores inseridos
-            If VerificaItem(e.RowIndex) = False Then
-                e.Cancel = True
-                'bindItens.CancelEdit()
-            Else
-                If _rowSit = EnumFlagEstado.NovoRegistro Then
-                    '
-                    Try
-                        Dim myItem As clPedidoItem = dgvItens.Rows(e.RowIndex).DataBoundItem
-                        '
-                        myItem.IDPedido = _pedido.IDPedido
-                        myItem.IDFilialOrigem = _pedido.IDFilial
-                        '
-                        ItemInserir(dgvItens.Rows(e.RowIndex).DataBoundItem)
-                        bindItens.EndEdit()
-                        currentEditRow = Nothing
-                    Catch ex As Exception
-                        bindItens.CancelEdit()
-                    End Try
-                    '
-                ElseIf _rowSit = EnumFlagEstado.Alterado Then
-                    '
-                    Try
-                        ItemAlterar(dgvItens.Rows(e.RowIndex).DataBoundItem)
-                        bindItens.EndEdit()
-                        currentEditRow = Nothing
-                    Catch ex As Exception
-                        bindItens.CancelEdit()
-                    End Try
-                    '
-                End If
-                '
-                bindItens.EndEdit()
-                _rowSit = EnumFlagEstado.RegistroSalvo
-                AtualizaTotalGeral()
-                '
-            End If
-            '
-        End If
-        '
-    End Sub
-    '
-    '--- INSERE NOVO ITEM NO PEDIDO
-    Private Function ItemInserir(myItem As clPedidoItem) As Integer
-        '
-        Try
-            Dim myI As Object = _pedBLL.PedidoItem_Inserir(myItem)
-            '
-            If IsNumeric(myI) Then
-                myItem.IDPedidoItem = myI
-                myItem.Origem = 0
-                Return myI
-            Else
-                Throw New Exception(myI.ToString)
-            End If
-            '
-        Catch ex As Exception
-            MessageBox.Show("Ocorreu uma exceção ao inserir novo Item no Pedido" & vbNewLine &
-                            ex.Message, "Exceção",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return Nothing
-        End Try
-        '
-    End Function
-    '
-    '--- ALTERA ITEM NO PEDIDO
-    Private Function ItemAlterar(myItem As clPedidoItem) As Integer
-        '
-        Try
-            Dim myI As Object = _pedBLL.PedidoItem_Alterar(myItem)
-            '
-            If IsNumeric(myI) Then
-                Return myI
-            Else
-                Throw New Exception(myI.ToString)
-            End If
-            '
-        Catch ex As Exception
-            MessageBox.Show("Ocorreu uma exceção ao ALTERAR Item do Pedido" & vbNewLine &
-                            ex.Message, "Exceção",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return Nothing
-        End Try
-        '
-    End Function
-    '
-    '--- VERIFICACAO SE O ITEM ESTA PRONTO PARA SER INSERIDO OU ALTERADO
-    Private Function VerificaItem(rowIndex As Integer) As Boolean
-        '
-        Dim myItem As clPedidoItem
-        '
-        Try
-            myItem = dgvItens.Rows(rowIndex).DataBoundItem
-        Catch ex As Exception
-            myItem = Nothing
-        End Try
-        '
-        If myItem Is Nothing Then Return False
-        '
-        If String.IsNullOrEmpty(myItem.Produto) Then
-            dgvItens.CurrentCell = dgvItens.Rows(currentEditRow).Cells(2)
-            MessageBox.Show("A descrição do Produto pedido não pode ficar vazia..." & currentEditRow, "Campo Vazio",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Return False
-        End If
-        '
-        If IsNothing(myItem.IDProdutoTipo) Then
-            dgvItens.CurrentCell = dgvItens.Rows(currentEditRow).Cells(4)
-            MessageBox.Show("O tipo do Produto pedido não pode ficar vazio..." & currentEditRow, "Campo Vazio",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Return False
-        End If
-        '
-        Return True
-        '
-    End Function
     '
     '--- CONTROLA HANDLER KEYPRESS DO DATAGRIDVIEW
     Private Sub dgvItens_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvItens.EditingControlShowing
@@ -517,27 +365,23 @@ Public Class frmPedidoItemsEncontrados
         '--- verifica se a currenteCELL is Dirty
         If Not dgvItens.IsCurrentCellDirty Then Return
         '
-        If e.ColumnIndex = 1 Then
-            '
-            If String.IsNullOrEmpty(e.FormattedValue.ToString) Then
-                e.Cancel = False
-                Return
-            End If
-            '
-            If ProcuraItemRG(e.FormattedValue) = False Then
-                dgvItens.Rows(e.RowIndex).Cells(e.ColumnIndex).Value = String.Empty
-                e.Cancel = True
-                Return
-            End If
-            '
-        ElseIf e.ColumnIndex = clnEstoqueIdeal.Index Then
+        If e.ColumnIndex = clnEstoqueIdeal.Index Then
             '
             '--- obtem o item do dgv
             Dim item As clPedidoItem = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clPedidoItem)
             '
             '--- verifica se existe RGProduto
             If Not item.IDProduto Is Nothing Then
-                Altera_Item_EstoqueNivel(item.IDProduto, item.EstoqueNivel, e.FormattedValue)
+                '
+                If item.EstoqueNivel <= e.FormattedValue Then
+                    Altera_Item_EstoqueNivel(item.IDProduto, item.EstoqueNivel, e.FormattedValue)
+                ElseIf _rowSit = EnumFlagEstado.Alterado Then
+                    AbrirDialog("O Nivel de Estoque não pode ser maior que o Estoque Ideal...",
+                                "Estoque Nivel", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                    dgvItens.CancelEdit()
+                    _rowSit = EnumFlagEstado.RegistroSalvo
+                End If
+                '
             End If
             '
         ElseIf e.ColumnIndex = clnEstoqueNivel.Index Then
@@ -547,7 +391,16 @@ Public Class frmPedidoItemsEncontrados
             '
             '--- verifica se existe RGProduto
             If Not item.IDProduto Is Nothing Then
-                Altera_Item_EstoqueNivel(item.IDProduto, e.FormattedValue, item.EstoqueIdeal)
+                '
+                If item.EstoqueIdeal > e.FormattedValue Then
+                    Altera_Item_EstoqueNivel(item.IDProduto, e.FormattedValue, item.EstoqueIdeal)
+                ElseIf _rowSit = EnumFlagEstado.Alterado Then
+                    AbrirDialog("O Nivel de Estoque não pode ser maior que o Estoque Ideal...",
+                                "Estoque Nivel", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                    dgvItens.CancelEdit()
+                    _rowSit = EnumFlagEstado.RegistroSalvo
+                End If
+                '
             End If
             '
         End If
@@ -564,7 +417,8 @@ Public Class frmPedidoItemsEncontrados
                 '--- Ampulheta ON
                 Cursor = Cursors.WaitCursor
                 '
-                prodBLL.ProdutoAlterarEstoqueMinimoIdeal(IDProduto, _pedido.IDFilial, EstNivel, EstIdeal)
+                Dim IDFilial As Integer = _ItensList(0).IDFilialOrigem
+                prodBLL.ProdutoAlterarEstoqueMinimoIdeal(IDProduto, IDFilial, EstNivel, EstIdeal)
                 '
             Catch ex As Exception
                 MessageBox.Show("Uma exceção ocorreu ao Atualizar o estoque Mínimo e/ou Ideal..." & vbNewLine &
@@ -588,37 +442,49 @@ Public Class frmPedidoItemsEncontrados
         '
     End Sub
     '
-    '--- AO EXCLUIR O ITEM DO PEDIDO
-    Private Sub dgvItens_UserDeletingRow(sender As Object, e As DataGridViewRowCancelEventArgs) Handles dgvItens.UserDeletingRow
+    '--- AO SELECIONAR O ITEM ALTERA A CONTAGEM
+    Private Sub dgvItens_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellValueChanged
         '
-        Dim delItem As clPedidoItem = e.Row.DataBoundItem
-        '
-        '--- verifica se existe numero de IDPedidoItem
-        If IsNothing(delItem.IDPedidoItem) Then
-            e.Cancel = True
-            Return
+        If e.ColumnIndex = 0 Then
+            Dim quant As Integer = 0
+            '
+            For Each row As DataGridViewRow In dgvItens.Rows
+                If row.Cells(0).Value = True Then
+                    quant += 1
+                End If
+            Next
+            '
+            If quant > 0 Then
+                lblSelecionados.Visible = True
+                lblSelecionados.Text = Format(quant, "00") + " Item(s) Selecionado(s)"
+                btnInserirSelecionados.Visible = True
+            Else
+                lblSelecionados.Visible = False
+                lblSelecionados.Text = Format(quant, "00") + " Item(s) Selecionado(s)"
+                btnInserirSelecionados.Visible = False
+            End If
+            '
         End If
         '
-        '--- pergunta ao usuario
-        If MessageBox.Show("Você realmente deseja excluir o produto:" & vbNewLine & delItem.Produto.ToUpper & "?",
-                           "Excluir Produto", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                           MessageBoxDefaultButton.Button2) = DialogResult.No Then
-            e.Cancel = True
-            Return
+    End Sub
+    '
+    '--- AO SELECIONAR O ITEM ALTERA A CONTAGEM
+    Private Sub dgvItens_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellContentClick
+        '
+        If e.ColumnIndex = 0 Then
+            dgvItens.CommitEdit(DataGridViewDataErrorContexts.Commit)
         End If
         '
-        '--- exclui o registro no BD
+    End Sub
+    '
+    '--- AO CLICAR NO ROW HEADER TRANSFERIR O ITEM
+    Private Sub dgvItens_RowHeaderMouseDoubleClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvItens.RowHeaderMouseDoubleClick
         '
         Try
-            '
-            _pedBLL.PedidoItem_Excluir(delItem.IDPedidoItem)
-            e.Cancel = False
-            AtualizaTotalGeral()
-            '
+            ItemTransferir(dgvItens.Rows(e.RowIndex).DataBoundItem, True)
         Catch ex As Exception
-            MessageBox.Show("Houve uma exceção ao excluir o item do pedido:" & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao Transferir Item para o pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            e.Cancel = True
         End Try
         '
     End Sub
@@ -646,7 +512,7 @@ Public Class frmPedidoItemsEncontrados
         If lista.Count = 0 Then Return
         '
         For Each item In _ItensList
-            If lista.Exists(Function(x) x.IDProduto = item.IDProduto) Then
+            If lista.Exists(Function(x) If(x.IDProduto, 0) = item.IDProduto) Then
                 item.Origem = 10
                 ItensInseridos += 1
             End If
@@ -677,6 +543,7 @@ Public Class frmPedidoItemsEncontrados
         If Not IsNothing(_formOrigem) Then
             Dim pnl As Panel = _formOrigem.Controls("Panel1")
             pnl.BackColor = Color.Silver
+            _formOrigem.Controls("tsMenu").Enabled = False
         End If
     End Sub
     '
@@ -684,9 +551,71 @@ Public Class frmPedidoItemsEncontrados
         If Not IsNothing(_formOrigem) Then
             Dim pnl As Panel = _formOrigem.Controls("Panel1")
             pnl.BackColor = Color.SlateGray
+            _formOrigem.Controls("tsMenu").Enabled = True
         End If
     End Sub
     '
 #End Region
+    '
+#Region "TRANSFERIR ITENS"
+    '
+    Private Sub ItemTransferir(item As clPedidoItem, emitirMensagem As Boolean)
+        '
+        If emitirMensagem AndAlso item.Origem = 10 Then
+            '
+            If AbrirDialog("O produto: " + item.Produto + vbCrLf +
+                           "já foi inserido no pedido..." + vbCrLf +
+                           "Deseja inserir esse produto assim mesmo?",
+                           "Produto Já Inserido",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.No Then Exit Sub
+            '
+        End If
+        '
+        Try
+            _ItensInseridos.Add(item)
+            _formOrigem.ItemInserir(item)
+            _formOrigem.bindItens.ResetBindings(False)
+            _formOrigem.AtualizaTotalGeral()
+            bindItens.Remove(item)
+        Catch ex As Exception
+            '
+            Throw ex
+            '
+        End Try
+        '
+    End Sub
+
+    Private Sub btnInserirSelecionados_Click(sender As Object, e As EventArgs) Handles btnInserirSelecionados.Click
+        '
+        Dim quant As Integer = 0
+        '
+        For Each row As DataGridViewRow In dgvItens.Rows
+            If row.Cells(0).Value = True Then
+                If row.DataBoundItem.Origem = 10 Then quant += 1
+            End If
+        Next
+        '
+        If AbrirDialog("Existe(m) " + Format(quant, "00") + " produto(s) que" + vbCrLf +
+                       "já foram inseridos no pedido..." + vbCrLf +
+                       "Deseja inserir os produtos selecionados mesmo assim?",
+                       "Produto Já Inserido",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question) = DialogResult.No Then Exit Sub
+        '
+        Try
+            For Each row As DataGridViewRow In dgvItens.Rows
+                If row.Cells(0).Value = True Then
+                    ItemTransferir(row.DataBoundItem, False)
+                End If
+            Next
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Transferir os Items para o pedido..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        '
+    End Sub
+    '
+#End Region '/ TRANSFERIR ITENS
     '
 End Class

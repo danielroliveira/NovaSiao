@@ -395,10 +395,10 @@ Public Class frmReservaProcurar
         clnTelefoneB.Width = 110
         '
         clnProduto.DisplayMember = "Produto"
-        clnProduto.Width = 200
+        clnProduto.Width = 250
         '
         clnAutor.DisplayMember = "Autor"
-        clnAutor.Width = 100
+        clnAutor.Width = 150
         '
         clnFornecedor.DisplayMember = "Fornecedor"
         clnFornecedor.Width = 100

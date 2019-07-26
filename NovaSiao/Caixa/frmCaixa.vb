@@ -1049,7 +1049,7 @@ Public Class frmCaixa
             If cl.Mov = "E" Then
                 E = E + cl.MovValor
             ElseIf cl.Mov = "S" Then
-                S = S + cl.MovValor
+                S = S + cl.MovValorReal
             Else
                 Transf = Transf + cl.MovValorReal
             End If
@@ -1062,7 +1062,7 @@ Public Class frmCaixa
             lblTTransf.Text = Format(Transf, "C")
             '
             '--- Calcula SALDOS
-            _Caixa.SaldoFinal = _TEntradas + _TTransf - _TSaidas
+            _Caixa.SaldoFinal = _TEntradas - _TTransf - _TSaidas
             lblSaldoFinal.Text = Format(_Caixa.SaldoFinal, "C")
             '
             If _Caixa.SaldoFinal >= 0 Then

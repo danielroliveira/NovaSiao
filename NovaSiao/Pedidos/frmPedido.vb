@@ -10,8 +10,8 @@ Public Class frmPedido
     Private _strPedidoImportado As String = ""
     '
     '--- Itens do pedido
-    Private _ItensList As New List(Of clPedidoItem)
-    Private bindItens As New BindingSource
+    Public ItensList As New List(Of clPedidoItem)
+    Public bindItens As New BindingSource
     Private currentEditRow As Integer? = Nothing
     Private _rowSit As EnumFlagEstado
     Const rowHeight As Integer = 25 '--- define o tamanho da row no DataGridView
@@ -244,8 +244,8 @@ Public Class frmPedido
     '--- RETORNA TODOS OS ITENS DA VENDA
     Private Sub GetItens()
         Try
-            _ItensList = _pedBLL.GetPedidoItens_IDPedido_List(_pedido.IDPedido, _pedido.IDFilial)
-            bindItens.DataSource = _ItensList
+            ItensList = _pedBLL.GetPedidoItens_IDPedido_List(_pedido.IDPedido, _pedido.IDFilial)
+            bindItens.DataSource = ItensList
             '--- Atualiza o label TOTAL
             AtualizaTotalGeral()
         Catch ex As Exception
@@ -567,7 +567,7 @@ Public Class frmPedido
     '
     Private Sub miImprimir_Click(sender As Object, e As EventArgs) Handles miImprimir.Click
         '
-        Dim frm As New frmReportPedido(_pedido, _ItensList, _MensagensList)
+        Dim frm As New frmReportPedido(_pedido, ItensList, _MensagensList)
         '
         '--- Ampulheta ON
         Cursor = Cursors.WaitCursor
@@ -583,7 +583,7 @@ Public Class frmPedido
     '
     Private Sub miEnviarPorEmail_Click(sender As Object, e As EventArgs) Handles miEnviarPorEmail.Click
         '
-        Dim frm As New frmReportPedido(_pedido, _ItensList, _MensagensList)
+        Dim frm As New frmReportPedido(_pedido, ItensList, _MensagensList)
         '
         '--- Ampulheta ON
         Cursor = Cursors.WaitCursor
@@ -848,12 +848,12 @@ Public Class frmPedido
         '
     End Sub
     '
-    Private Function AtualizaTotalGeral() As Decimal
+    Public Function AtualizaTotalGeral() As Decimal
         '
-        If _ItensList.Count > 0 Then
+        If ItensList.Count > 0 Then
             Dim T As Double = 0
             '
-            T = _ItensList.Sum(Function(x) x.SubTotal)
+            T = ItensList.Sum(Function(x) x.SubTotal)
             _pedido.TotalPedido = T
             lblValorTotal.Text = Format(T, "c")
             '
@@ -963,9 +963,13 @@ Public Class frmPedido
     End Sub
     '
     '--- INSERE NOVO ITEM NO PEDIDO
-    Private Function ItemInserir(myItem As clPedidoItem) As Integer
+    Public Function ItemInserir(myItem As clPedidoItem) As Integer
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Dim myI As Object = _pedBLL.PedidoItem_Inserir(myItem)
             '
             If IsNumeric(myI) Then
@@ -981,6 +985,11 @@ Public Class frmPedido
                             ex.Message, "Exceção",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return Nothing
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Function
@@ -989,6 +998,10 @@ Public Class frmPedido
     Private Function ItemAlterar(myItem As clPedidoItem) As Integer
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Dim myI As Object = _pedBLL.PedidoItem_Alterar(myItem)
             '
             If IsNumeric(myI) Then
@@ -1002,6 +1015,11 @@ Public Class frmPedido
                             ex.Message, "Exceção",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return Nothing
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Function
@@ -1166,7 +1184,16 @@ Public Class frmPedido
             '
             '--- verifica se existe RGProduto
             If Not item.IDProduto Is Nothing Then
-                Altera_Item_EstoqueNivel(item.IDProduto, item.EstoqueNivel, e.FormattedValue)
+                '
+                If item.EstoqueNivel <= e.FormattedValue Then
+                    Altera_Item_EstoqueNivel(item.IDProduto, item.EstoqueNivel, e.FormattedValue)
+                ElseIf _rowSit = EnumFlagEstado.Alterado Then
+                    AbrirDialog("O Nivel de Estoque não pode ser maior que o Estoque Ideal...",
+                                "Estoque Nivel", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                    dgvItens.CancelEdit()
+                    _rowSit = EnumFlagEstado.RegistroSalvo
+                End If
+                '
             End If
             '
         ElseIf e.ColumnIndex = clnEstoqueNivel.Index Then
@@ -1176,7 +1203,16 @@ Public Class frmPedido
             '
             '--- verifica se existe RGProduto
             If Not item.IDProduto Is Nothing Then
-                Altera_Item_EstoqueNivel(item.IDProduto, e.FormattedValue, item.EstoqueIdeal)
+                '
+                If item.EstoqueIdeal > e.FormattedValue Then
+                    Altera_Item_EstoqueNivel(item.IDProduto, e.FormattedValue, item.EstoqueIdeal)
+                ElseIf _rowSit = EnumFlagEstado.Alterado Then
+                    AbrirDialog("O Nivel de Estoque não pode ser maior que o Estoque Ideal...",
+                                "Estoque Nivel", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                    dgvItens.CancelEdit()
+                    _rowSit = EnumFlagEstado.RegistroSalvo
+                End If
+                '
             End If
             '
         End If
@@ -1629,7 +1665,7 @@ Public Class frmPedido
     Private Sub miExportarItens_Click(sender As Object, e As EventArgs) Handles miExportarItens.Click
         '
         '--- verifica se existem itens no pedido
-        If _ItensList.Count = 0 Then
+        If ItensList.Count = 0 Then
             MessageBox.Show("O pedido ainda não tem nenhum item inserido..." & vbNewLine &
                             "Não possível criar arquivo de exportação sem produtos.",
                             "Pedido Vazio", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -1693,7 +1729,7 @@ Public Class frmPedido
                 .WriteStartElement("Produtos")
                 Dim us As New Globalization.CultureInfo("en-US")
 
-                For Each i As clPedidoItem In _ItensList
+                For Each i As clPedidoItem In ItensList
                     '
                     .WriteStartElement("Item")
                     .WriteAttributeString("IDPedidoItem", i.IDPedidoItem)
@@ -1856,9 +1892,9 @@ Public Class frmPedido
                 End Try
                 '
                 '--- adiciona o item a listagem
-                _ItensList.Add(item)
+                ItensList.Add(item)
                 '
-                bindItens.DataSource = _ItensList
+                bindItens.DataSource = ItensList
                 bindItens.ResetBindings(False)
                 AtualizaTotalGeral()
                 '
@@ -1891,14 +1927,6 @@ Public Class frmPedido
         '
         Dim IDTipo As Integer = form.propIdTipo_Escolha
         '
-        'If AbrirDialog("Deseja incluir todos os produtos do Tipo: " +
-        '               form.propTipo_Escolha.ToUpper +
-        '               " que estão com estoque abaixo do nível, no pedido",
-        '               "Incluir Produtos por Tipo",
-        '               frmDialog.DialogType.SIM_NAO,
-        '               frmDialog.DialogIcon.Question,
-        '               frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Exit Sub
-        '
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
@@ -1906,13 +1934,48 @@ Public Class frmPedido
             Dim newItems As List(Of clPedidoItem) = _pedBLL.VerificaProdutoEstoqueTipo(IDTipo, _pedido)
             '
             If newItems.Count = 0 Then
-                AbrirDialog("Não há produtos que estejam abaixo do Estoque Nível...",
+                AbrirDialog("Não há produtos desse TIPO que estejam abaixo do Estoque Nível...",
                             "Nenhum produto selecionado",
                             frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
                 Exit Sub
             End If
             '
-            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, _ItensList, Me)
+            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, Me)
+            formSelecionados.ShowDialog()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao pesquisar e inserir produtos no pedido..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+
+    Private Sub miPeloEstoquePorFabricante_Click(sender As Object, e As EventArgs) Handles miPeloEstoquePorFabricante.Click
+        '
+        Dim form As New frmFabricanteProcurar(Me)
+        '
+        form.ShowDialog()
+        If form.DialogResult <> DialogResult.OK Then Exit Sub
+        '
+        Dim IDFabricante As Integer = form.propIDFab_Escolha
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim newItems As List(Of clPedidoItem) = _pedBLL.VerificaProdutoEstoqueFabricante(IDFabricante, _pedido)
+            '
+            If newItems.Count = 0 Then
+                AbrirDialog("Não há produtos desse FABRICANTE que estejam abaixo do Estoque Nível...",
+                            "Nenhum produto selecionado",
+                            frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Exit Sub
+            End If
+            '
+            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, Me)
             formSelecionados.ShowDialog()
             '
         Catch ex As Exception

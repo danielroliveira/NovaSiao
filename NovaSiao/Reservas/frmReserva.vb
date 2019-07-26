@@ -79,6 +79,8 @@ Public Class frmReserva
         '
         AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
         '
+        AddHandler chkProdutoConhecido.CheckedChanged, AddressOf chkProdutoConhecido_CheckedChanged
+        '
     End Sub
     '
 #End Region
@@ -532,8 +534,9 @@ Public Class frmReserva
     End Sub
     '
     '--- AO ALTERAR A SITUACAO DO CHECKED PRODUTO CONHECIDO
-    Private Sub chkProdutoConhecido_CheckedChanged(sender As Object, e As EventArgs) Handles chkProdutoConhecido.CheckedChanged
+    Private Sub chkProdutoConhecido_CheckedChanged(sender As Object, e As EventArgs)
         '
+        chkProdutoConhecido.DataBindings.Item("Checked").WriteValue()
         VerificaProdutoConhecido()
         '
     End Sub

@@ -789,3 +789,190 @@ Public Class clProdutoEtiqueta
 #End Region
     '
 End Class
+'
+'==================================================================================
+' CLASSE PRODUTO FORNECEDOR => relaciona produtos aos fornecedores
+'==================================================================================
+Public Class clProdutoFornecedor
+    Implements IEditableObject
+    '
+#Region "ESTRUTURA DOS DADOS"
+    '
+    Structure ProdutoDados ' alguns usam FRIEND em vez de DIM
+        '
+        '--- Dados da tblProduto
+        '========================================
+        Dim _IDProduto As Integer?
+        'Dim RGProduto As Integer?
+        'Dim Produto As String
+        Dim _IDFornecedor As Integer?
+        'Dim Cadastro As String
+        'Dim CNPJ As String
+        Dim _IDTransacao As Integer?
+        Dim _UltimaEntrada As Date?
+        Dim _PCompra As Decimal?
+        Dim _DescontoCompra As Decimal?
+        Dim _IDProdutoOrigem As String
+        'Dim IDFilial As String
+        'Dim ApelidoFilial As String
+        '=========================================
+        '
+    End Structure
+#End Region
+    '
+#Region "PRIVATE VARIABLES"
+    Private PData As ProdutoDados
+    Private backupData As ProdutoDados
+    Private inTxn As Boolean = False
+#End Region
+    '
+#Region "IMPLEMENTS EVENTS"
+    Public Sub New()
+        PData = New ProdutoDados()
+    End Sub
+    '
+    Public Sub BeginEdit() Implements IEditableObject.BeginEdit
+        If Not inTxn Then
+            Me.backupData = PData
+            inTxn = True
+        End If
+    End Sub
+    '
+    Public Sub CancelEdit() Implements IEditableObject.CancelEdit
+        If inTxn Then
+            Me.PData = backupData
+            inTxn = False
+        End If
+    End Sub
+    '
+    Public Sub EndEdit() Implements IEditableObject.EndEdit
+        If inTxn Then
+            backupData = New ProdutoDados()
+            inTxn = False
+        End If
+    End Sub
+    '
+    '_EVENTO PUBLIC AOALTERAR
+    Public Event AoAlterar()
+    '
+    Public Overrides Function ToString() As String
+        Return Produto.ToString
+    End Function
+    '
+    Public ReadOnly Property RegistroAlterado As Boolean
+        Get
+            Return inTxn
+        End Get
+    End Property
+#End Region
+    '
+#Region "PROPRIEDADES"
+    '
+    Property IDProduto() As Integer?
+        Get
+            Return PData._IDProduto
+        End Get
+        Set(ByVal value As Integer?)
+            PData._IDProduto = value
+        End Set
+    End Property
+    '
+    Property RGProduto() As Integer?
+    '
+    Property Produto() As String
+    '
+    '--- Propriedade IDFornecedor
+    '------------------------------------------------------
+    Public Property IDFornecedor() As Integer
+        Get
+            Return PData._IDFornecedor
+        End Get
+        Set(ByVal value As Integer)
+            If value <> PData._IDFornecedor Then
+                RaiseEvent AoAlterar()
+            End If
+            PData._IDFornecedor = value
+        End Set
+    End Property
+    '
+    Property Cadastro() As String
+    '
+    Property CNPJ() As String
+    '
+    '--- Propriedade IDTransacao
+    '------------------------------------------------------
+    Public Property IDTransacao() As Integer
+        Get
+            Return PData._IDTransacao
+        End Get
+        Set(ByVal value As Integer)
+            If value <> PData._IDTransacao Then
+                RaiseEvent AoAlterar()
+            End If
+            PData._IDTransacao = value
+        End Set
+    End Property
+    '
+    '--- Propriedade UltimaEntrada
+    '------------------------------------------------------
+    Public Property UltimaEntrada() As Date?
+        Get
+            Return PData._UltimaEntrada
+        End Get
+        Set(ByVal value As Date?)
+            If value <> PData._UltimaEntrada Then
+                RaiseEvent AoAlterar()
+            End If
+            PData._UltimaEntrada = value
+        End Set
+    End Property
+    '    
+    Property PCompra() As Decimal?
+        Get
+            Return PData._PCompra
+        End Get
+        Set(value As Decimal?)
+            If Not IsNothing(PData._PCompra) Then
+                If value <> PData._PCompra Then
+                    RaiseEvent AoAlterar()
+                End If
+            End If
+            PData._PCompra = value
+        End Set
+    End Property
+    '
+    '--- Propriedade DescontoCompra
+    '------------------------------------------------------
+    Public Property DescontoCompra() As Decimal?
+        Get
+            Return PData._DescontoCompra
+        End Get
+        Set(ByVal value As Decimal?)
+            If value <> PData._DescontoCompra Then
+                RaiseEvent AoAlterar()
+            End If
+            PData._DescontoCompra = value
+        End Set
+    End Property
+    '
+    Property IDProdutoOrigem() As String
+        Get
+            Return PData._IDProdutoOrigem
+        End Get
+        Set(value As String)
+            If Not IsNothing(PData._IDProdutoOrigem) Then
+                If value <> PData._IDProdutoOrigem Then
+                    RaiseEvent AoAlterar()
+                End If
+            End If
+            PData._IDProdutoOrigem = value
+        End Set
+    End Property
+    '
+    Property IDFilial() As Integer?
+    '
+    Property ApelidoFilial() As String
+    '
+#End Region
+    '
+End Class

@@ -706,6 +706,12 @@
     <Compile Include="Produtos\frmProdutoEtiquetaControle.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Produtos\frmProdutoFornecedor.Designer.vb">
+      <DependentUpon>frmProdutoFornecedor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Produtos\frmProdutoFornecedor.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Produtos\frmProdutoListagem.designer.vb">
       <DependentUpon>frmProdutoListagem.vb</DependentUpon>
     </Compile>
@@ -1156,6 +1162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Produtos\frmProdutoEtiquetaControle.resx">
       <DependentUpon>frmProdutoEtiquetaControle.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Produtos\frmProdutoFornecedor.resx">
+      <DependentUpon>frmProdutoFornecedor.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Produtos\frmProdutoListagem.resx">
       <DependentUpon>frmProdutoListagem.vb</DependentUpon>

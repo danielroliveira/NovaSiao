@@ -1308,3 +1308,152 @@ Public Class TipoSubTipoCategoriaBLL
     End Function
     '
 End Class
+'
+'==========================================================================================
+' PRODUTO FORNECEDOR
+'==========================================================================================
+Public Class ProdutoFornecedorBLL
+    '
+    '--- GET PRODUTO FORNECEDOR PELO IDPRODUTO
+    '----------------------------------------------------------------------------------
+    Public Function GetListProdutoFornecedorByIDProduto(IDProduto As Integer) As List(Of clProdutoFornecedor)
+        '
+        Try
+            Dim query As String = "SELECT * FROM qryProdutoFornecedor WHERE IDProduto = @IDProduto"
+            Dim list As New List(Of clProdutoFornecedor)
+            Dim db As New AcessoDados
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProduto", IDProduto)
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return list
+            '
+            For Each r In dt.Rows
+                list.Add(ConvertRowInClass(r))
+            Next
+            '
+            Return list
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '--- GET PRODUTO-FORNECEDOR BY IDPRODUTO & IDFORNECEDOR
+    '----------------------------------------------------------------------------------
+    Public Function GetProdutoFornecedor(IDProduto As Integer,
+                                         IDFornecedor As Integer,
+                                         Optional mydb As AcessoDados = Nothing) As clProdutoFornecedor
+        Try
+            '
+            Dim db As AcessoDados = If(mydb, New AcessoDados)
+            Dim query As String = "SELECT * FROM tblProdutoFornecedor WHERE IDProduto = @IDProduto And IDFornecedor = @IDFornecedor"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProduto", IDProduto)
+            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return Nothing
+            '
+            Return ConvertRowInClass(dt.Rows(0))
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '--- INSERT OR UPDATE PRODUTO FORNECEDOR
+    '----------------------------------------------------------------------------------
+    Public Function InsertUpdate_ProdutoFornecedor(prodForn As clProdutoFornecedor) As clProdutoFornecedor
+        '
+        Try
+            '
+            Dim db As New AcessoDados
+            Dim query As String = ""
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProduto", prodForn.IDProduto)
+            db.AdicionarParametros("@IDFornecedor", prodForn.IDFornecedor)
+            '
+            query = "COUNT(*) FROM tblProdutoFornecedor WHERE IDProduto = @IDProduto And IDFornecedor = @IDFornecedor"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            If dt.Rows.Count = 0 Then Throw New Exception("Consulta não retornou valor...")
+            '
+            If dt.Rows(0).Item(0) = 0 Then '--- INSERT
+                '
+                query = "INSERT INTO tblProdutoFornecedor " +
+                        "(IDFornecedor, IDProduto, IDTransacao, UltimaEntrada, PCompra, DescontoCompra) " +
+                        "VALUES " +
+                        "(@IDFornecedor, @IDProduto, @IDTransacao, @UltimaEntrada, @PCompra, @DescontoCompra)"
+                '
+                db.LimparParametros()
+                db.AdicionarParametros("@IDFornecedor", prodForn.IDFornecedor)
+                db.AdicionarParametros("@IDProduto", prodForn.IDProduto)
+                db.AdicionarParametros("@IDTransacao", prodForn.IDTransacao)
+                db.AdicionarParametros("@UltimaEntrada", prodForn.UltimaEntrada)
+                db.AdicionarParametros("@PCompra", prodForn.PCompra)
+                db.AdicionarParametros("@DescontoCompra", prodForn.DescontoCompra)
+                '
+                db.ExecutarManipulacao(CommandType.Text, query)
+                '
+            ElseIf dt.Rows(0).Item(0) = 1 Then '--- UPDATE
+                '
+                query = "UPDATE tblProdutoFornecedor SET " +
+                        "UltimaEntrada = @UltimaEntrada, " +
+                        "IDTransacao = @IDTransacao, " +
+                        "DescontoCompra = @DescontoCompra, " +
+                        "PCompra = @PCompra " +
+                        "WHERE IDProduto = @IDProduto And IDFornecedor = @IDFornecedor"
+                '
+                db.LimparParametros()
+                db.AdicionarParametros("@IDFornecedor", prodForn.IDFornecedor)
+                db.AdicionarParametros("@IDProduto", prodForn.IDProduto)
+                db.AdicionarParametros("@IDTransacao", prodForn.IDTransacao)
+                db.AdicionarParametros("@UltimaEntrada", prodForn.UltimaEntrada)
+                db.AdicionarParametros("@PCompra", prodForn.PCompra)
+                db.AdicionarParametros("@DescontoCompra", prodForn.DescontoCompra)
+                '
+                db.ExecutarManipulacao(CommandType.Text, query)
+                '
+            Else
+                Throw New Exception("Consulta retornou MAIS do que um valor...")
+            End If
+            '
+            Return GetProdutoFornecedor(prodForn.IDProduto, prodForn.IDFornecedor, db)
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '--- CONVERT ROW IN CLASS
+    '----------------------------------------------------------------------------------
+    Private Function ConvertRowInClass(r) As clProdutoFornecedor
+        '
+        Return New clProdutoFornecedor With {
+            .IDProduto = r("IDProduto"),
+            .Produto = r("Produto"),
+            .RGProduto = r("RGProduto"),
+            .IDFornecedor = r("IDFornecedor"),
+            .Cadastro = r("Cadastro"),
+            .CNPJ = r("CNPJ"),
+            .PCompra = If(IsDBNull(r("PCompra")), 0, r("PCompra")),
+            .DescontoCompra = If(IsDBNull(r("DescontoCompra")), 0, r("DescontoCompra")),
+            .IDTransacao = If(IsDBNull(r("IDTransacao")), Nothing, r("IDTransacao")),
+            .UltimaEntrada = If(IsDBNull(r("UltimaEntrada")), Nothing, r("UltimaEntrada")),
+            .IDProdutoOrigem = If(IsDBNull(r("IDProdutoOrigem")), String.Empty, r("IDProdutoOrigem")),
+            .IDFilial = If(IsDBNull(r("IDFilial")), Nothing, r("IDFilial")),
+            .ApelidoFilial = If(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
+            }
+        '
+    End Function
+    '
+End Class

@@ -63,6 +63,7 @@ Partial Class frmReservaProcurar
         Me.Panel1.Controls.Add(Me.lblFilial)
         Me.Panel1.Controls.Add(Me.Label6)
         Me.Panel1.Controls.Add(Me.btnClose)
+        Me.Panel1.Size = New System.Drawing.Size(1300, 50)
         Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.btnClose, 0)
@@ -71,8 +72,9 @@ Partial Class frmReservaProcurar
         '
         'lblTitulo
         '
+        Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTitulo.Dock = System.Windows.Forms.DockStyle.None
-        Me.lblTitulo.Location = New System.Drawing.Point(679, 7)
+        Me.lblTitulo.Location = New System.Drawing.Point(1035, 7)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(226, 34)
         Me.lblTitulo.TabIndex = 2
@@ -96,13 +98,12 @@ Partial Class frmReservaProcurar
         '
         'btnFechar
         '
-        Me.btnFechar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnFechar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnFechar.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnFechar.ForeColor = System.Drawing.Color.DarkRed
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.block
         Me.btnFechar.ImageAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnFechar.Location = New System.Drawing.Point(789, 521)
+        Me.btnFechar.Location = New System.Drawing.Point(1145, 521)
         Me.btnFechar.Name = "btnFechar"
         Me.btnFechar.Size = New System.Drawing.Size(143, 41)
         Me.btnFechar.TabIndex = 17
@@ -112,12 +113,11 @@ Partial Class frmReservaProcurar
         '
         'btnEditar
         '
-        Me.btnEditar.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnEditar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnEditar.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnEditar.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnEditar.Image = Global.NovaSiao.My.Resources.Resources.editar
-        Me.btnEditar.Location = New System.Drawing.Point(491, 521)
+        Me.btnEditar.Location = New System.Drawing.Point(847, 521)
         Me.btnEditar.Name = "btnEditar"
         Me.btnEditar.Size = New System.Drawing.Size(143, 41)
         Me.btnEditar.TabIndex = 15
@@ -129,10 +129,11 @@ Partial Class frmReservaProcurar
         'btnClose
         '
         Me.btnClose.AllowAnimations = True
+        Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnClose.BackColor = System.Drawing.Color.Transparent
         Me.btnClose.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.CloseButton
         Me.btnClose.ForeColor = System.Drawing.Color.Firebrick
-        Me.btnClose.Location = New System.Drawing.Point(912, 12)
+        Me.btnClose.Location = New System.Drawing.Point(1268, 13)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.RibbonStyle = False
         Me.btnClose.RoundedCornersMask = CType(15, Byte)
@@ -181,12 +182,11 @@ Partial Class frmReservaProcurar
         '
         'btnNova
         '
-        Me.btnNova.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnNova.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnNova.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnNova.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnNova.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.btnNova.Location = New System.Drawing.Point(640, 521)
+        Me.btnNova.Location = New System.Drawing.Point(996, 521)
         Me.btnNova.Name = "btnNova"
         Me.btnNova.Size = New System.Drawing.Size(143, 41)
         Me.btnNova.TabIndex = 16
@@ -299,6 +299,9 @@ Partial Class frmReservaProcurar
         '
         'lstListagem
         '
+        Me.lstListagem.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lstListagem.BackColor = System.Drawing.Color.White
         Me.lstListagem.CheckBoxes = ComponentOwl.BetterListView.BetterListViewCheckBoxes.TwoState
         Me.lstListagem.Columns.Add(Me.clnIDReserva)
@@ -317,7 +320,7 @@ Partial Class frmReservaProcurar
         Me.lstListagem.Location = New System.Drawing.Point(12, 171)
         Me.lstListagem.MultiSelect = False
         Me.lstListagem.Name = "lstListagem"
-        Me.lstListagem.Size = New System.Drawing.Size(919, 337)
+        Me.lstListagem.Size = New System.Drawing.Size(1275, 337)
         Me.lstListagem.TabIndex = 11
         '
         'clnIDReserva
@@ -326,30 +329,35 @@ Partial Class frmReservaProcurar
         Me.clnIDReserva.ForeColor = System.Drawing.Color.Black
         Me.clnIDReserva.Name = "clnIDReserva"
         Me.clnIDReserva.Text = "ID"
+        Me.clnIDReserva.Width = 70
         '
         'clnReservaData
         '
         Me.clnReservaData.AllowResize = False
         Me.clnReservaData.Name = "clnReservaData"
         Me.clnReservaData.Text = "Data"
+        Me.clnReservaData.Width = 80
         '
         'clnClienteNome
         '
         Me.clnClienteNome.AllowResize = False
         Me.clnClienteNome.Name = "clnClienteNome"
         Me.clnClienteNome.Text = "Nome do Cliente"
+        Me.clnClienteNome.Width = 150
         '
         'clnTelefoneA
         '
         Me.clnTelefoneA.AllowResize = False
         Me.clnTelefoneA.Name = "clnTelefoneA"
         Me.clnTelefoneA.Text = "Telefone"
+        Me.clnTelefoneA.Width = 110
         '
         'clnTelefoneB
         '
         Me.clnTelefoneB.AllowResize = False
         Me.clnTelefoneB.Name = "clnTelefoneB"
         Me.clnTelefoneB.Text = "Celular"
+        Me.clnTelefoneB.Width = 110
         '
         'clnProduto
         '
@@ -378,8 +386,7 @@ Partial Class frmReservaProcurar
         '
         'chkAlterarSituacao
         '
-        Me.chkAlterarSituacao.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.chkAlterarSituacao.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.chkAlterarSituacao.Appearance = System.Windows.Forms.Appearance.Button
         Me.chkAlterarSituacao.Enabled = False
         Me.chkAlterarSituacao.Image = Global.NovaSiao.My.Resources.Resources.refresh1
@@ -394,8 +401,7 @@ Partial Class frmReservaProcurar
         '
         'btnPrintEtiquetas
         '
-        Me.btnPrintEtiquetas.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnPrintEtiquetas.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnPrintEtiquetas.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnPrintEtiquetas.Enabled = False
         Me.btnPrintEtiquetas.ForeColor = System.Drawing.Color.DarkBlue
@@ -411,8 +417,7 @@ Partial Class frmReservaProcurar
         '
         'btnPrintListagem
         '
-        Me.btnPrintListagem.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnPrintListagem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnPrintListagem.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnPrintListagem.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnPrintListagem.Image = Global.NovaSiao.My.Resources.Resources.print
@@ -428,7 +433,7 @@ Partial Class frmReservaProcurar
         'frmReservaProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(944, 573)
+        Me.ClientSize = New System.Drawing.Size(1300, 573)
         Me.Controls.Add(Me.chkAlterarSituacao)
         Me.Controls.Add(Me.lstListagem)
         Me.Controls.Add(Me.txtProduto)
