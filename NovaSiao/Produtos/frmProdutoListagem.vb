@@ -814,7 +814,7 @@ Public Class frmProdutoListagem
         '
         ' Autor
         clnAutor.DisplayMember = "Autor"
-        clnAutor.Width = 200
+        clnAutor.Width = 190
         clnAutor.AllowResize = True
         '
         ' PVenda
@@ -831,36 +831,36 @@ Public Class frmProdutoListagem
         ' EstoqueNivel
         clnEstoqueMinimo.DisplayMember = "EstoqueNivel"
         clnEstoqueMinimo.ValueMember = "EstoqueNivel"
-        clnEstoqueMinimo.Width = 70
+        clnEstoqueMinimo.Width = 65
         clnEstoqueMinimo.AllowResize = False
         '
         ' EstoqueIdeal
         clnEstoqueIdeal.DisplayMember = "EstoqueIdeal"
         clnEstoqueIdeal.ValueMember = "EstoqueIdeal"
-        clnEstoqueIdeal.Width = 70
+        clnEstoqueIdeal.Width = 65
         clnEstoqueIdeal.AllowResize = False
         '
         ' ProdutoAtivo
         clnAtivo.ValueMember = "ProdutoAtivo"
-        clnAtivo.Width = 70
+        clnAtivo.Width = 60
         clnAtivo.AllowResize = False
         '
         ' Tipo
         clnTipo.DisplayMember = "ProdutoTipo"
         clnTipo.ValueMember = "IDProdutoTipo"
-        clnTipo.Width = 100
+        clnTipo.Width = 95
         clnTipo.AllowResize = False
         '
         ' SubTipo
         clnSubTipo.DisplayMember = "ProdutoSubTipo"
         clnSubTipo.ValueMember = "IDProdutoSubTipo"
-        clnSubTipo.Width = 100
+        clnSubTipo.Width = 95
         clnSubTipo.AllowResize = False
         '
         ' Categoria
         clnCategoria.DisplayMember = "ProdutoCategoria"
         clnCategoria.ValueMember = "IDCategoria"
-        clnCategoria.Width = 100
+        clnCategoria.Width = 95
         clnCategoria.AllowResize = False
         '
         ' Fabricante

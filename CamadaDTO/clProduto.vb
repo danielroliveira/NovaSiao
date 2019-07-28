@@ -829,6 +829,8 @@ Public Class clProdutoFornecedor
 #Region "IMPLEMENTS EVENTS"
     Public Sub New()
         PData = New ProdutoDados()
+        PData._PCompra = 0
+        PData._DescontoCompra = 0
     End Sub
     '
     Public Sub BeginEdit() Implements IEditableObject.BeginEdit
@@ -883,11 +885,11 @@ Public Class clProdutoFornecedor
     '
     '--- Propriedade IDFornecedor
     '------------------------------------------------------
-    Public Property IDFornecedor() As Integer
+    Public Property IDFornecedor() As Integer?
         Get
             Return PData._IDFornecedor
         End Get
-        Set(ByVal value As Integer)
+        Set(ByVal value As Integer?)
             If value <> PData._IDFornecedor Then
                 RaiseEvent AoAlterar()
             End If
@@ -901,11 +903,11 @@ Public Class clProdutoFornecedor
     '
     '--- Propriedade IDTransacao
     '------------------------------------------------------
-    Public Property IDTransacao() As Integer
+    Public Property IDTransacao() As Integer?
         Get
             Return PData._IDTransacao
         End Get
-        Set(ByVal value As Integer)
+        Set(ByVal value As Integer?)
             If value <> PData._IDTransacao Then
                 RaiseEvent AoAlterar()
             End If
@@ -972,6 +974,12 @@ Public Class clProdutoFornecedor
     Property IDFilial() As Integer?
     '
     Property ApelidoFilial() As String
+    '
+    ReadOnly Property SubTotal() As Decimal
+        Get
+            Return If(PCompra, 0) - (If(PCompra, 0) * If(DescontoCompra, 0) / 100)
+        End Get
+    End Property
     '
 #End Region
     '

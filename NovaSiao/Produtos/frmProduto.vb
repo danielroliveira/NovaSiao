@@ -31,6 +31,7 @@ Public Class frmProduto
                 btnExcluir.Enabled = True
                 btnCancelar.Enabled = False
                 btnProcurar.Enabled = True
+                btnFornecedores.Enabled = True
                 lblIDProduto.Text = Format(_produto.IDProduto, "0000")
                 CalcMargemDescontoLabel()
                 AtivoButtonImage()
@@ -40,6 +41,7 @@ Public Class frmProduto
                 btnExcluir.Enabled = True
                 btnCancelar.Enabled = True
                 btnProcurar.Enabled = False
+                btnFornecedores.Enabled = False
                 AtivoButtonImage()
             ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
                 txtRGProduto.Select()
@@ -47,6 +49,7 @@ Public Class frmProduto
                 btnNovoProduto.Enabled = False
                 btnExcluir.Enabled = False
                 btnProcurar.Enabled = False
+                btnFornecedores.Enabled = False
                 lblIDProduto.Text = "NOVO"
                 AtivoButtonImage()
                 If IsNothing(_formOrigem) Then '--- Não tem formulário de origem
@@ -747,7 +750,7 @@ Public Class frmProduto
     Private Sub txtRGProduto_Validating(sender As Object, e As CancelEventArgs) Handles txtRGProduto.Validating
         '
         '--- VERIFICA VALOR
-        If txtRGProduto.Text.Trim.Length = 0 Then
+        If Sit = EnumFlagEstado.RegistroSalvo OrElse txtRGProduto.Text.Trim.Length = 0 Then
             Return
         End If
         '
@@ -1556,6 +1559,39 @@ Public Class frmProduto
                 End If
             End If
         End If
+        '
+    End Sub
+    '
+    '--- EXCLUIR PRODUTO
+    '----------------------------------------------------------------------------------
+    Private Sub btnExcluir_Click(sender As Object, e As EventArgs) Handles btnExcluir.Click
+        MsgBox("Ainda não foi implementado...")
+    End Sub
+    '
+    '--- FORNECEDORES DO PRODUTO
+    '----------------------------------------------------------------------------------
+    Private Sub btnFornecedores_Click(sender As Object, e As EventArgs) Handles btnFornecedores.Click
+        '
+        If IsNothing(_produto.IDProduto) OrElse _produto.IDProduto = 0 Then
+            AbrirDialog("O registro de produto necessita ser Salvo antes de abrir os fornecedores...",
+                        "Salve o Registro", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim form As New frmProdutoFornecedor(_produto, Me)
+            form.ShowDialog()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir formulário de Fornecedores..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '

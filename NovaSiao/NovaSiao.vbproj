@@ -712,6 +712,12 @@
     <Compile Include="Produtos\frmProdutoFornecedor.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Produtos\frmProdutoFornecedorEditar.Designer.vb">
+      <DependentUpon>frmProdutoFornecedorEditar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Produtos\frmProdutoFornecedorEditar.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Produtos\frmProdutoListagem.designer.vb">
       <DependentUpon>frmProdutoListagem.vb</DependentUpon>
     </Compile>
@@ -1166,6 +1172,9 @@
     <EmbeddedResource Include="Produtos\frmProdutoFornecedor.resx">
       <DependentUpon>frmProdutoFornecedor.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Produtos\frmProdutoFornecedorEditar.resx">
+      <DependentUpon>frmProdutoFornecedorEditar.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Produtos\frmProdutoListagem.resx">
       <DependentUpon>frmProdutoListagem.vb</DependentUpon>
     </EmbeddedResource>
@@ -1411,6 +1420,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="NovaSiao_ico_256px.ico" />
+    <None Include="Resources\fornecedor_64px.png" />
     <None Include="Resources\editar_24px.png" />
     <None Include="Resources\icon_warning.png" />
     <None Include="Resources\icon_information.png" />
