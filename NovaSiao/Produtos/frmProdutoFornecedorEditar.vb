@@ -26,6 +26,22 @@ Public Class frmProdutoFornecedorEditar
             Sit = EnumFlagEstado.RegistroSalvo
         End If
         '
+        If IsNothing(_prodForn.IDTransacao) Then
+            btnFornecedor.Enabled = True
+            txtFornecedor.ReadOnly = False
+            dtpUltimaEntrada.Enabled = True
+            txtDescontoCompra.ReadOnly = False
+            txtPCompra.ReadOnly = False
+            lblVinculado.Visible = False
+        Else
+            btnFornecedor.Enabled = False
+            txtFornecedor.ReadOnly = True
+            dtpUltimaEntrada.Enabled = False
+            txtDescontoCompra.ReadOnly = True
+            txtPCompra.ReadOnly = True
+            lblVinculado.Visible = True
+        End If
+        '
         dtpUltimaEntrada.MaxDate = Today
         '
     End Sub
@@ -67,7 +83,7 @@ Public Class frmProdutoFornecedorEditar
 
         lblRGProduto.DataBindings.Add("Text", bindProd, "RGProduto")
         lblProduto.DataBindings.Add("Text", bindProd, "Produto")
-        lblFornecedor.DataBindings.Add("Text", bindProd, "Cadastro")
+        txtFornecedor.DataBindings.Add("Text", bindProd, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
 
         txtPCompra.DataBindings.Add("Text", bindProd, "PCompra", True, DataSourceUpdateMode.OnPropertyChanged)
         txtDescontoCompra.DataBindings.Add("Text", bindProd, "DescontoCompra", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -115,6 +131,8 @@ Public Class frmProdutoFornecedorEditar
     '--- BTN ESCOLHER FORNECEDOR
     Private Sub btnFornecedor_Click(sender As Object, e As EventArgs) Handles btnFornecedor.Click
         '
+        If Not IsNothing(_prodForn.IDTransacao) Then Exit Sub
+        '
         Dim frmF As frmFornecedorProcurar
         Dim oldID As Integer?
         '
@@ -127,7 +145,7 @@ Public Class frmProdutoFornecedorEditar
         ' ao fechar dialog verifica o resultado
         If frmF.DialogResult <> DialogResult.OK Then Exit Sub
         '
-        lblFornecedor.Text = frmF.propFornecedor_Escolha.Cadastro
+        txtFornecedor.Text = frmF.propFornecedor_Escolha.Cadastro
         _prodForn.Cadastro = frmF.propFornecedor_Escolha.Cadastro
         _prodForn.IDFornecedor = frmF.propFornecedor_Escolha.IDPessoa
         '
@@ -155,9 +173,20 @@ Public Class frmProdutoFornecedorEditar
 
     Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
         '
+        If Not IsNothing(_prodForn.IDTransacao) Then
+            AbrirDialog("Não é possível salvar esse registro porque está vinculado a uma Transação de Compra...",
+                        "Registro Vinculado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+
+            _prodForn.CancelEdit()
+            bindProd.ResetBindings(False)
+            Sit = EnumFlagEstado.RegistroSalvo
+            Exit Sub
+        End If
+        '
         If Not VerificaValores() Then Exit Sub
         '
         DialogResult = DialogResult.OK
+        '
     End Sub
     '
 #End Region '/ BUTTONS FUNCTION
@@ -173,7 +202,7 @@ Public Class frmProdutoFornecedorEditar
             Return False
         End If
         '
-        If Not f.VerificaDadosClasse(lblFornecedor, "Fornecedor", _prodForn, EP) Then
+        If Not f.VerificaDadosClasse(txtFornecedor, "Fornecedor", _prodForn, EP) Then
             btnFornecedor.Focus()
             Return False
         End If
@@ -186,8 +215,8 @@ Public Class frmProdutoFornecedorEditar
                             "Campo Vazio", MessageBoxButtons.OK, MessageBoxIcon.Information)
             '
             '--- CONTROLA O ERROR PROVIDER
-            EP.SetError(lblFornecedor, "Preencha o valor desse campo!")
-            btnFornecedor.Focus()
+            EP.SetError(txtFornecedor, "Preencha o valor desse campo!")
+            txtFornecedor.Focus()
             '
             Return False
             '
@@ -286,5 +315,50 @@ Public Class frmProdutoFornecedorEditar
     End Sub
     '
 #End Region
+    '
+    '---------------------------------------------------------------------------------------
+    '--- BLOQUEIA PRESS A TECLA (+)
+    '---------------------------------------------------------------------------------------
+    Private Sub me_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
+        '
+        If e.KeyChar = "+" Then
+            '--- cria uma lista de controles que serao impedidos de receber '+'
+            Dim controlesBloqueados As String() = {
+                "txtFornecedor"
+            }
+            '
+            If controlesBloqueados.Contains(ActiveControl.Name) Then
+                e.Handled = True
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    Private Sub txtFornecedor_KeyDown(sender As Object, e As KeyEventArgs) Handles txtFornecedor.KeyDown
+
+        If e.KeyCode = Keys.Add Then
+            e.Handled = True
+            btnFornecedor_Click(New Object, New EventArgs)
+            '
+        ElseIf e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            SendKeys.Send("{Tab}")
+        Else
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
+        '
+    End Sub
+    '
+    Private Sub txtFornecedor_Enter(sender As Object, e As EventArgs) Handles txtFornecedor.Enter
+        txtFornecedor.BackColor = Color.White
+    End Sub
+
+    Private Sub txtFornecedor_Leave(sender As Object, e As EventArgs) Handles txtFornecedor.Leave
+        txtFornecedor.BackColor = Color.FromArgb(219, 228, 240)
+    End Sub
+    '
+
     '
 End Class

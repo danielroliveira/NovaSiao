@@ -45,10 +45,11 @@ Partial Class frmProdutoFornecedorEditar
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.lblFornecedor = New System.Windows.Forms.Label()
+        Me.txtFornecedor = New System.Windows.Forms.TextBox()
         Me.lblPrecoFinal = New System.Windows.Forms.Label()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
+        Me.lblVinculado = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -59,11 +60,13 @@ Partial Class frmProdutoFornecedorEditar
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.lblVinculado)
         Me.Panel1.Controls.Add(Me.btnClose)
         Me.Panel1.Size = New System.Drawing.Size(621, 50)
         Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.btnClose, 0)
+        Me.Panel1.Controls.SetChildIndex(Me.lblVinculado, 0)
         '
         'lblTitulo
         '
@@ -101,7 +104,7 @@ Partial Class frmProdutoFornecedorEditar
         Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
         Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSalvar, Me.btnCancelar, Me.btnFechar})
-        Me.tsMenu.Location = New System.Drawing.Point(4, 404)
+        Me.tsMenu.Location = New System.Drawing.Point(4, 411)
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
         Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional
@@ -193,6 +196,7 @@ Partial Class frmProdutoFornecedorEditar
         Me.btnFornecedor.RoundedCornersRadius = 0
         Me.btnFornecedor.Size = New System.Drawing.Size(34, 27)
         Me.btnFornecedor.TabIndex = 1
+        Me.btnFornecedor.TabStop = False
         Me.btnFornecedor.Text = "..."
         Me.btnFornecedor.UseCompatibleTextRendering = True
         Me.btnFornecedor.UseVisualStyleBackColor = False
@@ -351,22 +355,23 @@ Partial Class frmProdutoFornecedorEditar
         'Panel4
         '
         Me.Panel4.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.Panel4.Controls.Add(Me.txtFornecedor)
         Me.Panel4.Controls.Add(Me.btnFornecedor)
-        Me.Panel4.Controls.Add(Me.lblFornecedor)
         Me.Panel4.Location = New System.Drawing.Point(17, 267)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(587, 43)
         Me.Panel4.TabIndex = 6
         '
-        'lblFornecedor
+        'txtFornecedor
         '
-        Me.lblFornecedor.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblFornecedor.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblFornecedor.Location = New System.Drawing.Point(7, 8)
-        Me.lblFornecedor.Name = "lblFornecedor"
-        Me.lblFornecedor.Size = New System.Drawing.Size(529, 27)
-        Me.lblFornecedor.TabIndex = 0
-        Me.lblFornecedor.Text = "Fornecedor"
+        Me.txtFornecedor.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.txtFornecedor.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtFornecedor.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtFornecedor.Location = New System.Drawing.Point(12, 10)
+        Me.txtFornecedor.Margin = New System.Windows.Forms.Padding(0)
+        Me.txtFornecedor.Name = "txtFornecedor"
+        Me.txtFornecedor.Size = New System.Drawing.Size(524, 24)
+        Me.txtFornecedor.TabIndex = 0
         '
         'lblPrecoFinal
         '
@@ -402,10 +407,22 @@ Partial Class frmProdutoFornecedorEditar
         Me.Label8.TabIndex = 7
         Me.Label8.Text = "Preço:"
         '
+        'lblVinculado
+        '
+        Me.lblVinculado.AutoSize = True
+        Me.lblVinculado.Font = New System.Drawing.Font("Calibri", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblVinculado.ForeColor = System.Drawing.Color.Gold
+        Me.lblVinculado.Location = New System.Drawing.Point(6, 10)
+        Me.lblVinculado.Name = "lblVinculado"
+        Me.lblVinculado.Size = New System.Drawing.Size(214, 29)
+        Me.lblVinculado.TabIndex = 2
+        Me.lblVinculado.Text = "Vinculado à Compra"
+        Me.lblVinculado.Visible = False
+        '
         'frmProdutoFornecedorEditar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(621, 455)
+        Me.ClientSize = New System.Drawing.Size(621, 462)
         Me.Controls.Add(Me.Panel5)
         Me.Controls.Add(Me.Panel4)
         Me.Controls.Add(Me.Panel3)
@@ -428,6 +445,7 @@ Partial Class frmProdutoFornecedorEditar
         Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.Panel5, 0)
         Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.tsMenu.ResumeLayout(False)
         Me.tsMenu.PerformLayout()
         Me.Panel2.ResumeLayout(False)
@@ -435,6 +453,7 @@ Partial Class frmProdutoFornecedorEditar
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
         Me.Panel4.ResumeLayout(False)
+        Me.Panel4.PerformLayout()
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
         Me.ResumeLayout(False)
@@ -468,7 +487,8 @@ Partial Class frmProdutoFornecedorEditar
     Friend WithEvents Label9 As Label
     Friend WithEvents Panel4 As Panel
     Friend WithEvents lblPrecoFinal As Label
-    Friend WithEvents lblFornecedor As Label
     Friend WithEvents Panel5 As Panel
     Friend WithEvents Label8 As Label
+    Friend WithEvents txtFornecedor As TextBox
+    Friend WithEvents lblVinculado As Label
 End Class

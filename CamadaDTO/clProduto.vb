@@ -806,7 +806,7 @@ Public Class clProdutoFornecedor
         'Dim RGProduto As Integer?
         'Dim Produto As String
         Dim _IDFornecedor As Integer?
-        'Dim Cadastro As String
+        Dim _Cadastro As String
         'Dim CNPJ As String
         Dim _IDTransacao As Integer?
         Dim _UltimaEntrada As Date?
@@ -897,7 +897,19 @@ Public Class clProdutoFornecedor
         End Set
     End Property
     '
-    Property Cadastro() As String
+    '--- Propriedade Cadastro
+    '------------------------------------------------------
+    Public Property Cadastro() As String
+        Get
+            Return PData._Cadastro
+        End Get
+        Set(ByVal value As String)
+            If value <> PData._Cadastro Then
+                RaiseEvent AoAlterar()
+            End If
+            PData._Cadastro = value
+        End Set
+    End Property
     '
     Property CNPJ() As String
     '

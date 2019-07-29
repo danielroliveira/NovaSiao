@@ -8,6 +8,8 @@ Public Class frmProdutoFornecedor
     Private bindList As New BindingSource
     Private _formOrigem As Form
     Private _Produto As clProduto
+    Private currentEditRow As Integer? = Nothing
+    Private _rowSit As EnumFlagEstado
     '
 #Region "SUB NEW"
     '
@@ -153,7 +155,17 @@ Public Class frmProdutoFornecedor
     '
     Private Sub FormataColunas_Itens()
         '
-        ' (0) COLUNA Data
+        ' (0) COLUNA COD IDPRODUTOORIGEM
+        With clnIDProdutoFornecedor
+            .DataPropertyName = "IDProdutoOrigem"
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = False
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' (1) COLUNA Data
         With clnData
             .DataPropertyName = "UltimaEntrada"
             .Resizable = DataGridViewTriState.False
@@ -164,7 +176,7 @@ Public Class frmProdutoFornecedor
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (1) COLUNA APELIDOFILIAL
+        ' (2) COLUNA APELIDOFILIAL
         With clnApelidoFilial
             .DataPropertyName = "ApelidoFilial"
             .Resizable = DataGridViewTriState.False
@@ -174,7 +186,7 @@ Public Class frmProdutoFornecedor
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
         End With
         '
-        ' (2) COLUNA FORNECEDOR
+        ' (3) COLUNA FORNECEDOR
         With clnFornecedor
             .DataPropertyName = "Cadastro"
             .Resizable = DataGridViewTriState.False
@@ -184,7 +196,7 @@ Public Class frmProdutoFornecedor
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
         End With
         '
-        ' (3) COLUNA PRECO
+        ' (4) COLUNA PRECO
         With clnPreco
             .DataPropertyName = "PCompra"
             .Resizable = DataGridViewTriState.False
@@ -196,7 +208,7 @@ Public Class frmProdutoFornecedor
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (4) COLUNA DESCONTOCOMPRA
+        ' (5) COLUNA DESCONTOCOMPRA
         With clnDesconto
             .DataPropertyName = "DescontoCompra"
             .HeaderText = "Desc(%)"
@@ -209,24 +221,206 @@ Public Class frmProdutoFornecedor
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (5) COLUNA COD IDPRODUTOORIGEM
-        With clnIDProdutoFornecedor
-            .DataPropertyName = "IDProdutoOrigem"
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = False
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
         '--- adiciona as colunas editadas
-        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnData, clnApelidoFilial, clnFornecedor,
-                                  clnPreco, clnDesconto, clnIDProdutoFornecedor})
+        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnIDProdutoFornecedor, clnData, clnApelidoFilial,
+                                  clnFornecedor, clnPreco, clnDesconto})
         '
     End Sub
     '
     Private Sub dgvListagem_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
         btnEditar_Click(New Object, New EventArgs)
+    End Sub
+    '
+#End Region
+    '
+#Region "EDICAO DATAGRID ITENS"
+    '
+    '--- CONTROLA O ROW QUE ESTA SENDO EDITADO
+    Private Sub dgvItens_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvItens.CellBeginEdit
+        '
+        currentEditRow = e.RowIndex
+        _rowSit = EnumFlagEstado.Alterado
+        '
+    End Sub
+    '
+    '--- VALIDA O ROW E INSERE/ALTERA O ITEM DA LISTAGEM
+    Private Sub dgvItens_RowValidating(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvItens.RowValidating
+        '
+        '--- verifica se é um ROW editado ou novo
+        If _rowSit = EnumFlagEstado.Alterado Then
+            '
+            '--- Verifica os valores inseridos
+            If VerificaItem(e.RowIndex) = False Then
+                e.Cancel = True
+            Else
+                '
+                Try
+                    ItemSave(dgvItens.Rows(e.RowIndex).DataBoundItem)
+                    bindList.EndEdit()
+                    currentEditRow = Nothing
+                Catch ex As Exception
+                    bindList.CancelEdit()
+                End Try
+                '
+                bindList.EndEdit()
+                _rowSit = EnumFlagEstado.RegistroSalvo
+                '
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- INSERE NOVO ITEM NA LISTAGEM
+    Public Function ItemSave(myItem As clProdutoFornecedor) As clProdutoFornecedor
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim obj As Object = prodBLL.InsertUpdate_ProdutoFornecedor(myItem)
+            '
+            If obj.GetType Is GetType(clProdutoFornecedor) Then
+                Return obj
+            Else
+                Throw New Exception(obj.ToString)
+            End If
+            '
+        Catch ex As Exception
+            MessageBox.Show("Ocorreu uma exceção ao SALVAR novo registro de Fornecedor" & vbNewLine &
+                            ex.Message, "Exceção",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return Nothing
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Function
+    '
+    '--- VERIFICACAO SE O ITEM ESTA PRONTO PARA SER INSERIDO OU ALTERADO
+    Private Function VerificaItem(rowIndex As Integer) As Boolean
+        '
+        Return True
+        '
+    End Function
+    '
+    '--- CONTROLA HANDLER KEYPRESS DO DATAGRIDVIEW
+    Private Sub dgvItens_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvItens.EditingControlShowing
+        '
+        Dim colName As String = dgvItens.Columns(dgvItens.CurrentCell.ColumnIndex).Name
+        '
+        If colName = "clnIDProdutoFornecedor" Then
+            AddHandler e.Control.Leave, AddressOf txtCell_RemoveHandler
+            AddHandler e.Control.KeyPress, AddressOf txtcell_onlyUpperCase_keypress
+        End If
+        '
+    End Sub
+    '
+    '--- REMOVE HANDLER DAS CELLS
+    Private Sub txtCell_RemoveHandler(sender As Object, e As EventArgs)
+        '
+        RemoveHandler DirectCast(sender, DataGridViewTextBoxEditingControl).KeyPress, AddressOf txtcell_onlyUpperCase_keypress
+        RemoveHandler DirectCast(sender, DataGridViewTextBoxEditingControl).Leave, AddressOf txtCell_RemoveHandler
+        '
+    End Sub
+    '
+    '--- PERMITE SOMENTE NUMEROS
+    Private Sub txtcell_onlyUpperCase_keypress(ByVal sender As Object, ByVal e As KeyPressEventArgs)
+        '
+        If Char.IsNumber(e.KeyChar) Then
+            e.Handled = False
+        ElseIf e.KeyChar = vbBack Then
+            e.Handled = False
+        ElseIf Char.IsLetter(e.KeyChar) Then
+            DirectCast(sender, TextBox).SelectedText = Char.ToUpper(e.KeyChar)
+            e.Handled = True
+        End If
+        '
+    End Sub
+    '
+    '--- AO PRESSIONAR A TECLA (ENTER) ENVIAR (TAB) NO DATAGRID
+    Private Sub dgvItens_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvItens.KeyDown
+        '
+        If e.KeyCode = Keys.Enter Then
+            '
+            Dim iColumn As Integer = dgvItens.CurrentCell.ColumnIndex
+            Dim iRow As Integer = dgvItens.CurrentCell.RowIndex
+            '
+            e.SuppressKeyPress = True
+            e.Handled = True
+            '
+            If iColumn = dgvItens.ColumnCount - 1 Then
+                If (dgvItens.RowCount > (iRow + 1)) Then
+
+                    dgvItens.CurrentCell = dgvItens(1, iRow + 1)
+
+                Else
+                    'focus next control
+                End If
+            Else
+                dgvItens.CurrentCell = dgvItens(iColumn + 1, iRow)
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- VALIDA O CELL RGPRODUTO E PROCURA O PRODUTO PELO RGPRODUTO
+    Private Sub dgvItens_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvItens.CellValidating
+        '
+        '--- verifica se a currenteCELL is Dirty
+        If Not dgvItens.IsCurrentCellDirty Then Return
+        '
+        If e.ColumnIndex = clnIDProdutoFornecedor.Index Then
+            '
+            '--- obtem o item do dgv
+            Dim item As clProdutoFornecedor = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clProdutoFornecedor)
+            '
+            '--- SAVE
+            Try
+                Altera_Item_IDProdutoOrigem(item.IDProduto, item.IDFornecedor, e.FormattedValue)
+                currentEditRow = Nothing
+                _rowSit = EnumFlagEstado.RegistroSalvo
+            Catch ex As Exception
+                e.Cancel = True
+            End Try
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- ALTERA O CODIGO DO PRODUTO ORIGEM
+    '----------------------------------------------------------------------------------
+    Private Sub Altera_Item_IDProdutoOrigem(IDProduto As Integer,
+                                            IDFornecedor As Integer,
+                                            IDProdutoOrigem As String)
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            prodBLL.InsertUpdate_IDProdutoOrigem(IDProduto, IDFornecedor, IDProdutoOrigem)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Salvar o ID do produto da Origem..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    '--- ON ENTER IN ROW VERIFY SITUATION OF THEN
+    Private Sub dgvItens_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.RowEnter
+        '
+        currentEditRow = Nothing
+        _rowSit = EnumFlagEstado.RegistroSalvo
+        '
     End Sub
     '
 #End Region
@@ -251,7 +445,11 @@ Public Class frmProdutoFornecedor
         Dim form As New frmProdutoFornecedorEditar(prodForn, Me)
         form.ShowDialog()
         '
-        If form.DialogResult <> DialogResult.OK Then Exit Sub
+        If form.DialogResult <> DialogResult.OK Then
+            prodForn.CancelEdit()
+            bindList.ResetBindings(False)
+            Exit Sub
+        End If
         '
         '--- check if FORNECEDOR already inserted
         If _list.Exists(Function(x) x.IDFornecedor = prodForn.IDFornecedor) Then
@@ -262,8 +460,22 @@ Public Class frmProdutoFornecedor
             Exit Sub
         End If
         '
-        _list.Add(prodForn)
-        bindList.ResetBindings(False)
+        Try
+            '
+            Dim obj As Object = prodBLL.InsertUpdate_ProdutoFornecedor(prodForn)
+            '
+            If Not obj.GetType Is GetType(clProdutoFornecedor) Then
+                Throw New Exception(obj.ToString)
+            End If
+            '
+            _list.Add(prodForn)
+            bindList.ResetBindings(False)
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao Salvar Registro de Fornecedor..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
         '
     End Sub
     '
@@ -282,6 +494,7 @@ Public Class frmProdutoFornecedor
         '
         If form.DialogResult <> DialogResult.OK Then
             prodForn.CancelEdit()
+            bindList.ResetBindings(False)
             Exit Sub
         End If
         '
@@ -297,6 +510,54 @@ Public Class frmProdutoFornecedor
         '
         _list.Add(prodForn)
         bindList.ResetBindings(False)
+        '
+    End Sub
+    '
+    Private Sub btnExcluir_Click(sender As Object, e As EventArgs) Handles btnExcluir.Click
+        '
+        If IsNothing(dgvItens.CurrentRow) Then
+            MessageBox.Show("Não não nenhum registro selecionado ainda...",
+                            "Selecione um Registro", MessageBoxButtons.OK,
+                            MessageBoxIcon.Exclamation)
+            Exit Sub
+        End If
+        '
+        Dim delItem As clProdutoFornecedor = dgvItens.CurrentRow.DataBoundItem
+        '
+        If Not IsNothing(delItem.IDTransacao) Then
+            AbrirDialog("Não é possível excluir um registro de Fornecedor quando está vinculado à uma compra...",
+                        "Registro Vinculado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Return
+        End If
+        '
+        '--- pergunta ao usuario
+        If AbrirDialog("Você realmente deseja excluir o FORNECEDOR:" & vbNewLine & delItem.Cadastro.ToUpper & "?",
+                       "Excluir Fornecedor",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question,
+                       frmDialog.DialogDefaultButton.Second) = DialogResult.No Then
+            Return
+        End If
+        '
+        '--- exclui o registro no BD
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            prodBLL.Delete_ProdutoFornecedor(delItem)
+            bindList.RemoveCurrent()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Houve uma exceção ao excluir o Fornecedor:" & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
         '
     End Sub
     '
