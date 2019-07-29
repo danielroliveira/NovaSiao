@@ -171,7 +171,7 @@ Public Class frmProdutoProcurar
         dgvProdutos.Columns.Add("clnProdutoAutor", "Descrição")
         With dgvProdutos.Columns("clnProdutoAutor")
             .DataPropertyName = "Produto"
-            .Width = 300
+            .Width = 420
             .Visible = True
             .ReadOnly = True
             .Resizable = False

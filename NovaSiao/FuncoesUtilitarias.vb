@@ -30,8 +30,9 @@ Public Class Utilidades
         End Select
         '
         ' MENSAGEM E ERROR PROVIDER
-        MsgBox("O campo " & myControlTexto.ToUpper & " não pode ficar vazio;" & vbCrLf &
-                "Preencha esse campo antes de Salvar o registro por favor...", vbInformation, "Campo Vazio")
+        MessageBox.Show("O campo " & myControlTexto.ToUpper & " não pode ficar vazio;" & vbCrLf &
+                        "Preencha esse campo antes de Salvar o registro por favor...",
+                        "Campo Vazio", MessageBoxButtons.OK, MessageBoxIcon.Information)
         If IsNothing(EProvider) Then
             Dim EP As New ErrorProvider
             EP.SetError(myControl, "Preencha o valor desse campo!")
@@ -74,8 +75,9 @@ Public Class Utilidades
         If IsNothing(pInfo.GetValue(minhaClasse)) Then
             '
             '--- MENSAGEM E ERROR PROVIDER
-            MsgBox("O campo " & meuControleTexto.ToUpper & " não pode ficar vazio;" & vbCrLf &
-                "Preencha esse campo antes de Salvar o registro por favor...", vbInformation, "Campo Vazio")
+            MessageBox.Show("O campo " & meuControleTexto.ToUpper & " não pode ficar vazio;" & vbCrLf &
+                            "Preencha esse campo antes de Salvar o registro por favor...",
+                            "Campo Vazio", MessageBoxButtons.OK, MessageBoxIcon.Information)
             '
             '--- CONTROLA O ERROR PROVIDER
             If IsNothing(EProvider) Then

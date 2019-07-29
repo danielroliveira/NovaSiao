@@ -67,7 +67,7 @@ Public Class frmProdutoFornecedor
         If IsNothing(_Produto) OrElse IsNothing(_Produto.IDProduto) Then Exit Sub
         '
         lblProduto.Text = _Produto.Produto
-        lblRGProduto.Text = _Produto.RGProduto
+        lblRGProduto.Text = Format(_Produto.RGProduto, "0000")
         '
     End Sub
     '
@@ -202,7 +202,7 @@ Public Class frmProdutoFornecedor
             .HeaderText = "Desc(%)"
             .Resizable = DataGridViewTriState.False
             .Visible = True
-            .ReadOnly = False
+            .ReadOnly = True
             .SortMode = DataGridViewColumnSortMode.NotSortable
             .DefaultCellStyle.Format = "0.00"
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
@@ -214,7 +214,7 @@ Public Class frmProdutoFornecedor
             .DataPropertyName = "IDProdutoOrigem"
             .Resizable = DataGridViewTriState.False
             .Visible = True
-            .ReadOnly = True
+            .ReadOnly = False
             .SortMode = DataGridViewColumnSortMode.NotSortable
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
         End With
@@ -223,6 +223,10 @@ Public Class frmProdutoFornecedor
         dgvItens.Columns.AddRange(New DataGridViewColumn() {clnData, clnApelidoFilial, clnFornecedor,
                                   clnPreco, clnDesconto, clnIDProdutoFornecedor})
         '
+    End Sub
+    '
+    Private Sub dgvListagem_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
+        btnEditar_Click(New Object, New EventArgs)
     End Sub
     '
 #End Region
@@ -249,6 +253,48 @@ Public Class frmProdutoFornecedor
         '
         If form.DialogResult <> DialogResult.OK Then Exit Sub
         '
+        '--- check if FORNECEDOR already inserted
+        If _list.Exists(Function(x) x.IDFornecedor = prodForn.IDFornecedor) Then
+            AbrirDialog("Já existe um registro inserido com o fornecedor:" & vbCrLf &
+                        prodForn.Cadastro,
+                        "Fornecedor Existente",
+                        frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        _list.Add(prodForn)
+        bindList.ResetBindings(False)
+        '
+    End Sub
+    '
+    Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
+        '
+        If dgvItens.Rows.Count = 0 OrElse IsNothing(dgvItens.CurrentRow) Then
+            AbrirDialog("Selecione um registro na listagem para editar...",
+                        "Selecionar Registro", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Dim prodForn As clProdutoFornecedor = dgvItens.CurrentRow.DataBoundItem
+        '
+        Dim form As New frmProdutoFornecedorEditar(prodForn, Me)
+        form.ShowDialog()
+        '
+        If form.DialogResult <> DialogResult.OK Then
+            prodForn.CancelEdit()
+            Exit Sub
+        End If
+        '
+        '--- check if FORNECEDOR already inserted
+        If _list.Exists(Function(x) x.IDFornecedor = prodForn.IDFornecedor) Then
+            AbrirDialog("Já existe um registro inserido com o fornecedor:" & vbCrLf &
+                        prodForn.Cadastro,
+                        "Fornecedor Existente",
+                        frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            prodForn.CancelEdit()
+            Exit Sub
+        End If
+        '
         _list.Add(prodForn)
         bindList.ResetBindings(False)
         '
@@ -272,8 +318,6 @@ Public Class frmProdutoFornecedor
             _formOrigem.Visible = True
         End If
     End Sub
-
-
     '
 #End Region
     '

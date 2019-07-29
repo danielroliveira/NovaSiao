@@ -57,12 +57,14 @@ Partial Class frmProdutoProcurar
         '
         'Panel1
         '
-        Me.Panel1.Size = New System.Drawing.Size(620, 37)
+        Me.Panel1.Size = New System.Drawing.Size(740, 37)
         Me.Panel1.TabIndex = 0
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(428, 0)
+        Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblTitulo.Dock = System.Windows.Forms.DockStyle.None
+        Me.lblTitulo.Location = New System.Drawing.Point(545, 0)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(192, 37)
         Me.lblTitulo.TabIndex = 0
@@ -70,7 +72,7 @@ Partial Class frmProdutoProcurar
         '
         'txtProcurar
         '
-        Me.txtProcurar.Location = New System.Drawing.Point(90, 174)
+        Me.txtProcurar.Location = New System.Drawing.Point(90, 149)
         Me.txtProcurar.Name = "txtProcurar"
         Me.txtProcurar.Size = New System.Drawing.Size(301, 27)
         Me.txtProcurar.TabIndex = 8
@@ -78,7 +80,7 @@ Partial Class frmProdutoProcurar
         'lblDesc
         '
         Me.lblDesc.AutoSize = True
-        Me.lblDesc.Location = New System.Drawing.Point(42, 177)
+        Me.lblDesc.Location = New System.Drawing.Point(42, 152)
         Me.lblDesc.Name = "lblDesc"
         Me.lblDesc.Size = New System.Drawing.Size(42, 19)
         Me.lblDesc.TabIndex = 7
@@ -86,9 +88,10 @@ Partial Class frmProdutoProcurar
         '
         'btnEscolher
         '
+        Me.btnEscolher.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnEscolher.FlatAppearance.BorderSize = 0
         Me.btnEscolher.Image = Global.NovaSiao.My.Resources.Resources.accept
-        Me.btnEscolher.Location = New System.Drawing.Point(332, 509)
+        Me.btnEscolher.Location = New System.Drawing.Point(454, 488)
         Me.btnEscolher.Name = "btnEscolher"
         Me.btnEscolher.Size = New System.Drawing.Size(135, 41)
         Me.btnEscolher.TabIndex = 13
@@ -99,9 +102,10 @@ Partial Class frmProdutoProcurar
         '
         'btnCancelar
         '
+        Me.btnCancelar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCancelar.FlatAppearance.BorderSize = 0
         Me.btnCancelar.Image = Global.NovaSiao.My.Resources.Resources.block
-        Me.btnCancelar.Location = New System.Drawing.Point(473, 509)
+        Me.btnCancelar.Location = New System.Drawing.Point(595, 488)
         Me.btnCancelar.Name = "btnCancelar"
         Me.btnCancelar.Size = New System.Drawing.Size(135, 41)
         Me.btnCancelar.TabIndex = 14
@@ -114,9 +118,9 @@ Partial Class frmProdutoProcurar
         '
         Me.GroupBox1.Controls.Add(Me.chkProdutosAtivos)
         Me.GroupBox1.Controls.Add(Me.chkComEstoque)
-        Me.GroupBox1.Location = New System.Drawing.Point(408, 55)
+        Me.GroupBox1.Location = New System.Drawing.Point(408, 51)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(200, 146)
+        Me.GroupBox1.Size = New System.Drawing.Size(273, 125)
         Me.GroupBox1.TabIndex = 12
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Opções:"
@@ -124,21 +128,20 @@ Partial Class frmProdutoProcurar
         'chkProdutosAtivos
         '
         Me.chkProdutosAtivos.AutoSize = True
-        Me.chkProdutosAtivos.Location = New System.Drawing.Point(20, 87)
+        Me.chkProdutosAtivos.Location = New System.Drawing.Point(20, 81)
         Me.chkProdutosAtivos.Name = "chkProdutosAtivos"
-        Me.chkProdutosAtivos.Size = New System.Drawing.Size(145, 42)
+        Me.chkProdutosAtivos.Size = New System.Drawing.Size(189, 23)
         Me.chkProdutosAtivos.TabIndex = 1
-        Me.chkProdutosAtivos.Text = "Somente Produtos" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Ativos"
+        Me.chkProdutosAtivos.Text = "Somente Produtos Ativos"
         Me.chkProdutosAtivos.UseVisualStyleBackColor = True
         '
         'chkComEstoque
         '
-        Me.chkComEstoque.AutoSize = True
         Me.chkComEstoque.Location = New System.Drawing.Point(20, 28)
         Me.chkComEstoque.Name = "chkComEstoque"
-        Me.chkComEstoque.Size = New System.Drawing.Size(145, 42)
+        Me.chkComEstoque.Size = New System.Drawing.Size(237, 42)
         Me.chkComEstoque.TabIndex = 0
-        Me.chkComEstoque.Text = "Somente Produtos" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "com Estoque"
+        Me.chkComEstoque.Text = "Somente Produtos com Estoque"
         Me.chkComEstoque.UseVisualStyleBackColor = True
         '
         'Label3
@@ -165,7 +168,7 @@ Partial Class frmProdutoProcurar
         '
         Me.Label5.AutoSize = True
         Me.Label5.BackColor = System.Drawing.Color.Transparent
-        Me.Label5.Location = New System.Drawing.Point(462, 4)
+        Me.Label5.Location = New System.Drawing.Point(585, 4)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(45, 19)
         Me.Label5.TabIndex = 3
@@ -175,7 +178,7 @@ Partial Class frmProdutoProcurar
         '
         Me.Label6.AutoSize = True
         Me.Label6.BackColor = System.Drawing.Color.Transparent
-        Me.Label6.Location = New System.Drawing.Point(514, 4)
+        Me.Label6.Location = New System.Drawing.Point(637, 4)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(42, 19)
         Me.Label6.TabIndex = 4
@@ -185,7 +188,7 @@ Partial Class frmProdutoProcurar
         '
         Me.Label7.AutoSize = True
         Me.Label7.BackColor = System.Drawing.Color.Transparent
-        Me.Label7.Location = New System.Drawing.Point(372, 4)
+        Me.Label7.Location = New System.Drawing.Point(495, 4)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(33, 19)
         Me.Label7.TabIndex = 2
@@ -193,15 +196,17 @@ Partial Class frmProdutoProcurar
         '
         'pnlProduto
         '
+        Me.pnlProduto.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnlProduto.BackColor = System.Drawing.Color.Transparent
         Me.pnlProduto.Controls.Add(Me.Label6)
         Me.pnlProduto.Controls.Add(Me.Label3)
         Me.pnlProduto.Controls.Add(Me.Label7)
         Me.pnlProduto.Controls.Add(Me.Label5)
         Me.pnlProduto.Controls.Add(Me.Label4)
-        Me.pnlProduto.Location = New System.Drawing.Point(10, 216)
+        Me.pnlProduto.Location = New System.Drawing.Point(10, 195)
         Me.pnlProduto.Name = "pnlProduto"
-        Me.pnlProduto.Size = New System.Drawing.Size(598, 28)
+        Me.pnlProduto.Size = New System.Drawing.Size(720, 28)
         Me.pnlProduto.TabIndex = 9
         '
         'MenuProd
@@ -242,6 +247,8 @@ Partial Class frmProdutoProcurar
         Me.dgvProdutos.AllowUserToDeleteRows = False
         Me.dgvProdutos.AllowUserToResizeColumns = False
         Me.dgvProdutos.AllowUserToResizeRows = False
+        Me.dgvProdutos.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvProdutos.BackgroundColor = System.Drawing.Color.Snow
         Me.dgvProdutos.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.dgvProdutos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
@@ -255,7 +262,7 @@ Partial Class frmProdutoProcurar
         Me.dgvProdutos.DefaultCellStyle = DataGridViewCellStyle1
         Me.dgvProdutos.EnableHeadersVisualStyles = False
         Me.dgvProdutos.GridColor = System.Drawing.SystemColors.Control
-        Me.dgvProdutos.Location = New System.Drawing.Point(10, 245)
+        Me.dgvProdutos.Location = New System.Drawing.Point(10, 224)
         Me.dgvProdutos.Name = "dgvProdutos"
         Me.dgvProdutos.ReadOnly = True
         Me.dgvProdutos.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
@@ -277,19 +284,19 @@ Partial Class frmProdutoProcurar
         Me.dgvProdutos.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.Black
         Me.dgvProdutos.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvProdutos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvProdutos.Size = New System.Drawing.Size(598, 258)
+        Me.dgvProdutos.Size = New System.Drawing.Size(720, 258)
         Me.dgvProdutos.TabIndex = 10
         '
         'txtSubTipo
         '
-        Me.txtSubTipo.Location = New System.Drawing.Point(90, 110)
+        Me.txtSubTipo.Location = New System.Drawing.Point(90, 104)
         Me.txtSubTipo.Name = "txtSubTipo"
         Me.txtSubTipo.Size = New System.Drawing.Size(206, 27)
         Me.txtSubTipo.TabIndex = 5
         '
         'txtTipo
         '
-        Me.txtTipo.Location = New System.Drawing.Point(90, 66)
+        Me.txtTipo.Location = New System.Drawing.Point(90, 60)
         Me.txtTipo.Name = "txtTipo"
         Me.txtTipo.Size = New System.Drawing.Size(206, 27)
         Me.txtTipo.TabIndex = 2
@@ -300,7 +307,7 @@ Partial Class frmProdutoProcurar
         Me.btnSubTipoEscolher.BackColor = System.Drawing.Color.Transparent
         Me.btnSubTipoEscolher.FlatAppearance.BorderColor = System.Drawing.Color.Black
         Me.btnSubTipoEscolher.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnSubTipoEscolher.Location = New System.Drawing.Point(302, 110)
+        Me.btnSubTipoEscolher.Location = New System.Drawing.Point(302, 104)
         Me.btnSubTipoEscolher.Name = "btnSubTipoEscolher"
         Me.btnSubTipoEscolher.RoundedCornersMask = CType(15, Byte)
         Me.btnSubTipoEscolher.RoundedCornersRadius = 0
@@ -318,7 +325,7 @@ Partial Class frmProdutoProcurar
         Me.btnTipoEscolher.BackColor = System.Drawing.Color.Transparent
         Me.btnTipoEscolher.FlatAppearance.BorderColor = System.Drawing.Color.Black
         Me.btnTipoEscolher.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnTipoEscolher.Location = New System.Drawing.Point(302, 66)
+        Me.btnTipoEscolher.Location = New System.Drawing.Point(302, 60)
         Me.btnTipoEscolher.Name = "btnTipoEscolher"
         Me.btnTipoEscolher.RoundedCornersMask = CType(15, Byte)
         Me.btnTipoEscolher.RoundedCornersRadius = 0
@@ -333,7 +340,7 @@ Partial Class frmProdutoProcurar
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(24, 113)
+        Me.Label1.Location = New System.Drawing.Point(24, 107)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(60, 19)
         Me.Label1.TabIndex = 4
@@ -342,7 +349,7 @@ Partial Class frmProdutoProcurar
         'Label8
         '
         Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(47, 69)
+        Me.Label8.Location = New System.Drawing.Point(47, 63)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(37, 19)
         Me.Label8.TabIndex = 1
@@ -351,7 +358,7 @@ Partial Class frmProdutoProcurar
         'frmProdutoProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(620, 557)
+        Me.ClientSize = New System.Drawing.Size(740, 536)
         Me.Controls.Add(Me.txtSubTipo)
         Me.Controls.Add(Me.txtTipo)
         Me.Controls.Add(Me.btnSubTipoEscolher)

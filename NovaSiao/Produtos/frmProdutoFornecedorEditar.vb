@@ -26,7 +26,7 @@ Public Class frmProdutoFornecedorEditar
             Sit = EnumFlagEstado.RegistroSalvo
         End If
         '
-
+        dtpUltimaEntrada.MaxDate = Today
         '
     End Sub
     '
@@ -52,14 +52,7 @@ Public Class frmProdutoFornecedorEditar
             End If
         End Set
     End Property
-
-
-
-
     '
-
-
-
 #End Region '/ SUB NEW
     '
 #Region "BINDINGS"
@@ -87,6 +80,14 @@ Public Class frmProdutoFornecedorEditar
         AddHandler lblIDTransacao.DataBindings("Text").Format, AddressOf idFormatRG
         AddHandler lblPrecoFinal.DataBindings("Text").Format, AddressOf FormatCUR
         '
+        ' ADD HANDLER PARA DATABINGS
+        AddHandler _prodForn.AoAlterar, AddressOf HandlerAoAlterar
+    End Sub
+    '
+    Private Sub HandlerAoAlterar()
+        If _prodForn.RegistroAlterado = True And Sit = EnumFlagEstado.RegistroSalvo Then
+            Sit = EnumFlagEstado.Alterado
+        End If
     End Sub
     '
     ' FORMATA OS BINDINGS
@@ -139,10 +140,127 @@ Public Class frmProdutoFornecedorEditar
         End If
         '
     End Sub
+    '
+    Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
+        '
+        If Sit = EnumFlagEstado.Alterado Then
+            _prodForn.CancelEdit()
+            bindProd.ResetBindings(False)
+            Sit = EnumFlagEstado.RegistroSalvo
+        Else
+            DialogResult = DialogResult.Cancel
+        End If
+        '
+    End Sub
 
-
-
+    Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
+        '
+        If Not VerificaValores() Then Exit Sub
+        '
+        DialogResult = DialogResult.OK
+    End Sub
+    '
 #End Region '/ BUTTONS FUNCTION
+    '
+#Region "OUTRAS FUNCOES"
+    '
+    Private Function VerificaValores() As Boolean
+        '
+        Dim EP As New ErrorProvider
+        Dim f As New Utilidades
+        '
+        If Not f.VerificaDadosClasse(dtpUltimaEntrada, "Ultima Data da Entrada", _prodForn, EP) Then
+            Return False
+        End If
+        '
+        If Not f.VerificaDadosClasse(lblFornecedor, "Fornecedor", _prodForn, EP) Then
+            btnFornecedor.Focus()
+            Return False
+        End If
+        '
+        If IsNothing(_prodForn.IDFornecedor) Then
+            '
+            '--- MENSAGEM E ERROR PROVIDER
+            MessageBox.Show("O campo Fornecedor não pode ficar vazio;" & vbCrLf &
+                            "Preencha esse campo antes de Salvar o registro por favor...",
+                            "Campo Vazio", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            '
+            '--- CONTROLA O ERROR PROVIDER
+            EP.SetError(lblFornecedor, "Preencha o valor desse campo!")
+            btnFornecedor.Focus()
+            '
+            Return False
+            '
+        End If
+        '
+        If Not f.VerificaDadosClasse(txtPCompra, "Preço de Compra", _prodForn, EP) Then
+            Return False
+        End If
+        '
+        If _prodForn.PCompra <= 0 Then
+            '
+            '--- MENSAGEM E ERROR PROVIDER
+            MessageBox.Show("O campo Preço de Compra não pode ser igual ou menor que Zero;" & vbCrLf &
+                            "Preencha esse campo antes de Salvar o registro, por favor...",
+                            "Campo Inválido", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            '
+            '--- CONTROLA O ERROR PROVIDER
+            EP.SetError(txtPCompra, "Preencha o valor desse campo!")
+            txtPCompra.Focus()
+            '
+            Return False
+            '
+        End If
+        '
+        If Not f.VerificaDadosClasse(txtDescontoCompra, "Desconto de Compra", _prodForn, EP) Then
+            Return False
+        End If
+        '
+        If _prodForn.DescontoCompra < 0 OrElse _prodForn.DescontoCompra > 90 Then
+            '
+            '--- MENSAGEM E ERROR PROVIDER
+            MessageBox.Show("O campo Desconto de Compra não pode menor que Zero, ou maior que 90;" & vbCrLf &
+                            "Preencha esse campo antes de Salvar o registro, por favor...",
+                            "Campo Inválido", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            '
+            '--- CONTROLA O ERROR PROVIDER
+            EP.SetError(txtDescontoCompra, "Preencha o valor desse campo!")
+            txtDescontoCompra.Focus()
+            '
+            Return False
+            '
+        End If
+        '
+        Return True
+        '
+    End Function
+    '
+    '
+    '---------------------------------------------------------------------------------------
+    '--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
+    '---------------------------------------------------------------------------------------
+    Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) _
+    Handles dtpUltimaEntrada.KeyDown, txtPCompra.KeyDown, txtDescontoCompra.KeyDown
+        '
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            SendKeys.Send("{Tab}")
+        End If
+        '
+    End Sub
+    '
+    '------------------------------------------------------------------------------------------
+    ' FAZ A TECLA ESC FECHAR O FORM
+    '------------------------------------------------------------------------------------------
+    Private Sub Me_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            e.Handled = True
+            '
+            btnCancelar_Click(New Object, New EventArgs)
+        End If
+    End Sub
+    '
+#End Region '/ OUTRAS FUNCOES
     '
 #Region "EFEITOS VISUAIS"
     '
@@ -163,12 +281,8 @@ Public Class frmProdutoFornecedorEditar
         End If
     End Sub
 
-    Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
-        DialogResult = DialogResult.Cancel
-    End Sub
-
-    Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
-        DialogResult = DialogResult.OK
+    Private Sub txtDescontoCompra_Leave(sender As Object, e As EventArgs) Handles txtDescontoCompra.Leave
+        bindProd.ResetBindings(False)
     End Sub
     '
 #End Region

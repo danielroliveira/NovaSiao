@@ -193,7 +193,6 @@ Partial Class frmProdutoFornecedorEditar
         Me.btnFornecedor.RoundedCornersRadius = 0
         Me.btnFornecedor.Size = New System.Drawing.Size(34, 27)
         Me.btnFornecedor.TabIndex = 1
-        Me.btnFornecedor.TabStop = False
         Me.btnFornecedor.Text = "..."
         Me.btnFornecedor.UseCompatibleTextRendering = True
         Me.btnFornecedor.UseVisualStyleBackColor = False
@@ -416,6 +415,7 @@ Partial Class frmProdutoFornecedorEditar
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.tsMenu)
         Me.Controls.Add(Me.Label4)
+        Me.KeyPreview = True
         Me.Name = "frmProdutoFornecedorEditar"
         Me.Controls.SetChildIndex(Me.Label4, 0)
         Me.Controls.SetChildIndex(Me.tsMenu, 0)
