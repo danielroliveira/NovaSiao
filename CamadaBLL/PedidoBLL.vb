@@ -542,9 +542,11 @@ Public Class PedidoBLL
             db.AdicionarParametros("@IDTipo", IDTipo)
             db.AdicionarParametros("@IDFilial", Pedido.IDFilial)
             '
-            Dim query As String = "SELECT * FROM qryProdutosEstoque " +
+            Dim query As String = "SELECT *, E.EstoqueIdeal, E.EstoqueNivel, E.Quantidade AS Estoque, E.IDFilial " +
+                                  "FROM qryProdutos " +
+                                  "LEFT JOIN tblEstoque AS E " +
+                                  "ON qryProdutos.IDProduto = E.IDProduto AND E.IDFilial = @IDFilial " +
                                   "WHERE IDProdutoTipo = @IDTipo AND " +
-                                  "IDFilial = @IDFilial AND  " +
                                   "Estoque < EstoqueNivel"
             '
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
@@ -586,10 +588,58 @@ Public Class PedidoBLL
             db.AdicionarParametros("@IDFabricante", IDFabricante)
             db.AdicionarParametros("@IDFilial", Pedido.IDFilial)
             '
-            Dim query As String = "SELECT * FROM qryProdutosEstoque " +
+            Dim query As String = "SELECT *, E.EstoqueIdeal, E.EstoqueNivel, E.Quantidade AS Estoque, E.IDFilial " +
+                                  "FROM qryProdutos " +
+                                  "LEFT JOIN tblEstoque AS E " +
+                                  "ON qryProdutos.IDProduto = E.IDProduto AND E.IDFilial = @IDFilial " +
                                   "WHERE IDFabricante = @IDFabricante AND " +
-                                  "IDFilial = @IDFilial AND  " +
                                   "Estoque < EstoqueNivel"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return itemsList
+            '
+            For Each r In dt.Rows
+                '
+                Dim item As clPedidoItem = ConvertRowInClass(r, Pedido)
+                itemsList.Add(item)
+                '
+            Next
+            '
+            Return itemsList
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' VERIFICA E OBTEM PRODUTOS PELO ESTOQUE NIVEL POR FORNECEDOR
+    '==========================================================================================
+    Public Function VerificaProdutoEstoqueFornecedor(IDFornecedor As Integer,
+                                                     Pedido As clPedido) As List(Of clPedidoItem)
+        '
+        Try
+            '
+            If IsNothing(Pedido.IDFilial) Then
+                Throw New Exception("O pedido ainda não tem Filial...")
+                Return Nothing
+            End If
+            '
+            Dim itemsList As New List(Of clPedidoItem)
+            Dim db As New AcessoDados
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
+            db.AdicionarParametros("@IDFilial", Pedido.IDFilial)
+            '
+            Dim query As String = "SELECT *, E.EstoqueIdeal, E.EstoqueNivel, E.Quantidade AS Estoque, E.IDFilial " +
+                                  "FROM qryProdutos " +
+                                  "LEFT JOIN tblEstoque AS E " +
+                                  "ON qryProdutos.IDProduto = E.IDProduto AND E.IDFilial = @IDFilial " +
+                                  "WHERE Quantidade < EstoqueNivel AND " +
+                                  "qryProdutos.IDProduto IN (SELECT IDProduto FROM tblProdutoFornecedor WHERE IDFornecedor = @IDFornecedor) "
             '
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             '

@@ -25,7 +25,6 @@ Partial Class frmProdutoFornecedorEditar
         Me.btnCancelar = New System.Windows.Forms.ToolStripButton()
         Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.btnAtivo = New System.Windows.Forms.ToolStripButton()
-        Me.lblRGProduto = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblProduto = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -43,6 +42,7 @@ Partial Class frmProdutoFornecedorEditar
         Me.Label22 = New System.Windows.Forms.Label()
         Me.txtDescontoCompra = New System.Windows.Forms.TextBox()
         Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.txtRGProduto = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Panel4 = New System.Windows.Forms.Panel()
@@ -160,15 +160,6 @@ Partial Class frmProdutoFornecedorEditar
         Me.btnAtivo.Size = New System.Drawing.Size(210, 41)
         Me.btnAtivo.Text = "Fornecedor Padrão"
         Me.btnAtivo.ToolTipText = "Fornecedor Padrão"
-        '
-        'lblRGProduto
-        '
-        Me.lblRGProduto.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblRGProduto.Location = New System.Drawing.Point(7, 25)
-        Me.lblRGProduto.Name = "lblRGProduto"
-        Me.lblRGProduto.Size = New System.Drawing.Size(89, 27)
-        Me.lblRGProduto.TabIndex = 1
-        Me.lblRGProduto.Text = "0000"
         '
         'Label2
         '
@@ -335,15 +326,25 @@ Partial Class frmProdutoFornecedorEditar
         'Panel3
         '
         Me.Panel3.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.Panel3.Controls.Add(Me.txtRGProduto)
         Me.Panel3.Controls.Add(Me.lblProduto)
         Me.Panel3.Controls.Add(Me.Label1)
-        Me.Panel3.Controls.Add(Me.lblRGProduto)
         Me.Panel3.Controls.Add(Me.Label2)
         Me.Panel3.Location = New System.Drawing.Point(17, 175)
         Me.Panel3.Margin = New System.Windows.Forms.Padding(6)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(587, 58)
         Me.Panel3.TabIndex = 4
+        '
+        'txtRGProduto
+        '
+        Me.txtRGProduto.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.txtRGProduto.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtRGProduto.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtRGProduto.Location = New System.Drawing.Point(12, 27)
+        Me.txtRGProduto.Name = "txtRGProduto"
+        Me.txtRGProduto.Size = New System.Drawing.Size(88, 24)
+        Me.txtRGProduto.TabIndex = 1
         '
         'Label4
         '
@@ -456,8 +457,8 @@ Partial Class frmProdutoFornecedorEditar
         Me.Controls.SetChildIndex(Me.Label9, 0)
         Me.Controls.SetChildIndex(Me.Panel3, 0)
         Me.Controls.SetChildIndex(Me.Panel4, 0)
-        Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.Panel5, 0)
+        Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.tsMenu.ResumeLayout(False)
@@ -479,7 +480,6 @@ Partial Class frmProdutoFornecedorEditar
     Friend WithEvents btnSalvar As ToolStripButton
     Friend WithEvents btnCancelar As ToolStripButton
     Friend WithEvents btnFechar As ToolStripButton
-    Friend WithEvents lblRGProduto As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents lblProduto As Label
     Friend WithEvents Label1 As Label
@@ -506,4 +506,5 @@ Partial Class frmProdutoFornecedorEditar
     Friend WithEvents txtFornecedor As TextBox
     Friend WithEvents lblVinculado As Label
     Friend WithEvents btnAtivo As ToolStripButton
+    Friend WithEvents txtRGProduto As TextBox
 End Class

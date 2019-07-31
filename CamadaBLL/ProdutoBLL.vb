@@ -1354,6 +1354,34 @@ Public Class ProdutoFornecedorBLL
         '
     End Function
     '
+    '--- GET PRODUTO FORNECEDOR PELO IDFORNECEDOR
+    '----------------------------------------------------------------------------------
+    Public Function GetListProdutoFornecedorByIDFornecedor(IDFornecedor As Integer) As List(Of clProdutoFornecedor)
+        '
+        Try
+            Dim query As String = "SELECT * FROM qryProdutoFornecedor WHERE IDFornecedor = @IDFornecedor"
+            Dim list As New List(Of clProdutoFornecedor)
+            Dim db As New AcessoDados
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return list
+            '
+            For Each r In dt.Rows
+                list.Add(ConvertRowInClass(r))
+            Next
+            '
+            Return list
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
     '--- GET PRODUTO-FORNECEDOR BY IDPRODUTO & IDFORNECEDOR
     '----------------------------------------------------------------------------------
     Public Function GetProdutoFornecedor(IDProduto As Integer,

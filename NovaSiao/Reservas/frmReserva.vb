@@ -80,6 +80,7 @@ Public Class frmReserva
         AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
         '
         AddHandler chkProdutoConhecido.CheckedChanged, AddressOf chkProdutoConhecido_CheckedChanged
+        dtpReservaData.MaxDate = Today
         '
     End Sub
     '
@@ -93,7 +94,7 @@ Public Class frmReserva
         '
         lblIDReserva.DataBindings.Add("Tag", bindReserva, "IDReserva")
         lblFilial.DataBindings.Add("Text", bindReserva, "ApelidoFilial")
-        txtReservaData.DataBindings.Add("Text", bindReserva, "ReservaData", True, DataSourceUpdateMode.OnPropertyChanged, "  /  /")
+        dtpReservaData.DataBindings.Add("Value", bindReserva, "ReservaData", True, DataSourceUpdateMode.OnPropertyChanged, "  /  /")
         txtFuncionario.DataBindings.Add("Text", bindReserva, "ApelidoFuncionario")
         txtClienteNome.DataBindings.Add("Text", bindReserva, "ClienteNome", True, DataSourceUpdateMode.OnPropertyChanged)
         txtTelefoneA.DataBindings.Add("Text", bindReserva, "TelefoneA", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -405,7 +406,7 @@ Public Class frmReserva
             Return False
         End If
         '
-        If Not f.VerificaDadosClasse(txtReservaData, "Data da Reserva", _Reserva, EProvider) Then
+        If Not f.VerificaDadosClasse(dtpReservaData, "Data da Reserva", _Reserva, EProvider) Then
             Return False
         End If
         '
@@ -471,6 +472,9 @@ Public Class frmReserva
                         AddHandler cp.KeyDown, AddressOf EnterForTab
                     ElseIf TypeOf cp Is MaskedTextBox Then
                         AddHandler cp.GotFocus, AddressOf SelTodoTexto
+                        AddHandler cp.KeyDown, AddressOf EnterForTab
+                    ElseIf TypeOf cp Is DateTimePicker Then
+                        AddHandler cp.KeyDown, AddressOf EnterForTab
                     ElseIf TypeOf cp Is CheckBox Then
                         AddHandler cp.KeyDown, AddressOf EnterForTab
                     End If
@@ -528,7 +532,6 @@ Public Class frmReserva
                 txtAutor.KeyDown,
                 txtFabricante.KeyDown,
                 txtFornecedor.KeyDown,
-                txtRGProduto.KeyDown,
                 txtProduto.KeyDown
         '
         Dim ctr As Control = DirectCast(sender, Control)

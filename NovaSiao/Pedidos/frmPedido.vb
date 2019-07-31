@@ -1987,6 +1987,42 @@ Public Class frmPedido
         End Try
         '
     End Sub
+
+    Private Sub miPeloEstoquePorFornecedor_Click(sender As Object, e As EventArgs) Handles miPeloEstoquePorFornecedor.Click
+        '
+        If IsNothing(_pedido.IDFornecedor) OrElse _pedido.IDFornecedor = 0 Then
+            AbrirDialog("Como esse Pedido não tem um Fornecedor já cadastrado não é possível verificar os produtos pelo Fornecedor",
+                        "Fornecedor Indefinido",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim newItems As List(Of clPedidoItem) = _pedBLL.VerificaProdutoEstoqueFornecedor(_pedido.IDFornecedor, _pedido)
+            '
+            If newItems.Count = 0 Then
+                AbrirDialog("Não há produtos desse FORNECEDOR que estejam abaixo do Estoque Nível...",
+                            "Nenhum produto selecionado",
+                            frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Exit Sub
+            End If
+            '
+            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, Me)
+            formSelecionados.ShowDialog()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao pesquisar e inserir produtos no pedido..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
     '
 #End Region '/ VERIFICACAO DE ESTOQUE E DE RESERVAS
     '

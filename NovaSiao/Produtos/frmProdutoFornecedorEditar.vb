@@ -1,4 +1,5 @@
 ﻿Imports CamadaDTO
+Imports CamadaBLL
 '
 Public Class frmProdutoFornecedorEditar
     '
@@ -8,10 +9,11 @@ Public Class frmProdutoFornecedorEditar
     Private _formOrigem As Form = Nothing
     Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
+    Private _isProdutoFixed As Boolean
     '
 #Region "SUB NEW"
     '
-    Sub New(prodForn As clProdutoFornecedor, formOrigem As Form)
+    Sub New(prodForn As clProdutoFornecedor, isProdutoFixed As Boolean, formOrigem As Form)
         '
         ' This call is required by the designer.
         InitializeComponent()
@@ -29,8 +31,17 @@ Public Class frmProdutoFornecedorEditar
         End If
         '
         If IsNothing(_prodForn.IDTransacao) Then
-            btnFornecedor.Enabled = True
-            txtFornecedor.ReadOnly = False
+            '
+            If isProdutoFixed Then
+                btnFornecedor.Enabled = True
+                txtFornecedor.ReadOnly = False
+                txtRGProduto.ReadOnly = True
+            Else
+                btnFornecedor.Enabled = False
+                txtFornecedor.ReadOnly = True
+                txtRGProduto.ReadOnly = False
+            End If
+            '
             dtpUltimaEntrada.Enabled = True
             txtDescontoCompra.ReadOnly = False
             txtPCompra.ReadOnly = False
@@ -38,6 +49,7 @@ Public Class frmProdutoFornecedorEditar
         Else
             btnFornecedor.Enabled = False
             txtFornecedor.ReadOnly = True
+            txtRGProduto.ReadOnly = True
             dtpUltimaEntrada.Enabled = False
             txtDescontoCompra.ReadOnly = True
             txtPCompra.ReadOnly = True
@@ -59,14 +71,11 @@ Public Class frmProdutoFornecedorEditar
             If _Sit = EnumFlagEstado.RegistroSalvo Then
                 btnSalvar.Enabled = False
                 btnCancelar.Enabled = False
-                btnFornecedor.Enabled = True
             ElseIf _Sit = EnumFlagEstado.Alterado Then
                 btnSalvar.Enabled = True
                 btnCancelar.Enabled = True
-                btnFornecedor.Enabled = True
             ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
                 btnSalvar.Enabled = True
-                btnFornecedor.Enabled = True
                 btnCancelar.Enabled = True
             End If
         End Set
@@ -84,7 +93,7 @@ Public Class frmProdutoFornecedorEditar
         lblApelidoFilial.DataBindings.Add("Text", bindProd, "ApelidoFilial")
         dtpUltimaEntrada.DataBindings.Add("Value", bindProd, "UltimaEntrada", True, DataSourceUpdateMode.OnPropertyChanged)
 
-        lblRGProduto.DataBindings.Add("Text", bindProd, "RGProduto")
+        txtRGProduto.DataBindings.Add("Text", bindProd, "RGProduto", True, DataSourceUpdateMode.OnPropertyChanged)
         lblProduto.DataBindings.Add("Text", bindProd, "Produto")
         txtFornecedor.DataBindings.Add("Text", bindProd, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
 
@@ -95,7 +104,7 @@ Public Class frmProdutoFornecedorEditar
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler txtPCompra.DataBindings("Text").Format, AddressOf FormatCUR
         AddHandler txtDescontoCompra.DataBindings("text").Format, AddressOf FormatPercent
-        AddHandler lblRGProduto.DataBindings("Text").Format, AddressOf idFormatRG
+        AddHandler txtRGProduto.DataBindings("Text").Format, AddressOf idFormatRG
         AddHandler lblIDTransacao.DataBindings("Text").Format, AddressOf idFormatRG
         AddHandler lblPrecoFinal.DataBindings("Text").Format, AddressOf FormatCUR
         '
@@ -429,13 +438,125 @@ Public Class frmProdutoFornecedorEditar
         '
     End Sub
     '
-    Private Sub txtFornecedor_Enter(sender As Object, e As EventArgs) Handles txtFornecedor.Enter
-        txtFornecedor.BackColor = Color.White
+    Private Sub txtFornecedor_Enter(sender As Object, e As EventArgs) Handles txtFornecedor.Enter, txtRGProduto.Enter
+        DirectCast(sender, Control).BackColor = Color.White
     End Sub
 
-    Private Sub txtFornecedor_Leave(sender As Object, e As EventArgs) Handles txtFornecedor.Leave
-        txtFornecedor.BackColor = Color.FromArgb(219, 228, 240)
+    Private Sub txtFornecedor_Leave(sender As Object, e As EventArgs) Handles txtFornecedor.Leave, txtRGProduto.Leave
+        DirectCast(sender, Control).BackColor = Color.FromArgb(219, 228, 240)
     End Sub
+    '
+    ' CONTROLA O KEYPRESS DO RGPRODUTO (PERMITE SOMENTE NUMERO)
+    Private Sub txtRGProduto_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtRGProduto.KeyPress
+        '
+        If Char.IsNumber(e.KeyChar) Then
+            e.Handled = False
+        ElseIf e.KeyChar = vbBack Then
+            e.Handled = False
+        ElseIf e.KeyChar = "+" Then
+            e.Handled = True
+            '
+            '--- abre o form de Procura de Produto
+            Dim p As New frmProdutoProcurar(Me, True)
+            p.ShowDialog()
+            '
+            '--- verifica se retornou algum valor
+            If p.DialogResult = vbCancel Then Exit Sub
+            '
+            '--- se retornou entao preenche o RGProduto
+            txtRGProduto.Text = p.RGEscolhido
+            SendKeys.Send("{TAB}")
+            '
+        Else
+            e.Handled = True
+        End If
+        '
+    End Sub
+    '
+    '--- VALIDA O RGPRODUTO PARA OBTER OS DADOS DO PRODUTO
+    Private Sub txtRGProduto_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles txtRGProduto.Validating
+        '
+        If _isProdutoFixed Then Exit Sub
+        '
+        If String.IsNullOrEmpty(txtRGProduto.Text) OrElse Sit = EnumFlagEstado.RegistroSalvo Then Exit Sub
+        '
+        If Produto_ObterDados(txtRGProduto.Text) = False Then
+            e.Cancel = True
+        End If
+        '
+    End Sub
+    '
+    '--- FUNCAO PARA OBTER OS DADOS DO PRODUTO INSERIDO PELO RGPRODUTO
+    Private Function Produto_ObterDados(myRGProduto As Integer) As Boolean
+        Dim rBLL As New ReservaBLL
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            pBLL.GetProduto_PorID()
+
+
+            Using dt As DataTable = rBLL.ProdutoGet_PeloRG(myRGProduto, _Reserva.IDFilial)
+                '
+                If dt.Rows.Count = 0 Then
+                    MessageBox.Show("Esse código de Produto não foi encontrado...", "Registro Inválido",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    Return False
+                End If
+                '
+                Dim r As DataRow = dt.Rows(0)
+                '
+                '--- Define os itens do produto encontrado
+                _Reserva.Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto"))
+                _Reserva.IDFabricante = IIf(IsDBNull(r("IDFabricante")), Nothing, r("IDFabricante"))
+                _Reserva.Fabricante = IIf(IsDBNull(r("Fabricante")), String.Empty, r("Fabricante"))
+                _Reserva.IDProdutoTipo = IIf(IsDBNull(r("IDProdutoTipo")), Nothing, r("IDProdutoTipo"))
+                _Reserva.ProdutoTipo = IIf(IsDBNull(r("ProdutoTipo")), String.Empty, r("ProdutoTipo"))
+                _Reserva.PVenda = IIf(IsDBNull(r("PVenda")), Nothing, r("PVenda"))
+                _Reserva.Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor"))
+                '
+                '--- envia uma mensagem ao usuário caso houver ESTOQUE do produto na Filial
+                Dim estoque As Integer = IIf(IsDBNull(r("Quantidade")), 0, r("Quantidade"))
+                '
+                If estoque > 0 Then
+                    Dim msg As String = String.Format("{0} {1} {2} no estoque do produto {3}",
+                                                      IIf(estoque = 1, "Existe", "Existem"),
+                                                      Format(estoque, "00"),
+                                                      IIf(estoque = 1, "unidade", "unidades"),
+                                                      vbNewLine & r("Produto").ToString.ToUpper)
+                    '
+                    AbrirDialog(msg, "Estoque", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                    '
+                End If
+                '
+                '--- Verify exists FornecedorPadrao
+                Dim pfBLL As New ProdutoFornecedorBLL
+                '
+                Dim pf As clProdutoFornecedor = pfBLL.GetFornecedorPadrao(r("IDProduto"))
+                If Not IsNothing(pf) Then
+                    _Reserva.Fornecedor = pf.Cadastro
+                    txtFornecedor.Text = pf.Cadastro
+                    _Reserva.IDFornecedor = pf.IDFornecedor
+                End If
+                '
+                '--- RETORNA
+                Return True
+                '
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao obter os dados do produto informado...",
+                            "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return False
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Function
     '
 #End Region '/ CONTROLS
     '

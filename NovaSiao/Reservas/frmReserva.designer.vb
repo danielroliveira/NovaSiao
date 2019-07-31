@@ -21,7 +21,6 @@ Partial Class frmReserva
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmReserva))
-        Me.txtReservaData = New Controles.MaskText_Data()
         Me.txtProduto = New System.Windows.Forms.TextBox()
         Me.txtTelefoneB = New Controles.MaskText_Telefone()
         Me.txtTelefoneA = New Controles.MaskText_Telefone()
@@ -76,6 +75,7 @@ Partial Class frmReserva
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.lblFilial = New System.Windows.Forms.Label()
+        Me.dtpReservaData = New System.Windows.Forms.DateTimePicker()
         Me.Panel1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -107,15 +107,6 @@ Partial Class frmReserva
         Me.lblTitulo.Size = New System.Drawing.Size(247, 50)
         Me.lblTitulo.TabIndex = 4
         Me.lblTitulo.Text = "Reservas de Produtos"
-        '
-        'txtReservaData
-        '
-        Me.txtReservaData.Location = New System.Drawing.Point(446, 9)
-        Me.txtReservaData.Mask = "00/00/0000"
-        Me.txtReservaData.Name = "txtReservaData"
-        Me.txtReservaData.Size = New System.Drawing.Size(100, 27)
-        Me.txtReservaData.TabIndex = 4
-        Me.txtReservaData.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'txtProduto
         '
@@ -556,8 +547,8 @@ Partial Class frmReserva
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
+        Me.Panel2.Controls.Add(Me.dtpReservaData)
         Me.Panel2.Controls.Add(Me.btnProcFuncionario)
-        Me.Panel2.Controls.Add(Me.txtReservaData)
         Me.Panel2.Controls.Add(Me.txtFuncionario)
         Me.Panel2.Controls.Add(Me.Label1)
         Me.Panel2.Controls.Add(Me.Label2)
@@ -726,6 +717,15 @@ Partial Class frmReserva
         Me.lblFilial.Text = "Filial"
         Me.lblFilial.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'dtpReservaData
+        '
+        Me.dtpReservaData.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpReservaData.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpReservaData.Location = New System.Drawing.Point(446, 9)
+        Me.dtpReservaData.Name = "dtpReservaData"
+        Me.dtpReservaData.Size = New System.Drawing.Size(144, 27)
+        Me.dtpReservaData.TabIndex = 4
+        '
         'frmReserva
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
@@ -765,8 +765,6 @@ Partial Class frmReserva
         Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents txtReservaData As Controles.MaskText_Data
     Friend WithEvents txtProduto As TextBox
     Friend WithEvents txtTelefoneB As Controles.MaskText_Telefone
     Friend WithEvents txtTelefoneA As Controles.MaskText_Telefone
@@ -821,4 +819,5 @@ Partial Class frmReserva
     Friend WithEvents txtRGProduto As TextBox
     Friend WithEvents btnFechar As ToolStripButton
     Friend WithEvents Panel2 As Panel
+    Friend WithEvents dtpReservaData As DateTimePicker
 End Class

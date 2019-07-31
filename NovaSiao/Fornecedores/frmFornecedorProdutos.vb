@@ -1,13 +1,13 @@
 ﻿Imports CamadaBLL
 Imports CamadaDTO
 
-Public Class frmProdutoFornecedor
+Public Class frmFornecedorProdutos
     '
     Private prodBLL As New ProdutoFornecedorBLL
     Private _list As New List(Of clProdutoFornecedor)
     Private bindList As New BindingSource
     Private _formOrigem As Form
-    Private _Produto As clProduto
+    Private _Fornecedor As clFornecedor
     Private currentEditRow As Integer? = Nothing
     Private _rowSit As EnumFlagEstado
     Private ImgInativo As Image = My.Resources.full_page
@@ -15,15 +15,15 @@ Public Class frmProdutoFornecedor
     '
 #Region "SUB NEW"
     '
-    Sub New(Produto As clProduto, formOrigem As Form)
+    Sub New(Fornecedor As clFornecedor, formOrigem As Form)
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
         _formOrigem = formOrigem
-        _Produto = Produto
-        _list = GetListByID(Produto.IDProduto)
+        _Fornecedor = Fornecedor
+        _list = GetListByID(Fornecedor.IDPessoa)
         bindList.DataSource = _list
         '
         PreencheLabels()
@@ -32,23 +32,22 @@ Public Class frmProdutoFornecedor
         '
     End Sub
     '
-    Sub New(IDProduto As Integer, formOrigem As Form)
+    Sub New(IDFornecedor As Integer, formOrigem As Form)
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
         _formOrigem = formOrigem
-        _list = GetListByID(IDProduto)
+        _list = GetListByID(IDFornecedor)
         bindList.DataSource = _list
         '
         If _list.Count > 0 Then
-            _Produto = New clProduto
-            _Produto.Produto = _list(0).Produto
-            _Produto.IDProduto = _list(0).IDProduto
-            _Produto.RGProduto = _list(0).RGProduto
+            _Fornecedor = New clFornecedor
+            _Fornecedor.Cadastro = _list(0).Cadastro
+            _Fornecedor.IDPessoa = _list(0).IDFornecedor
         Else
-            _Produto = getProdutoByID(IDProduto)
+            _Fornecedor = getFornecedorByID(IDFornecedor)
         End If
         '
         PreencheLabels()
@@ -57,12 +56,12 @@ Public Class frmProdutoFornecedor
         '
     End Sub
     '
-    Private Sub frmProdutoFornecedor_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Private Sub frmFornecedorProdutos_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         '
-        If IsNothing(_Produto) OrElse IsNothing(_Produto.IDProduto) Then
+        If IsNothing(_Fornecedor) OrElse IsNothing(_Fornecedor.IDPessoa) Then
             '
             MessageBox.Show("Uma exceção ocorreu ao Abrir esse formulário..." & vbNewLine &
-                            "Não foi encontrado nenhum produto.", "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            "Não foi encontrado nenhum fornecedor.", "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             DialogResult = DialogResult.Cancel
         End If
         '
@@ -70,10 +69,10 @@ Public Class frmProdutoFornecedor
     '
     Private Sub PreencheLabels()
         '
-        If IsNothing(_Produto) OrElse IsNothing(_Produto.IDProduto) Then Exit Sub
+        If IsNothing(_Fornecedor) OrElse IsNothing(_Fornecedor.IDPessoa) Then Exit Sub
         '
-        lblProduto.Text = _Produto.Produto
-        lblRGProduto.Text = Format(_Produto.RGProduto, "0000")
+        lblFornecedor.Text = _Fornecedor.Cadastro
+        lblIDFornecedor.Text = Format(_Fornecedor.IDPessoa, "0000")
         '
     End Sub
     '
@@ -95,16 +94,16 @@ Public Class frmProdutoFornecedor
     '
 #Region "GET DADOS"
     '
-    Private Function GetListByID(IDProduto As Integer) As List(Of clProdutoFornecedor)
+    Private Function GetListByID(IDFornecedor As Integer) As List(Of clProdutoFornecedor)
         '
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Return prodBLL.GetListProdutoFornecedorByIDProduto(IDProduto)
+            Return prodBLL.GetListProdutoFornecedorByIDFornecedor(IDFornecedor)
             '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Obter a lista de Fornecedores do Produto..." & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao Obter a lista de Produtos do Fornecedor..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '--- Ampulheta OFF
@@ -117,17 +116,17 @@ Public Class frmProdutoFornecedor
     '
     '--- GET PRODUTO PELO ID
     '----------------------------------------------------------------------------------
-    Private Function getProdutoByID(IDProduto As Integer) As clProduto
+    Private Function getFornecedorByID(IDFornecedor As Integer) As clFornecedor
         '
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Dim pBLL As New ProdutoBLL
-            Return pBLL.GetProduto_PorID(IDProduto, Obter_FilialPadrao)
+            Dim fBLL As New FornecedorBLL
+            Return fBLL.GetFornecedores(IDFornecedor)(0)
             '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao obter Produto pelo ID..." & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao obter Fornecedor pelo ID..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return Nothing
         Finally
@@ -173,7 +172,17 @@ Public Class frmProdutoFornecedor
     '
     Private Sub FormataColunas_Itens()
         '
-        ' (0) COLUNA COD IDPRODUTOORIGEM
+        ' (0) COLUNA PRODUTO
+        With clnProduto
+            .DataPropertyName = "Produto"
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' (1) COLUNA COD IDPRODUTOORIGEM
         With clnIDProdutoFornecedor
             .DataPropertyName = "IDProdutoOrigem"
             .Resizable = DataGridViewTriState.False
@@ -183,38 +192,7 @@ Public Class frmProdutoFornecedor
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
         End With
         '
-        ' (1) COLUNA Data
-        With clnData
-            .DataPropertyName = "UltimaEntrada"
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .DefaultCellStyle.Format = "dd/MM/yyyy"
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-        End With
-        '
-        ' (2) COLUNA APELIDOFILIAL
-        With clnApelidoFilial
-            .DataPropertyName = "ApelidoFilial"
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
-        ' (3) COLUNA FORNECEDOR
-        With clnFornecedor
-            .DataPropertyName = "Cadastro"
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
-        ' (4) COLUNA PRECO
+        ' (2) COLUNA PRECO
         With clnPreco
             .DataPropertyName = "PCompra"
             .Resizable = DataGridViewTriState.False
@@ -226,7 +204,7 @@ Public Class frmProdutoFornecedor
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (5) COLUNA DESCONTOCOMPRA
+        ' (3) COLUNA DESCONTOCOMPRA
         With clnDesconto
             .DataPropertyName = "DescontoCompra"
             .HeaderText = "Desc(%)"
@@ -239,7 +217,28 @@ Public Class frmProdutoFornecedor
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (6) COLUNA DESCONTOCOMPRA
+        ' (4) COLUNA Data
+        With clnData
+            .DataPropertyName = "UltimaEntrada"
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .DefaultCellStyle.Format = "dd/MM/yyyy"
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+        End With
+        '
+        ' (5) COLUNA APELIDOFILIAL
+        With clnApelidoFilial
+            .DataPropertyName = "ApelidoFilial"
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' (6) COLUNA FORNECEDOR PADRAO
         With clnFornecedorPadrao
             .Resizable = DataGridViewTriState.False
             .Visible = True
@@ -250,8 +249,8 @@ Public Class frmProdutoFornecedor
         End With
         '
         '--- adiciona as colunas editadas
-        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnIDProdutoFornecedor, clnData, clnApelidoFilial,
-                                  clnFornecedor, clnPreco, clnDesconto, clnFornecedorPadrao})
+        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnProduto, clnIDProdutoFornecedor, clnPreco,
+                                  clnDesconto, clnData, clnApelidoFilial, clnFornecedorPadrao})
         '
     End Sub
     '
@@ -337,7 +336,7 @@ Public Class frmProdutoFornecedor
             End If
             '
         Catch ex As Exception
-            MessageBox.Show("Ocorreu uma exceção ao SALVAR novo registro de Fornecedor" & vbNewLine &
+            MessageBox.Show("Ocorreu uma exceção ao SALVAR novo registro de Produto" & vbNewLine &
                             ex.Message, "Exceção",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return Nothing
@@ -418,7 +417,7 @@ Public Class frmProdutoFornecedor
         '
     End Sub
     '
-    '--- VALIDA O CELL RGPRODUTO E PROCURA O PRODUTO PELO RGPRODUTO
+    '--- VALIDA O CELL
     Private Sub dgvItens_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvItens.CellValidating
         '
         '--- verifica se a currenteCELL is Dirty
@@ -499,15 +498,14 @@ Public Class frmProdutoFornecedor
     Private Sub btnInserir_Click(sender As Object, e As EventArgs) Handles btnInserir.Click
         '
         Dim prodForn As New clProdutoFornecedor With {
-            .Produto = _Produto.Produto,
-            .RGProduto = _Produto.RGProduto,
-            .IDProduto = _Produto.IDProduto,
+            .Cadastro = _Fornecedor.Cadastro,
+            .IDProduto = _Fornecedor.IDPessoa,
             .UltimaEntrada = Today,
             .ApelidoFilial = ObterConfigValorNode("FilialDescricao"),
             .IDFilial = Obter_FilialPadrao()
         }
         '
-        Dim form As New frmProdutoFornecedorEditar(prodForn, True, Me)
+        Dim form As New frmProdutoFornecedorEditar(prodForn, False, Me)
         form.ShowDialog()
         '
         If form.DialogResult <> DialogResult.OK Then
@@ -516,11 +514,11 @@ Public Class frmProdutoFornecedor
             Exit Sub
         End If
         '
-        '--- check if FORNECEDOR already inserted
-        If _list.Exists(Function(x) x.IDFornecedor = prodForn.IDFornecedor) Then
-            AbrirDialog("Já existe um registro inserido com o fornecedor:" & vbCrLf &
-                        prodForn.Cadastro,
-                        "Fornecedor Existente",
+        '--- check if PRODUTO already inserted
+        If _list.Exists(Function(x) x.IDProduto = prodForn.IDProduto) Then
+            AbrirDialog("Já existe um registro inserido com o PRODUTO:" & vbCrLf &
+                        prodForn.Produto,
+                        "Produto Existente",
                         frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             Exit Sub
         End If
@@ -542,7 +540,7 @@ Public Class frmProdutoFornecedor
             '
         Catch ex As Exception
             '
-            MessageBox.Show("Uma exceção ocorreu ao Salvar Registro de Fornecedor..." & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao Salvar Registro de Produto..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '
@@ -563,7 +561,7 @@ Public Class frmProdutoFornecedor
         '
         Dim prodForn As clProdutoFornecedor = dgvItens.CurrentRow.DataBoundItem
         '
-        Dim form As New frmProdutoFornecedorEditar(prodForn, True, Me)
+        Dim form As New frmProdutoFornecedorEditar(prodForn, False, Me)
         form.ShowDialog()
         '
         If form.DialogResult <> DialogResult.OK Then
@@ -572,11 +570,11 @@ Public Class frmProdutoFornecedor
             Exit Sub
         End If
         '
-        '--- check if FORNECEDOR already inserted
-        If _list.Exists(Function(x) x.IDFornecedor = prodForn.IDFornecedor) Then
-            AbrirDialog("Já existe um registro inserido com o fornecedor:" & vbCrLf &
-                        prodForn.Cadastro,
-                        "Fornecedor Existente",
+        '--- check if PRODUTO already inserted
+        If _list.Exists(Function(x) x.IDProduto = prodForn.IDProduto) Then
+            AbrirDialog("Já existe um registro inserido com o PRODUTO:" & vbCrLf &
+                        prodForn.Produto,
+                        "Produto Existente",
                         frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             prodForn.CancelEdit()
             bindList.ResetBindings(False)
@@ -598,7 +596,7 @@ Public Class frmProdutoFornecedor
             '
         Catch ex As Exception
             '
-            MessageBox.Show("Uma exceção ocorreu ao Salvar Registro de Fornecedor..." & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao Salvar Registro de Produto..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '
@@ -620,21 +618,21 @@ Public Class frmProdutoFornecedor
         Dim delItem As clProdutoFornecedor = dgvItens.CurrentRow.DataBoundItem
         '
         If Not IsNothing(delItem.IDTransacao) Then
-            AbrirDialog("Não é possível remover um registro de Fornecedor quando está vinculado à uma compra...",
+            AbrirDialog("Não é possível remover um registro de Produto quando está vinculado à uma compra...",
                         "Registro Vinculado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             Return
         End If
         '
         If delItem.FornecedorPadrao Then
-            AbrirDialog("Não é possível remover um registro de Fornecedor quando é o Fornecedor Padrão do Produto...",
+            AbrirDialog("Não é possível remover um registro de Produto quando é o Fornecedor Padrão do Produto...",
                         "Fornecedor Padrão", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             Return
         End If
         '
         '--- pergunta ao usuario
-        If AbrirDialog("Você realmente deseja remover o FORNECEDOR:" & vbNewLine & delItem.Cadastro.ToUpper & vbCrLf &
-                       "da listagem de fornecedores do produto?",
-                       "Remover Fornecedor",
+        If AbrirDialog("Você realmente deseja remover o PRODUTO:" & vbNewLine & delItem.Produto.ToUpper & vbCrLf &
+                       "da listagem desse Fornecedor?",
+                       "Remover Produto",
                        frmDialog.DialogType.SIM_NAO,
                        frmDialog.DialogIcon.Question,
                        frmDialog.DialogDefaultButton.Second) = DialogResult.No Then
@@ -653,7 +651,7 @@ Public Class frmProdutoFornecedor
             EnableButtons()
             '
         Catch ex As Exception
-            MessageBox.Show("Houve uma exceção ao remover o Fornecedor:" & vbNewLine &
+            MessageBox.Show("Houve uma exceção ao remover o Produto:" & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '
@@ -711,7 +709,7 @@ Public Class frmProdutoFornecedor
                                     "Talvez a transação não seja de Compra.")
             End If
             '
-            '--- close FORM frmProduto
+            '--- close FORM frmFornecedor
             If Not IsNothing(_formOrigem) Then
                 _formOrigem.Close()
                 _formOrigem = Nothing
@@ -746,14 +744,7 @@ Public Class frmProdutoFornecedor
             Cursor = Cursors.WaitCursor
             '
             prodBLL.DefineFornecedorPadrao(prodForn.IDProduto, prodForn.IDFornecedor)
-            '
-            For Each item As clProdutoFornecedor In bindList
-                If item.IDFornecedor = prodForn.IDFornecedor Then
-                    item.FornecedorPadrao = True
-                Else
-                    item.FornecedorPadrao = False
-                End If
-            Next
+            bindList.Current.FornecedorPadrao = True
             '
             Return True
             '
