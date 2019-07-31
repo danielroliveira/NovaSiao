@@ -457,7 +457,7 @@ Public Class frmProduto
         '
     End Sub
     '
-    ' ATIVAR OU DESATIVAR CLIENTE BOTÃO
+    ' ATIVAR OU DESATIVAR PRODUTO BOTÃO
     Private Sub btnAtivo_Click(sender As Object, e As EventArgs) Handles btnAtivo.Click
         '
         If Sit = EnumFlagEstado.NovoRegistro Then

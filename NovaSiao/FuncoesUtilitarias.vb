@@ -1,4 +1,5 @@
 ﻿Imports System.Reflection
+Imports System.Text.RegularExpressions
 '
 Public Class Utilidades
     '
@@ -172,6 +173,8 @@ Public Class Utilidades
         '--- Get chars quantity
         If Nome.Length = 0 Then Return ""
         '
+        '--- CONVERT TO LOWER FIRST
+        Nome = Nome.ToLower
 
         Dim palavrasExcluidas As String() = {
             "de", "da", "do", "e"
@@ -195,4 +198,19 @@ Public Class Utilidades
         '
     End Function
     '
+    '----------------------------------------------------------------------------------
+    '--- CHECK IS VALID EMAIL
+    '----------------------------------------------------------------------------------
+    Public Shared Function EmailCheck(email As String) As Boolean
+        '
+        Dim pattern As String = "^[a-zA-Z][\w\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]$"
+        Dim emailAddressMatch As Match = Regex.Match(email, pattern)
+        '
+        If emailAddressMatch.Success Then
+            Return True
+        Else
+            Return False
+        End If
+        '
+    End Function
 End Class

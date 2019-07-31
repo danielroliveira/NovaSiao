@@ -33,6 +33,7 @@ Partial Class frmProdutoFornecedor
         Me.clnFornecedor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnFornecedorPadrao = New System.Windows.Forms.DataGridViewImageColumn()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lblProduto = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -40,6 +41,8 @@ Partial Class frmProdutoFornecedor
         Me.btnInserir = New System.Windows.Forms.Button()
         Me.btnEditar = New System.Windows.Forms.Button()
         Me.btnExcluir = New System.Windows.Forms.Button()
+        Me.btnDefinirPadrao = New System.Windows.Forms.Button()
+        Me.btnCompra = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -82,11 +85,11 @@ Partial Class frmProdutoFornecedor
         '
         Me.btnFechar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar_24x24
-        Me.btnFechar.Location = New System.Drawing.Point(785, 454)
+        Me.btnFechar.Location = New System.Drawing.Point(782, 455)
         Me.btnFechar.Margin = New System.Windows.Forms.Padding(6)
         Me.btnFechar.Name = "btnFechar"
-        Me.btnFechar.Size = New System.Drawing.Size(120, 40)
-        Me.btnFechar.TabIndex = 9
+        Me.btnFechar.Size = New System.Drawing.Size(123, 40)
+        Me.btnFechar.TabIndex = 11
         Me.btnFechar.Text = "&Fechar"
         Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -116,7 +119,7 @@ Partial Class frmProdutoFornecedor
         Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvItens.ColumnHeadersHeight = 30
         Me.dgvItens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDProdutoFornecedor, Me.clnData, Me.clnApelidoFilial, Me.clnFornecedor, Me.clnPreco, Me.clnDesconto})
+        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDProdutoFornecedor, Me.clnData, Me.clnApelidoFilial, Me.clnFornecedor, Me.clnPreco, Me.clnDesconto, Me.clnFornecedorPadrao})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -147,7 +150,7 @@ Partial Class frmProdutoFornecedor
         Me.dgvItens.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black
         Me.dgvItens.RowTemplate.Height = 33
         Me.dgvItens.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvItens.Size = New System.Drawing.Size(893, 339)
+        Me.dgvItens.Size = New System.Drawing.Size(893, 343)
         Me.dgvItens.TabIndex = 5
         '
         'clnIDProdutoFornecedor
@@ -170,14 +173,14 @@ Partial Class frmProdutoFornecedor
         Me.clnApelidoFilial.HeaderText = "Filial"
         Me.clnApelidoFilial.Name = "clnApelidoFilial"
         Me.clnApelidoFilial.ReadOnly = True
-        Me.clnApelidoFilial.Width = 120
+        Me.clnApelidoFilial.Width = 110
         '
         'clnFornecedor
         '
         Me.clnFornecedor.HeaderText = "Fornecedor"
         Me.clnFornecedor.MaxInputLength = 50
         Me.clnFornecedor.Name = "clnFornecedor"
-        Me.clnFornecedor.Width = 350
+        Me.clnFornecedor.Width = 300
         '
         'clnPreco
         '
@@ -193,6 +196,13 @@ Partial Class frmProdutoFornecedor
         Me.clnDesconto.Name = "clnDesconto"
         Me.clnDesconto.ReadOnly = True
         Me.clnDesconto.Width = 70
+        '
+        'clnFornecedorPadrao
+        '
+        Me.clnFornecedorPadrao.HeaderText = "FP"
+        Me.clnFornecedorPadrao.Name = "clnFornecedorPadrao"
+        Me.clnFornecedorPadrao.ReadOnly = True
+        Me.clnFornecedorPadrao.Width = 50
         '
         'Label1
         '
@@ -234,7 +244,7 @@ Partial Class frmProdutoFornecedor
         '
         Me.btnInserir.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnInserir.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.btnInserir.Location = New System.Drawing.Point(12, 454)
+        Me.btnInserir.Location = New System.Drawing.Point(12, 455)
         Me.btnInserir.Margin = New System.Windows.Forms.Padding(6)
         Me.btnInserir.Name = "btnInserir"
         Me.btnInserir.Size = New System.Drawing.Size(120, 40)
@@ -248,7 +258,7 @@ Partial Class frmProdutoFornecedor
         '
         Me.btnEditar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnEditar.Image = Global.NovaSiao.My.Resources.Resources.editar
-        Me.btnEditar.Location = New System.Drawing.Point(136, 454)
+        Me.btnEditar.Location = New System.Drawing.Point(138, 455)
         Me.btnEditar.Margin = New System.Windows.Forms.Padding(6)
         Me.btnEditar.Name = "btnEditar"
         Me.btnEditar.Size = New System.Drawing.Size(120, 40)
@@ -262,7 +272,7 @@ Partial Class frmProdutoFornecedor
         '
         Me.btnExcluir.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnExcluir.Image = Global.NovaSiao.My.Resources.Resources.delete_24px
-        Me.btnExcluir.Location = New System.Drawing.Point(260, 454)
+        Me.btnExcluir.Location = New System.Drawing.Point(264, 455)
         Me.btnExcluir.Margin = New System.Windows.Forms.Padding(6)
         Me.btnExcluir.Name = "btnExcluir"
         Me.btnExcluir.Size = New System.Drawing.Size(120, 40)
@@ -271,6 +281,34 @@ Partial Class frmProdutoFornecedor
         Me.btnExcluir.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnExcluir.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnExcluir.UseVisualStyleBackColor = True
+        '
+        'btnDefinirPadrao
+        '
+        Me.btnDefinirPadrao.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnDefinirPadrao.Image = Global.NovaSiao.My.Resources.Resources.accept
+        Me.btnDefinirPadrao.Location = New System.Drawing.Point(390, 455)
+        Me.btnDefinirPadrao.Margin = New System.Windows.Forms.Padding(6)
+        Me.btnDefinirPadrao.Name = "btnDefinirPadrao"
+        Me.btnDefinirPadrao.Size = New System.Drawing.Size(190, 40)
+        Me.btnDefinirPadrao.TabIndex = 9
+        Me.btnDefinirPadrao.Text = "&Definir como Padrão"
+        Me.btnDefinirPadrao.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnDefinirPadrao.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnDefinirPadrao.UseVisualStyleBackColor = True
+        '
+        'btnCompra
+        '
+        Me.btnCompra.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnCompra.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
+        Me.btnCompra.Location = New System.Drawing.Point(586, 455)
+        Me.btnCompra.Margin = New System.Windows.Forms.Padding(6)
+        Me.btnCompra.Name = "btnCompra"
+        Me.btnCompra.Size = New System.Drawing.Size(190, 40)
+        Me.btnCompra.TabIndex = 10
+        Me.btnCompra.Text = "&Ir para Compra"
+        Me.btnCompra.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnCompra.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnCompra.UseVisualStyleBackColor = True
         '
         'frmProdutoFornecedor
         '
@@ -281,6 +319,8 @@ Partial Class frmProdutoFornecedor
         Me.Controls.Add(Me.lblProduto)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.dgvItens)
+        Me.Controls.Add(Me.btnCompra)
+        Me.Controls.Add(Me.btnDefinirPadrao)
         Me.Controls.Add(Me.btnExcluir)
         Me.Controls.Add(Me.btnEditar)
         Me.Controls.Add(Me.btnInserir)
@@ -291,6 +331,8 @@ Partial Class frmProdutoFornecedor
         Me.Controls.SetChildIndex(Me.btnInserir, 0)
         Me.Controls.SetChildIndex(Me.btnEditar, 0)
         Me.Controls.SetChildIndex(Me.btnExcluir, 0)
+        Me.Controls.SetChildIndex(Me.btnDefinirPadrao, 0)
+        Me.Controls.SetChildIndex(Me.btnCompra, 0)
         Me.Controls.SetChildIndex(Me.dgvItens, 0)
         Me.Controls.SetChildIndex(Me.Label1, 0)
         Me.Controls.SetChildIndex(Me.lblProduto, 0)
@@ -319,4 +361,7 @@ Partial Class frmProdutoFornecedor
     Friend WithEvents clnFornecedor As DataGridViewTextBoxColumn
     Friend WithEvents clnPreco As DataGridViewTextBoxColumn
     Friend WithEvents clnDesconto As DataGridViewTextBoxColumn
+    Friend WithEvents clnFornecedorPadrao As DataGridViewImageColumn
+    Friend WithEvents btnDefinirPadrao As Button
+    Friend WithEvents btnCompra As Button
 End Class

@@ -807,6 +807,7 @@ Public Class clProdutoFornecedor
         'Dim Produto As String
         Dim _IDFornecedor As Integer?
         Dim _Cadastro As String
+        Dim _FornecedorPadrao As Boolean
         'Dim CNPJ As String
         Dim _IDTransacao As Integer?
         Dim _UltimaEntrada As Date?
@@ -831,6 +832,7 @@ Public Class clProdutoFornecedor
         PData = New ProdutoDados()
         PData._PCompra = 0
         PData._DescontoCompra = 0
+        PData._FornecedorPadrao = False
     End Sub
     '
     Public Sub BeginEdit() Implements IEditableObject.BeginEdit
@@ -870,6 +872,8 @@ Public Class clProdutoFornecedor
     '
 #Region "PROPRIEDADES"
     '
+    '--- Propriedade IDProduto
+    '------------------------------------------------------
     Property IDProduto() As Integer?
         Get
             Return PData._IDProduto
@@ -879,8 +883,12 @@ Public Class clProdutoFornecedor
         End Set
     End Property
     '
+    '--- Propriedade RGProduto
+    '------------------------------------------------------
     Property RGProduto() As Integer?
     '
+    '--- Propriedade Produto
+    '------------------------------------------------------
     Property Produto() As String
     '
     '--- Propriedade IDFornecedor
@@ -911,6 +919,22 @@ Public Class clProdutoFornecedor
         End Set
     End Property
     '
+    '--- Propriedade FornecedorPadrao
+    '------------------------------------------------------
+    Public Property FornecedorPadrao() As Boolean
+        Get
+            Return PData._FornecedorPadrao
+        End Get
+        Set(ByVal value As Boolean)
+            If value <> PData._FornecedorPadrao Then
+                RaiseEvent AoAlterar()
+            End If
+            PData._FornecedorPadrao = value
+        End Set
+    End Property
+    '
+    '--- Propriedade CNPJ
+    '------------------------------------------------------
     Property CNPJ() As String
     '
     '--- Propriedade IDTransacao
@@ -940,7 +964,9 @@ Public Class clProdutoFornecedor
             PData._UltimaEntrada = value
         End Set
     End Property
-    '    
+    '
+    '--- Propriedade PCompra
+    '------------------------------------------------------ 
     Property PCompra() As Decimal?
         Get
             Return PData._PCompra
@@ -969,6 +995,8 @@ Public Class clProdutoFornecedor
         End Set
     End Property
     '
+    '--- Propriedade IDProdutoOrigem
+    '------------------------------------------------------ 
     Property IDProdutoOrigem() As String
         Get
             Return PData._IDProdutoOrigem
@@ -983,10 +1011,16 @@ Public Class clProdutoFornecedor
         End Set
     End Property
     '
+    '--- Propriedade IDFilial
+    '------------------------------------------------------ 
     Property IDFilial() As Integer?
     '
+    '--- Propriedade ApelidoFilial
+    '------------------------------------------------------ 
     Property ApelidoFilial() As String
     '
+    '--- Propriedade SubTotal
+    '------------------------------------------------------ 
     ReadOnly Property SubTotal() As Decimal
         Get
             Return If(PCompra, 0) - (If(PCompra, 0) * If(DescontoCompra, 0) / 100)

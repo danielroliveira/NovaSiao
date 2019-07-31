@@ -24,6 +24,7 @@ Partial Class frmProdutoFornecedorEditar
         Me.btnSalvar = New System.Windows.Forms.ToolStripButton()
         Me.btnCancelar = New System.Windows.Forms.ToolStripButton()
         Me.btnFechar = New System.Windows.Forms.ToolStripButton()
+        Me.btnAtivo = New System.Windows.Forms.ToolStripButton()
         Me.lblRGProduto = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblProduto = New System.Windows.Forms.Label()
@@ -103,7 +104,7 @@ Partial Class frmProdutoFornecedorEditar
         Me.tsMenu.Dock = System.Windows.Forms.DockStyle.None
         Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
-        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSalvar, Me.btnCancelar, Me.btnFechar})
+        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSalvar, Me.btnCancelar, Me.btnFechar, Me.btnAtivo})
         Me.tsMenu.Location = New System.Drawing.Point(4, 411)
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
@@ -146,6 +147,19 @@ Partial Class frmProdutoFornecedorEditar
         Me.btnFechar.Size = New System.Drawing.Size(88, 45)
         Me.btnFechar.Text = "&Fechar"
         Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'btnAtivo
+        '
+        Me.btnAtivo.AutoSize = False
+        Me.btnAtivo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.btnAtivo.CheckOnClick = True
+        Me.btnAtivo.Image = Global.NovaSiao.My.Resources.Resources.Switch_ON_PEQ
+        Me.btnAtivo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnAtivo.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnAtivo.Name = "btnAtivo"
+        Me.btnAtivo.Size = New System.Drawing.Size(210, 41)
+        Me.btnAtivo.Text = "Fornecedor Padrão"
+        Me.btnAtivo.ToolTipText = "Fornecedor Padrão"
         '
         'lblRGProduto
         '
@@ -491,4 +505,5 @@ Partial Class frmProdutoFornecedorEditar
     Friend WithEvents Label8 As Label
     Friend WithEvents txtFornecedor As TextBox
     Friend WithEvents lblVinculado As Label
+    Friend WithEvents btnAtivo As ToolStripButton
 End Class

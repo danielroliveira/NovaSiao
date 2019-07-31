@@ -14,52 +14,31 @@ Public Class ReservaBLL
         '
         bd.LimparParametros()
         '
+        '--- ADD FILIAL
         bd.AdicionarParametros("@IDFilial", _IDFilial)
+        Dim query As String = "SELECT * FROM qryReserva WHERE IDFilial = @IDFilial "
         '
-        If Not IsNothing(_IDSituacaoReserva) Then
-            bd.AdicionarParametros("@IDSituacaoReserva", _IDSituacaoReserva)
-        End If
-        '
+        '--- ADD RESERVAATIVA
         If Not IsNothing(_ReservaAtiva) Then
             bd.AdicionarParametros("@ReservaAtiva", _ReservaAtiva)
+            query += "AND ReservaAtiva = @ReservaAtiva "
         End If
-        '        
+        '
+        '--- ADD SITUACAO RESERVA
+        If Not IsNothing(_IDSituacaoReserva) Then
+            bd.AdicionarParametros("@IDSituacaoReserva", _IDSituacaoReserva)
+            query += "AND IDSituacaoReserva = @IDSituacaoReserva "
+        End If
+        '
+        '--- ORDER BY
+        query += "ORDER BY ReservaData"
+        '
+        '--- EXECUTE
         Try
-            Dim dt As DataTable = bd.ExecutarConsulta(CommandType.StoredProcedure, "uspReserva_GET")
+            Dim dt As DataTable = bd.ExecutarConsulta(CommandType.Text, query)
             '
             For Each r As DataRow In dt.Rows
-                Dim res As New clReserva
-                '
-                res.IDReserva = IIf(IsDBNull(r("IDReserva")), Nothing, r("IDReserva"))
-                res.ReservaData = IIf(IsDBNull(r("ReservaData")), Nothing, r("ReservaData"))
-                res.IDFuncionario = IIf(IsDBNull(r("IDFuncionario")), Nothing, r("IDFuncionario"))
-                res.ApelidoFuncionario = IIf(IsDBNull(r("ApelidoFuncionario")), String.Empty, r("ApelidoFuncionario"))
-                res.IDFilial = IIf(IsDBNull(r("IDFilial")), Nothing, r("IDFilial"))
-                res.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
-                res.ClienteNome = IIf(IsDBNull(r("ClienteNome")), String.Empty, r("ClienteNome"))
-                res.TelefoneA = IIf(IsDBNull(r("TelefoneA")), String.Empty, r("TelefoneA"))
-                res.TelefoneB = IIf(IsDBNull(r("TelefoneB")), String.Empty, r("TelefoneB"))
-                res.TemWathsapp = IIf(IsDBNull(r("TemWathsapp")), Nothing, r("TemWathsapp"))
-                res.ClienteEmail = IIf(IsDBNull(r("ClienteEmail")), String.Empty, r("ClienteEmail"))
-                res.ProdutoConhecido = IIf(IsDBNull(r("ProdutoConhecido")), Nothing, r("ProdutoConhecido"))
-                res.RGProduto = IIf(IsDBNull(r("RGProduto")), Nothing, r("RGProduto"))
-                res.Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto"))
-                res.PVenda = IIf(IsDBNull(r("PVenda")), Nothing, r("PVenda"))
-                res.Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor"))
-                res.IDFornecedor = IIf(IsDBNull(r("IDFornecedor")), Nothing, r("IDFornecedor"))
-                res.Fornecedor = IIf(IsDBNull(r("Fornecedor")), String.Empty, r("Fornecedor"))
-                res.IDFabricante = IIf(IsDBNull(r("IDFabricante")), Nothing, r("IDFabricante"))
-                res.Fabricante = IIf(IsDBNull(r("Fabricante")), String.Empty, r("Fabricante"))
-                res.IDProdutoTipo = IIf(IsDBNull(r("IDProdutoTipo")), Nothing, r("IDProdutoTipo"))
-                res.ProdutoTipo = IIf(IsDBNull(r("ProdutoTipo")), String.Empty, r("ProdutoTipo"))
-                res.IDSituacaoReserva = IIf(IsDBNull(r("IDSituacaoReserva")), Nothing, r("IDSituacaoReserva"))
-                res.SituacaoReserva = IIf(IsDBNull(r("SituacaoReserva")), String.Empty, r("SituacaoReserva"))
-                res.ConclusaoData = IIf(IsDBNull(r("ConclusaoData")), Nothing, r("ConclusaoData"))
-                res.Observacao = IIf(IsDBNull(r("Observacao")), String.Empty, r("Observacao"))
-                res.ReservaAtiva = IIf(IsDBNull(r("ReservaAtiva")), Nothing, r("ReservaAtiva"))
-                '
-                lst.Add(res)
-                '
+                lst.Add(ConvertRowClass(r))
             Next
             '
             Return lst
@@ -74,38 +53,67 @@ Public Class ReservaBLL
     ' INSERIR NOVO
     '===================================================================================================
     Public Function Reserva_Inserir(myReserva As clReserva) As Object
-        Dim bd As New AcessoDados
         '
-        bd.LimparParametros()
+        Dim db As New AcessoDados
+        db.BeginTransaction()
+        '
+        db.LimparParametros()
         '
         '--- ADICIONA OS PARAMENTROS NECESSARIOS
-        bd.AdicionarParametros("@ReservaData", myReserva.ReservaData)
-        bd.AdicionarParametros("@IDFuncionario", myReserva.IDFuncionario)
-        bd.AdicionarParametros("@IDFilial", myReserva.IDFilial)
-        bd.AdicionarParametros("@ClienteNome", myReserva.ClienteNome)
-        bd.AdicionarParametros("@TelefoneA", myReserva.TelefoneA)
-        bd.AdicionarParametros("@TelefoneB", myReserva.TelefoneB)
-        bd.AdicionarParametros("@TemWathsapp", myReserva.TemWathsapp)
-        bd.AdicionarParametros("@ClienteEmail", myReserva.ClienteEmail)
-        bd.AdicionarParametros("@ProdutoConhecido", myReserva.ProdutoConhecido)
-        bd.AdicionarParametros("@RGProduto", myReserva.RGProduto)
-        bd.AdicionarParametros("@Produto", myReserva.Produto)
-        bd.AdicionarParametros("@Autor", myReserva.Autor)
-        bd.AdicionarParametros("@IDFornecedor", myReserva.IDFornecedor)
-        bd.AdicionarParametros("@IDFabricante", myReserva.IDFabricante)
-        bd.AdicionarParametros("@IDProdutoTipo", myReserva.IDProdutoTipo)
-        bd.AdicionarParametros("@Observacao", myReserva.Observacao)
+        db.AdicionarParametros("@ReservaData", myReserva.ReservaData)
+        db.AdicionarParametros("@IDFuncionario", myReserva.IDFuncionario)
+        db.AdicionarParametros("@IDFilial", myReserva.IDFilial)
+        db.AdicionarParametros("@ClienteNome", myReserva.ClienteNome)
+        db.AdicionarParametros("@TelefoneA", If(myReserva.TelefoneA, DBNull.Value))
+        db.AdicionarParametros("@TelefoneB", If(myReserva.TelefoneB, DBNull.Value))
+        db.AdicionarParametros("@TemWathsapp", myReserva.TemWathsapp)
+        db.AdicionarParametros("@ClienteEmail", If(myReserva.ClienteEmail, DBNull.Value))
+        db.AdicionarParametros("@ProdutoConhecido", myReserva.ProdutoConhecido)
+        db.AdicionarParametros("@RGProduto", If(myReserva.RGProduto, DBNull.Value))
+        db.AdicionarParametros("@Produto", myReserva.Produto)
+        db.AdicionarParametros("@Autor", If(myReserva.Autor, DBNull.Value))
+        db.AdicionarParametros("@IDFornecedor", If(myReserva.IDFornecedor, DBNull.Value))
+        db.AdicionarParametros("@IDFabricante", If(myReserva.IDFabricante, DBNull.Value))
+        db.AdicionarParametros("@IDProdutoTipo", If(myReserva.IDProdutoTipo, DBNull.Value))
+        '
+        Dim query As String =
+            "INSERT INTO tblReserva " +
+            "( ReservaData, IDFuncionario, IDFilial, ClienteNome " +
+            ", TelefoneA, TelefoneB, TemWathsapp, ClienteEmail " +
+            ", ProdutoConhecido, RGProduto, Produto, Autor " +
+            ", IDFornecedor, IDFabricante, IDProdutoTipo, IDSituacaoReserva ) " +
+            "VALUES " +
+            "( @ReservaData, @IDFuncionario, @IDFilial, @ClienteNome " +
+            ", @TelefoneA, @TelefoneB, @TemWathsapp, @ClienteEmail " +
+            ", @ProdutoConhecido, @RGProduto, @Produto, @Autor " +
+            ", @IDFornecedor, @IDFabricante, @IDProdutoTipo, 1 )"
         '
         Try
-            Dim myID As Object = bd.ExecutarManipulacao(CommandType.StoredProcedure, "uspReserva_Inserir")
             '
-            If IsNumeric(myID) Then
-                Return myID
-            Else
-                Throw New Exception(myID.ToString)
+            Dim obj As Object = db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            '--- obter NewID
+            db.LimparParametros()
+            query = "SELECT @@IDENTITY As LastID;"
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            Dim newID As Object = dt.Rows(0)(0)
+            '
+            If Not IsNumeric(newID) Then
+                Throw New Exception(newID.ToString)
             End If
             '
+            '--- INSERT OBSERVACAO
+            If If(myReserva.Observacao, "").Trim <> "" Then
+                Dim oBLL As New ObservacaoBLL
+                oBLL.SaveObservacao(6, newID, myReserva.Observacao, db)
+            End If
+            '
+            db.CommitTransaction()
+            Return newID
+            '
         Catch ex As Exception
+            db.RollBackTransaction()
             Throw ex
         End Try
         '
@@ -159,6 +167,7 @@ Public Class ReservaBLL
     ' ALTERA A SITUCAO DA RESERVA
     '===================================================================================================
     Public Function Reserva_AlteraSituacao(IDReserva As Integer, IDSituacao As Byte) As Boolean
+        '
         Dim SQL As New SQLControl
         Dim mySQL As String = String.Format("UPDATE tblReserva SET IDSituacaoReserva = '{0}' WHERE IDReserva = {1}", IDSituacao, IDReserva)
         '
@@ -180,6 +189,7 @@ Public Class ReservaBLL
     ' GET RESERVA SITUACAO
     '===================================================================================================
     Public Function ReservaSituacao_GET_DT(Optional _ReservaAtiva As Boolean? = Nothing) As DataTable
+        '
         Dim SQL As New SQLControl
         Dim str As String = ""
         '
@@ -206,6 +216,7 @@ Public Class ReservaBLL
     ' GET PRODUTO DADOS PELO RGPRODUTO
     '===================================================================================================
     Public Function ProdutoGet_PeloRG(_RGProduto As Integer, _IDFilial As Integer) As DataTable
+        '
         Dim db As New AcessoDados
         '
         db.LimparParametros()
@@ -223,4 +234,42 @@ Public Class ReservaBLL
         '
     End Function
     '
+    '==========================================================================================
+    ' CONVERT ROW IN CLASS
+    '==========================================================================================
+    Private Function ConvertRowClass(r As DataRow) As clReserva
+        '
+        Dim res As New clReserva
+        '
+        res.IDReserva = IIf(IsDBNull(r("IDReserva")), Nothing, r("IDReserva"))
+        res.ReservaData = IIf(IsDBNull(r("ReservaData")), Nothing, r("ReservaData"))
+        res.IDFuncionario = IIf(IsDBNull(r("IDFuncionario")), Nothing, r("IDFuncionario"))
+        res.ApelidoFuncionario = IIf(IsDBNull(r("ApelidoFuncionario")), String.Empty, r("ApelidoFuncionario"))
+        res.IDFilial = IIf(IsDBNull(r("IDFilial")), Nothing, r("IDFilial"))
+        res.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
+        res.ClienteNome = IIf(IsDBNull(r("ClienteNome")), String.Empty, r("ClienteNome"))
+        res.TelefoneA = IIf(IsDBNull(r("TelefoneA")), String.Empty, r("TelefoneA"))
+        res.TelefoneB = IIf(IsDBNull(r("TelefoneB")), String.Empty, r("TelefoneB"))
+        res.TemWathsapp = IIf(IsDBNull(r("TemWathsapp")), Nothing, r("TemWathsapp"))
+        res.ClienteEmail = IIf(IsDBNull(r("ClienteEmail")), String.Empty, r("ClienteEmail"))
+        res.ProdutoConhecido = IIf(IsDBNull(r("ProdutoConhecido")), Nothing, r("ProdutoConhecido"))
+        res.RGProduto = IIf(IsDBNull(r("RGProduto")), Nothing, r("RGProduto"))
+        res.Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto"))
+        res.PVenda = IIf(IsDBNull(r("PVenda")), Nothing, r("PVenda"))
+        res.Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor"))
+        res.IDFornecedor = IIf(IsDBNull(r("IDFornecedor")), Nothing, r("IDFornecedor"))
+        res.Fornecedor = IIf(IsDBNull(r("Fornecedor")), String.Empty, r("Fornecedor"))
+        res.IDFabricante = IIf(IsDBNull(r("IDFabricante")), Nothing, r("IDFabricante"))
+        res.Fabricante = IIf(IsDBNull(r("Fabricante")), String.Empty, r("Fabricante"))
+        res.IDProdutoTipo = IIf(IsDBNull(r("IDProdutoTipo")), Nothing, r("IDProdutoTipo"))
+        res.ProdutoTipo = IIf(IsDBNull(r("ProdutoTipo")), String.Empty, r("ProdutoTipo"))
+        res.IDSituacaoReserva = IIf(IsDBNull(r("IDSituacaoReserva")), Nothing, r("IDSituacaoReserva"))
+        res.SituacaoReserva = IIf(IsDBNull(r("SituacaoReserva")), String.Empty, r("SituacaoReserva"))
+        res.ConclusaoData = IIf(IsDBNull(r("ConclusaoData")), Nothing, r("ConclusaoData"))
+        res.Observacao = IIf(IsDBNull(r("Observacao")), String.Empty, r("Observacao"))
+        res.ReservaAtiva = IIf(IsDBNull(r("ReservaAtiva")), Nothing, r("ReservaAtiva"))
+        '
+        Return res
+        '
+    End Function
 End Class

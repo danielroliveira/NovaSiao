@@ -32,14 +32,13 @@ Partial Class frmReserva
         Me.txtFuncionario = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.tsMenu = New System.Windows.Forms.ToolStrip()
         Me.btnProcurar = New System.Windows.Forms.ToolStripButton()
         Me.btnNovo = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnSalvar = New System.Windows.Forms.ToolStripButton()
         Me.btnCancelar = New System.Windows.Forms.ToolStripButton()
-        Me.btnFechar = New System.Windows.Forms.Button()
+        Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.txtFornecedor = New System.Windows.Forms.TextBox()
         Me.lblIDReserva = New System.Windows.Forms.Label()
@@ -78,10 +77,6 @@ Partial Class frmReserva
         Me.Label6 = New System.Windows.Forms.Label()
         Me.lblFilial = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
-        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SplitContainer1.Panel1.SuspendLayout()
-        Me.SplitContainer1.Panel2.SuspendLayout()
-        Me.SplitContainer1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
@@ -218,41 +213,19 @@ Partial Class frmReserva
         Me.Label2.TabIndex = 0
         Me.Label2.Text = "Funcionario"
         '
-        'SplitContainer1
-        '
-        Me.SplitContainer1.BackColor = System.Drawing.Color.AntiqueWhite
-        Me.SplitContainer1.CausesValidation = False
-        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.SplitContainer1.IsSplitterFixed = True
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 626)
-        Me.SplitContainer1.Name = "SplitContainer1"
-        '
-        'SplitContainer1.Panel1
-        '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.tsMenu)
-        '
-        'SplitContainer1.Panel2
-        '
-        Me.SplitContainer1.Panel2.Controls.Add(Me.btnFechar)
-        Me.SplitContainer1.Size = New System.Drawing.Size(627, 48)
-        Me.SplitContainer1.SplitterDistance = 520
-        Me.SplitContainer1.SplitterWidth = 1
-        Me.SplitContainer1.TabIndex = 8
-        Me.SplitContainer1.TabStop = False
-        '
         'tsMenu
         '
         Me.tsMenu.AutoSize = False
-        Me.tsMenu.BackColor = System.Drawing.Color.Transparent
-        Me.tsMenu.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tsMenu.BackColor = System.Drawing.Color.Gainsboro
+        Me.tsMenu.Dock = System.Windows.Forms.DockStyle.None
         Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
-        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnProcurar, Me.btnNovo, Me.ToolStripSeparator5, Me.btnSalvar, Me.btnCancelar})
-        Me.tsMenu.Location = New System.Drawing.Point(0, 0)
+        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnProcurar, Me.btnNovo, Me.ToolStripSeparator5, Me.btnSalvar, Me.btnCancelar, Me.btnFechar})
+        Me.tsMenu.Location = New System.Drawing.Point(0, 628)
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
         Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.tsMenu.Size = New System.Drawing.Size(520, 48)
+        Me.tsMenu.Size = New System.Drawing.Size(627, 48)
         Me.tsMenu.TabIndex = 0
         Me.tsMenu.TabStop = True
         Me.tsMenu.Text = "Menu Cliente PF"
@@ -304,22 +277,13 @@ Partial Class frmReserva
         '
         'btnFechar
         '
-        Me.btnFechar.BackColor = System.Drawing.Color.Transparent
-        Me.btnFechar.CausesValidation = False
-        Me.btnFechar.FlatAppearance.BorderSize = 0
-        Me.btnFechar.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightCoral
-        Me.btnFechar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue
-        Me.btnFechar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnFechar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar
-        Me.btnFechar.Location = New System.Drawing.Point(4, 0)
-        Me.btnFechar.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnFechar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFechar.Margin = New System.Windows.Forms.Padding(0, 1, 5, 2)
         Me.btnFechar.Name = "btnFechar"
-        Me.btnFechar.Size = New System.Drawing.Size(97, 48)
-        Me.btnFechar.TabIndex = 0
+        Me.btnFechar.Size = New System.Drawing.Size(86, 45)
         Me.btnFechar.Text = "&Fechar"
-        Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnFechar.UseVisualStyleBackColor = False
         '
         'Label11
         '
@@ -424,6 +388,7 @@ Partial Class frmReserva
         Me.txtPVenda.MaxLength = 10
         Me.txtPVenda.Name = "txtPVenda"
         Me.txtPVenda.Size = New System.Drawing.Size(100, 27)
+        Me.txtPVenda.SomentePositivos = True
         Me.txtPVenda.TabIndex = 16
         Me.txtPVenda.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -590,7 +555,7 @@ Partial Class frmReserva
         '
         'Panel2
         '
-        Me.Panel2.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(237, Byte), Integer), CType(CType(243, Byte), Integer))
+        Me.Panel2.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
         Me.Panel2.Controls.Add(Me.btnProcFuncionario)
         Me.Panel2.Controls.Add(Me.txtReservaData)
         Me.Panel2.Controls.Add(Me.txtFuncionario)
@@ -603,7 +568,7 @@ Partial Class frmReserva
         '
         'Panel3
         '
-        Me.Panel3.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(237, Byte), Integer), CType(CType(243, Byte), Integer))
+        Me.Panel3.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
         Me.Panel3.Controls.Add(Me.chkTemWathsapp)
         Me.Panel3.Controls.Add(Me.picWathsapp)
         Me.Panel3.Controls.Add(Me.txtClienteNome)
@@ -640,7 +605,7 @@ Partial Class frmReserva
         '
         'Panel4
         '
-        Me.Panel4.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(237, Byte), Integer), CType(CType(243, Byte), Integer))
+        Me.Panel4.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
         Me.Panel4.Controls.Add(Me.txtRGProduto)
         Me.Panel4.Controls.Add(Me.lblProdConhecido)
         Me.Panel4.Controls.Add(Me.chkProdutoConhecido)
@@ -705,26 +670,28 @@ Partial Class frmReserva
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(15, 111)
+        Me.Label4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label4.ForeColor = System.Drawing.Color.Gray
+        Me.Label4.Location = New System.Drawing.Point(15, 116)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(75, 24)
+        Me.Label4.Size = New System.Drawing.Size(56, 19)
         Me.Label4.TabIndex = 2
         Me.Label4.Text = "Cliente"
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(15, 257)
+        Me.Label5.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.Label5.ForeColor = System.Drawing.Color.Gray
+        Me.Label5.Location = New System.Drawing.Point(15, 262)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(181, 24)
+        Me.Label5.Size = New System.Drawing.Size(135, 19)
         Me.Label5.TabIndex = 5
         Me.Label5.Text = "Produto | Reserva"
         '
         'Panel5
         '
-        Me.Panel5.BackColor = System.Drawing.Color.FromArgb(CType(CType(218, Byte), Integer), CType(CType(237, Byte), Integer), CType(CType(243, Byte), Integer))
+        Me.Panel5.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
         Me.Panel5.Controls.Add(Me.txtObservacao)
         Me.Panel5.Controls.Add(Me.Label3)
         Me.Panel5.Location = New System.Drawing.Point(12, 545)
@@ -763,16 +730,15 @@ Partial Class frmReserva
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(627, 674)
+        Me.Controls.Add(Me.tsMenu)
         Me.Controls.Add(Me.Panel5)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Panel4)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.SplitContainer1)
         Me.KeyPreview = True
         Me.Name = "frmReserva"
-        Me.Controls.SetChildIndex(Me.SplitContainer1, 0)
         Me.Controls.SetChildIndex(Me.Panel2, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.Panel3, 0)
@@ -780,12 +746,9 @@ Partial Class frmReserva
         Me.Controls.SetChildIndex(Me.Label4, 0)
         Me.Controls.SetChildIndex(Me.Label5, 0)
         Me.Controls.SetChildIndex(Me.Panel5, 0)
+        Me.Controls.SetChildIndex(Me.tsMenu, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.SplitContainer1.Panel1.ResumeLayout(False)
-        Me.SplitContainer1.Panel2.ResumeLayout(False)
-        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.SplitContainer1.ResumeLayout(False)
         Me.tsMenu.ResumeLayout(False)
         Me.tsMenu.PerformLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).EndInit()
@@ -814,13 +777,11 @@ Partial Class frmReserva
     Friend WithEvents txtFuncionario As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
-    Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents tsMenu As ToolStrip
     Friend WithEvents btnNovo As ToolStripButton
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
     Friend WithEvents btnSalvar As ToolStripButton
     Friend WithEvents btnCancelar As ToolStripButton
-    Friend WithEvents btnFechar As Button
     Friend WithEvents btnProcurar As ToolStripButton
     Friend WithEvents Label11 As Label
     Friend WithEvents txtFornecedor As TextBox
@@ -847,7 +808,6 @@ Partial Class frmReserva
     Friend WithEvents txtFabricante As TextBox
     Friend WithEvents txtProdutoTipo As TextBox
     Friend WithEvents Panel3 As Panel
-    Friend WithEvents Panel2 As Panel
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Label4 As Label
     Friend WithEvents Label5 As Label
@@ -859,4 +819,6 @@ Partial Class frmReserva
     Friend WithEvents lblFilial As Label
     Friend WithEvents Label6 As Label
     Friend WithEvents txtRGProduto As TextBox
+    Friend WithEvents btnFechar As ToolStripButton
+    Friend WithEvents Panel2 As Panel
 End Class

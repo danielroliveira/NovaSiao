@@ -770,6 +770,10 @@ Public Class ProdutoBLL
     '
 End Class
 '
+'
+'*****************************************************************************************************************
+'*****************************************************************************************************************
+'
 '=================================================================================================================
 ' PRODUTO ETIQUETA BLL
 '=================================================================================================================
@@ -937,6 +941,10 @@ Public Class ProdutoEtiquetaBLL
     End Function
     '
 End Class
+'
+'
+'*****************************************************************************************************************
+'*****************************************************************************************************************
 '
 '=================================================================================================================
 ' PRODUTO TIPO SUBTIPO CATEGORIA
@@ -1309,6 +1317,10 @@ Public Class TipoSubTipoCategoriaBLL
     '
 End Class
 '
+'
+'*****************************************************************************************************************
+'*****************************************************************************************************************
+'
 '==========================================================================================
 ' PRODUTO FORNECEDOR
 '==========================================================================================
@@ -1531,6 +1543,67 @@ Public Class ProdutoFornecedorBLL
         '
     End Function
     '
+    '--- DEFINE/SELECT FORNECEDOR PADRAO
+    '----------------------------------------------------------------------------------
+    Public Function DefineFornecedorPadrao(IDProduto As Integer,
+                                           IDFornecedor As Integer) As Boolean
+        '
+        Dim db As New AcessoDados
+        db.BeginTransaction()
+        '
+        Try
+            '
+            Dim query As String = ""
+            '
+            '--- REMOVE ALL FORNECEDOR PADRAO
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProduto", IDProduto)
+            query = "UPDATE tblProdutoFornecedor SET FornecedorPadrao = 'FALSE' WHERE IDProduto = @IDProduto"
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            '--- DEFINE FORNECEDOR PADRAO
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProduto", IDProduto)
+            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
+            '
+            query = "UPDATE tblProdutoFornecedor SET FornecedorPadrao = 'TRUE' WHERE IDProduto = @IDProduto And IDFornecedor = @IDFornecedor"
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            db.CommitTransaction()
+            Return True
+            '
+        Catch ex As Exception
+            db.RollBackTransaction()
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '--- GET FORNECEDOR PADRAO OF PRODUTO
+    '----------------------------------------------------------------------------------
+    Public Function GetFornecedorPadrao(IDProduto As Integer) As clProdutoFornecedor
+        '
+        Try
+            Dim db As New AcessoDados
+            Dim query As String = "SELECT * FROM qryProdutoFornecedor WHERE FornecedorPadrao = 'TRUE' AND IDProduto = @IDProduto"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProduto", IDProduto)
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return Nothing
+            '
+            Return ConvertRowInClass(dt.Rows(0))
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
     '--- CONVERT ROW IN CLASS
     '----------------------------------------------------------------------------------
     Private Function ConvertRowInClass(r) As clProdutoFornecedor
@@ -1548,7 +1621,8 @@ Public Class ProdutoFornecedorBLL
             .UltimaEntrada = If(IsDBNull(r("UltimaEntrada")), Nothing, r("UltimaEntrada")),
             .IDProdutoOrigem = If(IsDBNull(r("IDProdutoOrigem")), String.Empty, r("IDProdutoOrigem")),
             .IDFilial = If(IsDBNull(r("IDFilial")), Nothing, r("IDFilial")),
-            .ApelidoFilial = If(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
+            .ApelidoFilial = If(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial")),
+            .FornecedorPadrao = r("FornecedorPadrao")
             }
         '
     End Function

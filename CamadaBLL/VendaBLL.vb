@@ -438,7 +438,7 @@ Public Class VendaBLL
             Return False
         End Try
         '
-        '--- DELETE VENDA FINNALY AND COMMIT
+        '--- DELETE VENDA
         '==================================================================
         Try
             '
@@ -446,6 +446,23 @@ Public Class VendaBLL
             ObjDB.AdicionarParametros("@IDVenda", clV.IDVenda)
             '
             myQuery = "DELETE FROM tblVenda where IDVenda = @IDVenda"
+            '
+            ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
+            '
+        Catch ex As Exception
+            ObjDB.RollBackTransaction()
+            Throw ex
+            Return False
+        End Try
+        '
+        '--- FINNALY DELETE TRANSACTION AND COMMIT
+        '==================================================================
+        Try
+            '
+            ObjDB.LimparParametros()
+            ObjDB.AdicionarParametros("@IDTransacao", clV.IDVenda)
+            '
+            myQuery = "DELETE FROM tblTransacao WHERE IDTransacao = @IDTransacao"
             '
             ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
             '

@@ -1420,6 +1420,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="NovaSiao_ico_256px.ico" />
+    <None Include="Resources\full_page.png" />
+    <None Include="Resources\accept_page.png" />
     <None Include="Resources\fornecedor_64px.png" />
     <None Include="Resources\editar_24px.png" />
     <None Include="Resources\icon_warning.png" />

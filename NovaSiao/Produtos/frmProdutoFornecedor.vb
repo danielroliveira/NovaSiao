@@ -10,6 +10,8 @@ Public Class frmProdutoFornecedor
     Private _Produto As clProduto
     Private currentEditRow As Integer? = Nothing
     Private _rowSit As EnumFlagEstado
+    Private ImgInativo As Image = My.Resources.full_page
+    Private ImgAtivo As Image = My.Resources.accept
     '
 #Region "SUB NEW"
     '
@@ -26,6 +28,7 @@ Public Class frmProdutoFornecedor
         '
         PreencheLabels()
         PreencheItens()
+        EnableButtons()
         '
     End Sub
     '
@@ -50,6 +53,7 @@ Public Class frmProdutoFornecedor
         '
         PreencheLabels()
         PreencheItens()
+        EnableButtons()
         '
     End Sub
     '
@@ -70,6 +74,20 @@ Public Class frmProdutoFornecedor
         '
         lblProduto.Text = _Produto.Produto
         lblRGProduto.Text = Format(_Produto.RGProduto, "0000")
+        '
+    End Sub
+    '
+    Private Sub EnableButtons()
+        '
+        If _list.Count = 0 Then
+            btnExcluir.Enabled = False
+            btnEditar.Enabled = False
+            btnDefinirPadrao.Enabled = False
+        Else
+            btnExcluir.Enabled = True
+            btnEditar.Enabled = True
+            btnDefinirPadrao.Enabled = True
+        End If
         '
     End Sub
     '
@@ -221,14 +239,45 @@ Public Class frmProdutoFornecedor
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
+        ' (6) COLUNA DESCONTOCOMPRA
+        With clnFornecedorPadrao
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+        End With
+        '
         '--- adiciona as colunas editadas
         dgvItens.Columns.AddRange(New DataGridViewColumn() {clnIDProdutoFornecedor, clnData, clnApelidoFilial,
-                                  clnFornecedor, clnPreco, clnDesconto})
+                                  clnFornecedor, clnPreco, clnDesconto, clnFornecedorPadrao})
         '
     End Sub
     '
     Private Sub dgvListagem_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
         btnEditar_Click(New Object, New EventArgs)
+    End Sub
+    '
+    ' PREENCHE AS IMAGENS DA LISTA
+    '------------------------------------------------------------------------------------------------------
+    Private Sub dgvProdutos_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) _
+        Handles dgvItens.CellFormatting
+        '
+        If e.ColumnIndex = clnFornecedorPadrao.Index Then
+            '
+            Dim prodForn As clProdutoFornecedor = dgvItens.Rows(e.RowIndex).DataBoundItem
+            '
+            If IsDBNull(prodForn.FornecedorPadrao) Then
+                e.Value = ImgInativo
+            ElseIf prodForn.FornecedorPadrao = True Then
+                e.Value = ImgAtivo
+            ElseIf prodForn.FornecedorPadrao = False Then
+                e.Value = ImgInativo
+            End If
+            '
+        End If
+        '
     End Sub
     '
 #End Region
@@ -421,6 +470,22 @@ Public Class frmProdutoFornecedor
         currentEditRow = Nothing
         _rowSit = EnumFlagEstado.RegistroSalvo
         '
+        Dim pf As clProdutoFornecedor = dgvItens.Rows(e.RowIndex).DataBoundItem
+        '
+        If IsNothing(pf.IDTransacao) Then
+            btnExcluir.Enabled = True
+            btnCompra.Enabled = False
+        Else
+            btnExcluir.Enabled = False
+            btnCompra.Enabled = True
+        End If
+        '
+        If pf.FornecedorPadrao Then
+            btnDefinirPadrao.Enabled = False
+        Else
+            btnDefinirPadrao.Enabled = True
+        End If
+        '
     End Sub
     '
 #End Region
@@ -462,6 +527,9 @@ Public Class frmProdutoFornecedor
         '
         Try
             '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Dim obj As Object = prodBLL.InsertUpdate_ProdutoFornecedor(prodForn)
             '
             If Not obj.GetType Is GetType(clProdutoFornecedor) Then
@@ -470,11 +538,17 @@ Public Class frmProdutoFornecedor
             '
             _list.Add(prodForn)
             bindList.ResetBindings(False)
+            EnableButtons()
             '
         Catch ex As Exception
             '
             MessageBox.Show("Uma exceção ocorreu ao Salvar Registro de Fornecedor..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -505,20 +579,41 @@ Public Class frmProdutoFornecedor
                         "Fornecedor Existente",
                         frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             prodForn.CancelEdit()
+            bindList.ResetBindings(False)
             Exit Sub
         End If
         '
-        _list.Add(prodForn)
-        bindList.ResetBindings(False)
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim obj As Object = prodBLL.InsertUpdate_ProdutoFornecedor(prodForn)
+            '
+            If Not obj.GetType Is GetType(clProdutoFornecedor) Then
+                Throw New Exception(obj.ToString)
+            End If
+            '
+            bindList.ResetBindings(False)
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao Salvar Registro de Fornecedor..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
         '
     End Sub
     '
     Private Sub btnExcluir_Click(sender As Object, e As EventArgs) Handles btnExcluir.Click
         '
         If IsNothing(dgvItens.CurrentRow) Then
-            MessageBox.Show("Não não nenhum registro selecionado ainda...",
-                            "Selecione um Registro", MessageBoxButtons.OK,
-                            MessageBoxIcon.Exclamation)
+            AbrirDialog("Selecione um registro na listagem para excluir...",
+                        "Selecionar Registro", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             Exit Sub
         End If
         '
@@ -527,6 +622,12 @@ Public Class frmProdutoFornecedor
         If Not IsNothing(delItem.IDTransacao) Then
             AbrirDialog("Não é possível excluir um registro de Fornecedor quando está vinculado à uma compra...",
                         "Registro Vinculado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Return
+        End If
+        '
+        If delItem.FornecedorPadrao Then
+            AbrirDialog("Não é possível excluir um registro de Fornecedor quando é o Fornecedor Padrão do Produto...",
+                        "Fornecedor Padrão", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             Return
         End If
         '
@@ -548,6 +649,7 @@ Public Class frmProdutoFornecedor
             '
             prodBLL.Delete_ProdutoFornecedor(delItem)
             bindList.RemoveCurrent()
+            EnableButtons()
             '
         Catch ex As Exception
             MessageBox.Show("Houve uma exceção ao excluir o Fornecedor:" & vbNewLine &
@@ -561,7 +663,111 @@ Public Class frmProdutoFornecedor
         '
     End Sub
     '
+    Private Sub btnDefinirPadrao_Click(sender As Object, e As EventArgs) Handles btnDefinirPadrao.Click
+        '
+        If IsNothing(dgvItens.CurrentRow) Then
+            AbrirDialog("Selecione um registro na listagem para Definir como Padrão...",
+                        "Selecionar Registro", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Dim selItem As clProdutoFornecedor = dgvItens.CurrentRow.DataBoundItem
+        '
+        DefineFornecedorPadrao(selItem)
+        bindList.ResetBindings(False)
+        '
+    End Sub
+    '
+    '--- ABRIR A COMPRA
+    '----------------------------------------------------------------------------------
+    Private Sub btnCompra_Click(sender As Object, e As EventArgs) Handles btnCompra.Click
+        '
+        If IsNothing(dgvItens.CurrentRow) Then
+            AbrirDialog("Selecione um registro na listagem para ver a compra...",
+                        "Selecionar Registro", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Dim selItem As clProdutoFornecedor = dgvItens.CurrentRow.DataBoundItem
+        '
+        If selItem.IDFilial <> Obter_FilialPadrao() Then
+            AbrirDialog("Não é possível visualizar uma compra que tem origem em outra Filial...",
+                        "Filial Diferente",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Exclamation)
+            Exit Sub
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim cBLL As New CompraBLL
+            Dim _cmp As clCompra = cBLL.GetCompra_PorID_OBJ(selItem.IDTransacao)
+            '
+            If IsNothing(_cmp) Then
+                Throw New Exception("Não foi encontrado registro de Compra com esse ID..." & vbCrLf &
+                                    "Talvez a transação não seja de Compra.")
+            End If
+            '
+            '--- close FORM frmProduto
+            If Not IsNothing(_formOrigem) Then
+                _formOrigem.Close()
+                _formOrigem = Nothing
+            End If
+            '
+            Dim frm As New frmCompra(_cmp) With {
+                        .MdiParent = frmPrincipal,
+                        .StartPosition = FormStartPosition.CenterScreen
+                    }
+            '--- close ME and OPEN COMPRA
+            Close()
+            frm.Show()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir o formulario de Compras..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
 #End Region '/ FUNCTION BUTTONS
+    '
+#Region "OUTRAS FUNCOES"
+    '
+    Public Function DefineFornecedorPadrao(prodForn As clProdutoFornecedor) As Boolean
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            prodBLL.DefineFornecedorPadrao(prodForn.IDProduto, prodForn.IDFornecedor)
+            '
+            For Each item As clProdutoFornecedor In bindList
+                If item.IDFornecedor = prodForn.IDFornecedor Then
+                    item.FornecedorPadrao = True
+                Else
+                    item.FornecedorPadrao = False
+                End If
+            Next
+            '
+            Return True
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Definir Fornecedor Padrao..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Function
+    '
+#End Region '/ OUTRAS FUNCOES
     '
 #Region "EFEITOS VISUAIS"
     '
@@ -570,13 +776,13 @@ Public Class frmProdutoFornecedor
     '-------------------------------------------------------------------------------------------------
     Private Sub form_Activated(sender As Object, e As EventArgs) Handles Me.Activated
         If Not IsNothing(_formOrigem) Then
-            _formOrigem.Visible = False
+            _formOrigem.Hide()
         End If
     End Sub
     '
     Private Sub frmProdutoProcurar_Closed(sender As Object, e As EventArgs) Handles Me.Closed
         If Not IsNothing(_formOrigem) Then
-            _formOrigem.Visible = True
+            _formOrigem.Show()
         End If
     End Sub
     '

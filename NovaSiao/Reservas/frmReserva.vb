@@ -145,10 +145,22 @@ Public Class frmReserva
     '--- BTN PROCURAR
     Private Sub btnProcurar_Click(sender As Object, e As EventArgs) Handles btnProcurar.Click
         '
-        Close()
-        '
-        Dim fProc As New frmReservaProcurar
-        fProc.Show()
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Close()
+            '
+            Dim fProc As New frmReservaProcurar
+            fProc.Show()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir Formulário..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '
@@ -161,6 +173,7 @@ Public Class frmReserva
     '
     '--- BTN CANCELAR
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
+        '
         If Sit = EnumFlagEstado.NovoRegistro Then
             btnProcurar_Click(btnCancelar, New EventArgs)
             '
@@ -196,6 +209,7 @@ Public Class frmReserva
 #Region "BOTOES DE PROCURA"
     '
     Private Sub btnProcFuncionario_Click(sender As Object, e As EventArgs) Handles btnProcFuncionario.Click
+        '
         Dim frmF As New frmFuncionarioProcurar(False, Me)
         Dim oldID As Integer? = _Reserva.IDFuncionario
         '
@@ -219,6 +233,9 @@ Public Class frmReserva
     End Sub
     '
     Private Sub btnProcProdutoTipo_Click(sender As Object, e As EventArgs) Handles btnProcProdutoTipo.Click
+        '
+        If _Reserva.ProdutoConhecido Then Exit Sub
+        '
         Dim frmT As New frmProdutoProcurarTipo(Me, _Reserva.IDProdutoTipo)
         Dim oldID As Integer? = _Reserva.IDProdutoTipo
         '
@@ -242,6 +259,9 @@ Public Class frmReserva
     End Sub
     '
     Private Sub btnProcAutores_Click(sender As Object, e As EventArgs) Handles btnProcAutores.Click
+        '
+        If _Reserva.ProdutoConhecido Then Exit Sub
+        '
         Dim frmA As New frmAutoresProcurar(Me)
         Dim oldAutor As String = _Reserva.Autor
         '
@@ -263,6 +283,9 @@ Public Class frmReserva
     End Sub
     '
     Private Sub btnProcFabricantes_Click(sender As Object, e As EventArgs) Handles btnProcFabricantes.Click
+        '
+        If _Reserva.ProdutoConhecido Then Exit Sub
+        '
         Dim frmF As New frmFabricanteProcurar(Me, _Reserva.IDFabricante)
         Dim oldIDFabricante As Integer? = _Reserva.IDFabricante
         '
@@ -312,6 +335,7 @@ Public Class frmReserva
 #End Region
     '
 #Region "SALVAR REGISTRO"
+    '
     ' SALVAR O REGISTRO
     '---------------------------------------------------------------------------------------------------
     Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
@@ -324,16 +348,26 @@ Public Class frmReserva
         Dim reservaBLL As New ReservaBLL
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             '--- Salva mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
             If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
                 NewReservaID = reservaBLL.Reserva_Inserir(_Reserva)
             ElseIf Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
                 NewReservaID = reservaBLL.Reserva_Alterar(_Reserva)
             End If
+            '
         Catch ex As Exception
             MessageBox.Show("Um erro ocorreu ao salvar o registro!" & vbCrLf &
                             ex.Message, "Erro ao Salvar Registro",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
         '--- Verifica se houve Retorno da Função de Salvar
@@ -350,7 +384,10 @@ Public Class frmReserva
             Sit = EnumFlagEstado.RegistroSalvo
             '
             '--- Mensagem de Sucesso:
-            MsgBox("Registro Salvo com sucesso!", vbInformation, "Registro Salvo")
+            AbrirDialog("Registro Salvo com sucesso!",
+                        "Registro Salvo",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
         Else
             MsgBox("Registro NÃO pôde ser salvo!", vbInformation, "Erro ao Salvar")
         End If
@@ -359,6 +396,7 @@ Public Class frmReserva
     '
     ' FAZER VERIFICAÇÃO ANTES DE SALVAR
     Private Function VerificaDados() As Boolean
+        '
         EProvider.Clear()
         '
         Dim f As New Utilidades
@@ -404,8 +442,18 @@ Public Class frmReserva
             End If
         End If
         '
+        If txtClienteEmail.Text.Trim <> "" Then
+            If Not Utilidades.EmailCheck(txtClienteEmail.Text) Then
+                MessageBox.Show("O endereço de Email não é um endereço válido...",
+                                "Email Inválido", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                EProvider.SetError(txtClienteEmail, "Email inválido")
+                Return False
+            End If
+        End If
+        '
         'Se nenhuma das condições acima forem verdadeira retorna TRUE
         Return True
+        '
     End Function
     '
 #End Region
@@ -465,7 +513,7 @@ Public Class frmReserva
         '
         If e.KeyChar = "+" Then
             '--- cria uma lista de controles que serao impedidos de receber '+'
-            Dim controlesBloqueados As String() = {"txtProdutoTipo", "txtFuncionario", "txtFabricante", "txtFornecedor", "txtAutor"}
+            Dim controlesBloqueados As String() = {"txtProdutoTipo", "txtFuncionario", "txtFabricante", "txtFornecedor", "txtAutor", "txtProduto"}
             If controlesBloqueados.Contains(ActiveControl.Name) Then
                 e.Handled = True
             End If
@@ -526,11 +574,13 @@ Public Class frmReserva
     '
     '--- QUANDO CHKBOX RECEBE O FOCO REALÇA A COR DA IMAGEM
     Private Sub chkTemWathsapp_ControleFocus(sender As Object, e As EventArgs) Handles chkTemWathsapp.GotFocus, chkTemWathsapp.LostFocus
+        '
         If chkTemWathsapp.Focused Then
             picWathsapp.BorderStyle = BorderStyle.FixedSingle
         Else
             picWathsapp.BorderStyle = BorderStyle.None
         End If
+        '
     End Sub
     '
     '--- AO ALTERAR A SITUACAO DO CHECKED PRODUTO CONHECIDO
@@ -559,14 +609,18 @@ Public Class frmReserva
             End If
             '
             lblProdConhecido.Text = "Produto CONHECIDO"
+            '
             '--- RGProduto
             txtRGProduto.Visible = True
             lblRG.Visible = True
+            '
             '--- Fornecedor
-            txtFornecedor.Enabled = True
-            btnProcFornecedores.Enabled = True
+            'txtFornecedor.Enabled = True
+            'btnProcFornecedores.Enabled = True
+            '
             '--- Preco Venda
             txtPVenda.Enabled = True
+            '
             '--- btn Tipo, Autor, Fabricante
             btnProcProdutoTipo.Enabled = False
             btnProcAutores.Enabled = False
@@ -581,19 +635,19 @@ Public Class frmReserva
                 _Reserva.Fornecedor = String.Empty
                 _Reserva.PVenda = Nothing
             End If
-
+            '
             lblProdConhecido.Text = "Produto DESCONHECIDO"
             '--- RGProduto
             txtRGProduto.Visible = False
             lblRG.Visible = False
-
+            '
             '--- Fornecedor
-            txtFornecedor.Enabled = False
-            btnProcFornecedores.Enabled = False
-
+            'txtFornecedor.Enabled = False
+            'btnProcFornecedores.Enabled = False
+            '
             '--- Preco Venda
             txtPVenda.Enabled = False
-
+            '
             '--- btn Tipo, Autor, Fabricante
             btnProcProdutoTipo.Enabled = True
             btnProcAutores.Enabled = True
@@ -605,6 +659,7 @@ Public Class frmReserva
     '
     ' CONTROLA O KEYPRESS DO RGPRODUTO (PERMITE SOMENTE NUMERO)
     Private Sub txtRGProduto_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtRGProduto.KeyPress
+        '
         If Char.IsNumber(e.KeyChar) Then
             e.Handled = False
         ElseIf e.KeyChar = vbBack Then
@@ -626,6 +681,7 @@ Public Class frmReserva
         Else
             e.Handled = True
         End If
+        '
     End Sub
     '
     '--- VALIDA O RGPRODUTO PARA OBTER OS DADOS DO PRODUTO
@@ -644,6 +700,10 @@ Public Class frmReserva
         Dim rBLL As New ReservaBLL
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Using dt As DataTable = rBLL.ProdutoGet_PeloRG(myRGProduto, _Reserva.IDFilial)
                 '
                 If dt.Rows.Count = 0 Then
@@ -672,8 +732,19 @@ Public Class frmReserva
                                                       Format(estoque, "00"),
                                                       IIf(estoque = 1, "unidade", "unidades"),
                                                       vbNewLine & r("Produto").ToString.ToUpper)
-
-                    MessageBox.Show(msg, "Estoque", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    '
+                    AbrirDialog(msg, "Estoque", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                    '
+                End If
+                '
+                '--- Verify exists FornecedorPadrao
+                Dim pfBLL As New ProdutoFornecedorBLL
+                '
+                Dim pf As clProdutoFornecedor = pfBLL.GetFornecedorPadrao(r("IDProduto"))
+                If Not IsNothing(pf) Then
+                    _Reserva.Fornecedor = pf.Cadastro
+                    txtFornecedor.Text = pf.Cadastro
+                    _Reserva.IDFornecedor = pf.IDFornecedor
                 End If
                 '
                 '--- RETORNA
@@ -684,10 +755,22 @@ Public Class frmReserva
             MessageBox.Show("Uma exceção ocorreu ao obter os dados do produto informado...",
                             "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Return False
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Function
     '
+    '--- CONVERT LETTERS TO UPPER CASE FOR NAMES
+    '----------------------------------------------------------------------------------
+    Private Sub txtClienteNome_Validating(sender As Object, e As CancelEventArgs) Handles txtClienteNome.Validating
+        If txtClienteNome.Text.Length > 0 Then
+            txtClienteNome.Text = Utilidades.PrimeiraLetraMaiuscula(txtClienteNome.Text)
+        End If
+    End Sub
 #End Region
     '
 End Class

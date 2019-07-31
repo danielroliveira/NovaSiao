@@ -64,20 +64,19 @@ Public Class CompraBLL
     ' GET REGISTRO POR ID/RG
     '--------------------------------------------------------------------------------------------
     Public Function GetCompra_PorID_OBJ(ByVal myIDCompra As Integer) As clCompra
+        '
         Dim objdb As New AcessoDados
         Dim strSql As String = ""
         strSql = "SELECT * FROM qryCompra WHERE IDCompra = " & myIDCompra
         '
         Try
             Dim dt As DataTable = objdb.ExecuteConsultaSQL_DataTable(strSql)
-            Dim r As DataRow = Nothing
             '
-            If dt.Rows.Count > 0 Then
-                r = dt.Rows(0)
-                Return ConvertDtRow_clCompra(r)
-            Else
-                Return Nothing
-            End If
+            If dt.Rows.Count = 0 Then Return Nothing
+            '
+            Dim r As DataRow = dt.Rows(0)
+            Return ConvertDtRow_clCompra(r)
+
         Catch ex As Exception
             Throw ex
         End Try
@@ -360,15 +359,52 @@ Public Class CompraBLL
             '
         End Try
         '
-        '--- DELETE COMPRA FINNALY AND COMMIT
+        '--- REMOVE ALL REFERENCES OF COMPRA IN TBLPRODUTOFORNECEDOR
         '==================================================================
+        Try
+            '
+            ObjDB.LimparParametros()
+            ObjDB.AdicionarParametros("@IDTransacao", clCmp.IDCompra)
+            '
+            myQuery = "UPDATE tblProdutoFornecedor SET IDTransacao = NULL WHERE IDTransacao = @IDTransacao"
+            '
+            ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
+        Catch ex As Exception
+            '
+            ObjDB.RollBackTransaction()
+            Throw ex
+            Return False
+            '
+        End Try
         '
+        '--- DELETE COMPRA
+        '==================================================================
         Try
             '
             ObjDB.LimparParametros()
             ObjDB.AdicionarParametros("@IDCompra", clCmp.IDCompra)
             '
             myQuery = "DELETE FROM tblCompra WHERE IDCompra = @IDCompra"
+            '
+            ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
+            '
+        Catch ex As Exception
+            '
+            ObjDB.RollBackTransaction()
+            Throw ex
+            Return False
+            '
+        End Try
+        '
+        '
+        '--- FINNALY - DELETE TRANSACTION AND COMMIT
+        '==================================================================
+        Try
+            '
+            ObjDB.LimparParametros()
+            ObjDB.AdicionarParametros("@IDTransacao", clCmp.IDCompra)
+            '
+            myQuery = "DELETE FROM tblTransacao WHERE IDTransacao = @IDTransacao"
             '
             ObjDB.ExecutarManipulacao(CommandType.Text, myQuery)
             '

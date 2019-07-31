@@ -104,8 +104,20 @@ Public Class frmReservaProcurar
     '
     Private Sub Get_Situacao()
         '
-        Dim rBLL As New ReservaBLL
-        dtSituacao = rBLL.ReservaSituacao_GET_DT()
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim rBLL As New ReservaBLL
+            dtSituacao = rBLL.ReservaSituacao_GET_DT()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao obter a situação das reservas..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '
@@ -115,6 +127,10 @@ Public Class frmReservaProcurar
         '
         '--- consulta o banco de dados
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             If cmbIDSituacao.SelectedValue = 100 Then '--- TODAS AS SITUACOES
                 resLista = ReservaBLL.Reserva_GET_List(IDFilial, , _ReservaAtiva)
             Else
@@ -124,6 +140,11 @@ Public Class frmReservaProcurar
         Catch ex As Exception
             MessageBox.Show("Ocorreu exceção ao obter a listagem de Reservas..." & vbNewLine &
             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -140,8 +161,8 @@ Public Class frmReservaProcurar
             Exit Sub
         End If
         '
-        Dim selIndex As Integer = lstListagem.SelectedItems(0).Index
-        Dim clR As clReserva = resLista.Item(selIndex)
+        Dim resID As Integer = lstListagem.SelectedItems(0).Value
+        Dim clR As clReserva = resLista.Where(Function(x) x.IDReserva = resID)(0)
         '
         '--- Verifica se o form Reserva ja esta aberto
         Dim frm As Form = Nothing
@@ -176,6 +197,7 @@ Public Class frmReservaProcurar
     End Sub
     '
     Private Sub btnTipo_Click(sender As Object, e As EventArgs) Handles btnTipo.Click
+        '
         Dim frmT As New frmProdutoProcurarTipo(Me, IDProdutoTipo)
         Dim oldID As Integer? = IDProdutoTipo
         '
@@ -197,6 +219,7 @@ Public Class frmReservaProcurar
     End Sub
     '
     Private Sub btnNova_Click(sender As Object, e As EventArgs) Handles btnNova.Click
+        '
         '--- Verifica se o form Despesa ja esta aberto
         Dim frm As Form = Nothing
         Dim clR As New clReserva
@@ -380,9 +403,11 @@ Public Class frmReservaProcurar
     Private Sub FormataListagem()
         '
         clnIDReserva.DisplayMember = "IDReserva"
+        clnIDReserva.ValueMember = "IDReserva"
         clnIDReserva.Width = 70
         '
         clnReservaData.DisplayMember = "ReservaData"
+        clnReservaData.ValueMember = "ReservaData"
         clnReservaData.Width = 80
         '
         clnClienteNome.DisplayMember = "ClienteNome"
@@ -606,10 +631,20 @@ Public Class frmReservaProcurar
             Dim rBLL As New ReservaBLL
             '
             Try
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
                 rBLL.Reserva_AlteraSituacao(i.Text, NovaSituacao)
+                '
             Catch ex As Exception
                 MessageBox.Show("Houve uma exceção inesperada ao Alterar a situação da reserva no BD" & vbNewLine &
                                 ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Finally
+                '
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+                '
             End Try
             '
         Next

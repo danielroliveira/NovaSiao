@@ -6,6 +6,8 @@ Public Class frmProdutoFornecedorEditar
     Private bindProd As New BindingSource
     Private _Sit As EnumFlagEstado
     Private _formOrigem As Form = Nothing
+    Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
+    Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
     '
 #Region "SUB NEW"
     '
@@ -43,6 +45,7 @@ Public Class frmProdutoFornecedorEditar
         End If
         '
         dtpUltimaEntrada.MaxDate = Today
+        AtivoButtonImage()
         '
     End Sub
     '
@@ -148,6 +151,7 @@ Public Class frmProdutoFornecedorEditar
         txtFornecedor.Text = frmF.propFornecedor_Escolha.Cadastro
         _prodForn.Cadastro = frmF.propFornecedor_Escolha.Cadastro
         _prodForn.IDFornecedor = frmF.propFornecedor_Escolha.IDPessoa
+        txtFornecedor.Focus()
         '
         ' altera o EnumFlagEstado para ALTERADO
         If IIf(IsNothing(oldID), 0, oldID) <> IIf(IsNothing(_prodForn.IDFornecedor), 0, _prodForn.IDFornecedor) Then
@@ -164,6 +168,7 @@ Public Class frmProdutoFornecedorEditar
         If Sit = EnumFlagEstado.Alterado Then
             _prodForn.CancelEdit()
             bindProd.ResetBindings(False)
+            AtivoButtonImage()
             Sit = EnumFlagEstado.RegistroSalvo
         Else
             DialogResult = DialogResult.Cancel
@@ -175,10 +180,13 @@ Public Class frmProdutoFornecedorEditar
         '
         If Not IsNothing(_prodForn.IDTransacao) Then
             AbrirDialog("Não é possível salvar esse registro porque está vinculado a uma Transação de Compra...",
-                        "Registro Vinculado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                        "Registro Vinculado",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Exclamation)
 
             _prodForn.CancelEdit()
             bindProd.ResetBindings(False)
+            AtivoButtonImage()
             Sit = EnumFlagEstado.RegistroSalvo
             Exit Sub
         End If
@@ -186,6 +194,74 @@ Public Class frmProdutoFornecedorEditar
         If Not VerificaValores() Then Exit Sub
         '
         DialogResult = DialogResult.OK
+        '
+    End Sub
+    '
+    ' ATIVAR OU DESATIVAR FORNECEDOR PADRAO BOTÃO
+    Private Sub btnAtivo_Click(sender As Object, e As EventArgs) Handles btnAtivo.Click
+        '
+        If Sit = EnumFlagEstado.NovoRegistro Then
+            AbrirDialog("Não é possível definir Fornecedor Padrão para um registro que ainda não foi Salvo" & vbNewLine &
+                        "Para definir esse fornecedor, favor salvar o registro antes.",
+                        "Definir Fornecedor Padrão",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        If _prodForn.FornecedorPadrao = True Then ' Fornecedor Padrão
+            '
+            AbrirDialog("Não é possível remover o Fornecedor Padrão..." & vbNewLine &
+                        "Para remover desse Fornecedor, defina outro Fornecedor Padrão.",
+                        "Remover Fornecedor Padrão",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
+            '
+        ElseIf _prodForn.FornecedorPadrao = False Then ' Fornecedor Auxiliar
+            '
+            If AbrirDialog("Você deseja realmente definir o Fornecedor padrão do Produto para:" & vbNewLine &
+                           txtFornecedor.Text.ToUpper,
+                           "Definir Fornecedor Padrão",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question,
+                           frmDialog.DialogDefaultButton.Second) = DialogResult.Yes Then
+                '
+                Try
+                    '
+                    '--- Ampulheta ON
+                    Cursor = Cursors.WaitCursor
+                    '
+                    DirectCast(_formOrigem, frmProdutoFornecedor).DefineFornecedorPadrao(_prodForn)
+                    '
+                Catch ex As Exception
+                    '
+                    MessageBox.Show("Uma exceção ocorreu ao Definir fornecedor Padrão..." & vbNewLine &
+                                    ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Finally
+                    '
+                    '--- Ampulheta OFF
+                    Cursor = Cursors.Default
+                End Try
+                '
+                _prodForn.FornecedorPadrao = True
+                _prodForn.EndEdit()
+                Sit = EnumFlagEstado.RegistroSalvo
+                AtivoButtonImage()
+            End If
+        End If
+        '
+    End Sub
+    '
+    ' ALTERA A IMAGEM E O TEXTO DO BOTÃO ATIVO E DESATIVO
+    Private Sub AtivoButtonImage()
+        '
+        If _prodForn.FornecedorPadrao = True Then ' Nesse caso é Produto Ativo
+            btnAtivo.Image = AtivarImage
+            btnAtivo.Text = "Fornecedor Padrão"
+        ElseIf _prodForn.FornecedorPadrao = False Then ' Nesse caso é Produto Inativo
+            btnAtivo.Image = DesativarImage
+            btnAtivo.Text = "Fornecedor Auxiliar"
+        End If
         '
     End Sub
     '
@@ -316,6 +392,8 @@ Public Class frmProdutoFornecedorEditar
     '
 #End Region
     '
+#Region "CONTROLS"
+    '
     '---------------------------------------------------------------------------------------
     '--- BLOQUEIA PRESS A TECLA (+)
     '---------------------------------------------------------------------------------------
@@ -359,6 +437,6 @@ Public Class frmProdutoFornecedorEditar
         txtFornecedor.BackColor = Color.FromArgb(219, 228, 240)
     End Sub
     '
-
+#End Region '/ CONTROLS
     '
 End Class
