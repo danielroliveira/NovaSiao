@@ -1952,7 +1952,7 @@ Public Class frmPedido
         End Try
         '
     End Sub
-
+    '
     Private Sub miPeloEstoquePorFabricante_Click(sender As Object, e As EventArgs) Handles miPeloEstoquePorFabricante.Click
         '
         Dim form As New frmFabricanteProcurar(Me)
@@ -1987,7 +1987,7 @@ Public Class frmPedido
         End Try
         '
     End Sub
-
+    '
     Private Sub miPeloEstoquePorFornecedor_Click(sender As Object, e As EventArgs) Handles miPeloEstoquePorFornecedor.Click
         '
         If IsNothing(_pedido.IDFornecedor) OrElse _pedido.IDFornecedor = 0 Then
@@ -2016,6 +2016,37 @@ Public Class frmPedido
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao pesquisar e inserir produtos no pedido..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub miFornecedorProdutos_Click(sender As Object, e As EventArgs) Handles miFornecedorProdutos.Click
+        '
+        If IsNothing(_pedido.IDFornecedor) OrElse _pedido.IDFornecedor = 0 Then
+            AbrirDialog("Ainda não existe nenhum Fornecedor relacionado ao pedido.",
+                        "Sem Fornecedor",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim forn As New clFornecedor With {
+                .IDPessoa = _pedido.IDFornecedor,
+                .Cadastro = _pedido.Fornecedor}
+            '
+            Dim form As New frmFornecedorProdutos(forn, Me)
+            form.ShowDialog()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir formulário de Produtos..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '--- Ampulheta OFF

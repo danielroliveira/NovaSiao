@@ -21,6 +21,7 @@ Public Class frmProdutoFornecedorEditar
         ' Add any initialization after the InitializeComponent() call.
         _formOrigem = formOrigem
         _prodForn = prodForn
+        _isProdutoFixed = isProdutoFixed
         bindProd.DataSource = _prodForn
         PreencheDataBindings()
         '
@@ -349,12 +350,11 @@ Public Class frmProdutoFornecedorEditar
         '
     End Function
     '
-    '
     '---------------------------------------------------------------------------------------
     '--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
     '---------------------------------------------------------------------------------------
     Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) _
-    Handles dtpUltimaEntrada.KeyDown, txtPCompra.KeyDown, txtDescontoCompra.KeyDown
+    Handles dtpUltimaEntrada.KeyDown, txtPCompra.KeyDown, txtDescontoCompra.KeyDown, txtRGProduto.KeyDown
         '
         If e.KeyCode = Keys.Enter Then
             e.SuppressKeyPress = True
@@ -411,7 +411,7 @@ Public Class frmProdutoFornecedorEditar
         If e.KeyChar = "+" Then
             '--- cria uma lista de controles que serao impedidos de receber '+'
             Dim controlesBloqueados As String() = {
-                "txtFornecedor"
+                "txtFornecedor", "txtRGProduto"
             }
             '
             If controlesBloqueados.Contains(ActiveControl.Name) Then
@@ -426,6 +426,13 @@ Public Class frmProdutoFornecedorEditar
 
         If e.KeyCode = Keys.Add Then
             e.Handled = True
+            '
+            If Not _isProdutoFixed Then
+                MessageBox.Show("Não é possível alterar o fornecedor...",
+                                "Fornecedor", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Exit Sub
+            End If
+            '
             btnFornecedor_Click(New Object, New EventArgs)
             '
         ElseIf e.KeyCode = Keys.Enter Then
@@ -449,6 +456,14 @@ Public Class frmProdutoFornecedorEditar
     ' CONTROLA O KEYPRESS DO RGPRODUTO (PERMITE SOMENTE NUMERO)
     Private Sub txtRGProduto_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtRGProduto.KeyPress
         '
+        'MsgBox(e.KeyChar.ToString)
+        '
+        If _isProdutoFixed And e.KeyChar <> vbCr Then
+            MessageBox.Show("Não é possível alterar o produto...",
+                            "Produto", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Exit Sub
+        End If
+        '
         If Char.IsNumber(e.KeyChar) Then
             e.Handled = False
         ElseIf e.KeyChar = vbBack Then
@@ -467,6 +482,8 @@ Public Class frmProdutoFornecedorEditar
             txtRGProduto.Text = p.RGEscolhido
             SendKeys.Send("{TAB}")
             '
+        ElseIf e.KeyChar = vbCr Then '--- pressiona ENTER
+            e.Handled = False
         Else
             e.Handled = True
         End If
@@ -487,64 +504,34 @@ Public Class frmProdutoFornecedorEditar
     End Sub
     '
     '--- FUNCAO PARA OBTER OS DADOS DO PRODUTO INSERIDO PELO RGPRODUTO
-    Private Function Produto_ObterDados(myRGProduto As Integer) As Boolean
-        Dim rBLL As New ReservaBLL
+    Private Function Produto_ObterDados(RGProduto As Integer) As Boolean
+        Dim pBLL As New ProdutoBLL
         '
         Try
             '
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            pBLL.GetProduto_PorID()
-
-
-            Using dt As DataTable = rBLL.ProdutoGet_PeloRG(myRGProduto, _Reserva.IDFilial)
-                '
-                If dt.Rows.Count = 0 Then
-                    MessageBox.Show("Esse código de Produto não foi encontrado...", "Registro Inválido",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    Return False
-                End If
-                '
-                Dim r As DataRow = dt.Rows(0)
-                '
-                '--- Define os itens do produto encontrado
-                _Reserva.Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto"))
-                _Reserva.IDFabricante = IIf(IsDBNull(r("IDFabricante")), Nothing, r("IDFabricante"))
-                _Reserva.Fabricante = IIf(IsDBNull(r("Fabricante")), String.Empty, r("Fabricante"))
-                _Reserva.IDProdutoTipo = IIf(IsDBNull(r("IDProdutoTipo")), Nothing, r("IDProdutoTipo"))
-                _Reserva.ProdutoTipo = IIf(IsDBNull(r("ProdutoTipo")), String.Empty, r("ProdutoTipo"))
-                _Reserva.PVenda = IIf(IsDBNull(r("PVenda")), Nothing, r("PVenda"))
-                _Reserva.Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor"))
-                '
-                '--- envia uma mensagem ao usuário caso houver ESTOQUE do produto na Filial
-                Dim estoque As Integer = IIf(IsDBNull(r("Quantidade")), 0, r("Quantidade"))
-                '
-                If estoque > 0 Then
-                    Dim msg As String = String.Format("{0} {1} {2} no estoque do produto {3}",
-                                                      IIf(estoque = 1, "Existe", "Existem"),
-                                                      Format(estoque, "00"),
-                                                      IIf(estoque = 1, "unidade", "unidades"),
-                                                      vbNewLine & r("Produto").ToString.ToUpper)
-                    '
-                    AbrirDialog(msg, "Estoque", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
-                    '
-                End If
-                '
-                '--- Verify exists FornecedorPadrao
-                Dim pfBLL As New ProdutoFornecedorBLL
-                '
-                Dim pf As clProdutoFornecedor = pfBLL.GetFornecedorPadrao(r("IDProduto"))
-                If Not IsNothing(pf) Then
-                    _Reserva.Fornecedor = pf.Cadastro
-                    txtFornecedor.Text = pf.Cadastro
-                    _Reserva.IDFornecedor = pf.IDFornecedor
-                End If
-                '
-                '--- RETORNA
-                Return True
-                '
-            End Using
+            Dim prod As clProduto = pBLL.GetProduto_PorRG(RGProduto, Obter_FilialPadrao)
+            '
+            If IsNothing(prod) Then
+                MessageBox.Show("Esse código de Produto não foi encontrado...",
+                                "Registro Inválido",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Exclamation)
+                Return False
+            End If
+            '
+            '--- Define os itens do produto encontrado
+            _prodForn.Produto = prod.Produto
+            _prodForn.IDProduto = prod.IDProduto
+            _prodForn.RGProduto = prod.RGProduto
+            _prodForn.PCompra = prod.PCompra
+            _prodForn.DescontoCompra = prod.DescontoCompra
+            '
+            '--- RETORNA
+            Return True
+            '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao obter os dados do produto informado...",
                             "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Information)

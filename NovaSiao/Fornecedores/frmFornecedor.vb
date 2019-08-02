@@ -157,6 +157,32 @@ Public Class frmFornecedor
         '
     End Sub
     '
+    '--- BTN PRODUTOS
+    Private Sub btnProdutos_Click(sender As Object, e As EventArgs) Handles btnProdutos.Click
+        '
+        If IsNothing(_forn.IDPessoa) OrElse _forn.IDPessoa = 0 Then
+            AbrirDialog("O registro de FORNECEDOR necessita ser Salvo antes de abrir os produtos...",
+                        "Salve o Registro", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim form As New frmFornecedorProdutos(_forn, Me)
+            form.ShowDialog()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir formulário de Produtos..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
     '--- BTN NOVO
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
         propForn = New clFornecedor
@@ -166,11 +192,17 @@ Public Class frmFornecedor
     '
     '--- BTN CANCELAR
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
+        '
         If Sit = EnumFlagEstado.NovoRegistro Then
-            btnProcurar_Click(btnCancelar, New EventArgs)
             '
-        ElseIf Sit = enumFlagEstado.Alterado Then
+            btnProcurar_Click(btnCancelar, New EventArgs)
+            Exit Sub
+            '
+        ElseIf Sit = EnumFlagEstado.Alterado Then
+            '
             BindForn.CancelEdit()
+            AtivoButtonImage()
+            '
         End If
         '
         Sit = EnumFlagEstado.RegistroSalvo
@@ -179,14 +211,15 @@ Public Class frmFornecedor
     '
     '--- BTN PROCURAR
     Private Sub btnAtivo_Click(sender As Object, e As EventArgs) Handles btnAtivo.Click
+        '
         If Sit = EnumFlagEstado.NovoRegistro Then
             MessageBox.Show("Você não pode INATIVAR um Novo Fornecedor...", "Inativar Fornecedor",
                             MessageBoxButtons.OK, MessageBoxIcon.Information)
             Exit Sub
         End If
-
+        '
         Dim transp As clFornecedor = BindForn.Current
-
+        '
         If transp.Ativo = True Then ' Fornecedor Ativo
             If MessageBox.Show("Você deseja realmente INATIVAR o Fornecedor:" & vbNewLine &
                         txtRazaoSocial.Text.ToUpper, "Inativar Fornecedor", MessageBoxButtons.YesNo,
@@ -204,19 +237,20 @@ Public Class frmFornecedor
                 AtivoButtonImage()
             End If
         End If
+        '
     End Sub
     '
     ' ALTERA A IMAGEM E O TEXTO DO BOTÃO ATIVO E DESATIVO
     Private Sub AtivoButtonImage()
-        Dim transp As clFornecedor = BindForn.Current
-
-        If transp.Ativo = True Then ' Nesse caso é Fornecedor Ativo
+        '
+        If _forn.Ativo = True Then ' Nesse caso é Fornecedor Ativo
             btnAtivo.Image = AtivarImage
             btnAtivo.Text = "Ativo"
-        ElseIf transp.Ativo = False Then ' Nesse caso é Fornecedor Inativo
+        ElseIf _forn.Ativo = False Then ' Nesse caso é Fornecedor Inativo
             btnAtivo.Image = DesativarImage
             btnAtivo.Text = "Inativo"
         End If
+        '
     End Sub
     '
     '--- BTN FECHAR

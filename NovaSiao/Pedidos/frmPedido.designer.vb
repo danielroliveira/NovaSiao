@@ -40,6 +40,7 @@ Partial Class frmPedido
         Me.miPeloEstoquePorFornecedor = New System.Windows.Forms.ToolStripMenuItem()
         Me.miPeloEstoquePorTipo = New System.Windows.Forms.ToolStripMenuItem()
         Me.miPeloEstoquePorFabricante = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miFornecedorProdutos = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnVerificarReservas = New System.Windows.Forms.ToolStripSplitButton()
         Me.miPelaReservaPorFornecedor = New System.Windows.Forms.ToolStripMenuItem()
         Me.miPelaReservaPorTipo = New System.Windows.Forms.ToolStripMenuItem()
@@ -249,7 +250,7 @@ Partial Class frmPedido
         '
         'btnVerificarEstoque
         '
-        Me.btnVerificarEstoque.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miPeloEstoquePorFornecedor, Me.miPeloEstoquePorTipo, Me.miPeloEstoquePorFabricante})
+        Me.btnVerificarEstoque.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miPeloEstoquePorFornecedor, Me.miPeloEstoquePorTipo, Me.miPeloEstoquePorFabricante, Me.miFornecedorProdutos})
         Me.btnVerificarEstoque.Image = Global.NovaSiao.My.Resources.Resources.search1
         Me.btnVerificarEstoque.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnVerificarEstoque.Name = "btnVerificarEstoque"
@@ -261,7 +262,7 @@ Partial Class frmPedido
         Me.miPeloEstoquePorFornecedor.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.miPeloEstoquePorFornecedor.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.miPeloEstoquePorFornecedor.Name = "miPeloEstoquePorFornecedor"
-        Me.miPeloEstoquePorFornecedor.Size = New System.Drawing.Size(213, 30)
+        Me.miPeloEstoquePorFornecedor.Size = New System.Drawing.Size(245, 36)
         Me.miPeloEstoquePorFornecedor.Text = "Por Fornecedor"
         '
         'miPeloEstoquePorTipo
@@ -269,7 +270,7 @@ Partial Class frmPedido
         Me.miPeloEstoquePorTipo.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.miPeloEstoquePorTipo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.miPeloEstoquePorTipo.Name = "miPeloEstoquePorTipo"
-        Me.miPeloEstoquePorTipo.Size = New System.Drawing.Size(213, 30)
+        Me.miPeloEstoquePorTipo.Size = New System.Drawing.Size(245, 36)
         Me.miPeloEstoquePorTipo.Text = "Por Tipo de Produto"
         '
         'miPeloEstoquePorFabricante
@@ -277,8 +278,16 @@ Partial Class frmPedido
         Me.miPeloEstoquePorFabricante.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.miPeloEstoquePorFabricante.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.miPeloEstoquePorFabricante.Name = "miPeloEstoquePorFabricante"
-        Me.miPeloEstoquePorFabricante.Size = New System.Drawing.Size(213, 30)
+        Me.miPeloEstoquePorFabricante.Size = New System.Drawing.Size(245, 36)
         Me.miPeloEstoquePorFabricante.Text = "Por Fabricante"
+        '
+        'miFornecedorProdutos
+        '
+        Me.miFornecedorProdutos.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
+        Me.miFornecedorProdutos.Name = "miFornecedorProdutos"
+        Me.miFornecedorProdutos.Size = New System.Drawing.Size(245, 36)
+        Me.miFornecedorProdutos.Text = "Produtos do Fornecedor"
+        Me.miFornecedorProdutos.ToolTipText = "Exibir lista de produtos do Fornecedor"
         '
         'btnVerificarReservas
         '
@@ -369,13 +378,13 @@ Partial Class frmPedido
         'miImportarItens
         '
         Me.miImportarItens.Name = "miImportarItens"
-        Me.miImportarItens.Size = New System.Drawing.Size(169, 24)
+        Me.miImportarItens.Size = New System.Drawing.Size(180, 24)
         Me.miImportarItens.Text = "Importar Itens"
         '
         'miExportarItens
         '
         Me.miExportarItens.Name = "miExportarItens"
-        Me.miExportarItens.Size = New System.Drawing.Size(169, 24)
+        Me.miExportarItens.Size = New System.Drawing.Size(180, 24)
         Me.miExportarItens.Text = "Exportar Itens"
         '
         'lblID
@@ -1282,4 +1291,5 @@ Partial Class frmPedido
     Friend WithEvents clnSubTotal As DataGridViewTextBoxColumn
     Friend WithEvents clnMensagem As DataGridViewTextBoxColumn
     Friend WithEvents clnIDMensagem As DataGridViewTextBoxColumn
+    Friend WithEvents miFornecedorProdutos As ToolStripMenuItem
 End Class

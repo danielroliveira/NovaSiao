@@ -123,7 +123,9 @@ Public Class ReservaBLL
     ' ALTERAR REGISTRO
     '===================================================================================================
     Public Function Reserva_Alterar(myReserva As clReserva) As Object
+        '
         Dim bd As New AcessoDados
+        bd.BeginTransaction()
         '
         bd.LimparParametros()
         '
@@ -133,31 +135,55 @@ Public Class ReservaBLL
         bd.AdicionarParametros("@IDFuncionario", myReserva.IDFuncionario)
         bd.AdicionarParametros("@IDFilial", myReserva.IDFilial)
         bd.AdicionarParametros("@ClienteNome", myReserva.ClienteNome)
-        bd.AdicionarParametros("@TelefoneA", myReserva.TelefoneA)
-        bd.AdicionarParametros("@TelefoneB", myReserva.TelefoneB)
+        bd.AdicionarParametros("@TelefoneA", If(myReserva.TelefoneA, DBNull.Value))
+        bd.AdicionarParametros("@TelefoneB", If(myReserva.TelefoneB, DBNull.Value))
         bd.AdicionarParametros("@TemWathsapp", myReserva.TemWathsapp)
-        bd.AdicionarParametros("@ClienteEmail", myReserva.ClienteEmail)
+        bd.AdicionarParametros("@ClienteEmail", If(myReserva.ClienteEmail, DBNull.Value))
         bd.AdicionarParametros("@ProdutoConhecido", myReserva.ProdutoConhecido)
-        bd.AdicionarParametros("@RGProduto", myReserva.RGProduto)
+        bd.AdicionarParametros("@RGProduto", If(myReserva.RGProduto, DBNull.Value))
         bd.AdicionarParametros("@Produto", myReserva.Produto)
-        bd.AdicionarParametros("@Autor", myReserva.Autor)
-        bd.AdicionarParametros("@IDFornecedor", myReserva.IDFornecedor)
-        bd.AdicionarParametros("@IDFabricante", myReserva.IDFabricante)
-        bd.AdicionarParametros("@IDProdutoTipo", myReserva.IDProdutoTipo)
+        bd.AdicionarParametros("@Autor", If(myReserva.Autor, DBNull.Value))
+        bd.AdicionarParametros("@IDFornecedor", If(myReserva.IDFornecedor, DBNull.Value))
+        bd.AdicionarParametros("@IDFabricante", If(myReserva.IDFabricante, DBNull.Value))
+        bd.AdicionarParametros("@IDProdutoTipo", If(myReserva.IDProdutoTipo, DBNull.Value))
         bd.AdicionarParametros("@IDSituacaoReserva", myReserva.IDSituacaoReserva)
-        bd.AdicionarParametros("@ConclusaoData", myReserva.ConclusaoData)
+        bd.AdicionarParametros("@ConclusaoData", If(myReserva.ConclusaoData, DBNull.Value))
         bd.AdicionarParametros("@Observacao", myReserva.Observacao)
         '
+        Dim query = "UPDATE tblReserva SET " +
+                    "ReservaData = @ReservaData " +
+                    ", IDFuncionario = @IDFuncionario " +
+                    ", IDFilial = @IDFilial " +
+                    ", ClienteNome = @ClienteNome " +
+                    ", TelefoneA = @TelefoneA " +
+                    ", TelefoneB = @TelefoneB " +
+                    ", TemWathsapp = @TemWathsapp " +
+                    ", ClienteEmail = @ClienteEmail " +
+                    ", ProdutoConhecido = @ProdutoConhecido " +
+                    ", RGProduto = @RGProduto " +
+                    ", Produto = @Produto " +
+                    ", Autor = @Autor " +
+                    ", IDFornecedor = @IDFornecedor " +
+                    ", IDFabricante = @IDFabricante " +
+                    ", IDProdutoTipo = @IDProdutoTipo " +
+                    ", IDSituacaoReserva = @IDSituacaoReserva " +
+                    ", ConclusaoData = @ConclusaoData " +
+                    "WHERE " +
+                    "IDReserva = @IDReserva"
+        '
         Try
-            Dim myID As Object = bd.ExecutarManipulacao(CommandType.StoredProcedure, "uspReserva_Alterar")
             '
-            If IsNumeric(myID) Then
-                Return myID
-            Else
-                Throw New Exception(myID.ToString)
-            End If
+            bd.ExecutarManipulacao(CommandType.Text, query)
+            '
+            '--- OBSERVACAO
+            Dim oBLL As New ObservacaoBLL
+            oBLL.SaveObservacao(6, myReserva.IDReserva, myReserva.Observacao, bd)
+            '
+            bd.CommitTransaction()
+            Return myReserva.IDReserva
             '
         Catch ex As Exception
+            bd.RollBackTransaction()
             Throw ex
         End Try
         '
@@ -212,28 +238,6 @@ Public Class ReservaBLL
         '
     End Function
     '
-    '===================================================================================================
-    ' GET PRODUTO DADOS PELO RGPRODUTO
-    '===================================================================================================
-    Public Function ProdutoGet_PeloRG(_RGProduto As Integer, _IDFilial As Integer) As DataTable
-        '
-        Dim db As New AcessoDados
-        '
-        db.LimparParametros()
-        db.AdicionarParametros("@RGProduto", _RGProduto)
-        db.AdicionarParametros("@IDFilial", _IDFilial)
-        '
-        Try
-            Dim dt As DataTable = db.ExecutarConsulta(CommandType.StoredProcedure, "uspReserva_Produto_GET")
-            '
-            Return dt
-            '
-        Catch ex As Exception
-            Throw ex
-        End Try
-        '
-    End Function
-    '
     '==========================================================================================
     ' CONVERT ROW IN CLASS
     '==========================================================================================
@@ -272,4 +276,5 @@ Public Class ReservaBLL
         Return res
         '
     End Function
+    '
 End Class

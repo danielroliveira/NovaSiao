@@ -156,19 +156,57 @@ Public Class ProdutoBLL
     '---------------------------------------------------------------------------------------------------------
     ' GET REGISTRO POR ID/RG
     '---------------------------------------------------------------------------------------------------------
-    Public Function GetProduto_PorID(myIDProd As Integer, myFilial As Integer) As clProduto
+    Public Function GetProduto_PorID(IDProduto As Integer, IDFilial As Integer) As clProduto
         Dim objdb As New AcessoDados
         Dim dt As DataTable
         '
         objdb.LimparParametros()
-        objdb.AdicionarParametros("@IDProduto", myIDProd)
-        objdb.AdicionarParametros("@IDFilial", myFilial)
+        objdb.AdicionarParametros("@IDProduto", IDProduto)
+        objdb.AdicionarParametros("@IDFilial", IDFilial)
+        '
+        Dim query As String = "SELECT P.*, E.Quantidade, E.EstoqueNivel, E.EstoqueIdeal " +
+                              "FROM qryProdutos AS P " +
+                              "LEFT JOIN tblEstoque AS E " +
+                              "ON E.IDProduto = P.IDProduto AND E.IDFilial = @IDFilial " +
+                              "WHERE P.IDProduto = @IDProduto"
         '
         Try
-            dt = objdb.ExecutarConsulta(CommandType.StoredProcedure, "uspProduto_GET_PorID")
+            dt = objdb.ExecutarConsulta(CommandType.Text, query)
             '
             If dt.Rows.Count = 0 Then
                 Return New clProduto
+            Else
+                Return ConvertDT_To_clProduto(dt)(0)
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '---------------------------------------------------------------------------------------------------------
+    ' GET PRODUTO DADOS PELO RGPRODUTO
+    '---------------------------------------------------------------------------------------------------------
+    Public Function GetProduto_PorRG(RGProduto As Integer, IDFilial As Integer) As clProduto
+        '
+        Dim db As New AcessoDados
+        '
+        db.LimparParametros()
+        db.AdicionarParametros("@RGProduto", RGProduto)
+        db.AdicionarParametros("@IDFilial", IDFilial)
+        '
+        Dim query As String = "SELECT P.*, E.Quantidade, E.EstoqueNivel, E.EstoqueIdeal " +
+                              "FROM qryProdutos AS P " +
+                              "LEFT JOIN tblEstoque AS E " +
+                              "ON E.IDProduto = P.IDProduto AND E.IDFilial = @IDFilial " +
+                              "WHERE P.RGProduto = @RGProduto"
+        '
+        Try
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then
+                Return Nothing
             Else
                 Return ConvertDT_To_clProduto(dt)(0)
             End If
@@ -736,6 +774,82 @@ Public Class ProdutoBLL
         '
     End Function
     '
+    '---------------------------------------------------------------------------------------------------------
+    '--- ULTIMAS TRANSACOES (COMPRA | VENDA | SIMPLES | DEVOLUCAO ) DO PRODUTO --> DATATABLE
+    '---------------------------------------------------------------------------------------------------------
+    Public Function ProdutoTransacoes(IDProduto As Integer,
+                                      MovTipo As EnumMovimento,
+                                      IDFilial As Integer,
+                                      Optional Operacao As TransacaoBLL.EnumOperacao = Nothing,
+                                      Optional dtInicial As Date? = Nothing,
+                                      Optional dtFinal As Date? = Nothing) As DataTable
+        '
+        Dim db As AcessoDados
+        '
+        Try
+            db = New AcessoDados
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+        db.LimparParametros()
+        '
+        db.AdicionarParametros("@IDProduto", IDProduto)
+        db.AdicionarParametros("@IDFilial", IDFilial)
+        '
+        Dim query As String = "SELECT I.*, T.TransacaoData, T.IDOperacao, O.Operacao, O.MovimentoEstoque " +
+                              "FROM tblTransacaoItens AS I " +
+                              "JOIN tblTransacao AS T " +
+                              "ON I.IDTransacao = T.IDTransacao " +
+                              "JOIN tblOperacao AS O " +
+                              "ON T.IDOperacao = O.IDOperacao " +
+                              "WHERE I.IDProduto = @IDProduto " +
+                              "AND T.IDPessoaDestino = @IDFilial "
+        '
+        If MovTipo = EnumMovimento.Entrada Then
+            '--- CASO ENTRADA
+            query += "AND O.MovimentoEstoque = 'E' "
+        Else
+            '--- CASO SAIDA
+            query += "AND O.MovimentoEstoque = 'S' "
+        End If
+        '
+        '--- OPERACAO
+        If Not IsNothing(Operacao) Then
+            '
+            db.AdicionarParametros("@IDOperacao", Operacao)
+            query += "AND IDOperacao = @IDOperacao "
+            '
+        End If
+        '
+        '--- DATA INICIAL
+        If Not IsNothing(dtInicial) Then
+            '
+            db.AdicionarParametros("@DataInicial", dtInicial)
+            query += "AND TransacaoData >= @DataInicial "
+            '
+        End If
+        '
+        '--- DATA FINAL
+        If Not IsNothing(dtFinal) Then
+            '
+            db.AdicionarParametros("@DataFinal", dtFinal)
+            query += "AND TransacaoData <= @DataFinal "
+            '
+        End If
+        '
+        '--- ORDER BY
+        query += "ORDER BY T.TransacaoData"
+        '
+        Try
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            Return dt
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' To detect redundant calls
 

@@ -700,60 +700,60 @@ Public Class frmReserva
     '
     '--- FUNCAO PARA OBTER OS DADOS DO PRODUTO INSERIDO PELO RGPRODUTO
     Private Function Produto_ObterDados(myRGProduto As Integer) As Boolean
-        Dim rBLL As New ReservaBLL
+        '
+        Dim pBLL As New ProdutoBLL
         '
         Try
             '
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Using dt As DataTable = rBLL.ProdutoGet_PeloRG(myRGProduto, _Reserva.IDFilial)
+            Dim prod As clProduto = pBLL.GetProduto_PorRG(myRGProduto, _Reserva.IDFilial)
+            '
+            If IsNothing(prod) Then
+                MessageBox.Show("Esse código de Produto não foi encontrado...",
+                                "Registro Inválido",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information)
+                Return False
+            End If
+            '
+            '--- Define os itens do produto encontrado
+            _Reserva.Produto = prod.Produto
+            _Reserva.IDFabricante = prod.IDFabricante
+            _Reserva.Fabricante = prod.Fabricante
+            _Reserva.IDProdutoTipo = prod.IDProdutoTipo
+            _Reserva.ProdutoTipo = prod.ProdutoTipo
+            _Reserva.PVenda = prod.PVenda
+            _Reserva.Autor = prod.Autor
+            '
+            '--- envia uma mensagem ao usuário caso houver ESTOQUE do produto na Filial
+            Dim estoque As Integer = prod.Estoque
+            '
+            If estoque > 0 Then
+                Dim msg As String = String.Format("{0} {1} {2} no estoque do produto {3}",
+                IIf(estoque = 1, "Existe", "Existem"),
+                Format(estoque, "00"),
+                IIf(estoque = 1, "unidade", "unidades"),
+                vbNewLine & prod.Produto.ToString.ToUpper)
                 '
-                If dt.Rows.Count = 0 Then
-                    MessageBox.Show("Esse código de Produto não foi encontrado...", "Registro Inválido",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    Return False
-                End If
+                AbrirDialog(msg, "Estoque", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
                 '
-                Dim r As DataRow = dt.Rows(0)
-                '
-                '--- Define os itens do produto encontrado
-                _Reserva.Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto"))
-                _Reserva.IDFabricante = IIf(IsDBNull(r("IDFabricante")), Nothing, r("IDFabricante"))
-                _Reserva.Fabricante = IIf(IsDBNull(r("Fabricante")), String.Empty, r("Fabricante"))
-                _Reserva.IDProdutoTipo = IIf(IsDBNull(r("IDProdutoTipo")), Nothing, r("IDProdutoTipo"))
-                _Reserva.ProdutoTipo = IIf(IsDBNull(r("ProdutoTipo")), String.Empty, r("ProdutoTipo"))
-                _Reserva.PVenda = IIf(IsDBNull(r("PVenda")), Nothing, r("PVenda"))
-                _Reserva.Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor"))
-                '
-                '--- envia uma mensagem ao usuário caso houver ESTOQUE do produto na Filial
-                Dim estoque As Integer = IIf(IsDBNull(r("Quantidade")), 0, r("Quantidade"))
-                '
-                If estoque > 0 Then
-                    Dim msg As String = String.Format("{0} {1} {2} no estoque do produto {3}",
-                                                      IIf(estoque = 1, "Existe", "Existem"),
-                                                      Format(estoque, "00"),
-                                                      IIf(estoque = 1, "unidade", "unidades"),
-                                                      vbNewLine & r("Produto").ToString.ToUpper)
-                    '
-                    AbrirDialog(msg, "Estoque", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
-                    '
-                End If
-                '
-                '--- Verify exists FornecedorPadrao
-                Dim pfBLL As New ProdutoFornecedorBLL
-                '
-                Dim pf As clProdutoFornecedor = pfBLL.GetFornecedorPadrao(r("IDProduto"))
-                If Not IsNothing(pf) Then
-                    _Reserva.Fornecedor = pf.Cadastro
-                    txtFornecedor.Text = pf.Cadastro
-                    _Reserva.IDFornecedor = pf.IDFornecedor
-                End If
-                '
-                '--- RETORNA
-                Return True
-                '
-            End Using
+            End If
+            '
+            '--- Verify exists FornecedorPadrao
+            Dim pfBLL As New ProdutoFornecedorBLL
+            '
+            Dim pf As clProdutoFornecedor = pfBLL.GetFornecedorPadrao(prod.IDProduto)
+            If Not IsNothing(pf) Then
+                _Reserva.Fornecedor = pf.Cadastro
+                txtFornecedor.Text = pf.Cadastro
+                _Reserva.IDFornecedor = pf.IDFornecedor
+            End If
+            '
+            '--- RETORNA
+            Return True
+            '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao obter os dados do produto informado...",
                             "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Information)

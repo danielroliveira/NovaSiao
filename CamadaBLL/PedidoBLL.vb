@@ -547,7 +547,7 @@ Public Class PedidoBLL
                                   "LEFT JOIN tblEstoque AS E " +
                                   "ON qryProdutos.IDProduto = E.IDProduto AND E.IDFilial = @IDFilial " +
                                   "WHERE IDProdutoTipo = @IDTipo AND " +
-                                  "Estoque < EstoqueNivel"
+                                  "E.Quantidade < E.EstoqueNivel"
             '
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             '
@@ -593,7 +593,7 @@ Public Class PedidoBLL
                                   "LEFT JOIN tblEstoque AS E " +
                                   "ON qryProdutos.IDProduto = E.IDProduto AND E.IDFilial = @IDFilial " +
                                   "WHERE IDFabricante = @IDFabricante AND " +
-                                  "Estoque < EstoqueNivel"
+                                  "E.Quantidade < E.EstoqueNivel"
             '
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             '

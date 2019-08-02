@@ -46,7 +46,6 @@ Partial Class frmFornecedor
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.tsMenu = New System.Windows.Forms.ToolStrip()
         Me.btnProcurar = New System.Windows.Forms.ToolStripButton()
         Me.btnNovo = New System.Windows.Forms.ToolStripButton()
@@ -55,7 +54,7 @@ Partial Class frmFornecedor
         Me.btnCancelar = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnAtivo = New System.Windows.Forms.ToolStripButton()
-        Me.btnFechar = New System.Windows.Forms.Button()
+        Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.txtNomeFantasia = New System.Windows.Forms.TextBox()
         Me.lblID = New System.Windows.Forms.Label()
@@ -67,11 +66,8 @@ Partial Class frmFornecedor
         Me.txtVendedor = New System.Windows.Forms.TextBox()
         Me.txtEmailVendas = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
+        Me.btnProdutos = New System.Windows.Forms.ToolStripButton()
         Me.Panel1.SuspendLayout()
-        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SplitContainer1.Panel1.SuspendLayout()
-        Me.SplitContainer1.Panel2.SuspendLayout()
-        Me.SplitContainer1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -80,7 +76,7 @@ Partial Class frmFornecedor
         '
         Me.Panel1.Controls.Add(Me.lblID)
         Me.Panel1.Controls.Add(Me.lbl_IdTexto)
-        Me.Panel1.Size = New System.Drawing.Size(614, 50)
+        Me.Panel1.Size = New System.Drawing.Size(713, 50)
         Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.lbl_IdTexto, 0)
@@ -88,7 +84,7 @@ Partial Class frmFornecedor
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(300, 0)
+        Me.lblTitulo.Location = New System.Drawing.Point(399, 0)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(314, 50)
         Me.lblTitulo.TabIndex = 2
@@ -96,7 +92,7 @@ Partial Class frmFornecedor
         '
         'txtFundacaoData
         '
-        Me.txtFundacaoData.Location = New System.Drawing.Point(491, 396)
+        Me.txtFundacaoData.Location = New System.Drawing.Point(532, 397)
         Me.txtFundacaoData.Mask = "00/00/0000"
         Me.txtFundacaoData.Name = "txtFundacaoData"
         Me.txtFundacaoData.Size = New System.Drawing.Size(100, 27)
@@ -107,7 +103,7 @@ Partial Class frmFornecedor
         'txtInscricao
         '
         Me.txtInscricao.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtInscricao.Location = New System.Drawing.Point(401, 130)
+        Me.txtInscricao.Location = New System.Drawing.Point(442, 133)
         Me.txtInscricao.MaxLength = 20
         Me.txtInscricao.Name = "txtInscricao"
         Me.txtInscricao.Size = New System.Drawing.Size(190, 27)
@@ -115,7 +111,7 @@ Partial Class frmFornecedor
         '
         'txtContatoNome
         '
-        Me.txtContatoNome.Location = New System.Drawing.Point(137, 396)
+        Me.txtContatoNome.Location = New System.Drawing.Point(178, 397)
         Me.txtContatoNome.MaxLength = 30
         Me.txtContatoNome.Name = "txtContatoNome"
         Me.txtContatoNome.Size = New System.Drawing.Size(237, 27)
@@ -125,7 +121,7 @@ Partial Class frmFornecedor
         '
         Me.Label17.AutoSize = True
         Me.Label17.BackColor = System.Drawing.Color.Transparent
-        Me.Label17.Location = New System.Drawing.Point(297, 133)
+        Me.Label17.Location = New System.Drawing.Point(337, 136)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(99, 19)
         Me.Label17.TabIndex = 7
@@ -135,7 +131,7 @@ Partial Class frmFornecedor
         '
         Me.Label18.AutoSize = True
         Me.Label18.BackColor = System.Drawing.Color.Transparent
-        Me.Label18.Location = New System.Drawing.Point(10, 399)
+        Me.Label18.Location = New System.Drawing.Point(51, 400)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(121, 19)
         Me.Label18.TabIndex = 29
@@ -143,7 +139,7 @@ Partial Class frmFornecedor
         '
         'txtTelefoneB
         '
-        Me.txtTelefoneB.Location = New System.Drawing.Point(350, 297)
+        Me.txtTelefoneB.Location = New System.Drawing.Point(391, 298)
         Me.txtTelefoneB.Mask = "(99) 99000-0000"
         Me.txtTelefoneB.Name = "txtTelefoneB"
         Me.txtTelefoneB.Size = New System.Drawing.Size(144, 27)
@@ -151,7 +147,7 @@ Partial Class frmFornecedor
         '
         'txtTelefoneA
         '
-        Me.txtTelefoneA.Location = New System.Drawing.Point(137, 297)
+        Me.txtTelefoneA.Location = New System.Drawing.Point(178, 298)
         Me.txtTelefoneA.Mask = "(99) 99000-0000"
         Me.txtTelefoneA.Name = "txtTelefoneA"
         Me.txtTelefoneA.Size = New System.Drawing.Size(144, 27)
@@ -160,7 +156,7 @@ Partial Class frmFornecedor
         'txtCNPJ
         '
         Me.txtCNPJ.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtCNPJ.Location = New System.Drawing.Point(137, 130)
+        Me.txtCNPJ.Location = New System.Drawing.Point(178, 133)
         Me.txtCNPJ.Mask = "00,000,000/0000-00"
         Me.txtCNPJ.Name = "txtCNPJ"
         Me.txtCNPJ.Size = New System.Drawing.Size(152, 27)
@@ -171,7 +167,7 @@ Partial Class frmFornecedor
         'txtCidade
         '
         Me.txtCidade.BackColor = System.Drawing.Color.White
-        Me.txtCidade.Location = New System.Drawing.Point(401, 196)
+        Me.txtCidade.Location = New System.Drawing.Point(442, 199)
         Me.txtCidade.MaxLength = 50
         Me.txtCidade.Name = "txtCidade"
         Me.txtCidade.Size = New System.Drawing.Size(190, 27)
@@ -181,7 +177,7 @@ Partial Class frmFornecedor
         '
         Me.txtUF.BackColor = System.Drawing.Color.White
         Me.txtUF.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtUF.Location = New System.Drawing.Point(137, 231)
+        Me.txtUF.Location = New System.Drawing.Point(178, 232)
         Me.txtUF.MaxLength = 2
         Me.txtUF.Name = "txtUF"
         Me.txtUF.Size = New System.Drawing.Size(46, 27)
@@ -190,7 +186,7 @@ Partial Class frmFornecedor
         'txtEndereco
         '
         Me.txtEndereco.BackColor = System.Drawing.Color.White
-        Me.txtEndereco.Location = New System.Drawing.Point(137, 163)
+        Me.txtEndereco.Location = New System.Drawing.Point(178, 166)
         Me.txtEndereco.MaxLength = 50
         Me.txtEndereco.Name = "txtEndereco"
         Me.txtEndereco.Size = New System.Drawing.Size(454, 27)
@@ -201,7 +197,7 @@ Partial Class frmFornecedor
         Me.Label16.AutoSize = True
         Me.Label16.BackColor = System.Drawing.Color.Transparent
         Me.Label16.ForeColor = System.Drawing.Color.Black
-        Me.Label16.Location = New System.Drawing.Point(20, 366)
+        Me.Label16.Location = New System.Drawing.Point(61, 367)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(111, 19)
         Me.Label16.TabIndex = 27
@@ -209,7 +205,7 @@ Partial Class frmFornecedor
         '
         'txtBairro
         '
-        Me.txtBairro.Location = New System.Drawing.Point(137, 196)
+        Me.txtBairro.Location = New System.Drawing.Point(178, 199)
         Me.txtBairro.MaxLength = 30
         Me.txtBairro.Name = "txtBairro"
         Me.txtBairro.Size = New System.Drawing.Size(190, 27)
@@ -220,7 +216,7 @@ Partial Class frmFornecedor
         Me.Label6.AutoSize = True
         Me.Label6.BackColor = System.Drawing.Color.Transparent
         Me.Label6.ForeColor = System.Drawing.Color.Black
-        Me.Label6.Location = New System.Drawing.Point(83, 200)
+        Me.Label6.Location = New System.Drawing.Point(124, 203)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(48, 19)
         Me.Label6.TabIndex = 11
@@ -228,7 +224,7 @@ Partial Class frmFornecedor
         '
         'txtEmail
         '
-        Me.txtEmail.Location = New System.Drawing.Point(137, 363)
+        Me.txtEmail.Location = New System.Drawing.Point(178, 364)
         Me.txtEmail.MaxLength = 100
         Me.txtEmail.Name = "txtEmail"
         Me.txtEmail.Size = New System.Drawing.Size(357, 27)
@@ -239,7 +235,7 @@ Partial Class frmFornecedor
         Me.Label5.AutoSize = True
         Me.Label5.BackColor = System.Drawing.Color.Transparent
         Me.Label5.ForeColor = System.Drawing.Color.Black
-        Me.Label5.Location = New System.Drawing.Point(62, 167)
+        Me.Label5.Location = New System.Drawing.Point(103, 170)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(69, 19)
         Me.Label5.TabIndex = 9
@@ -247,7 +243,7 @@ Partial Class frmFornecedor
         '
         'txtCEP
         '
-        Me.txtCEP.Location = New System.Drawing.Point(233, 231)
+        Me.txtCEP.Location = New System.Drawing.Point(274, 232)
         Me.txtCEP.Mask = "00000-000"
         Me.txtCEP.Name = "txtCEP"
         Me.txtCEP.Size = New System.Drawing.Size(94, 27)
@@ -259,7 +255,7 @@ Partial Class frmFornecedor
         Me.Label9.AutoSize = True
         Me.Label9.BackColor = System.Drawing.Color.Transparent
         Me.Label9.ForeColor = System.Drawing.Color.Black
-        Me.Label9.Location = New System.Drawing.Point(66, 301)
+        Me.Label9.Location = New System.Drawing.Point(107, 302)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(65, 19)
         Me.Label9.TabIndex = 21
@@ -270,7 +266,7 @@ Partial Class frmFornecedor
         Me.Label15.AutoSize = True
         Me.Label15.BackColor = System.Drawing.Color.Transparent
         Me.Label15.ForeColor = System.Drawing.Color.Black
-        Me.Label15.Location = New System.Drawing.Point(197, 235)
+        Me.Label15.Location = New System.Drawing.Point(238, 236)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(34, 19)
         Me.Label15.TabIndex = 17
@@ -281,7 +277,7 @@ Partial Class frmFornecedor
         Me.Label10.AutoSize = True
         Me.Label10.BackColor = System.Drawing.Color.Transparent
         Me.Label10.ForeColor = System.Drawing.Color.Black
-        Me.Label10.Location = New System.Drawing.Point(289, 301)
+        Me.Label10.Location = New System.Drawing.Point(330, 302)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(55, 19)
         Me.Label10.TabIndex = 23
@@ -292,7 +288,7 @@ Partial Class frmFornecedor
         Me.Label8.AutoSize = True
         Me.Label8.BackColor = System.Drawing.Color.Transparent
         Me.Label8.ForeColor = System.Drawing.Color.Black
-        Me.Label8.Location = New System.Drawing.Point(105, 235)
+        Me.Label8.Location = New System.Drawing.Point(146, 236)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(26, 19)
         Me.Label8.TabIndex = 15
@@ -303,7 +299,7 @@ Partial Class frmFornecedor
         Me.Label7.AutoSize = True
         Me.Label7.BackColor = System.Drawing.Color.Transparent
         Me.Label7.ForeColor = System.Drawing.Color.Black
-        Me.Label7.Location = New System.Drawing.Point(341, 199)
+        Me.Label7.Location = New System.Drawing.Point(382, 202)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(54, 19)
         Me.Label7.TabIndex = 13
@@ -312,7 +308,7 @@ Partial Class frmFornecedor
         'txtRazaoSocial
         '
         Me.txtRazaoSocial.BackColor = System.Drawing.Color.White
-        Me.txtRazaoSocial.Location = New System.Drawing.Point(137, 64)
+        Me.txtRazaoSocial.Location = New System.Drawing.Point(178, 67)
         Me.txtRazaoSocial.MaxLength = 50
         Me.txtRazaoSocial.Name = "txtRazaoSocial"
         Me.txtRazaoSocial.Size = New System.Drawing.Size(454, 27)
@@ -323,7 +319,7 @@ Partial Class frmFornecedor
         Me.Label1.AutoSize = True
         Me.Label1.BackColor = System.Drawing.Color.Transparent
         Me.Label1.ForeColor = System.Drawing.Color.Black
-        Me.Label1.Location = New System.Drawing.Point(391, 399)
+        Me.Label1.Location = New System.Drawing.Point(432, 400)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(94, 19)
         Me.Label1.TabIndex = 31
@@ -334,7 +330,7 @@ Partial Class frmFornecedor
         Me.Label4.AutoSize = True
         Me.Label4.BackColor = System.Drawing.Color.Transparent
         Me.Label4.ForeColor = System.Drawing.Color.Black
-        Me.Label4.Location = New System.Drawing.Point(91, 133)
+        Me.Label4.Location = New System.Drawing.Point(132, 136)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(40, 19)
         Me.Label4.TabIndex = 5
@@ -345,48 +341,26 @@ Partial Class frmFornecedor
         Me.Label2.AutoSize = True
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(41, 67)
+        Me.Label2.Location = New System.Drawing.Point(82, 70)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(90, 19)
         Me.Label2.TabIndex = 1
         Me.Label2.Text = "Razao Social"
         '
-        'SplitContainer1
-        '
-        Me.SplitContainer1.BackColor = System.Drawing.Color.AntiqueWhite
-        Me.SplitContainer1.CausesValidation = False
-        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.SplitContainer1.IsSplitterFixed = True
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 502)
-        Me.SplitContainer1.Name = "SplitContainer1"
-        '
-        'SplitContainer1.Panel1
-        '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.tsMenu)
-        '
-        'SplitContainer1.Panel2
-        '
-        Me.SplitContainer1.Panel2.Controls.Add(Me.btnFechar)
-        Me.SplitContainer1.Size = New System.Drawing.Size(614, 48)
-        Me.SplitContainer1.SplitterDistance = 505
-        Me.SplitContainer1.SplitterWidth = 1
-        Me.SplitContainer1.TabIndex = 36
-        Me.SplitContainer1.TabStop = False
-        '
         'tsMenu
         '
         Me.tsMenu.AutoSize = False
-        Me.tsMenu.BackColor = System.Drawing.Color.Transparent
-        Me.tsMenu.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tsMenu.BackColor = System.Drawing.Color.AntiqueWhite
+        Me.tsMenu.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
-        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnProcurar, Me.btnNovo, Me.ToolStripSeparator5, Me.btnSalvar, Me.btnCancelar, Me.ToolStripSeparator1, Me.btnAtivo})
-        Me.tsMenu.Location = New System.Drawing.Point(0, 0)
+        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnProcurar, Me.btnProdutos, Me.ToolStripSeparator5, Me.btnNovo, Me.btnSalvar, Me.btnCancelar, Me.ToolStripSeparator1, Me.btnAtivo, Me.btnFechar})
+        Me.tsMenu.Location = New System.Drawing.Point(0, 502)
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
         Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.tsMenu.Size = New System.Drawing.Size(505, 48)
-        Me.tsMenu.TabIndex = 0
+        Me.tsMenu.Size = New System.Drawing.Size(713, 48)
+        Me.tsMenu.TabIndex = 35
         Me.tsMenu.TabStop = True
         Me.tsMenu.Text = "Menu Cliente PF"
         '
@@ -455,29 +429,20 @@ Partial Class frmFornecedor
         '
         'btnFechar
         '
-        Me.btnFechar.BackColor = System.Drawing.Color.Transparent
-        Me.btnFechar.CausesValidation = False
-        Me.btnFechar.FlatAppearance.BorderSize = 0
-        Me.btnFechar.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightCoral
-        Me.btnFechar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue
-        Me.btnFechar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnFechar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar
-        Me.btnFechar.Location = New System.Drawing.Point(4, 0)
-        Me.btnFechar.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnFechar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFechar.Margin = New System.Windows.Forms.Padding(0, 1, 3, 2)
         Me.btnFechar.Name = "btnFechar"
-        Me.btnFechar.Size = New System.Drawing.Size(97, 48)
-        Me.btnFechar.TabIndex = 0
+        Me.btnFechar.Size = New System.Drawing.Size(86, 45)
         Me.btnFechar.Text = "&Fechar"
-        Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnFechar.UseVisualStyleBackColor = False
         '
         'Label11
         '
         Me.Label11.AutoSize = True
         Me.Label11.BackColor = System.Drawing.Color.Transparent
         Me.Label11.ForeColor = System.Drawing.Color.Black
-        Me.Label11.Location = New System.Drawing.Point(25, 100)
+        Me.Label11.Location = New System.Drawing.Point(66, 103)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(106, 19)
         Me.Label11.TabIndex = 3
@@ -486,7 +451,7 @@ Partial Class frmFornecedor
         'txtNomeFantasia
         '
         Me.txtNomeFantasia.BackColor = System.Drawing.Color.White
-        Me.txtNomeFantasia.Location = New System.Drawing.Point(137, 97)
+        Me.txtNomeFantasia.Location = New System.Drawing.Point(178, 100)
         Me.txtNomeFantasia.MaxLength = 50
         Me.txtNomeFantasia.Name = "txtNomeFantasia"
         Me.txtNomeFantasia.Size = New System.Drawing.Size(454, 27)
@@ -523,7 +488,7 @@ Partial Class frmFornecedor
         '
         Me.Label3.AutoSize = True
         Me.Label3.BackColor = System.Drawing.Color.Transparent
-        Me.Label3.Location = New System.Drawing.Point(45, 432)
+        Me.Label3.Location = New System.Drawing.Point(86, 433)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(86, 19)
         Me.Label3.TabIndex = 33
@@ -531,7 +496,7 @@ Partial Class frmFornecedor
         '
         'txtObservacao
         '
-        Me.txtObservacao.Location = New System.Drawing.Point(137, 429)
+        Me.txtObservacao.Location = New System.Drawing.Point(178, 430)
         Me.txtObservacao.Margin = New System.Windows.Forms.Padding(6)
         Me.txtObservacao.Multiline = True
         Me.txtObservacao.Name = "txtObservacao"
@@ -546,7 +511,7 @@ Partial Class frmFornecedor
         '
         Me.Label12.AutoSize = True
         Me.Label12.BackColor = System.Drawing.Color.Transparent
-        Me.Label12.Location = New System.Drawing.Point(61, 267)
+        Me.Label12.Location = New System.Drawing.Point(102, 268)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(70, 19)
         Me.Label12.TabIndex = 19
@@ -554,7 +519,7 @@ Partial Class frmFornecedor
         '
         'txtVendedor
         '
-        Me.txtVendedor.Location = New System.Drawing.Point(137, 264)
+        Me.txtVendedor.Location = New System.Drawing.Point(178, 265)
         Me.txtVendedor.MaxLength = 30
         Me.txtVendedor.Name = "txtVendedor"
         Me.txtVendedor.Size = New System.Drawing.Size(190, 27)
@@ -562,7 +527,7 @@ Partial Class frmFornecedor
         '
         'txtEmailVendas
         '
-        Me.txtEmailVendas.Location = New System.Drawing.Point(137, 330)
+        Me.txtEmailVendas.Location = New System.Drawing.Point(178, 331)
         Me.txtEmailVendas.MaxLength = 100
         Me.txtEmailVendas.Name = "txtEmailVendas"
         Me.txtEmailVendas.Size = New System.Drawing.Size(357, 27)
@@ -573,17 +538,25 @@ Partial Class frmFornecedor
         Me.Label13.AutoSize = True
         Me.Label13.BackColor = System.Drawing.Color.Transparent
         Me.Label13.ForeColor = System.Drawing.Color.Black
-        Me.Label13.Location = New System.Drawing.Point(29, 333)
+        Me.Label13.Location = New System.Drawing.Point(70, 334)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(102, 19)
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "e-Mail Vendas"
         '
+        'btnProdutos
+        '
+        Me.btnProdutos.Image = Global.NovaSiao.My.Resources.Resources.Estoque_24px
+        Me.btnProdutos.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnProdutos.Name = "btnProdutos"
+        Me.btnProdutos.Size = New System.Drawing.Size(100, 45)
+        Me.btnProdutos.Text = "Produtos"
+        '
         'frmFornecedor
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(614, 550)
-        Me.Controls.Add(Me.SplitContainer1)
+        Me.ClientSize = New System.Drawing.Size(713, 550)
+        Me.Controls.Add(Me.tsMenu)
         Me.Controls.Add(Me.txtFundacaoData)
         Me.Controls.Add(Me.txtInscricao)
         Me.Controls.Add(Me.txtObservacao)
@@ -653,14 +626,10 @@ Partial Class frmFornecedor
         Me.Controls.SetChildIndex(Me.txtObservacao, 0)
         Me.Controls.SetChildIndex(Me.txtInscricao, 0)
         Me.Controls.SetChildIndex(Me.txtFundacaoData, 0)
-        Me.Controls.SetChildIndex(Me.SplitContainer1, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
+        Me.Controls.SetChildIndex(Me.tsMenu, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.SplitContainer1.Panel1.ResumeLayout(False)
-        Me.SplitContainer1.Panel2.ResumeLayout(False)
-        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.SplitContainer1.ResumeLayout(False)
         Me.tsMenu.ResumeLayout(False)
         Me.tsMenu.PerformLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).EndInit()
@@ -695,7 +664,6 @@ Partial Class frmFornecedor
     Friend WithEvents Label1 As Label
     Friend WithEvents Label4 As Label
     Friend WithEvents Label2 As Label
-    Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents tsMenu As ToolStrip
     Friend WithEvents btnNovo As ToolStripButton
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
@@ -703,7 +671,6 @@ Partial Class frmFornecedor
     Friend WithEvents btnCancelar As ToolStripButton
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents btnAtivo As ToolStripButton
-    Friend WithEvents btnFechar As Button
     Friend WithEvents btnProcurar As ToolStripButton
     Friend WithEvents Label11 As Label
     Friend WithEvents txtNomeFantasia As TextBox
@@ -716,4 +683,6 @@ Partial Class frmFornecedor
     Friend WithEvents Label12 As Label
     Friend WithEvents Label13 As Label
     Friend WithEvents txtEmailVendas As TextBox
+    Friend WithEvents btnFechar As ToolStripButton
+    Friend WithEvents btnProdutos As ToolStripButton
 End Class
