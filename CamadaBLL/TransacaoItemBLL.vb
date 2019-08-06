@@ -327,4 +327,224 @@ Public Class TransacaoItemBLL
         '
     End Function
     '
+    '---------------------------------------------------------------------------------------------------------
+    '--- ULTIMAS TRANSACOES (COMPRA | VENDA | SIMPLES | DEVOLUCAO ) DO PRODUTO --> DATATABLE
+    '---------------------------------------------------------------------------------------------------------
+    Public Function ProdutoTransacoes(IDProduto As Integer,
+                                      MovTipo As EnumMovimento,
+                                      IDFilial As Integer,
+                                      Optional Operacao As TransacaoBLL.EnumOperacao = Nothing,
+                                      Optional dtInicial As Date? = Nothing,
+                                      Optional dtFinal As Date? = Nothing) As List(Of clTransacaoItem)
+        '
+        Dim db As AcessoDados
+        '
+        Try
+            db = New AcessoDados
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+        db.LimparParametros()
+        '
+        db.AdicionarParametros("@IDProduto", IDProduto)
+        db.AdicionarParametros("@IDFilial", IDFilial)
+        '
+        Dim query As String = "SELECT I.IDTransacaoItem, I.IDTransacao, I.IDProduto, I.Quantidade, I.Preco, I.Desconto, " +
+                              "T.TransacaoData, T.IDOperacao, O.Operacao, O.MovimentoEstoque " +
+                              "FROM tblTransacaoItens AS I " +
+                              "JOIN tblTransacao AS T " +
+                              "ON I.IDTransacao = T.IDTransacao " +
+                              "JOIN tblOperacao AS O " +
+                              "ON T.IDOperacao = O.IDOperacao " +
+                              "WHERE I.IDProduto = @IDProduto "
+
+        '
+        If MovTipo = EnumMovimento.ENTRADA Then
+            '--- CASO ENTRADA
+            query += "AND T.IDPessoaDestino = @IDFilial AND O.MovimentoEstoque = 'E' "
+        Else
+            '--- CASO SAIDA
+            query += "AND T.IDPessoaOrigem = @IDFilial AND O.MovimentoEstoque = 'S' "
+        End If
+        '
+        '--- OPERACAO
+        If Not IsNothing(Operacao) AndAlso Operacao > 0 Then
+            '
+            db.AdicionarParametros("@IDOperacao", Operacao)
+            query += "AND O.IDOperacao = @IDOperacao "
+            '
+        End If
+        '
+        '--- DATA INICIAL
+        If Not IsNothing(dtInicial) Then
+            '
+            db.AdicionarParametros("@DataInicial", dtInicial)
+            query += "AND TransacaoData >= @DataInicial "
+            '
+        End If
+        '
+        '--- DATA FINAL
+        If Not IsNothing(dtFinal) Then
+            '
+            db.AdicionarParametros("@DataFinal", dtFinal)
+            query += "AND TransacaoData <= @DataFinal "
+            '
+        End If
+        '
+        '--- ORDER BY
+        query += "ORDER BY T.TransacaoData"
+        '
+        Try
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            Dim lista As New List(Of clTransacaoItem)
+            If dt.Rows.Count = 0 Then Return lista
+            '
+            For Each r As DataRow In dt.Rows
+                Dim itn As clTransacaoItem = New clTransacaoItem
+                '--- Itens da tblTransacaoItens
+                itn.IDTransacaoItem = IIf(IsDBNull(r("IDTransacaoItem")), Nothing, r("IDTransacaoItem"))
+                itn.IDTransacao = IIf(IsDBNull(r("IDTransacao")), Nothing, r("IDTransacao"))
+                itn.IDProduto = IIf(IsDBNull(r("IDProduto")), Nothing, r("IDProduto"))
+                itn.Preco = IIf(IsDBNull(r("Preco")), Nothing, r("Preco"))
+                itn.Quantidade = IIf(IsDBNull(r("Quantidade")), Nothing, r("Quantidade"))
+                itn.Desconto = IIf(IsDBNull(r("Desconto")), Nothing, r("Desconto"))
+                '--- Itens Importados tblTransacaoItensCustos
+                itn.TransacaoData = IIf(IsDBNull(r("TransacaoData")), Nothing, r("TransacaoData"))
+                itn.IDOperacao = IIf(IsDBNull(r("IDOperacao")), Nothing, r("IDOperacao"))
+                itn.Operacao = IIf(IsDBNull(r("Operacao")), Nothing, r("Operacao"))
+                itn.MovimentoEstoque = IIf(IsDBNull(r("MovimentoEstoque")), Nothing, r("MovimentoEstoque"))
+                '
+                lista.Add(itn)
+                '
+            Next
+            '
+            Return lista
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '---------------------------------------------------------------------------------------------------------
+    '--- ULTIMAS TRANSACOES AGRUPADAS (COMPRA | VENDA | SIMPLES | DEVOLUCAO ) DO PRODUTO --> DATATABLE
+    '---------------------------------------------------------------------------------------------------------
+    Public Function ProdutoTransacoesGroup(IDProduto As Integer,
+                                           MovTipo As EnumMovimento,
+                                           IDFilial As Integer,
+                                           Optional Operacao As TransacaoBLL.EnumOperacao = Nothing,
+                                           Optional dtInicial As Date? = Nothing,
+                                           Optional dtFinal As Date? = Nothing) As List(Of clTransacaoItem)
+        '
+        Dim db As AcessoDados
+        '
+        Try
+            db = New AcessoDados
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+        db.LimparParametros()
+        '
+        db.AdicionarParametros("@IDProduto", IDProduto)
+        db.AdicionarParametros("@IDFilial", IDFilial)
+        '
+        Dim query As String = "SELECT I.IDTransacaoItem, I.IDTransacao, I.IDProduto, I.Quantidade, I.Preco, I.Desconto, " +
+                              "T.TransacaoData, T.IDOperacao, O.Operacao, O.MovimentoEstoque " +
+                              "FROM tblTransacaoItens AS I " +
+                              "JOIN tblTransacao AS T " +
+                              "ON I.IDTransacao = T.IDTransacao " +
+                              "JOIN tblOperacao AS O " +
+                              "ON T.IDOperacao = O.IDOperacao " +
+                              "WHERE I.IDProduto = @IDProduto "
+
+        query = "SELECT " +
+                "I.IDProduto, " +
+                "SUM(I.Quantidade) AS QuantidadeTotal, " +
+                "SUM(I.Preco * I.Quantidade) AS ValorTotal, " +
+                "SUM(I.Quantidade * I.Preco * I.Desconto/ 100) AS TotalDesc, " +
+                "YEAR(T.TransacaoData) AS Ano, " +
+                "MONTH(T.TransacaoData) AS Mes, " +
+                "T.IDOperacao, O.Operacao, O.MovimentoEstoque " +
+                "FROM tblTransacaoItens AS I " +
+                "INNER JOIN " +
+                "tblTransacao AS T ON I.IDTransacao = T.IDTransacao " +
+                "INNER JOIN " +
+                "tblOperacao AS O ON T.IDOperacao = O.IDOperacao " +
+                "GROUP BY I.IDProduto, " +
+                "YEAR(T.TransacaoData), MONTH(T.TransacaoData), " +
+                "T.IDOperacao, O.Operacao, O.MovimentoEstoque " +
+                "HAVING (I.IDProduto = @IDProduto)"
+
+        '
+        If MovTipo = EnumMovimento.ENTRADA Then
+            '--- CASO ENTRADA
+            query += "AND T.IDPessoaDestino = @IDFilial AND O.MovimentoEstoque = 'E' "
+        Else
+            '--- CASO SAIDA
+            query += "AND T.IDPessoaOrigem = @IDFilial AND O.MovimentoEstoque = 'S' "
+        End If
+        '
+        '--- OPERACAO
+        If Not IsNothing(Operacao) AndAlso Operacao > 0 Then
+            '
+            db.AdicionarParametros("@IDOperacao", Operacao)
+            query += "AND O.IDOperacao = @IDOperacao "
+            '
+        End If
+        '
+        '--- DATA INICIAL
+        If Not IsNothing(dtInicial) Then
+            '
+            db.AdicionarParametros("@DataInicial", dtInicial)
+            query += "AND TransacaoData >= @DataInicial "
+            '
+        End If
+        '
+        '--- DATA FINAL
+        If Not IsNothing(dtFinal) Then
+            '
+            db.AdicionarParametros("@DataFinal", dtFinal)
+            query += "AND TransacaoData <= @DataFinal "
+            '
+        End If
+        '
+        '--- ORDER BY
+        query += "ORDER BY T.TransacaoData"
+        '
+        Try
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            Dim lista As New List(Of clTransacaoItem)
+            If dt.Rows.Count = 0 Then Return lista
+            '
+            For Each r As DataRow In dt.Rows
+                Dim itn As clTransacaoItem = New clTransacaoItem
+                '--- Itens da tblTransacaoItens
+                itn.IDTransacaoItem = IIf(IsDBNull(r("IDTransacaoItem")), Nothing, r("IDTransacaoItem"))
+                itn.IDTransacao = IIf(IsDBNull(r("IDTransacao")), Nothing, r("IDTransacao"))
+                itn.IDProduto = IIf(IsDBNull(r("IDProduto")), Nothing, r("IDProduto"))
+                itn.Preco = IIf(IsDBNull(r("Preco")), Nothing, r("Preco"))
+                itn.Quantidade = IIf(IsDBNull(r("Quantidade")), Nothing, r("Quantidade"))
+                itn.Desconto = IIf(IsDBNull(r("Desconto")), Nothing, r("Desconto"))
+                '--- Itens Importados tblTransacaoItensCustos
+                itn.TransacaoData = IIf(IsDBNull(r("TransacaoData")), Nothing, r("TransacaoData"))
+                itn.IDOperacao = IIf(IsDBNull(r("IDOperacao")), Nothing, r("IDOperacao"))
+                itn.Operacao = IIf(IsDBNull(r("Operacao")), Nothing, r("Operacao"))
+                itn.MovimentoEstoque = IIf(IsDBNull(r("MovimentoEstoque")), Nothing, r("MovimentoEstoque"))
+                '
+                lista.Add(itn)
+                '
+            Next
+            '
+            Return lista
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
 End Class

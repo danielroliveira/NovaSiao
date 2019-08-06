@@ -395,9 +395,18 @@ Public Class frmProdutoListagem
         '
         Dim selIndex As Integer = lstListagem.SelectedItems(0).Index
         Dim clProd As clProduto = prodLista.Item(selIndex)
+
+
+
+        Dim frm As Form = New frmProdutoTransacoes(clProd, Me)
+        frm.ShowDialog()
+
+        Exit Sub
+
+
         '
         '--- Verifica se o form Produto ja esta aberto
-        Dim frm As Form = Nothing
+        'Dim frm As Form = Nothing
         '
         For Each f As Form In Application.OpenForms
             If f.Name = "frmProduto" Then

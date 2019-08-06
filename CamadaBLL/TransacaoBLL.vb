@@ -3,14 +3,14 @@
 Public Class TransacaoBLL
     '
     Public Enum EnumOperacao
-        Venda = 1 '--- Vendas
-        Compra = 2 '--- Compras
-        SimplesEntrada = 3 '--- Simples Entrada
-        SimplesSaida = 4 '--- Simples Saída
-        DevolucaoDeEntrada = 5 '--- Quando o Cliente devolve uma venda
-        DevolucaoDeSaida = 6 '--- Quando a Filial Devolve uma Compra
-        ConsignacaoEntrada = 7 '--- Quando a Filial recebe uma Consignação
-        ConsignacaoSaida = 8 '--- Quando a Filial devolve uma Consignação
+        Venda = 1               '--- Vendas                                  --> SAIDA
+        Compra = 2              '--- Compras                                 --> ENTRADA
+        SimplesEntrada = 3      '--- Simples Entrada                         --> ENTRADA
+        SimplesSaida = 4        '--- Simples Saída                           --> SAIDA
+        DevolucaoDeEntrada = 5  '--- Quando o Cliente devolve uma venda      --> ENTRADA
+        DevolucaoDeSaida = 6    '--- Quando a Filial Devolve uma Compra      --> SAIDA
+        ConsignacaoEntrada = 7  '--- Quando a Filial recebe uma Consignação  --> ENTRADA
+        ConsignacaoSaida = 8    '--- Quando a Filial devolve uma Consignação --> SAIDA
     End Enum
     '
     Public Enum EnumCFOPUFDestino

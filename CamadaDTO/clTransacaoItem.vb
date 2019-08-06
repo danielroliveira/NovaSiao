@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+'
 Public Class clTransacaoItem : Implements IEditableObject
     '
 #Region "ESTRUTURA DOS DADOS"
@@ -389,6 +390,11 @@ Public Class clTransacaoItem : Implements IEditableObject
             Return itemData._Quantidade * itemData._Preco * (100 - itemData._Desconto) / 100
         End Get
     End Property
+    '
+    Property TransacaoData As Date?
+    Property IDOperacao As Byte?
+    Property Operacao As String
+    Property MovimentoEstoque As String
     '
 #End Region
     '
