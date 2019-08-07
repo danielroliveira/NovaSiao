@@ -119,10 +119,12 @@ Partial Class frmDespesaTipoProcurar
         Me.dgvListagem.EnableHeadersVisualStyles = False
         Me.dgvListagem.GridColor = System.Drawing.SystemColors.ActiveCaption
         Me.dgvListagem.Location = New System.Drawing.Point(12, 98)
+        Me.dgvListagem.MultiSelect = False
         Me.dgvListagem.Name = "dgvListagem"
         Me.dgvListagem.ReadOnly = True
         Me.dgvListagem.RowHeadersWidth = 30
         Me.dgvListagem.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.dgvListagem.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvListagem.Size = New System.Drawing.Size(451, 363)
         Me.dgvListagem.TabIndex = 3
         '

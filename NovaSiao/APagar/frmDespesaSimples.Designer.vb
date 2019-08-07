@@ -399,6 +399,7 @@ Partial Class frmDespesaSimples
         Me.txtDespesaValor.MaxLength = 15
         Me.txtDespesaValor.Name = "txtDespesaValor"
         Me.txtDespesaValor.Size = New System.Drawing.Size(113, 27)
+        Me.txtDespesaValor.SomentePositivos = True
         Me.txtDespesaValor.TabIndex = 23
         Me.txtDespesaValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -495,6 +496,7 @@ Partial Class frmDespesaSimples
         Me.txtAcrescimo.Location = New System.Drawing.Point(173, 397)
         Me.txtAcrescimo.Name = "txtAcrescimo"
         Me.txtAcrescimo.Size = New System.Drawing.Size(113, 27)
+        Me.txtAcrescimo.SomentePositivos = True
         Me.txtAcrescimo.TabIndex = 25
         Me.txtAcrescimo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -597,7 +599,6 @@ Partial Class frmDespesaSimples
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.lblCNPTexto)
-        Me.KeyPreview = True
         Me.Name = "frmDespesaSimples"
         Me.Text = "frmDespesaSimples"
         Me.Controls.SetChildIndex(Me.lblCNPTexto, 0)

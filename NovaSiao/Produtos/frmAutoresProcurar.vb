@@ -164,11 +164,12 @@ Public Class frmAutoresProcurar
                     End If
                     '
                     dgvAutores.Rows(i - 1).Selected = True
-                    dgvAutores.Rows(i - 1).Visible = True
                 Else
                     dgvAutores.Rows(0).Selected = True
-                    dgvAutores.Rows(0).Visible = True
                 End If
+                '
+                dgvAutores.FirstDisplayedScrollingRowIndex = dgvAutores.SelectedRows(0).Index
+                '
             End If
             '
         ElseIf e.KeyCode = Keys.Down Then
@@ -185,10 +186,12 @@ Public Class frmAutoresProcurar
                     End If
                     '
                     dgvAutores.Rows(i + 1).Selected = True
-                    dgvAutores.Rows(i + 1).Visible = True
                 Else
                     dgvAutores.Rows(0).Selected = True
                 End If
+                '
+                dgvAutores.FirstDisplayedScrollingRowIndex = dgvAutores.SelectedRows(0).Index
+                '
             End If
             '
         End If

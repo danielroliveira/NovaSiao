@@ -388,11 +388,12 @@ Public Class frmFornecedorProcurar
                     End If
                     '
                     dgvListagem.Rows(i - 1).Selected = True
-                    dgvListagem.Rows(i - 1).Visible = True
                 Else
                     dgvListagem.Rows(0).Selected = True
-                    dgvListagem.Rows(0).Visible = True
                 End If
+                '
+                dgvListagem.FirstDisplayedScrollingRowIndex = dgvListagem.SelectedRows(0).Index
+                '
             End If
             '
         ElseIf e.KeyCode = Keys.Down Then
@@ -413,10 +414,12 @@ Public Class frmFornecedorProcurar
                     End If
                     '
                     dgvListagem.Rows(i + 1).Selected = True
-                    dgvListagem.Rows(i + 1).Visible = True
                 Else
                     dgvListagem.Rows(0).Selected = True
                 End If
+                '
+                dgvListagem.FirstDisplayedScrollingRowIndex = dgvListagem.SelectedRows(0).Index
+                '
             End If
             '
         End If

@@ -10,6 +10,7 @@ Public Class frmDespesaTipoProcurar
     Private _formOrigem As Form = Nothing
     '
 #Region "LOAD FORM"
+    '
     Sub New(Optional Procura As Boolean = False, Optional formOrigem As Form = Nothing)
         '
         ' This call is required by the designer.
@@ -236,6 +237,65 @@ Public Class frmDespesaTipoProcurar
         ElseIf e.KeyChar = Convert.ToChar(Keys.Escape) Then
             e.Handled = True
             btnFechar_Click(New Object, New EventArgs)
+        End If
+        '
+    End Sub
+    '
+    '-------------------------------------------------------------------------------------------------
+    '--- QUANDO PRESSIONA A TECLA ESC FECHA O FORMULARIO
+    '--- QUANDO A TECLA CIMA E BAIXO NAVEGA ENTRE OS ITENS DA LISTAGEM
+    '-------------------------------------------------------------------------------------------------
+    Private Sub Me_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            e.Handled = True
+            btnFechar_Click(New Object, New EventArgs)
+            '
+        ElseIf e.KeyCode = Keys.Up Then
+            '
+            e.Handled = True
+            '
+            If dgvListagem.Rows.Count > 0 Then
+                If dgvListagem.SelectedRows.Count > 0 Then
+                    Dim i As Integer = dgvListagem.SelectedRows(0).Index
+                    '
+                    dgvListagem.Rows(i).Selected = False
+                    '
+                    If i = 0 Then
+                        i = dgvListagem.Rows.Count
+                    End If
+                    '
+                    dgvListagem.Rows(i - 1).Selected = True
+                Else
+                    dgvListagem.Rows(0).Selected = True
+                End If
+                '
+                dgvListagem.FirstDisplayedScrollingRowIndex = dgvListagem.SelectedRows(0).Index
+                '
+            End If
+            '
+        ElseIf e.KeyCode = Keys.Down Then
+            '
+            e.Handled = True
+            '
+            If dgvListagem.Rows.Count > 0 Then
+                If dgvListagem.SelectedRows.Count > 0 Then
+                    Dim i As Integer = dgvListagem.SelectedRows(0).Index
+                    '
+                    dgvListagem.Rows(i).Selected = False
+                    '
+                    If i = dgvListagem.Rows.Count - 1 Then
+                        i = -1
+                    End If
+                    '
+                    dgvListagem.Rows(i + 1).Selected = True
+                Else
+                    dgvListagem.Rows(0).Selected = True
+                End If
+                '
+                dgvListagem.FirstDisplayedScrollingRowIndex = dgvListagem.SelectedRows(0).Index
+                '
+            End If
+            '
         End If
         '
     End Sub

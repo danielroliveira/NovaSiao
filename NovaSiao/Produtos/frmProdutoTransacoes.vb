@@ -3,7 +3,8 @@ Imports CamadaDTO
 
 Public Class frmProdutoTransacoes
     '
-    Private _list As New List(Of clTransacaoItem)
+    'Private _list As New List(Of clTransacaoItem)
+    Private itensDt As DataTable
     Private bindList As New BindingSource
     Private _formOrigem As Form
     Private _Produto As clProduto
@@ -38,14 +39,7 @@ Public Class frmProdutoTransacoes
         _IDFilial = Obter_FilialPadrao()
         _formOrigem = formOrigem
         '
-        If _list.Count > 0 Then
-            _Produto = New clProduto
-            _Produto.Produto = _list(0).Produto
-            _Produto.IDProduto = _list(0).IDProduto
-            _Produto.RGProduto = _list(0).RGProduto
-        Else
-            _Produto = getProdutoByID(IDProduto)
-        End If
+        _Produto = getProdutoByID(IDProduto)
         '
         Operacao = 1 '--- VENDA
         '
@@ -85,23 +79,23 @@ Public Class frmProdutoTransacoes
             If Operacao < 100 Then
                 If Operacao = 1 Or Operacao = 4 Or Operacao = 6 Or Operacao = 8 Then
                     '--- operacoes de SAIDA
-                    _list = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.SAIDA, Operacao)
+                    itensDt = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.SAIDA, Operacao)
                 Else
                     '--- operacoes de ENTRADA
-                    _list = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.ENTRADA, Operacao)
+                    itensDt = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.ENTRADA, Operacao)
                 End If
             Else
                 If Operacao = 100 Then
                     '--- TODAS operacoes de SAIDA
-                    _list = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.SAIDA)
+                    itensDt = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.SAIDA)
                 ElseIf Operacao = 101 Then
                     '--- TODAS operacoes de ENTRADA
-                    _list = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.ENTRADA)
+                    itensDt = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.ENTRADA)
                 End If
             End If
             '
             '--- DEFINE O BINDING
-            bindList.DataSource = _list
+            bindList.DataSource = itensDt
             '
             'Venda = 1               '--- Vendas                                  --> SAIDA
             'Compra = 2              '--- Compras                                 --> ENTRADA
@@ -122,7 +116,7 @@ Public Class frmProdutoTransacoes
     '
     Private Function GetListByID(IDProduto As Integer,
                                  Mov As TransacaoItemBLL.EnumMovimento,
-                                 Optional Operacao? As TransacaoBLL.EnumOperacao = Nothing) As List(Of clTransacaoItem)
+                                 Optional Operacao? As TransacaoBLL.EnumOperacao = Nothing) As DataTable
         '
         Try
             '--- Ampulheta ON
@@ -131,9 +125,9 @@ Public Class frmProdutoTransacoes
             Dim itemBLL As New TransacaoItemBLL
             '
             If IsNothing(Operacao) Then
-                Return itemBLL.ProdutoTransacoes(IDProduto, Mov, _IDFilial)
+                Return itemBLL.ProdutoTransacoesGroup(IDProduto, Mov, _IDFilial)
             Else
-                Return itemBLL.ProdutoTransacoes(IDProduto, Mov, _IDFilial, Operacao)
+                Return itemBLL.ProdutoTransacoesGroup(IDProduto, Mov, _IDFilial, Operacao)
             End If
             '
         Catch ex As Exception
@@ -208,11 +202,11 @@ Public Class frmProdutoTransacoes
         '
         ' (0) COLUNA Data
         With clnData
-            .DataPropertyName = "TransacaoData"
+            .DataPropertyName = "Ano"
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
-            .DefaultCellStyle.Format = "dd/MM/yyyy"
+            '.DefaultCellStyle.Format = "dd/MM/yyyy"
             .SortMode = DataGridViewColumnSortMode.NotSortable
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
@@ -229,7 +223,7 @@ Public Class frmProdutoTransacoes
         '
         ' (2) COLUNA QUANTIDADE
         With clnQuantidade
-            .DataPropertyName = "Quantidade"
+            .DataPropertyName = "QuantidadeTotal"
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
@@ -239,8 +233,8 @@ Public Class frmProdutoTransacoes
         End With
         '
         ' (3) COLUNA PRECO
-        With clnPreco
-            .DataPropertyName = "Preco"
+        With clnValor
+            .DataPropertyName = "ValorTotal"
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
@@ -250,27 +244,24 @@ Public Class frmProdutoTransacoes
             .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (4) COLUNA DESCONTO
-        With clnDesconto
-            .DataPropertyName = "Desconto"
-            .HeaderText = "Desc(%)"
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Format = "0.00"
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-        End With
-        '
         '--- adiciona as colunas editadas
         dgvItens.Columns.AddRange(New DataGridViewColumn() {clnData, clnOperacao,
-                                  clnQuantidade, clnPreco, clnDesconto})
+                                  clnQuantidade, clnValor})
         '
     End Sub
     '
     Private Sub dgvListagem_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
         'btnEditar_Click(New Object, New EventArgs)
+    End Sub
+    '
+    Private Sub dgvItens_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvItens.CellFormatting
+        '
+        If e.ColumnIndex = clnData.Index Then
+            Dim r As DataRowView = dgvItens.Rows(e.RowIndex).DataBoundItem
+            Dim dt As Date = DateSerial(r("Ano"), r("Mes"), 1)
+            e.Value = Format(dt, "MMMM | yyyy")
+        End If
+        '
     End Sub
     '
 #End Region

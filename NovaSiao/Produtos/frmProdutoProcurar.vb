@@ -575,11 +575,13 @@ Public Class frmProdutoProcurar
                     End If
                     '
                     dgvProdutos.Rows(i - 1).Selected = True
-                    'dgvProdutos.EnsureVisible(i - 1)
+
                 Else
                     dgvProdutos.Rows(0).Selected = True
-                    'dgvProdutos.EnsureVisible(0)
                 End If
+                '
+                dgvProdutos.FirstDisplayedScrollingRowIndex = dgvProdutos.SelectedRows(0).Index
+                '
             End If
             '
         ElseIf e.KeyCode = Keys.Down Then '--- seta para baixo navega no datagrid
@@ -596,10 +598,12 @@ Public Class frmProdutoProcurar
                     End If
                     '
                     dgvProdutos.Rows(i + 1).Selected = True
-                    'dgvProdutos.EnsureVisible(i + 1)
                 Else
                     dgvProdutos.Rows(0).Selected = True
                 End If
+                '
+                dgvProdutos.FirstDisplayedScrollingRowIndex = dgvProdutos.SelectedRows(0).Index
+                '
             End If
             '
         End If

@@ -12,8 +12,10 @@ Public Class frmCredorProcurar
     Private _formOrigem As Form
     Property propEscolhido As Integer?
     Property propCredorEscolhido As clCredor = Nothing
+    Private _CredorTipo As Byte
     '
 #Region "LOAD FORM"
+    '
     Sub New(Optional Procura As Boolean = False, Optional formOrigem As Form = Nothing)
         '
         ' This call is required by the designer.
@@ -21,7 +23,6 @@ Public Class frmCredorProcurar
         '
         ' Add any initialization after the InitializeComponent() call.
         CarregaCmbAtivo()
-        CarregaComboTipo()
         _Procura = Procura
         _formOrigem = formOrigem
         '
@@ -42,11 +43,13 @@ Public Class frmCredorProcurar
         '
         CarregaDados()
         '
+        AddHandler_Radio_CheckedChanged()
         IniciarFiltragem = True
         '
     End Sub
     '
     Private Sub CarregaDados()
+        '
         Dim cBLL As New CredorBLL
         '
         Try
@@ -54,7 +57,8 @@ Public Class frmCredorProcurar
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            listCred = cBLL.Credor_GET_List(CByte(cmbCredorTipo.SelectedValue))
+            listCred = cBLL.Credor_GET_List(CredorTipo)
+            '
         Catch ex As Exception
             MessageBox.Show("Houve uma exceção ao obter a lista de Credores..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -68,6 +72,16 @@ Public Class frmCredorProcurar
         PreencheListagem()
         '
     End Sub
+    '
+    Public Property CredorTipo() As Byte
+        Get
+            Return _CredorTipo
+        End Get
+        Set(ByVal value As Byte)
+            _CredorTipo = value
+            CarregaDados()
+        End Set
+    End Property
     '
 #End Region
     '
@@ -158,26 +172,6 @@ Public Class frmCredorProcurar
         End With
     End Sub
     '
-    '
-    ' CARREGA OS COMBOBOX
-    '--------------------------------------------------------------------------------------------------------
-    Private Sub CarregaComboTipo()
-        Dim dtTipo As New DataTable
-        'Adiciona todas as possibilidades
-        dtTipo.Columns.Add("IDTipo")
-        dtTipo.Columns.Add("Tipo")
-        dtTipo.Rows.Add(New Object() {0, "Simples"})
-        dtTipo.Rows.Add(New Object() {1, "Pessoa Física"})
-        dtTipo.Rows.Add(New Object() {2, "Pessoa Jurídica"})
-        dtTipo.Rows.Add(New Object() {3, "Orgão Público"})
-        With cmbCredorTipo
-            .DataSource = dtTipo
-            .ValueMember = "IDTipo"
-            .DisplayMember = "Tipo"
-            '.SelectedValue = -1
-        End With
-    End Sub
-    '
     Private Sub dgvListagem_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvListagem.CellFormatting
         If e.ColumnIndex = 0 Then
             e.Value = Format(e.Value, "D4")
@@ -204,22 +198,35 @@ Public Class frmCredorProcurar
     End Sub
     '
     Private Sub btnAdicionar_Click(sender As Object, e As EventArgs) Handles btnAdicionar.Click
+        '
         Dim cred As New clCredor
         Dim frmC As New frmCredor(cred, Me)
         '
         frmC.ShowDialog()
         '
         If frmC.DialogResult = DialogResult.OK Then
-            '--- atualiza os dados da listagem
-            cmbCredorTipo.SelectedValue = frmC._Credor.CredorTipo
+            '
             cmbAtivo.SelectedValue = True
             txtProcura.Clear()
-            CarregaDados()
+            '
+            '--- atualiza os dados da listagem
+            Select Case frmC._Credor.CredorTipo
+                Case 0
+                    rbtSimples.Checked = True
+                Case 1
+                    rbtPF.Checked = True
+                Case 2
+                    rbtPJ.Checked = True
+                Case 3
+                    rbtOrgaoPublico.Checked = True
+            End Select
+            '
         End If
         '
     End Sub
     '
     Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
+        '
         '--- verifica se existe algum item selecionado
         If dgvListagem.SelectedRows.Count = 0 Then
             MessageBox.Show("Não existe nenhum Credor selecionado...", "Escolher",
@@ -239,11 +246,22 @@ Public Class frmCredorProcurar
             frmC.ShowDialog()
             '
             If frmC.DialogResult = DialogResult.OK Then
-                '--- atualiza os dados da listagem
-                cmbCredorTipo.SelectedValue = frmC._Credor.CredorTipo
+                '
                 cmbAtivo.SelectedValue = True
                 txtProcura.Clear()
-                CarregaDados()
+                '
+                '--- atualiza os dados da listagem
+                Select Case frmC._Credor.CredorTipo
+                    Case 0
+                        rbtSimples.Checked = True
+                    Case 1
+                        rbtPF.Checked = True
+                    Case 2
+                        rbtPJ.Checked = True
+                    Case 3
+                        rbtOrgaoPublico.Checked = True
+                End Select
+                '
             End If
             '
         End If
@@ -297,7 +315,7 @@ Public Class frmCredorProcurar
         '
     End Sub
     '
-    Private Sub cmbCredorTipo_SelectedValueChanged(sender As Object, e As EventArgs) Handles cmbCredorTipo.SelectedValueChanged
+    Private Sub cmbCredorTipo_SelectedValueChanged(sender As Object, e As EventArgs)
         If IniciarFiltragem = False Then Exit Sub
         '
         CarregaDados()
@@ -399,45 +417,125 @@ Public Class frmCredorProcurar
 #End Region
     '
 #Region "OUTRAS FUNCOES"
-    '------------------------------------------------------------------------------------------
-    '--- CONTROLA PRESS A TECLA (ENTER) NO CONTROLE
-    '------------------------------------------------------------------------------------------
-    Private Sub Control_KeyDown_Enter(sender As Object, e As KeyEventArgs) Handles txtProcura.KeyDown
+    '
+    '-------------------------------------------------------------------------------------------------
+    '--- QUANDO PRESSIONA A TECLA ESC FECHA O FORMULARIO
+    '--- QUANDO A TECLA CIMA E BAIXO NAVEGA ENTRE OS ITENS DA LISTAGEM
+    '-------------------------------------------------------------------------------------------------
+    Private Sub Me_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
         '
-        If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Tab Then
+        If e.KeyCode = Keys.Escape Then
             e.Handled = True
-            SendKeys.Send("{Tab}")
+            btnFechar_Click(New Object, New EventArgs)
+            '
+        ElseIf e.KeyCode = Keys.Up Then
+            '
+            '--- garante que o combo não está aberto
+            If cmbAtivo.DroppedDown = True Then Exit Sub
+            '
+            e.Handled = True
+            '
+            If dgvListagem.Rows.Count > 0 Then
+                If dgvListagem.SelectedRows.Count > 0 Then
+                    Dim i As Integer = dgvListagem.SelectedRows(0).Index
+                    '
+                    dgvListagem.Rows(i).Selected = False
+                    '
+                    If i = 0 Then
+                        i = dgvListagem.Rows.Count
+                    End If
+                    '
+                    dgvListagem.Rows(i - 1).Selected = True
+                Else
+                    dgvListagem.Rows(0).Selected = True
+                End If
+                '
+                dgvListagem.FirstDisplayedScrollingRowIndex = dgvListagem.SelectedRows(0).Index
+                '
+            End If
+            '
+        ElseIf e.KeyCode = Keys.Down Then
+            '
+            '--- garante que o combo não está aberto
+            If cmbAtivo.DroppedDown = True Then Exit Sub
+            '
+            e.Handled = True
+            '
+            If dgvListagem.Rows.Count > 0 Then
+                If dgvListagem.SelectedRows.Count > 0 Then
+                    Dim i As Integer = dgvListagem.SelectedRows(0).Index
+                    '
+                    dgvListagem.Rows(i).Selected = False
+                    '
+                    If i = dgvListagem.Rows.Count - 1 Then
+                        i = -1
+                    End If
+                    '
+                    dgvListagem.Rows(i + 1).Selected = True
+                Else
+                    dgvListagem.Rows(0).Selected = True
+                End If
+                '
+                dgvListagem.FirstDisplayedScrollingRowIndex = dgvListagem.SelectedRows(0).Index
+                '
+            End If
+            '
         End If
-        '
     End Sub
     '
     '------------------------------------------------------------------------------------------
-    ' CRIA UM ATALHO PARA OS COMBO BOX
+    '--- CONTROLA PRESS A TECLA (ENTER) NO CONTROLE
     '------------------------------------------------------------------------------------------
-    Private Sub ComboSelecionaPeloNumero(myCombo As ComboBox, myItemNumber As Integer)
-        Dim dt As DataTable = myCombo.DataSource
-        Dim rCount As Integer = dt.Rows.Count
+    Private Sub Control_KeyDown_Enter(sender As Object, e As KeyEventArgs) Handles txtProcura.KeyDown,
+        rbtSimples.KeyDown, rbtPF.KeyDown, rbtPJ.KeyDown, rbtOrgaoPublico.KeyDown
         '
-        If myItemNumber <= rCount And myItemNumber > 0 Then
-            Dim Valor As Integer = dt.Rows(myItemNumber - 1)(0)
-            '
-            myCombo.SelectedValue = Valor
-            '
+        If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Tab Then
+            e.Handled = True
+            e.SuppressKeyPress = True
+            SendKeys.Send("{Tab}")
         End If
         '
     End Sub
     '
     Private Sub frmCredorProcurar_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
         '
-        If Char.IsNumber(e.KeyChar) Then
-            e.Handled = True
-            ComboSelecionaPeloNumero(cmbCredorTipo, e.KeyChar.ToString)
-        ElseIf e.KeyChar.ToString = "+" Then
+        If e.KeyChar.ToString = "+" Then
             e.Handled = True
             btnAdicionar_Click(New Object, New EventArgs)
         ElseIf e.KeyChar = Convert.ToChar(Keys.Escape) Then
             e.Handled = True
             btnFechar_Click(New Object, New EventArgs)
+        End If
+        '
+    End Sub
+    '
+    '--- CHANGE CREDOR TIPO RADIO
+    '----------------------------------------------------------------------------------
+    Private Sub Radio_CheckedChanged(sender As Object, e As EventArgs)
+        '
+        Dim newTipo As Byte = DirectCast(sender, Control).Tag
+        '
+        If CredorTipo <> newTipo Then
+            CredorTipo = newTipo
+        End If
+        '
+    End Sub
+    '
+    Private Sub AddHandler_Radio_CheckedChanged()
+        AddHandler rbtSimples.CheckedChanged, AddressOf Radio_CheckedChanged
+        AddHandler rbtPF.CheckedChanged, AddressOf Radio_CheckedChanged
+        AddHandler rbtPJ.CheckedChanged, AddressOf Radio_CheckedChanged
+        AddHandler rbtOrgaoPublico.CheckedChanged, AddressOf Radio_CheckedChanged
+    End Sub
+    '
+    '--- CHANGE COLOR PANEL ON ENTER AND LEAVE
+    '----------------------------------------------------------------------------------
+    Private Sub pnlCredorTipo_EnterLeave(sender As Object, e As EventArgs) Handles pnlCredorTipo.Enter, pnlCredorTipo.Leave
+        '
+        If pnlCredorTipo.BackColor = Color.Gainsboro Then
+            pnlCredorTipo.BackColor = Color.Transparent
+        Else
+            pnlCredorTipo.BackColor = Color.Gainsboro
         End If
         '
     End Sub

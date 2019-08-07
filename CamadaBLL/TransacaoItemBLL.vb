@@ -436,7 +436,7 @@ Public Class TransacaoItemBLL
                                            IDFilial As Integer,
                                            Optional Operacao As TransacaoBLL.EnumOperacao = Nothing,
                                            Optional dtInicial As Date? = Nothing,
-                                           Optional dtFinal As Date? = Nothing) As List(Of clTransacaoItem)
+                                           Optional dtFinal As Date? = Nothing) As DataTable
         '
         Dim db As AcessoDados
         '
@@ -451,43 +451,37 @@ Public Class TransacaoItemBLL
         db.AdicionarParametros("@IDProduto", IDProduto)
         db.AdicionarParametros("@IDFilial", IDFilial)
         '
-        Dim query As String = "SELECT I.IDTransacaoItem, I.IDTransacao, I.IDProduto, I.Quantidade, I.Preco, I.Desconto, " +
-                              "T.TransacaoData, T.IDOperacao, O.Operacao, O.MovimentoEstoque " +
+        Dim query As String = "SELECT " +
+                              "I.IDProduto, " +
+                              "SUM(I.Quantidade) AS QuantidadeTotal, " +
+                              "SUM(I.Preco * I.Quantidade) AS ValorTotal, " +
+                              "SUM(I.Quantidade * I.Preco * I.Desconto/ 100) AS TotalDesc, " +
+                              "YEAR(T.TransacaoData) AS Ano, " +
+                              "MONTH(T.TransacaoData) AS Mes, " +
+                              "T.IDOperacao, O.Operacao, O.MovimentoEstoque " +
                               "FROM tblTransacaoItens AS I " +
-                              "JOIN tblTransacao AS T " +
-                              "ON I.IDTransacao = T.IDTransacao " +
-                              "JOIN tblOperacao AS O " +
-                              "ON T.IDOperacao = O.IDOperacao " +
-                              "WHERE I.IDProduto = @IDProduto "
-
-        query = "SELECT " +
-                "I.IDProduto, " +
-                "SUM(I.Quantidade) AS QuantidadeTotal, " +
-                "SUM(I.Preco * I.Quantidade) AS ValorTotal, " +
-                "SUM(I.Quantidade * I.Preco * I.Desconto/ 100) AS TotalDesc, " +
-                "YEAR(T.TransacaoData) AS Ano, " +
-                "MONTH(T.TransacaoData) AS Mes, " +
-                "T.IDOperacao, O.Operacao, O.MovimentoEstoque " +
-                "FROM tblTransacaoItens AS I " +
-                "INNER JOIN " +
-                "tblTransacao AS T ON I.IDTransacao = T.IDTransacao " +
-                "INNER JOIN " +
-                "tblOperacao AS O ON T.IDOperacao = O.IDOperacao " +
-                "GROUP BY I.IDProduto, " +
-                "YEAR(T.TransacaoData), MONTH(T.TransacaoData), " +
-                "T.IDOperacao, O.Operacao, O.MovimentoEstoque " +
-                "HAVING (I.IDProduto = @IDProduto)"
+                              "INNER JOIN " +
+                              "tblTransacao AS T ON I.IDTransacao = T.IDTransacao " +
+                              "INNER JOIN " +
+                              "tblOperacao AS O ON T.IDOperacao = O.IDOperacao "
 
         '
+        '--- CASO ENTRADA
         If MovTipo = EnumMovimento.ENTRADA Then
-            '--- CASO ENTRADA
-            query += "AND T.IDPessoaDestino = @IDFilial AND O.MovimentoEstoque = 'E' "
-        Else
-            '--- CASO SAIDA
-            query += "AND T.IDPessoaOrigem = @IDFilial AND O.MovimentoEstoque = 'S' "
+            '
+            '--- ADD FILIAL
+            query += "WHERE T.IDPessoaDestino = @IDFilial "
+            '--- ADD MOVIMENTO
+            query += "AND O.MovimentoEstoque = 'E' "
+        Else '--- CASO SAIDA
+            '
+            '--- ADD FILIAL
+            query += "WHERE T.IDPessoaOrigem = @IDFilial "
+            '--- ADD MOVIMENTO
+            query += "AND O.MovimentoEstoque = 'S' "
         End If
         '
-        '--- OPERACAO
+        '--- ADD OPERACAO
         If Not IsNothing(Operacao) AndAlso Operacao > 0 Then
             '
             db.AdicionarParametros("@IDOperacao", Operacao)
@@ -495,7 +489,7 @@ Public Class TransacaoItemBLL
             '
         End If
         '
-        '--- DATA INICIAL
+        '--- ADD DATA INICIAL
         If Not IsNothing(dtInicial) Then
             '
             db.AdicionarParametros("@DataInicial", dtInicial)
@@ -503,7 +497,7 @@ Public Class TransacaoItemBLL
             '
         End If
         '
-        '--- DATA FINAL
+        '--- ADD DATA FINAL
         If Not IsNothing(dtFinal) Then
             '
             db.AdicionarParametros("@DataFinal", dtFinal)
@@ -511,35 +505,19 @@ Public Class TransacaoItemBLL
             '
         End If
         '
-        '--- ORDER BY
-        query += "ORDER BY T.TransacaoData"
+        '--- ADD GROUP BY
+        query += "GROUP BY I.IDProduto, " +
+                 "YEAR(T.TransacaoData), MONTH(T.TransacaoData), " +
+                 "T.IDOperacao, O.Operacao, O.MovimentoEstoque " +
+                 "HAVING (I.IDProduto = @IDProduto) "
+        '
+        '--- ADD ORDER BY
+        query += "ORDER BY Ano DESC, Mes DESC"
         '
         Try
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             '
-            Dim lista As New List(Of clTransacaoItem)
-            If dt.Rows.Count = 0 Then Return lista
-            '
-            For Each r As DataRow In dt.Rows
-                Dim itn As clTransacaoItem = New clTransacaoItem
-                '--- Itens da tblTransacaoItens
-                itn.IDTransacaoItem = IIf(IsDBNull(r("IDTransacaoItem")), Nothing, r("IDTransacaoItem"))
-                itn.IDTransacao = IIf(IsDBNull(r("IDTransacao")), Nothing, r("IDTransacao"))
-                itn.IDProduto = IIf(IsDBNull(r("IDProduto")), Nothing, r("IDProduto"))
-                itn.Preco = IIf(IsDBNull(r("Preco")), Nothing, r("Preco"))
-                itn.Quantidade = IIf(IsDBNull(r("Quantidade")), Nothing, r("Quantidade"))
-                itn.Desconto = IIf(IsDBNull(r("Desconto")), Nothing, r("Desconto"))
-                '--- Itens Importados tblTransacaoItensCustos
-                itn.TransacaoData = IIf(IsDBNull(r("TransacaoData")), Nothing, r("TransacaoData"))
-                itn.IDOperacao = IIf(IsDBNull(r("IDOperacao")), Nothing, r("IDOperacao"))
-                itn.Operacao = IIf(IsDBNull(r("Operacao")), Nothing, r("Operacao"))
-                itn.MovimentoEstoque = IIf(IsDBNull(r("MovimentoEstoque")), Nothing, r("MovimentoEstoque"))
-                '
-                lista.Add(itn)
-                '
-            Next
-            '
-            Return lista
+            Return dt
             '
         Catch ex As Exception
             Throw ex

@@ -274,8 +274,9 @@ Public Class frmDespesaSimples
     Private Sub Control_KeyDown_Enter(sender As Object, e As KeyEventArgs) Handles txtDescricao.KeyDown,
         txtDespesaValor.KeyDown, txtIdentificador.KeyDown, txtAcrescimo.KeyDown
         '
-        If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Tab Then
+        If e.KeyCode = Keys.Enter Then
             e.Handled = True
+            e.SuppressKeyPress = True
             SendKeys.Send("{Tab}")
         End If
         '
@@ -337,6 +338,34 @@ Public Class frmDespesaSimples
         '
     End Sub
     '
+    '
+    '--- EXECUTAR A FUNCAO DO BOTAO QUANDO PRESSIONA A TECLA (+) NO CONTROLE
+    Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) Handles _
+        txtCredor.KeyDown, txtDespesaTipo.KeyDown, txtConta.KeyDown
+        '
+        Dim ctr As Control = DirectCast(sender, Control)
+        '
+        If e.KeyCode = Keys.Add Then
+            e.Handled = True
+            Select Case ctr.Name
+                Case "txtCredor"
+                    btnCredor_Click(sender, e)
+                Case "txtDespesaTipo"
+                    btnTipo_Click(sender, e)
+                Case "txtConta"
+                    btnContaEscolher_Click(sender, e)
+            End Select
+        ElseIf e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Tab Then
+            e.Handled = True
+            e.SuppressKeyPress = True
+            SendKeys.Send("{Tab}")
+        Else
+            e.Handled = True
+            e.SuppressKeyPress = True
+        End If
+        '
+    End Sub
+    '
 #End Region
     '
 #Region "BUTTONS"
@@ -395,34 +424,8 @@ Public Class frmDespesaSimples
         '
     End Sub
     '
-    '--- EXECUTAR A FUNCAO DO BOTAO QUANDO PRESSIONA A TECLA (+) NO CONTROLE
-    Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) Handles _
-        txtCredor.KeyDown, txtDespesaTipo.KeyDown, txtConta.KeyDown
-        '
-        Dim ctr As Control = DirectCast(sender, Control)
-        '
-        If e.KeyCode = Keys.Add Then
-            e.Handled = True
-            Select Case ctr.Name
-                Case "txtCredor"
-                    btnCredor_Click(sender, e)
-                Case "txtDespesaTipo"
-                    btnTipo_Click(sender, e)
-                Case "txtConta"
-                    btnContaEscolher_Click(sender, e)
-            End Select
-        ElseIf e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Tab Then
-            e.Handled = True
-            'e.SuppressKeyPress = True
-            SendKeys.Send("{Tab}")
-        Else
-            e.Handled = True
-            e.SuppressKeyPress = True
-        End If
-        '
-    End Sub
-    '
     Private Sub btnCredor_Click(sender As Object, e As EventArgs) Handles btnCredor.Click
+        '
         Dim frmC As New frmCredorProcurar(True, Me)
         '
         frmC.ShowDialog()
