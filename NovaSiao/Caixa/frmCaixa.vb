@@ -243,7 +243,7 @@ Public Class frmCaixa
         ' (4) COLUNA VALOR
         With clnValor
             .HeaderText = "Valor"
-            .DataPropertyName = "MovValor"
+            .DataPropertyName = "MovValorReal"
             .Width = 100
             .Resizable = DataGridViewTriState.False
             .Visible = True
@@ -1047,7 +1047,7 @@ Public Class frmCaixa
         For Each cl As clMovimentacao In lstMov
             '
             If cl.Mov = "E" Then
-                E = E + cl.MovValor
+                E = E + cl.MovValorReal
             ElseIf cl.Mov = "S" Then
                 S = S + cl.MovValorReal
             Else

@@ -228,6 +228,8 @@ Public Class DespesaBLL
             '
             If dt.Rows.Count = 0 Then
                 Throw New Exception("ERRO: Não foi retornado nenhum registro...")
+            ElseIf Not IsNumeric(dt.Rows(0).Item(0)) Then
+                Throw New Exception(dt.Rows(0).Item(0))
             End If
             '
             Dim r As DataRow = dt.Rows(dt.Rows.Count - 1)

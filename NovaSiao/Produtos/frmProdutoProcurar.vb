@@ -581,6 +581,7 @@ Public Class frmProdutoProcurar
                 End If
                 '
                 dgvProdutos.FirstDisplayedScrollingRowIndex = dgvProdutos.SelectedRows(0).Index
+                dgvProdutos.SelectedRows(0).Cells(0).Selected = True
                 '
             End If
             '
@@ -603,6 +604,7 @@ Public Class frmProdutoProcurar
                 End If
                 '
                 dgvProdutos.FirstDisplayedScrollingRowIndex = dgvProdutos.SelectedRows(0).Index
+                dgvProdutos.SelectedRows(0).Cells(0).Selected = True
                 '
             End If
             '

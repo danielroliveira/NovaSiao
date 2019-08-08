@@ -168,7 +168,7 @@ Public Class frmDespesaSimples
         '
         '--- BIND MOVIMENTACAO SAIDAS
         txtObservacao.DataBindings.Add("Text", BindMovSaida, "Observacao", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblSaidaValor.DataBindings.Add("Text", BindMovSaida, "MovValor", True, DataSourceUpdateMode.OnPropertyChanged)
+        'lblSaidaValor.DataBindings.Add("Text", BindMovSaida, "MovValor", True, DataSourceUpdateMode.OnPropertyChanged)
         txtConta.DataBindings.Add("Text", BindMovSaida, "Conta", True, DataSourceUpdateMode.OnPropertyChanged)
         '
         ' CARREGA OS COMBOBOX
@@ -184,7 +184,7 @@ Public Class frmDespesaSimples
         AddHandler txtDespesaData.DataBindings("text").Format, AddressOf FormatDT
         AddHandler lblCNP.DataBindings("text").Format, AddressOf FormatCNPNull
         AddHandler txtAcrescimo.DataBindings("text").Format, AddressOf FormatCUR
-        AddHandler lblSaidaValor.DataBindings("text").Format, AddressOf FormatCUR
+        'AddHandler lblSaidaValor.DataBindings("text").Format, AddressOf FormatCUR
         '
         ' ADD HANDLER PARA DATABINGS
         AddHandler _clDespesa.AoAlterar, AddressOf HandlerAoAlterar
@@ -338,7 +338,6 @@ Public Class frmDespesaSimples
         '
     End Sub
     '
-    '
     '--- EXECUTAR A FUNCAO DO BOTAO QUANDO PRESSIONA A TECLA (+) NO CONTROLE
     Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) Handles _
         txtCredor.KeyDown, txtDespesaTipo.KeyDown, txtConta.KeyDown
@@ -362,6 +361,23 @@ Public Class frmDespesaSimples
         Else
             e.Handled = True
             e.SuppressKeyPress = True
+        End If
+        '
+    End Sub
+    '
+    '--- OBSERVACAO KEYDOWN FOR MULTLINES TEXTBOX
+    '------------------------------------------------------------------------------
+    Private Sub txtObservacao_KeyDown(sender As Object, e As KeyEventArgs) Handles txtObservacao.KeyDown
+        '
+        If e.KeyCode = Keys.Enter Then
+            Dim lines As String() = txtObservacao.Text.Split(vbCr)
+
+            If lines.Last.Length = 1 Then
+                e.Handled = True
+                e.SuppressKeyPress = True
+                SendKeys.Send("{Tab}")
+            End If
+
         End If
         '
     End Sub
@@ -449,6 +465,7 @@ Public Class frmDespesaSimples
     End Sub
     '
     Private Sub btnTipo_Click(sender As Object, e As EventArgs) Handles btnTipo.Click
+        '
         Dim frmT As New frmDespesaTipoProcurar(True, Me)
         '
         frmT.ShowDialog()
@@ -477,6 +494,10 @@ Public Class frmDespesaSimples
         Dim dBLL As New DespesaBLL
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             propMovSaida = dBLL.DespesaSimples_InserirQuitar(_clDespesa, _clAPagar, _clMovSaida)
             '
         Catch ex As Exception
@@ -484,6 +505,11 @@ Public Class frmDespesaSimples
                             ex.Message & vbNewLine & "O registro não pode ser salvo...",
                             "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Exit Sub
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
         '--- Finaliza

@@ -230,13 +230,26 @@ Public Class frmCaixaProcurar
         '
         Dim clCx As clCaixa = dgvListagem.SelectedRows(0).DataBoundItem
         '
-        Dim cBLL As New CaixaBLL
         '
-        Dim frm = New frmCaixa(clCx)
-        frm.MdiParent = frmPrincipal
-        frm.StartPosition = FormStartPosition.CenterScreen
-        Close()
-        frm.Show()
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim cBLL As New CaixaBLL
+            '
+            Dim frm = New frmCaixa(clCx)
+            frm.MdiParent = frmPrincipal
+            frm.StartPosition = FormStartPosition.CenterScreen
+            Close()
+            frm.Show()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Abrir o formulário do Caixa..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '

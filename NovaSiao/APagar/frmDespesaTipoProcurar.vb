@@ -224,6 +224,7 @@ Public Class frmDespesaTipoProcurar
         '
         If e.KeyCode = Keys.Enter OrElse e.KeyCode = Keys.Tab Then
             e.Handled = True
+            e.SuppressKeyPress = True
             SendKeys.Send("{Tab}")
         End If
         '
@@ -270,6 +271,7 @@ Public Class frmDespesaTipoProcurar
                 End If
                 '
                 dgvListagem.FirstDisplayedScrollingRowIndex = dgvListagem.SelectedRows(0).Index
+                dgvListagem.SelectedRows(0).Cells(0).Selected = True
                 '
             End If
             '
@@ -293,6 +295,7 @@ Public Class frmDespesaTipoProcurar
                 End If
                 '
                 dgvListagem.FirstDisplayedScrollingRowIndex = dgvListagem.SelectedRows(0).Index
+                dgvListagem.SelectedRows(0).Cells(0).Selected = True
                 '
             End If
             '

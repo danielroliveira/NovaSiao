@@ -451,6 +451,7 @@ Public Class frmCredorProcurar
                 End If
                 '
                 dgvListagem.FirstDisplayedScrollingRowIndex = dgvListagem.SelectedRows(0).Index
+                dgvListagem.SelectedRows(0).Cells(0).Selected = True
                 '
             End If
             '
@@ -477,6 +478,7 @@ Public Class frmCredorProcurar
                 End If
                 '
                 dgvListagem.FirstDisplayedScrollingRowIndex = dgvListagem.SelectedRows(0).Index
+                dgvListagem.SelectedRows(0).Cells(0).Selected = True
                 '
             End If
             '

@@ -36,7 +36,6 @@ Partial Class frmCredorProcurar
         Me.rbtPF = New System.Windows.Forms.RadioButton()
         Me.rbtSimples = New System.Windows.Forms.RadioButton()
         Me.pnlCredorTipo = New System.Windows.Forms.Panel()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvListagem, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuListagem.SuspendLayout()
@@ -58,7 +57,7 @@ Partial Class frmCredorProcurar
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(24, 136)
+        Me.Label1.Location = New System.Drawing.Point(24, 125)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(58, 19)
         Me.Label1.TabIndex = 2
@@ -66,7 +65,7 @@ Partial Class frmCredorProcurar
         '
         'txtProcura
         '
-        Me.txtProcura.Location = New System.Drawing.Point(88, 133)
+        Me.txtProcura.Location = New System.Drawing.Point(88, 122)
         Me.txtProcura.Margin = New System.Windows.Forms.Padding(6)
         Me.txtProcura.Name = "txtProcura"
         Me.txtProcura.Size = New System.Drawing.Size(285, 27)
@@ -75,7 +74,7 @@ Partial Class frmCredorProcurar
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(400, 136)
+        Me.Label2.Location = New System.Drawing.Point(400, 125)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(42, 19)
         Me.Label2.TabIndex = 4
@@ -83,6 +82,8 @@ Partial Class frmCredorProcurar
         '
         'dgvListagem
         '
+        Me.dgvListagem.AllowUserToAddRows = False
+        Me.dgvListagem.AllowUserToDeleteRows = False
         Me.dgvListagem.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvListagem.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
@@ -90,8 +91,10 @@ Partial Class frmCredorProcurar
         Me.dgvListagem.Location = New System.Drawing.Point(21, 174)
         Me.dgvListagem.MultiSelect = False
         Me.dgvListagem.Name = "dgvListagem"
+        Me.dgvListagem.ReadOnly = True
         Me.dgvListagem.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvListagem.Size = New System.Drawing.Size(547, 358)
+        Me.dgvListagem.StandardTab = True
         Me.dgvListagem.TabIndex = 6
         '
         'btnEditar
@@ -138,7 +141,7 @@ Partial Class frmCredorProcurar
         Me.cmbAtivo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cmbAtivo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cmbAtivo.FormattingEnabled = True
-        Me.cmbAtivo.Location = New System.Drawing.Point(448, 133)
+        Me.cmbAtivo.Location = New System.Drawing.Point(448, 122)
         Me.cmbAtivo.Name = "cmbAtivo"
         Me.cmbAtivo.RestrictContentToListItems = True
         Me.cmbAtivo.Size = New System.Drawing.Size(119, 27)
@@ -166,72 +169,81 @@ Partial Class frmCredorProcurar
         '
         'rbtOrgaoPublico
         '
-        Me.rbtOrgaoPublico.AutoSize = True
-        Me.rbtOrgaoPublico.Location = New System.Drawing.Point(418, 33)
+        Me.rbtOrgaoPublico.Appearance = System.Windows.Forms.Appearance.Button
+        Me.rbtOrgaoPublico.BackColor = System.Drawing.Color.AliceBlue
+        Me.rbtOrgaoPublico.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
+        Me.rbtOrgaoPublico.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightSteelBlue
+        Me.rbtOrgaoPublico.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.rbtOrgaoPublico.Location = New System.Drawing.Point(403, 6)
         Me.rbtOrgaoPublico.Name = "rbtOrgaoPublico"
-        Me.rbtOrgaoPublico.Size = New System.Drawing.Size(118, 23)
+        Me.rbtOrgaoPublico.Size = New System.Drawing.Size(118, 33)
         Me.rbtOrgaoPublico.TabIndex = 4
         Me.rbtOrgaoPublico.Tag = "3"
         Me.rbtOrgaoPublico.Text = "Orgão Público"
-        Me.rbtOrgaoPublico.UseVisualStyleBackColor = True
+        Me.rbtOrgaoPublico.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.rbtOrgaoPublico.UseVisualStyleBackColor = False
         '
         'rbtPJ
         '
-        Me.rbtPJ.AutoSize = True
-        Me.rbtPJ.Location = New System.Drawing.Point(280, 32)
+        Me.rbtPJ.Appearance = System.Windows.Forms.Appearance.Button
+        Me.rbtPJ.BackColor = System.Drawing.Color.AliceBlue
+        Me.rbtPJ.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
+        Me.rbtPJ.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightSteelBlue
+        Me.rbtPJ.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.rbtPJ.Location = New System.Drawing.Point(271, 6)
         Me.rbtPJ.Name = "rbtPJ"
-        Me.rbtPJ.Size = New System.Drawing.Size(126, 23)
+        Me.rbtPJ.Size = New System.Drawing.Size(118, 33)
         Me.rbtPJ.TabIndex = 3
         Me.rbtPJ.Tag = "2"
         Me.rbtPJ.Text = "Pessoa Jurídica"
-        Me.rbtPJ.UseVisualStyleBackColor = True
+        Me.rbtPJ.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.rbtPJ.UseVisualStyleBackColor = False
         '
         'rbtPF
         '
-        Me.rbtPF.AutoSize = True
-        Me.rbtPF.Location = New System.Drawing.Point(150, 32)
+        Me.rbtPF.Appearance = System.Windows.Forms.Appearance.Button
+        Me.rbtPF.BackColor = System.Drawing.Color.AliceBlue
+        Me.rbtPF.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
+        Me.rbtPF.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightSteelBlue
+        Me.rbtPF.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.rbtPF.Location = New System.Drawing.Point(139, 6)
         Me.rbtPF.Name = "rbtPF"
-        Me.rbtPF.Size = New System.Drawing.Size(114, 23)
+        Me.rbtPF.Size = New System.Drawing.Size(118, 33)
         Me.rbtPF.TabIndex = 2
         Me.rbtPF.Tag = "1"
         Me.rbtPF.Text = "Pessoa Física"
-        Me.rbtPF.UseVisualStyleBackColor = True
+        Me.rbtPF.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.rbtPF.UseVisualStyleBackColor = False
         '
         'rbtSimples
         '
-        Me.rbtSimples.AutoSize = True
+        Me.rbtSimples.Appearance = System.Windows.Forms.Appearance.Button
+        Me.rbtSimples.BackColor = System.Drawing.Color.AliceBlue
         Me.rbtSimples.Checked = True
-        Me.rbtSimples.Location = New System.Drawing.Point(13, 32)
+        Me.rbtSimples.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
+        Me.rbtSimples.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightSteelBlue
+        Me.rbtSimples.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.rbtSimples.Location = New System.Drawing.Point(7, 6)
         Me.rbtSimples.Name = "rbtSimples"
-        Me.rbtSimples.Size = New System.Drawing.Size(124, 23)
+        Me.rbtSimples.Size = New System.Drawing.Size(118, 33)
         Me.rbtSimples.TabIndex = 1
         Me.rbtSimples.TabStop = True
         Me.rbtSimples.Tag = "0"
         Me.rbtSimples.Text = "Credor Simples"
-        Me.rbtSimples.UseVisualStyleBackColor = True
+        Me.rbtSimples.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.rbtSimples.UseVisualStyleBackColor = False
         '
         'pnlCredorTipo
         '
         Me.pnlCredorTipo.BackColor = System.Drawing.Color.Transparent
-        Me.pnlCredorTipo.Controls.Add(Me.Label3)
         Me.pnlCredorTipo.Controls.Add(Me.rbtOrgaoPublico)
         Me.pnlCredorTipo.Controls.Add(Me.rbtPJ)
         Me.pnlCredorTipo.Controls.Add(Me.rbtSimples)
         Me.pnlCredorTipo.Controls.Add(Me.rbtPF)
-        Me.pnlCredorTipo.Location = New System.Drawing.Point(22, 57)
+        Me.pnlCredorTipo.Location = New System.Drawing.Point(30, 63)
         Me.pnlCredorTipo.Name = "pnlCredorTipo"
-        Me.pnlCredorTipo.Size = New System.Drawing.Size(546, 71)
+        Me.pnlCredorTipo.Size = New System.Drawing.Size(527, 46)
         Me.pnlCredorTipo.TabIndex = 1
-        '
-        'Label3
-        '
-        Me.Label3.AutoSize = True
-        Me.Label3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(6, 6)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(110, 19)
-        Me.Label3.TabIndex = 0
-        Me.Label3.Text = "Tipo de Credor"
         '
         'frmCredorProcurar
         '
@@ -263,7 +275,6 @@ Partial Class frmCredorProcurar
         CType(Me.dgvListagem, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuListagem.ResumeLayout(False)
         Me.pnlCredorTipo.ResumeLayout(False)
-        Me.pnlCredorTipo.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -285,5 +296,4 @@ Partial Class frmCredorProcurar
     Friend WithEvents rbtPF As RadioButton
     Friend WithEvents rbtOrgaoPublico As RadioButton
     Friend WithEvents pnlCredorTipo As Panel
-    Friend WithEvents Label3 As Label
 End Class
