@@ -418,7 +418,7 @@ Public Class frmReserva
         Dim telA As Boolean = IsNothing(_Reserva.TelefoneA)
         Dim telB As Boolean = IsNothing(_Reserva.TelefoneB)
         '
-        If telA Or telB Then
+        If telA And telB Then
             MessageBox.Show("Deve haver pelo menos um telefone cadastrado nos dados da Reserva...", "Telefone de Contato",
                             MessageBoxButtons.OK, MessageBoxIcon.Information)
             txtTelefoneA.Focus()
@@ -470,9 +470,9 @@ Public Class frmReserva
                     If TypeOf cp Is TextBox Then
                         AddHandler cp.GotFocus, AddressOf SelTodoTexto
                         AddHandler cp.KeyDown, AddressOf EnterForTab
-                    ElseIf TypeOf cp Is MaskedTextBox Then
-                        AddHandler cp.GotFocus, AddressOf SelTodoTexto
-                        AddHandler cp.KeyDown, AddressOf EnterForTab
+                        'ElseIf TypeOf cp Is MaskedTextBox Then
+                        'AddHandler cp.GotFocus, AddressOf SelTodoTexto
+                        'AddHandler cp.KeyDown, AddressOf EnterForTab
                     ElseIf TypeOf cp Is DateTimePicker Then
                         AddHandler cp.KeyDown, AddressOf EnterForTab
                     ElseIf TypeOf cp Is CheckBox Then
@@ -774,6 +774,7 @@ Public Class frmReserva
             txtClienteNome.Text = Utilidades.PrimeiraLetraMaiuscula(txtClienteNome.Text)
         End If
     End Sub
+    '
 #End Region
     '
 End Class

@@ -86,7 +86,7 @@ Public Class FuncionarioBLL
         End If
         '
         Try
-            Return objdb.ExecuteConsultaSQL_DataTable(strSql)
+            Return objdb.ExecutarConsulta(CommandType.Text, strSql)
         Catch ex As Exception
             Throw ex
         End Try

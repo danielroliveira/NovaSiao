@@ -11,7 +11,7 @@ Public Class BancosBLL
             sqlDB = "SELECT * FROM tblBancos WHERE Ativo = 'TRUE'"
         End If
         '
-        Return db.ExecuteConsultaSQL_DataTable(sqlDB)
+        Return db.ExecutarConsulta(CommandType.Text, sqlDB)
         '
     End Function
 End Class

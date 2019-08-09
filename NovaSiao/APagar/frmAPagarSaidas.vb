@@ -299,9 +299,9 @@ Public Class frmAPagarSaidas
     '--- FUNCAO QUE VERIFICA SE A TRANSACAO DE ORIGEM DO APAGAR JÁ ESTA CONCLUIDA
     Private Function VerificaTransacaoSit() As Boolean
         '
-        '--- ORIGEM DESPESA
+        '--- VERIFICA A ORIGEM DESPESA DIFERENTE DE TRANSACAO
         '--------------------------------------------------------------------------------------------
-        If _APagar.Origem = 2 OrElse _APagar.Origem = 3 Then
+        If _APagar.Origem <> 1 Then
             Return True
         End If
         '

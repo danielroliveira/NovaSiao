@@ -890,20 +890,29 @@ Public Class frmDespesa
     '
     Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
         '
-        '--- Verifica os Controles
-        '----------------------------------------------------------------------
-        '
-        '--- Ampulheta ON
-        Cursor = Cursors.WaitCursor
-        '
-        If Not VerificaControles() Then Exit Sub
-        '
-        '--- Verifica a soma dos valores de APagar
-        '----------------------------------------------------------------------
-        If Not Verifica_APagar() Then Exit Sub
-        '
-        '--- Ampulheta OFF
-        Cursor = Cursors.Default
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Verifica os Controles
+            '----------------------------------------------------------------------
+            If Not VerificaControles() Then Exit Sub
+            '
+            '--- Verifica a soma dos valores de APagar
+            '----------------------------------------------------------------------
+            If Not Verifica_APagar() Then Exit Sub
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao Salvar Despesa..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
         '
         '--- Salva a Despesa
         '----------------------------------------------------------------------

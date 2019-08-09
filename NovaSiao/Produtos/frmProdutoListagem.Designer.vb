@@ -77,12 +77,19 @@ Partial Class frmProdutoListagem
         Me.lblSelecionados = New System.Windows.Forms.Label()
         Me.lblSelTitulo = New System.Windows.Forms.Label()
         Me.btnPesquisar = New System.Windows.Forms.Button()
+        Me.btnFirst = New VIBlend.WinForms.Controls.vCircularButton()
+        Me.btnPrev = New VIBlend.WinForms.Controls.vCircularButton()
+        Me.btnNext = New VIBlend.WinForms.Controls.vCircularButton()
+        Me.btnLast = New VIBlend.WinForms.Controls.vCircularButton()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.lblPaginas = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.pnlAtivas.SuspendLayout()
         CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlMovimento.SuspendLayout()
         Me.mnuAlteracao.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        Me.Panel3.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -101,7 +108,7 @@ Partial Class frmProdutoListagem
         '
         Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTitulo.Dock = System.Windows.Forms.DockStyle.None
-        Me.lblTitulo.Location = New System.Drawing.Point(982, 9)
+        Me.lblTitulo.Location = New System.Drawing.Point(2606, 9)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(330, 34)
         Me.lblTitulo.TabIndex = 2
@@ -226,7 +233,7 @@ Partial Class frmProdutoListagem
         Me.rbtInativas.Name = "rbtInativas"
         Me.rbtInativas.Size = New System.Drawing.Size(78, 23)
         Me.rbtInativas.TabIndex = 2
-        Me.rbtInativas.TabStop = True
+        Me.rbtInativas.Tag = "2"
         Me.rbtInativas.Text = "Inativos"
         Me.rbtInativas.UseVisualStyleBackColor = True
         '
@@ -237,18 +244,20 @@ Partial Class frmProdutoListagem
         Me.rbtTodos.Name = "rbtTodos"
         Me.rbtTodos.Size = New System.Drawing.Size(65, 23)
         Me.rbtTodos.TabIndex = 3
-        Me.rbtTodos.TabStop = True
+        Me.rbtTodos.Tag = "3"
         Me.rbtTodos.Text = "Todos"
         Me.rbtTodos.UseVisualStyleBackColor = True
         '
         'rbtAtivas
         '
         Me.rbtAtivas.AutoSize = True
+        Me.rbtAtivas.Checked = True
         Me.rbtAtivas.Location = New System.Drawing.Point(17, 7)
         Me.rbtAtivas.Name = "rbtAtivas"
         Me.rbtAtivas.Size = New System.Drawing.Size(67, 23)
         Me.rbtAtivas.TabIndex = 0
         Me.rbtAtivas.TabStop = True
+        Me.rbtAtivas.Tag = "1"
         Me.rbtAtivas.Text = "Ativos"
         Me.rbtAtivas.UseVisualStyleBackColor = True
         '
@@ -678,10 +687,89 @@ Partial Class frmProdutoListagem
         Me.btnPesquisar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnPesquisar.UseVisualStyleBackColor = True
         '
+        'btnFirst
+        '
+        Me.btnFirst.AllowAnimations = True
+        Me.btnFirst.BackColor = System.Drawing.Color.Transparent
+        Me.btnFirst.Image = Global.NovaSiao.My.Resources.Resources.First_32px
+        Me.btnFirst.Location = New System.Drawing.Point(3, 3)
+        Me.btnFirst.Name = "btnFirst"
+        Me.btnFirst.RoundedCornersMask = CType(15, Byte)
+        Me.btnFirst.Size = New System.Drawing.Size(32, 32)
+        Me.btnFirst.StyleKey = "CircularButton"
+        Me.btnFirst.TabIndex = 25
+        Me.btnFirst.UseVisualStyleBackColor = False
+        Me.btnFirst.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
+        '
+        'btnPrev
+        '
+        Me.btnPrev.AllowAnimations = True
+        Me.btnPrev.BackColor = System.Drawing.Color.Transparent
+        Me.btnPrev.Image = Global.NovaSiao.My.Resources.Resources.Previous_32px
+        Me.btnPrev.Location = New System.Drawing.Point(41, 3)
+        Me.btnPrev.Name = "btnPrev"
+        Me.btnPrev.RoundedCornersMask = CType(15, Byte)
+        Me.btnPrev.Size = New System.Drawing.Size(32, 32)
+        Me.btnPrev.StyleKey = "CircularButton"
+        Me.btnPrev.TabIndex = 25
+        Me.btnPrev.UseVisualStyleBackColor = False
+        Me.btnPrev.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
+        '
+        'btnNext
+        '
+        Me.btnNext.AllowAnimations = True
+        Me.btnNext.BackColor = System.Drawing.Color.Transparent
+        Me.btnNext.Image = Global.NovaSiao.My.Resources.Resources.Next_32px
+        Me.btnNext.Location = New System.Drawing.Point(194, 3)
+        Me.btnNext.Name = "btnNext"
+        Me.btnNext.RoundedCornersMask = CType(15, Byte)
+        Me.btnNext.Size = New System.Drawing.Size(32, 32)
+        Me.btnNext.StyleKey = "CircularButton"
+        Me.btnNext.TabIndex = 25
+        Me.btnNext.UseVisualStyleBackColor = False
+        Me.btnNext.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
+        '
+        'btnLast
+        '
+        Me.btnLast.AllowAnimations = True
+        Me.btnLast.BackColor = System.Drawing.Color.Transparent
+        Me.btnLast.Image = Global.NovaSiao.My.Resources.Resources.Last_32px
+        Me.btnLast.Location = New System.Drawing.Point(232, 3)
+        Me.btnLast.Name = "btnLast"
+        Me.btnLast.RoundedCornersMask = CType(15, Byte)
+        Me.btnLast.Size = New System.Drawing.Size(32, 32)
+        Me.btnLast.StyleKey = "CircularButton"
+        Me.btnLast.TabIndex = 25
+        Me.btnLast.UseVisualStyleBackColor = False
+        Me.btnLast.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
+        '
+        'Panel3
+        '
+        Me.Panel3.Controls.Add(Me.btnFirst)
+        Me.Panel3.Controls.Add(Me.btnLast)
+        Me.Panel3.Controls.Add(Me.btnPrev)
+        Me.Panel3.Controls.Add(Me.btnNext)
+        Me.Panel3.Controls.Add(Me.lblPaginas)
+        Me.Panel3.Location = New System.Drawing.Point(879, 563)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(268, 38)
+        Me.Panel3.TabIndex = 26
+        '
+        'lblPaginas
+        '
+        Me.lblPaginas.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lblPaginas.Location = New System.Drawing.Point(80, 10)
+        Me.lblPaginas.Name = "lblPaginas"
+        Me.lblPaginas.Size = New System.Drawing.Size(108, 19)
+        Me.lblPaginas.TabIndex = 24
+        Me.lblPaginas.Text = "Pag. 1 de 1"
+        Me.lblPaginas.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'frmProdutoListagem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1350, 680)
+        Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.lblSelTitulo)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.lblSelecionados)
@@ -732,6 +820,7 @@ Partial Class frmProdutoListagem
         Me.Controls.SetChildIndex(Me.lblSelecionados, 0)
         Me.Controls.SetChildIndex(Me.Label8, 0)
         Me.Controls.SetChildIndex(Me.lblSelTitulo, 0)
+        Me.Controls.SetChildIndex(Me.Panel3, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.pnlAtivas.ResumeLayout(False)
@@ -741,6 +830,7 @@ Partial Class frmProdutoListagem
         Me.pnlMovimento.PerformLayout()
         Me.mnuAlteracao.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
+        Me.Panel3.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -802,4 +892,10 @@ Partial Class frmProdutoListagem
     Friend WithEvents clnFabricante As ComponentOwl.BetterListView.BetterListViewColumnHeader
     Friend WithEvents itemAlterarCategoria As ToolStripMenuItem
     Friend WithEvents btnPesquisar As Button
+    Friend WithEvents btnFirst As VIBlend.WinForms.Controls.vCircularButton
+    Friend WithEvents btnPrev As VIBlend.WinForms.Controls.vCircularButton
+    Friend WithEvents btnNext As VIBlend.WinForms.Controls.vCircularButton
+    Friend WithEvents btnLast As VIBlend.WinForms.Controls.vCircularButton
+    Friend WithEvents Panel3 As Panel
+    Friend WithEvents lblPaginas As Label
 End Class

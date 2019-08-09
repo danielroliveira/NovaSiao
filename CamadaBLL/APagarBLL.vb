@@ -90,7 +90,7 @@ Public Class APagarBLL
                 db.AdicionarParametros("@IDOrigem", IDOrigem)
                 db.AdicionarParametros("@Origem", Origem)
                 '
-                query = "SELECT COUNT(*) FROM tblMovimentacao WHERE Origem = 10 AND IDOrigem = (" &
+                query = "SELECT COUNT(*) FROM tblCaixaMovimentacao WHERE Origem = 10 AND IDOrigem = (" &
                         "SELECT IDAPagar FROM tblAPagar WHERE IDOrigem = @IDOrigem AND Origem = @Origem)"
                 '
                 Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)

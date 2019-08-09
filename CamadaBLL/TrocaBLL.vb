@@ -19,7 +19,7 @@ Public Class TrocaBLL
         End If
         '
         Try
-            Dim dt As DataTable = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
             Dim lista As New List(Of clTroca)
             '
             If dt.Rows.Count = 0 Then Return lista
@@ -50,7 +50,7 @@ Public Class TrocaBLL
         strSql = "SELECT * FROM qryTroca WHERE IDVenda = " & myIDVenda
         '
         Try
-            Dim dt As DataTable = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
             Dim r As DataRow = Nothing
             '
             If dt.Rows.Count > 0 Then

@@ -8,6 +8,7 @@ Public Class CompraBLL
     ' GET DATATABLE COM WHERE
     '--------------------------------------------------------------------------------------------
     Public Function GetCompra_DT(Optional myWhere As String = "") As DataTable
+        '
         Dim objdb As New AcessoDados
         Dim dt As New DataTable
         Dim strSql As String
@@ -19,7 +20,7 @@ Public Class CompraBLL
         End If
         '
         Try
-            dt = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            dt = objdb.ExecutarConsulta(CommandType.Text, strSql)
             Return dt
         Catch ex As Exception
             Throw ex
@@ -31,8 +32,10 @@ Public Class CompraBLL
     ' GET LIST COM WHERE
     '--------------------------------------------------------------------------------------------
     Public Function GetCompra_List(Optional myWhere As String = "") As List(Of clCompra)
+        '
         Dim objdb As New AcessoDados
         Dim strSql As String = ""
+        '
         If Len(myWhere) = 0 Then
             strSql = "SELECT * FROM qryCompra"
         Else
@@ -40,7 +43,7 @@ Public Class CompraBLL
         End If
         '
         Try
-            Dim dt As DataTable = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
             Dim lista As New List(Of clCompra)
             '
             If dt.Rows.Count = 0 Then Return lista
@@ -70,7 +73,7 @@ Public Class CompraBLL
         strSql = "SELECT * FROM qryCompra WHERE IDCompra = " & myIDCompra
         '
         Try
-            Dim dt As DataTable = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
             '
             If dt.Rows.Count = 0 Then Return Nothing
             '

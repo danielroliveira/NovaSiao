@@ -20,6 +20,7 @@ Public Class frmCredorProcurar
         '
         ' This call is required by the designer.
         InitializeComponent()
+        rbtSimples.TabStop = False
         '
         ' Add any initialization after the InitializeComponent() call.
         CarregaCmbAtivo()
@@ -482,7 +483,24 @@ Public Class frmCredorProcurar
                 '
             End If
             '
+        ElseIf e.KeyCode = Keys.D1 Or e.KeyCode = Keys.NumPad1 Then
+            e.Handled = True
+            e.SuppressKeyPress = True
+            rbtSimples.Checked = True
+        ElseIf e.KeyCode = Keys.D2 Or e.KeyCode = Keys.NumPad2 Then
+            e.Handled = True
+            e.SuppressKeyPress = True
+            rbtPF.Checked = True
+        ElseIf e.KeyCode = Keys.D3 Or e.KeyCode = Keys.NumPad3 Then
+            e.Handled = True
+            e.SuppressKeyPress = True
+            rbtPJ.Checked = True
+        ElseIf e.KeyCode = Keys.D4 Or e.KeyCode = Keys.NumPad4 Then
+            e.Handled = True
+            e.SuppressKeyPress = True
+            rbtOrgaoPublico.Checked = True
         End If
+        '
     End Sub
     '
     '------------------------------------------------------------------------------------------
@@ -499,7 +517,7 @@ Public Class frmCredorProcurar
         '
     End Sub
     '
-    Private Sub frmCredorProcurar_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
+    Private Sub Me_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
         '
         If e.KeyChar.ToString = "+" Then
             e.Handled = True

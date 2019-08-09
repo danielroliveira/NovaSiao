@@ -18,7 +18,7 @@ Public Class VendaBLL
         End If
         '
         Try
-            dt = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            dt = objdb.ExecutarConsulta(CommandType.Text, strSql)
             Return dt
         Catch ex As Exception
             Throw ex
@@ -39,7 +39,7 @@ Public Class VendaBLL
         End If
         '
         Try
-            Dim dt As DataTable = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
             Dim lista As New List(Of clVenda)
             '
             If dt.Rows.Count = 0 Then Return lista
@@ -70,7 +70,7 @@ Public Class VendaBLL
         strSql = "SELECT * FROM qryVenda WHERE IDVenda = " & myIDVenda
         '
         Try
-            Dim dt As DataTable = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
             Dim r As DataRow = Nothing
             '
             If dt.Rows.Count > 0 Then
@@ -758,7 +758,7 @@ Public Class VendaBLL
         End If
         '
         Try
-            dt = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            dt = objdb.ExecutarConsulta(CommandType.Text, strSql)
             Return dt
         Catch ex As Exception
             Throw ex

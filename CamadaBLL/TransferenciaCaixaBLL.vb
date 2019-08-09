@@ -76,8 +76,8 @@ Public Class TransferenciaCaixaBLL
         movSaida.IDFilial = Transf.IDFilial
         movSaida.IDMeio = Transf.IDMeio
         movSaida.MovData = Transf.TransferenciaData
-        movSaida.Movimento = 3 '--- transferencia
-        movSaida.MovValor = Transf.TransferenciaValor * (-1)
+        movSaida.Movimento = 4 '--- transferencia de Saida (TS)
+        movSaida.MovValor = Transf.TransferenciaValor
         movSaida.IDOrigem = Transf.IDTransferencia '--- IDTranferencia
         movSaida.Origem = 11 '--- tblCaixaTransferencia
         movSaida.IDCaixa = Transf.IDCaixa '--> somente insere a saida no caixa
@@ -100,7 +100,7 @@ Public Class TransferenciaCaixaBLL
         movEntrada.IDFilial = Transf.IDFilial
         movEntrada.IDMeio = Transf.IDMeio
         movEntrada.MovData = Transf.TransferenciaData
-        movEntrada.Movimento = 3 '--- transferencia
+        movEntrada.Movimento = 3 '--- transferencia de Entrada (TE)
         movEntrada.MovValor = Transf.TransferenciaValor - Transf.ComissaoValor
         movEntrada.IDOrigem = Transf.IDTransferencia '--- IDTranferencia
         movEntrada.Origem = 11 '--- tblCaixaTransferencia

@@ -146,6 +146,7 @@ Partial Class frmCredorProcurar
         Me.cmbAtivo.RestrictContentToListItems = True
         Me.cmbAtivo.Size = New System.Drawing.Size(119, 27)
         Me.cmbAtivo.TabIndex = 5
+        Me.cmbAtivo.TabStop = False
         '
         'MenuListagem
         '
@@ -174,12 +175,13 @@ Partial Class frmCredorProcurar
         Me.rbtOrgaoPublico.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
         Me.rbtOrgaoPublico.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightSteelBlue
         Me.rbtOrgaoPublico.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.rbtOrgaoPublico.Location = New System.Drawing.Point(403, 6)
+        Me.rbtOrgaoPublico.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.rbtOrgaoPublico.Location = New System.Drawing.Point(421, 6)
         Me.rbtOrgaoPublico.Name = "rbtOrgaoPublico"
         Me.rbtOrgaoPublico.Size = New System.Drawing.Size(118, 33)
         Me.rbtOrgaoPublico.TabIndex = 4
         Me.rbtOrgaoPublico.Tag = "3"
-        Me.rbtOrgaoPublico.Text = "Orgão Público"
+        Me.rbtOrgaoPublico.Text = "4.Orgão Público"
         Me.rbtOrgaoPublico.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.rbtOrgaoPublico.UseVisualStyleBackColor = False
         '
@@ -190,12 +192,13 @@ Partial Class frmCredorProcurar
         Me.rbtPJ.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
         Me.rbtPJ.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightSteelBlue
         Me.rbtPJ.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.rbtPJ.Location = New System.Drawing.Point(271, 6)
+        Me.rbtPJ.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.rbtPJ.Location = New System.Drawing.Point(283, 6)
         Me.rbtPJ.Name = "rbtPJ"
-        Me.rbtPJ.Size = New System.Drawing.Size(118, 33)
+        Me.rbtPJ.Size = New System.Drawing.Size(132, 33)
         Me.rbtPJ.TabIndex = 3
         Me.rbtPJ.Tag = "2"
-        Me.rbtPJ.Text = "Pessoa Jurídica"
+        Me.rbtPJ.Text = "3.Pessoa Jurídica"
         Me.rbtPJ.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.rbtPJ.UseVisualStyleBackColor = False
         '
@@ -206,12 +209,13 @@ Partial Class frmCredorProcurar
         Me.rbtPF.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
         Me.rbtPF.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightSteelBlue
         Me.rbtPF.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.rbtPF.Location = New System.Drawing.Point(139, 6)
+        Me.rbtPF.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.rbtPF.Location = New System.Drawing.Point(145, 6)
         Me.rbtPF.Name = "rbtPF"
-        Me.rbtPF.Size = New System.Drawing.Size(118, 33)
+        Me.rbtPF.Size = New System.Drawing.Size(132, 33)
         Me.rbtPF.TabIndex = 2
         Me.rbtPF.Tag = "1"
-        Me.rbtPF.Text = "Pessoa Física"
+        Me.rbtPF.Text = "2.Pessoa Física"
         Me.rbtPF.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.rbtPF.UseVisualStyleBackColor = False
         '
@@ -223,15 +227,16 @@ Partial Class frmCredorProcurar
         Me.rbtSimples.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
         Me.rbtSimples.FlatAppearance.CheckedBackColor = System.Drawing.Color.LightSteelBlue
         Me.rbtSimples.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.rbtSimples.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.rbtSimples.Location = New System.Drawing.Point(7, 6)
         Me.rbtSimples.Name = "rbtSimples"
-        Me.rbtSimples.Size = New System.Drawing.Size(118, 33)
+        Me.rbtSimples.Size = New System.Drawing.Size(132, 33)
         Me.rbtSimples.TabIndex = 1
-        Me.rbtSimples.TabStop = True
         Me.rbtSimples.Tag = "0"
-        Me.rbtSimples.Text = "Credor Simples"
+        Me.rbtSimples.Text = "1.Credor Simples"
         Me.rbtSimples.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.rbtSimples.UseVisualStyleBackColor = False
+        Me.rbtSimples.TabStop = False
         '
         'pnlCredorTipo
         '
@@ -240,9 +245,9 @@ Partial Class frmCredorProcurar
         Me.pnlCredorTipo.Controls.Add(Me.rbtPJ)
         Me.pnlCredorTipo.Controls.Add(Me.rbtSimples)
         Me.pnlCredorTipo.Controls.Add(Me.rbtPF)
-        Me.pnlCredorTipo.Location = New System.Drawing.Point(30, 63)
+        Me.pnlCredorTipo.Location = New System.Drawing.Point(21, 63)
         Me.pnlCredorTipo.Name = "pnlCredorTipo"
-        Me.pnlCredorTipo.Size = New System.Drawing.Size(527, 46)
+        Me.pnlCredorTipo.Size = New System.Drawing.Size(547, 46)
         Me.pnlCredorTipo.TabIndex = 1
         '
         'frmCredorProcurar

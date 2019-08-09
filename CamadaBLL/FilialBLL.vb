@@ -18,7 +18,7 @@ Public Class FilialBLL
         '
         Try
             Dim lstFilial As New List(Of clFilial)
-            Dim dt As DataTable = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
             '
             If dt.Rows.Count = 0 Then Return lstFilial
             '

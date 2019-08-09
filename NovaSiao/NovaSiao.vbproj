@@ -1432,6 +1432,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="NovaSiao_ico_256px.ico" />
+    <None Include="Resources\Next.png" />
+    <None Include="Resources\Next_32px.png" />
+    <None Include="Resources\First_32px.png" />
+    <None Include="Resources\Previous_32px.png" />
+    <None Include="Resources\Last_32px.png" />
     <Content Include="SqlServerTypes\Loader.cs" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">

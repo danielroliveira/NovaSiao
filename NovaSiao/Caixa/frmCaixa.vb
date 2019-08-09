@@ -145,7 +145,7 @@ Public Class frmCaixa
             Cursor = Cursors.WaitCursor
             '
             '--- GET Lista de Movimentacoes
-            lstMov = movBLL.GetMovimentos_IDCaixa(propCaixa.IDCaixa)
+            lstMov = movBLL.GetMovimentos_IDCaixa(propCaixa)
             bindMovs.DataSource = lstMov
             dgvListagem.DataSource = bindMovs
             '
@@ -279,28 +279,28 @@ Public Class frmCaixa
             '
             Select Case M
                 '
-                Case "S"
+                Case "S", "TS"
                     '
                     dgvListagem.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.MistyRose
                     dgvListagem.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = Color.Firebrick
                     '
                     e.CellStyle.ForeColor = Color.Red
-                Case "E"
+                Case "E", "TE"
                     '
                     dgvListagem.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.FromArgb(219, 228, 240) 'Color.Azure
                     dgvListagem.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = SystemColors.Highlight
                     '
                     e.CellStyle.ForeColor = Color.DarkBlue
-                Case "T"
-                    '
-                    dgvListagem.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.FromArgb(205, 247, 205) 'Color.LightGreen
-                    dgvListagem.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = Color.DarkGreen
-                    '
-                    If e.Value > 0 Then
-                        e.CellStyle.ForeColor = Color.DarkBlue
-                    Else
-                        e.CellStyle.ForeColor = Color.Red
-                    End If
+                    'Case "T"
+                    '    '
+                    '    dgvListagem.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.FromArgb(205, 247, 205) 'Color.LightGreen
+                    '    dgvListagem.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = Color.DarkGreen
+                    '    '
+                    '    If e.Value > 0 Then
+                    '        e.CellStyle.ForeColor = Color.DarkBlue
+                    '    Else
+                    '        e.CellStyle.ForeColor = Color.Red
+                    '    End If
                     '
             End Select
             '
@@ -1050,8 +1050,10 @@ Public Class frmCaixa
                 E = E + cl.MovValorReal
             ElseIf cl.Mov = "S" Then
                 S = S + cl.MovValorReal
-            Else
+            ElseIf cl.Mov = "TE" Then
                 Transf = Transf + cl.MovValorReal
+            ElseIf cl.Mov = "TS" Then
+                Transf = Transf - cl.MovValorReal
             End If
             '
             _TEntradas = E
@@ -1059,16 +1061,23 @@ Public Class frmCaixa
             _TSaidas = S
             lblTSaidas.Text = Format(S, "C")
             _TTransf = Transf
-            lblTTransf.Text = Format(Transf, "C")
+            lblTTransf.Text = Format(Math.Abs(Transf), "C")
             '
             '--- Calcula SALDOS
-            _Caixa.SaldoFinal = _TEntradas - _TTransf - _TSaidas
+            _Caixa.SaldoFinal = _TEntradas + _TTransf - _TSaidas
             lblSaldoFinal.Text = Format(_Caixa.SaldoFinal, "C")
             '
+            '--- Define as CORES
             If _Caixa.SaldoFinal >= 0 Then
-                lblSaldoFinal.ForeColor = Color.Blue
+                lblSaldoFinal.ForeColor = Color.DarkBlue
             Else
-                lblSaldoFinal.ForeColor = Color.Red
+                lblSaldoFinal.ForeColor = Color.DarkRed
+            End If
+            '
+            If _TTransf >= 0 Then
+                lblTTransf.ForeColor = Color.DarkBlue
+            Else
+                lblTTransf.ForeColor = Color.DarkRed
             End If
             '
         Next

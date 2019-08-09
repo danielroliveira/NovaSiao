@@ -255,7 +255,11 @@ Public Class clMovimentacao : Implements IEditableObject
     Public Property MovValor() As Double
         '
         Get
-            Return MData._MovValor
+            If MData._Movimento = 2 Or MData._Movimento = 4 Then '--- SE FOR SAIDA OU TRANSF SAIDA
+                Return Math.Abs(MData._MovValor) * -1
+            Else
+                Return MData._MovValor
+            End If
         End Get
         '
         Set(ByVal value As Double)
@@ -264,12 +268,12 @@ Public Class clMovimentacao : Implements IEditableObject
                 RaiseEvent AoAlterar()
             End If
             '
-            '--- se for SAIDA tranforma o valor em negativo
-            If MData._Movimento = 2 Then '--- SE FOR SAIDA
-                MData._MovValor = If(value > 0, value * (-1), value)
-            Else
-                MData._MovValor = value
-            End If
+            MData._MovValor = value
+            ''--- se for SAIDA tranforma o valor em negativo
+            'If MData._Movimento = 2 Or MData._Movimento = 4 Then '--- SE FOR SAIDA OU TRANSF SAIDA
+            '    MData._MovValor = If(value > 0, value * (-1), value)
+            'Else '--- SE FOR ENTRADA OU TRANSF ENTRADA
+            'End If
             '
         End Set
         '

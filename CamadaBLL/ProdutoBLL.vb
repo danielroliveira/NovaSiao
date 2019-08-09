@@ -34,15 +34,20 @@ Public Class ProdutoBLL
     End Function
     '
     '---------------------------------------------------------------------------------------------------------
-    ' GET (LIST OF) COM ESTOQUE + FILTRO WHERE PELA FILIAL
+    ' GET (LIST OF) COM ESTOQUE + FILTRO WHERE PELA FILIAL + LIMITED BY NUMBER OF RECORDS
     '---------------------------------------------------------------------------------------------------------
-    Public Function GetProdutosWithEstoque_Where(IDFilial As Integer, Optional myWhere As String = "") As List(Of clProduto)
+    Public Function GetProdutosWithEstoque_Limited_Where(IDFilial As Integer,
+                                                         Optional myWhere As String = "",
+                                                         Optional maxRecords As Integer = 0,
+                                                         Optional startRecord As Integer = 0,
+                                                         Optional ByRef countTotal As Integer = 0
+                                                         ) As List(Of clProduto)
         '
         Dim db As New AcessoDados
         '
         db.LimparParametros()
         db.AdicionarParametros("@IDFilial", IDFilial)
-
+        '
         Dim strSql As String = "SELECT * " &
                                ", E.EstoqueIdeal " &
                                ", E.EstoqueNivel " &
@@ -58,7 +63,9 @@ Public Class ProdutoBLL
         '
         Try
             '
-            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, strSql)
+            'Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, strSql)
+            Dim dt As DataTable = db.ExecuteQueryLimited_Dt(strSql, 0, 9, countTotal)
+            '
             Return ConvertDT_To_clProduto(dt)
             '
         Catch ex As Exception
@@ -426,7 +433,7 @@ Public Class ProdutoBLL
         sql = "SELECT AUTOR, COUNT(Autor) AS Quantidade FROM tblProduto WHERE Autor <> '' GROUP BY Autor ORDER BY Autor "
         '
         Try
-            Return db.ExecuteConsultaSQL_DataTable(sql)
+            Return db.ExecutarConsulta(CommandType.Text, sql)
         Catch ex As Exception
             Throw ex
         End Try

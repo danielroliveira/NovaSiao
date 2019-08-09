@@ -440,6 +440,95 @@ Public Class AcessoDados
         '
     End Function
     '
+    '----------------------------------------------------------------------------
+    ' EXECUTAR UM COMMAND E OBTER DATATABLE COM LIMITES DE REGISTROS
+    '----------------------------------------------------------------------------
+    Public Function ExecuteQueryLimited_Dt(QuerySQL As String,
+                                           ByVal startRecord As Integer,
+                                           ByVal maxRecords As Integer,
+                                           Optional ByRef countTotal As Integer = 0) As DataTable
+        Try
+            '--- Abre a conexão
+            If conn.State = ConnectionState.Closed Then Connect()
+            '
+            '--- GET NUMBER OF RECORDS
+            '----------------------------------------------------------------------------
+            '--- Get the COUNT query
+            Dim fromPosition As Integer = QuerySQL.IndexOf("FROM")
+            Dim countQuery As String = QuerySQL.Substring(fromPosition)
+            countQuery = "SELECT COUNT(*) " + countQuery
+            '
+            '--- cria o commando
+            cmd = conn.CreateCommand
+            cmd.CommandType = CommandType.Text
+            '
+            '--- add params
+            ParamList.ForEach(Sub(p) cmd.Parameters.Add(p))
+            '
+            cmd.CommandText = countQuery
+            cmd.CommandTimeout = 1800
+            '
+            '--- cria o Adapter e o DataTable
+            Dim sqlDtAdapter As New SqlDataAdapter(cmd)
+            Dim dtCount As New DataTable
+            '
+            sqlDtAdapter.Fill(dtCount)
+            '
+            If dtCount.Rows.Count > 0 Then
+                '
+                Dim resp As Object = dtCount.Rows(0)(0)
+                '
+                If IsNumeric(resp) Then
+                    countTotal = resp
+                Else
+                    Throw New Exception(resp.ToString)
+                End If
+                '
+            Else
+                Throw New Exception("Não houver retorno na contagem de registros...")
+            End If
+            '
+            '--- return nothing if NO RECORDS
+            If countTotal = 0 Then
+                CloseConn()
+                Return Nothing
+            End If
+            '
+            cmd.Parameters.Clear()
+            cmd.Dispose()
+            '
+            '--- RETURN ALL RECORDS
+            '----------------------------------------------------------------------------
+            '--- cria o commando
+            cmd = conn.CreateCommand
+            cmd.CommandType = CommandType.Text
+            '
+            '--- add params
+            ParamList.ForEach(Sub(p) cmd.Parameters.Add(p))
+            '
+            cmd.CommandText = QuerySQL
+            cmd.CommandTimeout = 1800
+            sqlDtAdapter = New SqlDataAdapter(cmd)
+            '
+            Dim dt As New DataTable
+            '
+            '--- preenche o DataTable
+            sqlDtAdapter.Fill(startRecord, maxRecords, dt)
+            '
+            '--- close Connection if not Transaction
+            CloseConn()
+            '
+            '--- Retorna
+            Return dt
+            '
+        Catch ex As Exception
+            '
+            CloseConn()
+            Throw ex
+            '
+        End Try
+        '
+    End Function
 #End Region '/ COMMANDS QUERY | INSERT | UPDATE | DELETE
     '
 #Region "TRANSACTION"

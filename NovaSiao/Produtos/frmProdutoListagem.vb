@@ -18,6 +18,8 @@ Public Class frmProdutoListagem
     Private myWhere As String = ""
     Private LiberaAtualizacao As Boolean = False
     Private _totalProdutos As Integer ' quantidade total de produtos da listagem
+    Const _itemsPorPagina As Integer = 9 ' quantidade de itens que cabem na listagem
+    Private _paginaAtual As Integer = 1
     '
     '--- IMAGENS
     Private ImgInativo As Image = My.Resources.block
@@ -70,36 +72,36 @@ Public Class frmProdutoListagem
             '
             _ProdutoAtivo = value
             '
-            Select Case value
-                '--- seleciona o RADIO BUTON
-                Case 1 '--- ATIVAS
-                    If rbtAtivas.Checked <> True Then
-                        '
-                        rbtAtivas.Checked = True
-                        rbtInativas.Checked = False
-                        rbtTodos.Checked = False
-                        '
-                    End If
-                    '
-                Case 2 '--- INATIVAS
-                    If rbtInativas.Checked <> True Then
-                        '
-                        rbtInativas.Checked = True
-                        rbtAtivas.Checked = False
-                        rbtTodos.Checked = False
-                        '
-                    End If
-                    '
-                Case 3 '--- TODAS
-                    If rbtTodos.Checked <> True Then
-                        '
-                        rbtTodos.Checked = True
-                        rbtAtivas.Checked = False
-                        rbtInativas.Checked = False
-                        '
-                    End If
-                    '
-            End Select
+            'Select Case value
+            '    '--- seleciona o RADIO BUTON
+            '    Case 1 '--- ATIVAS
+            '        If rbtAtivas.Checked <> True Then
+            '            '
+            '            rbtAtivas.Checked = True
+            '            rbtInativas.Checked = False
+            '            rbtTodos.Checked = False
+            '            '
+            '        End If
+            '        '
+            '    Case 2 '--- INATIVAS
+            '        If rbtInativas.Checked <> True Then
+            '            '
+            '            rbtInativas.Checked = True
+            '            rbtAtivas.Checked = False
+            '            rbtTodos.Checked = False
+            '            '
+            '        End If
+            '        '
+            '    Case 3 '--- TODAS
+            '        If rbtTodos.Checked <> True Then
+            '            '
+            '            rbtTodos.Checked = True
+            '            rbtAtivas.Checked = False
+            '            rbtInativas.Checked = False
+            '            '
+            '        End If
+            '        '
+            'End Select
             '
             If atualizar Then AtualizaListagem()
             '
@@ -154,22 +156,69 @@ Public Class frmProdutoListagem
     '
     '--- QUANTIDADE TOTAL DOS FILTRADOS
     Public Property totalProdutos() As Integer
+        '
         Get
             Return _totalProdutos
         End Get
+        '
         Set(ByVal value As Integer)
             _totalProdutos = value
             '
             If value = 0 Then
                 lblTotalProdutos.Text = "Nenhum Produto Encontrado"
+                VerificaNavegacaoButtons()
             ElseIf value = 1 Then
                 lblTotalProdutos.Text = "01 Produto Encontrado"
+
+                VerificaNavegacaoButtons()
             Else
                 lblTotalProdutos.Text = Format(value, "00") & " Produtos"
+                lblPaginas.Text = "Pag. 1 de 1"
+                VerificaNavegacaoButtons()
             End If
             '
         End Set
+        '
     End Property
+    '
+    '--- VERIFICA BTN DE NAVEGACAO
+    '----------------------------------------------------------------------------------
+    Private Sub VerificaNavegacaoButtons()
+        '
+        If _totalProdutos < 10 Then
+            If _totalProdutos = 0 Then
+                lblPaginas.Text = "Pag. 0 de 0"
+            Else
+                lblPaginas.Text = "Pag. 1 de 1"
+            End If
+            btnFirst.Enabled = False
+            btnPrev.Enabled = False
+            btnNext.Enabled = False
+            btnLast.Enabled = False
+        Else
+            Dim pags As Integer = CInt(Math.Ceiling(_totalProdutos / _itemsPorPagina))
+            lblPaginas.Text = "Pag. " & _paginaAtual & " de " & pags
+            '
+            If _paginaAtual = 1 Then
+                btnFirst.Enabled = False
+                btnPrev.Enabled = False
+                btnNext.Enabled = True
+                btnLast.Enabled = True
+            ElseIf _paginaAtual = pags Then
+                btnFirst.Enabled = True
+                btnPrev.Enabled = True
+                btnNext.Enabled = False
+                btnLast.Enabled = False
+            Else
+                btnFirst.Enabled = True
+                btnPrev.Enabled = True
+                btnNext.Enabled = True
+                btnLast.Enabled = True
+            End If
+            '
+        End If
+        '
+    End Sub
     '
     '--- PREENCHE O COMBO COM AS SITUACOES POSSIVEIS
     Private Sub PreencheCombo_Movimento()
@@ -205,14 +254,14 @@ Public Class frmProdutoListagem
             Cursor = Cursors.WaitCursor
             '
             '--- Verifica a quantidade de produtos retornados
-            If prodBLL.CountProdutos_Where(GetWhere) > 100 Then
-                If MessageBox.Show("Maior que 100...") = DialogResult.No Then
-                    'Return
-                End If
-            End If
+            'If prodBLL.CountProdutos_Where(GetWhere) > 100 Then
+            '    If MessageBox.Show("Maior que 100...") = DialogResult.No Then
+            '        'Return
+            '    End If
+            'End If
             '
             '--- Get BD Dados
-            prodLista = prodBLL.GetProdutosWithEstoque_Where(_IDFilial, GetWhere)
+            prodLista = prodBLL.GetProdutosWithEstoque_Where(_IDFilial, GetWhere, totalProdutos)
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Obter lista de produtos..." & vbNewLine &
@@ -303,7 +352,6 @@ Public Class frmProdutoListagem
         If Not LiberaAtualizacao Then Exit Sub
         '
         Get_Dados()
-        'MsgBox(myWhere)
         FiltrarListagem()
         propHabilitaPesquisa = False
         '
@@ -312,7 +360,6 @@ Public Class frmProdutoListagem
             AtualizaLabelSelecionados()
             chkSelecionarTudo.Checked = False
         End If
-        '
         '
     End Sub
     '
@@ -731,12 +778,12 @@ Public Class frmProdutoListagem
         rbtInativas.CheckedChanged,
         rbtTodos.CheckedChanged
         '
-        If rbtAtivas.Checked = True Then
-            propProdutoAtivo = 1
-        ElseIf rbtInativas.Checked = True Then
-            propProdutoAtivo = 2
-        ElseIf rbtTodos.Checked = True Then
-            propProdutoAtivo = 3
+        Dim newValue As Byte = DirectCast(sender, RadioButton).Tag
+        '
+        If propProdutoAtivo = newValue Then
+            Exit Sub
+        Else
+            propProdutoAtivo = newValue
         End If
         '
     End Sub
@@ -973,13 +1020,6 @@ Public Class frmProdutoListagem
         End If
         '
         AtualizaLabelSelecionados()
-        '
-    End Sub
-    '
-    '--- RETORNA A QUANTIDADE DE PRODUTOS FILTRADOS
-    Private Sub lstListagem_DataSourceChanged(sender As Object, e As EventArgs) Handles lstListagem.DataSourceChanged '
-        '
-        totalProdutos = lstListagem.Items.Count
         '
     End Sub
     '

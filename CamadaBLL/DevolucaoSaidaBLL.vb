@@ -18,7 +18,7 @@ Public Class DevolucaoSaidaBLL
         End If
         '
         Try
-            Dim dt As DataTable = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
             Dim lista As New List(Of clDevolucaoSaida)
             '
             If dt.Rows.Count = 0 Then Return lista
@@ -50,7 +50,7 @@ Public Class DevolucaoSaidaBLL
         strSql = "SELECT * FROM qryDevolucaoSaida WHERE IDDevolucao = @IDDevolucao"
         '
         Try
-            Dim dt As DataTable = objdb.ExecuteConsultaSQL_DataTable(strSql)
+            Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
             Dim r As DataRow = Nothing
             '
             If dt.Rows.Count > 0 Then

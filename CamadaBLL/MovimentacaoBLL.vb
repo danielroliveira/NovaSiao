@@ -287,26 +287,68 @@ Public Class MovimentacaoBLL
     '============================================================================================
     ' GET MOVIMENTACOES DE CAIXA PELO ID CAIXA
     '============================================================================================
-    Public Function GetMovimentos_IDCaixa(myIDCaixa) As List(Of clMovimentacao)
+    Public Function GetMovimentos_IDCaixa(Caixa As clCaixa) As List(Of clMovimentacao)
         '
-        Dim db As New AcessoDados
-        '
-        db.LimparParametros()
-        db.AdicionarParametros("@IDCaixa", myIDCaixa)
+        Dim db As AcessoDados = Nothing
         '
         Try
+            db = New AcessoDados
             '
-            '---GET MOVIMENTACOES
-            Dim dt As DataTable = db.ExecutarConsulta(CommandType.StoredProcedure, "uspCaixa_GetMovimentos_IDCaixa")
+            db.BeginTransaction()
+            Dim query As String = ""
+            '
+            '
+            If Caixa.IDSituacao = 1 Then '-- INICIADA (LIBERADA PARA EDICAO)
+                '
+                '-- REMOVE MOVS DE ENTRADA ANTERIORES
+                '---------------------------------------------------------------------
+                db.LimparParametros()
+                db.AdicionarParametros("@IDCaixa", Caixa.IDCaixa)
+                '
+                query = "UPDATE tblCaixaMovimentacao SET IDCaixa = NULL WHERE IDCaixa = @IDCaixa"
+                '
+                db.ExecutarManipulacao(CommandType.Text, query)
+                '
+                '-- ADICIONA MOVS DE ENTRADA NOVOS
+                '---------------------------------------------------------------------
+                db.LimparParametros()
+                db.AdicionarParametros("@IDCaixa", Caixa.IDCaixa)
+                db.AdicionarParametros("@dtInicial", Caixa.DataInicial)
+                db.AdicionarParametros("@dtFinal", Caixa.DataFinal)
+                db.AdicionarParametros("@IDConta", Caixa.IDConta)
+                '
+                query = "UPDATE tblCaixaMovimentacao SET IDCaixa = @IDCaixa WHERE IDConta = @IDConta 
+			            AND MovData <= @dtFinal
+			            AND MovData >= @dtInicial"
+                '
+                db.ExecutarManipulacao(CommandType.Text, query)
+                '
+            End If
+            '
+            '--- GET MOVIMENTACOES
+            '---------------------------------------------------------------------
+            db.LimparParametros()
+            db.AdicionarParametros("@IDCaixa", Caixa.IDCaixa)
+            query = "SELECT * FROM qryMovimentacao WHERE IDCaixa = @IDCaixa ORDER BY MovData"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             '
             '--- SE NAO HA REGISTRO ENTAO RETORNA VAZIO
-            If dt.Rows.Count = 0 Then Return New List(Of clMovimentacao)
+            If dt.Rows.Count = 0 Then
+                Return New List(Of clMovimentacao)
+            ElseIf Not IsNumeric(dt.Rows(0).Item(0)) Then
+                Throw New Exception(dt.Rows(0).Item(0).ToString)
+            End If
             '
-            '--- CONVERT E RETURN
+            '--- COMMIT CONVERT E RETURN
+            db.CommitTransaction()
             Return Convert_DT_ListOF_Movimentacao(dt)
             '
         Catch ex As Exception
+            '
+            db.RollBackTransaction()
             Throw ex
+            '
         End Try
         '
     End Function
