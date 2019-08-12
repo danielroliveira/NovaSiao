@@ -1,31 +1,40 @@
 ﻿Imports CamadaBLL
 Imports CamadaDTO
 Imports System.Drawing.Drawing2D
-Imports ComponentOwl.BetterListView
 '
 Public Class frmProdutoListagem
+    '
     Private prodLista As New List(Of clProduto)
+    Private bindLista As New BindingSource
     '
-    Private _IDProdutoTipo As Integer?
-    Private _IDProdutoSubTipo As Integer?
-    Private _IDCategoria As Integer?
-    Private _IDFabricante As Integer?
-    Private _IDFilial As Integer?
     Private _ProdutoAtivo As Byte '--> 0:TODOS | 1:ATIVOS | 2:INATIVOS
-    '
-    Private _HabilitaPesquisa As Boolean = True '-- property que habilita o btnPesquisar
+    Private _Movimento As Byte?
+    Private _Produto As String
+    Private _Autor As String
+    Private _IDProdutoTipo As Integer?
+    Private _ProdutoTipo As String
+    Private _IDProdutoSubTipo As Integer?
+    Private _ProdutoSubTipo As String
+    Private _IDCategoria As Integer?
+    Private _ProdutoCategoria As String
+    Private _IDFabricante As Integer?
+    Private _Fabricante As String
+    Private _IDFilial As Integer?
     '
     Private myWhere As String = ""
-    Private LiberaAtualizacao As Boolean = False
+    '
+    '--- PAGINACAO
     Private _totalProdutos As Integer ' quantidade total de produtos da listagem
-    Const _itemsPorPagina As Integer = 9 ' quantidade de itens que cabem na listagem
+    Const _itemsPorPagina As Integer = 13 ' quantidade de itens que cabem na listagem
+    Const rowHeight As Integer = 32 '--- define o tamanho da row no DataGridView
     Private _paginaAtual As Integer = 1
     '
     '--- IMAGENS
     Private ImgInativo As Image = My.Resources.block
     Private ImgAtivo As Image = My.Resources.accept
+    Private BackupRowBackColor As Color
     '
-#Region "NEW | PROPRIEDADES"
+#Region "NEW"
     '
     Sub New()
         '
@@ -45,114 +54,119 @@ Public Class frmProdutoListagem
         End If
         '
         '--- preenche a listagem
-        propProdutoAtivo = 1 '--- ATIVO
-        PreencheCombo_Movimento()
-        cmbMovimento.SelectedValue = 0 '--- MOV NORMAL
-        FormataListagem()
-        propHabilitaPesquisa = False
-        'Get_Dados()
-        'FiltrarListagem()
+        _ProdutoAtivo = 1 '--- ATIVO
+        _Movimento = 0 '--- MOV NORMAL
+        ConfiguraDatagrid()
         AtualizaLabelSelecionados()
-        '
-        LiberaAtualizacao = True
+        totalProdutos = 0
         '
     End Sub
     '
-    Private Sub me_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        addToolTipHandler()
+    Private Sub frmProdutoListagem_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        chkSelecionarTudo.Visible = True
     End Sub
     '
-    Private Property propProdutoAtivo() As Byte
-        Get
-            Return _ProdutoAtivo
-        End Get
-        Set(ByVal value As Byte)
-            '
-            Dim atualizar As Boolean = IIf(_ProdutoAtivo = value, False, True)
-            '
-            _ProdutoAtivo = value
-            '
-            'Select Case value
-            '    '--- seleciona o RADIO BUTON
-            '    Case 1 '--- ATIVAS
-            '        If rbtAtivas.Checked <> True Then
-            '            '
-            '            rbtAtivas.Checked = True
-            '            rbtInativas.Checked = False
-            '            rbtTodos.Checked = False
-            '            '
-            '        End If
-            '        '
-            '    Case 2 '--- INATIVAS
-            '        If rbtInativas.Checked <> True Then
-            '            '
-            '            rbtInativas.Checked = True
-            '            rbtAtivas.Checked = False
-            '            rbtTodos.Checked = False
-            '            '
-            '        End If
-            '        '
-            '    Case 3 '--- TODAS
-            '        If rbtTodos.Checked <> True Then
-            '            '
-            '            rbtTodos.Checked = True
-            '            rbtAtivas.Checked = False
-            '            rbtInativas.Checked = False
-            '            '
-            '        End If
-            '        '
-            'End Select
-            '
-            If atualizar Then AtualizaListagem()
-            '
-        End Set
+    Private Sub Get_Dados()
         '
-    End Property
+        Dim prodBLL As New ProdutoBLL
+        '
+        '--- consulta o banco de dados
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Get BD Dados
+            Dim startRecord = (PaginaAtual * _itemsPorPagina) - _itemsPorPagina
+            prodLista = prodBLL.GetProdutosWithEstoque_Where_Limited(_IDFilial,
+                                                                     GetWhere,
+                                                                     _itemsPorPagina,
+                                                                     startRecord,
+                                                                     totalProdutos)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Obter lista de produtos..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
     '
-    '--- HABILITAR PROCURA DE DADOS
-    Public Property propHabilitaPesquisa() As Boolean
+    '--- CRIA E RETORNA A CLAUSULA WHERE DA BUSCA NO BD
+    Private Function GetWhere() As String
         '
-        Get
-            Return _HabilitaPesquisa
-        End Get
+        myWhere = ""
         '
-        Set(ByVal value As Boolean)
-            '
-            If value <> _HabilitaPesquisa Then
-                '
-                If value = True Then
-                    '
-                    btnPesquisar.Enabled = True
-                    lstListagem.Clear(True)
-                    '
-                Else
-                    btnPesquisar.Enabled = False
-                End If
-                '
-            End If
-            '
-            '--- Define o TOOLTIP
-            If value = True Then
-                '
-                Dim toolTip1 As New ToolTip
-                ' Define o delay para a ToolTip.
-                With toolTip1
-                    .AutoPopDelay = 2000
-                    .InitialDelay = 1000
-                    .ReshowDelay = 500
-                    .IsBalloon = True
-                    .UseAnimation = True
-                    .UseFading = True
-                End With
-                toolTip1.Show("Pressione AQUI...", btnPesquisar, btnPesquisar.Width - 30, -40, 1000)
-                '
-            End If
-            '
-            _HabilitaPesquisa = value
-            '
-        End Set
+        '--- Produto DESCRICAO
+        If _Produto.Trim.Length > 0 Then
+            myWhere += "Produto LIKE '%" & _Produto & "%'"
+        End If
         '
-    End Property
+        '--- Produto AUTOR
+        If _Autor.Trim.Length > 0 Then
+            myWhere += IIf(myWhere.Length = 0, "", " AND ")
+            myWhere += "Autor LIKE '%" & _Autor & "%'"
+        End If
+        '
+        '--- Produto MOVIMENTO
+        If Not IsNothing(_Movimento) Then
+            myWhere += IIf(myWhere.Length = 0, "", " AND ")
+            myWhere += "Movimento = " & _Movimento
+        End If
+        '
+        '--- Produto 1:ATIVO | 2:INATIVO | 3:TODOS
+        If _ProdutoAtivo <> 3 Then
+            myWhere += IIf(myWhere.Length = 0, "", " AND ")
+            myWhere += "ProdutoAtivo = '" & IIf(_ProdutoAtivo = 1, True, False) & "'"
+        End If
+        '
+        '--- ProdutoTipo
+        If Not IsNothing(_IDProdutoTipo) Then
+            myWhere += IIf(myWhere.Length = 0, "", " AND ")
+            myWhere += "IDProdutoTipo = " & _IDProdutoTipo
+        End If
+        '
+        '--- ProdutoSubTipo
+        If Not IsNothing(_IDProdutoSubTipo) Then
+            myWhere += IIf(myWhere.Length = 0, "", " AND ")
+            myWhere += "IDProdutoSubTipo = " & _IDProdutoSubTipo
+        End If
+        '
+        '--- ProdutoCategoria
+        If Not IsNothing(_IDCategoria) Then
+            myWhere += IIf(myWhere.Length = 0, "", " AND ")
+            myWhere += "IDCategoria = " & _IDCategoria
+        End If
+        '
+        '--- ProdutoCategoria
+        If Not IsNothing(_IDFabricante) Then
+            myWhere += IIf(myWhere.Length = 0, "", " AND ")
+            myWhere += "IDFabricante = " & _IDFabricante
+        End If
+        '
+        Return myWhere
+        '
+    End Function
+    '
+    '--- ATUALIZA A LISTAGEM
+    Private Sub AtualizaListagem()
+        '
+        Get_Dados()
+        bindLista.DataSource = prodLista
+        '
+        '--- uncheck todos os items
+        If chkSelecionarTudo.Checked = True Then
+            AtualizaLabelSelecionados()
+            chkSelecionarTudo.Checked = False
+        End If
+        '
+    End Sub
+    '----------------------------------------------------------------------------------------
+    '
+#End Region '// NEW
+    '
+#Region "PROPRIEDADES"
     '
     '--- QUANTIDADE TOTAL DOS FILTRADOS
     Public Property totalProdutos() As Integer
@@ -169,10 +183,9 @@ Public Class frmProdutoListagem
                 VerificaNavegacaoButtons()
             ElseIf value = 1 Then
                 lblTotalProdutos.Text = "01 Produto Encontrado"
-
                 VerificaNavegacaoButtons()
             Else
-                lblTotalProdutos.Text = Format(value, "00") & " Produtos"
+                lblTotalProdutos.Text = Format(value, "00") & " Produtos Encontrados"
                 lblPaginas.Text = "Pag. 1 de 1"
                 VerificaNavegacaoButtons()
             End If
@@ -181,184 +194,255 @@ Public Class frmProdutoListagem
         '
     End Property
     '
-    '--- VERIFICA BTN DE NAVEGACAO
-    '----------------------------------------------------------------------------------
-    Private Sub VerificaNavegacaoButtons()
+    Public Property PaginaAtual() As Integer
         '
-        If _totalProdutos < 10 Then
-            If _totalProdutos = 0 Then
-                lblPaginas.Text = "Pag. 0 de 0"
-            Else
-                lblPaginas.Text = "Pag. 1 de 1"
-            End If
-            btnFirst.Enabled = False
-            btnPrev.Enabled = False
-            btnNext.Enabled = False
-            btnLast.Enabled = False
-        Else
-            Dim pags As Integer = CInt(Math.Ceiling(_totalProdutos / _itemsPorPagina))
-            lblPaginas.Text = "Pag. " & _paginaAtual & " de " & pags
+        Get
+            Return _paginaAtual
+        End Get
+        '
+        Set(ByVal value As Integer)
+            Dim pags As Integer = Math.Ceiling(_totalProdutos / _itemsPorPagina)
             '
-            If _paginaAtual = 1 Then
-                btnFirst.Enabled = False
-                btnPrev.Enabled = False
-                btnNext.Enabled = True
-                btnLast.Enabled = True
-            ElseIf _paginaAtual = pags Then
-                btnFirst.Enabled = True
-                btnPrev.Enabled = True
-                btnNext.Enabled = False
-                btnLast.Enabled = False
-            Else
-                btnFirst.Enabled = True
-                btnPrev.Enabled = True
-                btnNext.Enabled = True
-                btnLast.Enabled = True
+            If value <= pags And value > 0 Then
+                _paginaAtual = value
+                VerificaNavegacaoButtons()
+                AtualizaListagem()
             End If
             '
-        End If
+        End Set
+        '
+    End Property
+    '
+#End Region '/ PROPRIEDADES
+    '
+#Region "DATAGRID"
+    '
+    Private Sub ConfiguraDatagrid()
+        '
+        '--- limpa as colunas do datagrid
+        dgvItens.Columns.Clear()
+        dgvItens.AutoGenerateColumns = False
+        '
+        ' altera as propriedades importantes
+        dgvItens.MultiSelect = False
+        dgvItens.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+        dgvItens.ColumnHeadersVisible = True
+        dgvItens.AllowUserToResizeRows = False
+        dgvItens.AllowUserToResizeColumns = False
+        dgvItens.RowHeadersVisible = False
+        dgvItens.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        dgvItens.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
+        dgvItens.StandardTab = True
+        '
+        dgvItens.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
+        dgvItens.RowHeadersWidth = rowHeight
+        dgvItens.RowTemplate.Height = rowHeight
+        dgvItens.RowTemplate.MinimumHeight = rowHeight
+        '
+        dgvItens.ColumnHeadersDefaultCellStyle.Font = New Font("Pathway Gothic One", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        '
+        '--- configura o DataSource
+        dgvItens.DataSource = bindLista
+        '
+        '--- formata as colunas do datagrid
+        FormataColunas_Itens()
         '
     End Sub
     '
-    '--- PREENCHE O COMBO COM AS SITUACOES POSSIVEIS
-    Private Sub PreencheCombo_Movimento()
-
-        Dim dtMov As New DataTable
+    Private Sub FormataColunas_Itens()
         '
-        'Adiciona todas as possibilidades de movimentacao
-        dtMov.Columns.Add("Movimento")
-        dtMov.Columns.Add("MovDescricao")
-        dtMov.Rows.Add(New Object() {0, "Normal"})
-        dtMov.Rows.Add(New Object() {1, "Sem Movimento"})
-        dtMov.Rows.Add(New Object() {2, "Protegido"})
-        dtMov.Rows.Add(New Object() {3, "Periódico"})
-
-        With cmbMovimento
-            .DataSource = dtMov
-            .ValueMember = "Movimento"
-            .DisplayMember = "MovDescricao"
+        With clnSelect
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .Resizable = DataGridViewTriState.False
         End With
         '
-        dtMov.Columns.Add()
+        ' (2) COLUNA RGProduto
+        With clnRGProduto
+            .DataPropertyName = "RGProduto"
+            '.Width = 60
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .DefaultCellStyle.Format = "0000"
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            '.DefaultCellStyle.Font = New Font("Arial Narrow", 12)
+        End With
+        '
+        ' (3) COLUNA PRODUTO
+        With clnProduto
+            .DataPropertyName = "Produto"
+            '.Width = 400
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' (4) COLUNA AUTOR
+        With clnAutor
+            .DataPropertyName = "Autor"
+            '.Width = 220
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' (5) COLUNA PRODUTO TIPO
+        With clnTipo
+            .DataPropertyName = "ProdutoTipo"
+            '.Width = 120
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' (6) COLUNA PRODUTO SUBTIPO
+        With clnSubTipo
+            .DataPropertyName = "ProdutoSubTipo"
+            '.Width = 120
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' (7) COLUNA PRODUTO CATEGORIA
+        With clnCategoria
+            .DataPropertyName = "ProdutoCategoria"
+            '.Width = 120
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' (8) COLUNA FABRICANTE
+        With clnFabricante
+            .DataPropertyName = "Fabricante"
+            '.Width = 120
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' (9) COLUNA ESTOQUE
+        With clnEstoque
+            .DataPropertyName = "Estoque"
+            .HeaderText = "Estoque"
+            '.Width = 50
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Format = "00"
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+        End With
+        '
+        ' (10) COLUNA ESTOQUE NIVEL
+        With clnEstoqueNivel
+            .DataPropertyName = "EstoqueNivel"
+            .HeaderText = "Est.Nivel"
+            '.Width = 50
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Format = "00"
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+        End With
+        '
+        ' (11) COLUNA ESTOQUE IDEAL
+        With clnEstoqueIdeal
+            .DataPropertyName = "EstoqueIdeal"
+            .HeaderText = "Est.Ideal"
+            '.Width = 50
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Format = "00"
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+        End With
+        '
+        ' (11) COLUNA PRECO
+        With clnPreco
+            .DataPropertyName = "PVenda"
+            '.Width = 70
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Format = "C"
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+        End With
+        '
+        ' (12) COLUNA ATIVO
+        With clnAtivoImage
+            .HeaderText = "Ativo"
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = False
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+        End With
+        '
+        '--- adiciona as colunas editadas
+        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnSelect, clnRGProduto,
+                                                            clnProduto, clnAutor, clnTipo, clnSubTipo, clnCategoria, clnFabricante,
+                                                            clnEstoque, clnEstoqueNivel, clnEstoqueIdeal, clnPreco, clnAtivoImage})
         '
     End Sub
     '
-    Private Sub Get_Dados()
+    Private Sub dgvItens_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvItens.CellFormatting
         '
-        Dim prodBLL As New ProdutoBLL
-        '
-        '--- consulta o banco de dados
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
+        '--- altera a IMAGEM ATIVO
+        If e.ColumnIndex = clnAtivoImage.Index Then '--- coluna Imagem Situação
+            Dim ativo As Boolean = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clProduto).ProdutoAtivo
             '
-            '--- Verifica a quantidade de produtos retornados
-            'If prodBLL.CountProdutos_Where(GetWhere) > 100 Then
-            '    If MessageBox.Show("Maior que 100...") = DialogResult.No Then
-            '        'Return
-            '    End If
-            'End If
+            ' Imagem Ativo | Inativo
+            If ativo Then
+                e.Value = ImgAtivo
+            Else
+                e.Value = ImgInativo
+            End If
             '
-            '--- Get BD Dados
-            prodLista = prodBLL.GetProdutosWithEstoque_Where(_IDFilial, GetWhere, totalProdutos)
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Obter lista de produtos..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
-        '
-    End Sub
-    '
-    '--- CRIA E RETORNA A CLAUSULA WHERE DA BUSCA NO BD
-    Private Function GetWhere() As String
-        '
-        myWhere = "Movimento = " & cmbMovimento.SelectedValue
-        '
-        '--- Produto ATIVO | INATIVO | TODOS
-        If propProdutoAtivo <> 3 Then
-            myWhere = myWhere & " AND ProdutoAtivo = '" & IIf(propProdutoAtivo = 1, True, False) & "'"
-        End If
-        '
-        '--- ProdutoTipo
-        If Not IsNothing(_IDProdutoTipo) Then
-            myWhere = myWhere & " AND IDProdutoTipo = " & _IDProdutoTipo
-        End If
-        '
-        '--- ProdutoSubTipo
-        If Not IsNothing(_IDProdutoSubTipo) Then
-            myWhere = myWhere & " AND IDProdutoSubTipo = " & _IDProdutoSubTipo
-        End If
-        '
-        '--- ProdutoCategoria
-        If Not IsNothing(_IDCategoria) Then
-            myWhere = myWhere & " AND IDCategoria = " & _IDCategoria
-        End If
-        '
-        '--- ProdutoCategoria
-        If Not IsNothing(_IDFabricante) Then
-            myWhere = myWhere & " AND IDFabricante = " & _IDFabricante
-        End If
-        '
-        Return myWhere
-        '
-    End Function
-    '
-    '--- FILTAR LISTAGEM PELO IDTIPO E _IDFilial, TXTPRODUTO, TXTNOME
-    Private Sub FiltrarListagem()
-        '
-        If txtProduto.Text.Length > 0 OrElse txtAutor.Text.Length > 0 Then
-            lstListagem.DataSource = prodLista.FindAll(AddressOf FindProduto)
-        Else
-            lstListagem.DataSource = prodLista
-            'lstListagem.DataSource = prodLista.Take(8).ToList
-            'lstListagem.DataSource = prodLista.GetRange(0, 7)
         End If
         '
     End Sub
     '
-    Private Function FindProduto(ByVal p As clProduto) As Boolean
+    '--- AO SELECIONAR O ITEM ALTERA A CONTAGEM
+    Private Sub dgvItens_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellValueChanged
         '
-        If (p.Produto.ToLower Like "*" & txtProduto.Text.ToLower & "*") AndAlso
-           (p.Autor.ToLower Like "*" & txtAutor.Text.ToLower & "*") Then
-            Return True
-        Else
-            Return False
-        End If
-        '
-        '--- CASO SEJA SERVIDOR LOCAL...
-        '-----------------------------------------------------------------------------------------------------
-        'If (p.Produto.ToLower Like "*" & txtProduto.Text.ToLower & "*") AndAlso
-        '   (p.Autor.ToLower Like "*" & txtAutor.Text.ToLower & "*") AndAlso
-        '   IIf(IsNothing(_IDProdutoTipo), True, (p.IDProdutoTipo = _IDProdutoTipo)) AndAlso
-        '   IIf(IsNothing(_IDProdutoSubTipo), True, (p.IDProdutoSubTipo = _IDProdutoSubTipo)) AndAlso
-        '   IIf(IsNothing(_IDCategoria), True, (p.IDCategoria = _IDCategoria)) AndAlso
-        '   IIf(IsNothing(_IDFabricante), True, (p.IDFabricante = _IDFabricante)) Then
-        '    Return True
-        'Else
-        '    Return False
-        'End If
-        '-----------------------------------------------------------------------------------------------------
-        '
-    End Function
-    '
-    '--- ATUALIZA A LISTAGEM
-    Private Sub AtualizaListagem()
-        '
-        '--- verifica se ja esta liberado a pesquisa
-        If Not LiberaAtualizacao Then Exit Sub
-        '
-        Get_Dados()
-        FiltrarListagem()
-        propHabilitaPesquisa = False
-        '
-        '--- uncheck todos os items
-        If chkSelecionarTudo.Checked = True Then
+        If e.ColumnIndex = 0 Then
+            '
+            chkAlterarProdutos.Checked = False
             AtualizaLabelSelecionados()
-            chkSelecionarTudo.Checked = False
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- AO SELECIONAR O ITEM ALTERA A CONTAGEM
+    Private Sub dgvItens_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellContentClick
+        '
+        If e.ColumnIndex = 0 Then
+            dgvItens.CommitEdit(DataGridViewDataErrorContexts.Commit)
         End If
         '
     End Sub
@@ -366,7 +450,7 @@ Public Class frmProdutoListagem
     '--- ATUALIZA LBLSELECIONADOS
     Private Sub AtualizaLabelSelecionados()
         '
-        Dim sel As Integer = lstListagem.CheckedItems.Count
+        Dim sel As Integer = ItensSelecionadosCount()
         '
         If sel > 0 Then
             chkAlterarProdutos.Enabled = True
@@ -388,63 +472,67 @@ Public Class frmProdutoListagem
         End If
         '
     End Sub
-    '----------------------------------------------------------------------------------------
     '
-#End Region '// LOAD | NEW
+    Private Function ItensSelecionadosCount() As Integer
+        '
+        Dim sel As Integer = 0
+        '
+        For Each row As DataGridViewRow In dgvItens.Rows
+            If row.Cells(0).Value = True Then
+                sel += 1
+            End If
+        Next
+        '
+        Return sel
+        '
+    End Function
+    '
+#End Region '/ DATAGRID
     '
 #Region "ACAO DOS BOTOES"
     '
     '--- PESQUISA NO BD
     Private Sub btnPesquisar_Click(sender As Object, e As EventArgs) Handles btnPesquisar.Click
         '
+        Dim f As New frmProdutoListagemFiltro(_ProdutoAtivo,
+                                              _Movimento,
+                                              _Produto, _Autor,
+                                              _IDProdutoTipo, _ProdutoTipo,
+                                              _IDProdutoSubTipo, _ProdutoSubTipo,
+                                              _IDCategoria, _ProdutoCategoria,
+                                              _IDFabricante, _Fabricante, Me)
+        '
+        f.ShowDialog()
+        If f.DialogResult <> DialogResult.OK Then Exit Sub
+        '
+        _ProdutoAtivo = f._ProdutoAtivo
+        _Movimento = f._Movimento
+        _Produto = f._Produto
+        _Autor = f._Autor
+        _IDProdutoTipo = f._IDProdutoTipo
+        _ProdutoTipo = f._ProdutoTipo
+        _IDProdutoSubTipo = f._IDProdutoSubTipo
+        _ProdutoSubTipo = f._ProdutoSubTipo
+        _IDCategoria = f._IDCategoria
+        _ProdutoCategoria = f._ProdutoCategoria
+        _IDFabricante = f._IDFabricante
+        _Fabricante = f._Fabricante
+        '
         AtualizaListagem()
         '
     End Sub
-    '
-    '--- LIMPA TODOS OS CONTROLES E PREENCHE A LISTAGEM
-    Private Sub btnLimpar_Click(sender As Object, e As EventArgs) Handles btnLimpar.Click
-        '
-        '--- cria uma lista de controles que serao limpos
-        Dim controlesLimpar As TextBox() = {
-                txtProduto,
-                txtProdutoTipo,
-                txtProdutoSubTipo,
-                txtProdutoCategoria,
-                txtAutor,
-                txtFabricante
-            }
-        '
-        For Each t In controlesLimpar
-            t.Clear()
-        Next
-        '
-        _IDProdutoTipo = Nothing
-        _IDProdutoSubTipo = Nothing
-        _IDCategoria = Nothing
-        _IDFabricante = Nothing
-        '
-        '--- Desabilita btnPesquisa
-        propHabilitaPesquisa = False
-        '
-        '--- Limpa listagem
-        lstListagem.Clear(True)
-        totalProdutos = 0
-        '
-    End Sub
+
     '
     Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
 
-        If lstListagem.SelectedItems.Count = 0 Then
+        If dgvItens.SelectedRows.Count = 0 Then
             MessageBox.Show("Não existe nenhum PRODUTO selecionado na listagem", "Escolher",
                             MessageBoxButtons.OK, MessageBoxIcon.Information)
             Exit Sub
         End If
         '
-        Dim selIndex As Integer = lstListagem.SelectedItems(0).Index
-        Dim clProd As clProduto = prodLista.Item(selIndex)
-
-
-
+        Dim clProd As clProduto = dgvItens.SelectedRows(0).DataBoundItem
+        '
         Dim frm As Form = New frmProdutoTransacoes(clProd, Me)
         frm.ShowDialog()
 
@@ -500,504 +588,59 @@ Public Class frmProdutoListagem
         MsgBox("Em implementação")
     End Sub
     '
+    Private Sub btnLimpar_Click(sender As Object, e As EventArgs) Handles btnLimpar.Click
+        '
+        _ProdutoAtivo = 1
+        _Autor = Nothing
+        _Produto = Nothing
+        _IDProdutoTipo = Nothing
+        _IDProdutoSubTipo = Nothing
+        _IDCategoria = Nothing
+        _IDFabricante = Nothing
+        '
+        prodLista.Clear()
+        bindLista.ResetBindings(False)
+        totalProdutos = 0
+        PaginaAtual = 1
+        '
+    End Sub
+    '
 #End Region '// ACAO DOS BOTOES
-    '
-#Region "OUTRAS FUNCOES"
-    '
-    '--- QUANDO ATUALIZAR O COMBO MOVIMENTO
-    Private Sub cmbMovimento_SelectedValueChanged(sender As Object, e As EventArgs) Handles cmbMovimento.SelectedValueChanged
-        '
-        If Not LiberaAtualizacao Then Return
-        AtualizaListagem()
-        '
-    End Sub
-    '
-    '--- BLOQUEIA PRESS A TECLA (+)
-    Private Sub me_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
-        '
-        If e.KeyChar = "+" Then
-            '--- cria uma lista de controles que serao impedidos de receber '+'
-            Dim controlesBloqueados As String() = {
-                "txtProdutoSubTipo",
-                "txtAutor",
-                "txtProdutoSubTipo",
-                "txtProdutoTipo",
-                "txtProdutoCategoria",
-                "txtFabricante"
-            }
-
-            If controlesBloqueados.Contains(ActiveControl.Name) Then
-                e.Handled = True
-            End If
-        End If
-        '
-    End Sub
-    '
-    '--- EXECUTAR A FUNCAO DO BOTAO QUANDO PRESSIONA A TECLA (+) NO CONTROLE
-    '--- ACIONA ATALHO TECLA (+) E (DEL) | IMPEDE INSERIR TEXTO NOS CONTROLES
-    Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) _
-        Handles txtProdutoTipo.KeyDown,
-                txtProdutoSubTipo.KeyDown,
-                txtProdutoCategoria.KeyDown,
-                txtAutor.KeyDown,
-                txtFabricante.KeyDown
-        '
-        Dim ctr As Control = DirectCast(sender, Control)
-        '
-        If e.KeyCode = Keys.Add Then
-            e.Handled = True
-            '
-            Select Case ctr.Name
-                Case "txtProdutoTipo"
-                    ProcurarEscolherTipo(sender)
-                Case "txtProdutoSubTipo"
-                    ProcurarEscolherTipo(sender)
-                Case "txtProdutoCategoria"
-                    ProcurarEscolherTipo(sender)
-                Case "txtAutor"
-                    ProcurarEscolherTipo(sender)
-                Case "txtFabricante"
-                    ProcurarEscolherTipo(sender)
-            End Select
-            '
-        ElseIf e.KeyCode = Keys.Delete Then
-            e.Handled = True
-            Select Case ctr.Name
-                Case "txtProdutoTipo"
-                    txtProdutoTipo.Clear()
-                    _IDProdutoTipo = Nothing
-                    propHabilitaPesquisa = True
-                Case "txtProdutoSubTipo"
-                    txtProdutoSubTipo.Clear()
-                    _IDProdutoSubTipo = Nothing
-                    propHabilitaPesquisa = True
-                Case "txtProdutoCategoria"
-                    txtProdutoCategoria.Clear()
-                    _IDCategoria = Nothing
-                    propHabilitaPesquisa = True
-                Case "txtFabricante"
-                    txtFabricante.Clear()
-                    _IDFabricante = Nothing
-                    propHabilitaPesquisa = True
-                Case "txtAutor"
-                    txtAutor.Clear()
-                    'FiltrarListagem()
-            End Select
-            '
-        Else
-            '--- cria uma lista de controles que serão bloqueados de alteracao
-            Dim controlesBloqueados As New List(Of String)
-            controlesBloqueados.AddRange({
-                                         "txtProdutoTipo",
-                                         "txtProdutoSubTipo",
-                                         "txtProdutoCategoria",
-                                         "txtFabricante"
-                                         })
-            '
-            If controlesBloqueados.Contains(ctr.Name) Then
-                e.Handled = True
-                e.SuppressKeyPress = True
-            End If
-        End If
-        '
-    End Sub
-    '
-    '--- ESCOLHER TIPO DE PRODUTO | SUBTIPO DE PRODUTO | CATEGORIA | FABRICANTE
-    Private Sub ProcurarEscolherTipo(sender As Control)
-        '
-        Dim frmT As Form = Nothing
-        Dim oldID As Integer?
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            '--- abre o formulário de ProdutoTipo, SubTipo, Categoria, Fabricante
-            Select Case sender.Name
-            '
-                Case "txtAutor"
-                    '
-                    oldID = Nothing
-                    frmT = New frmAutoresProcurar(Me)
-                '
-                Case "txtFabricante"
-                    '
-                    oldID = _IDFabricante
-                    frmT = New frmFabricanteProcurar(Me, oldID)
-                '
-                Case "txtProdutoTipo"
-                    '
-                    oldID = _IDProdutoTipo
-                    frmT = New frmProdutoProcurarTipo(Me, oldID)
-                '
-                Case "txtProdutoSubTipo"
-                    '
-                    ' verifica se existe TIPO selecionado
-                    If IsNothing(_IDProdutoTipo) Then
-                        MessageBox.Show("Favor escolher o TIPO de produto, antes de escolher o SUBTIPO/CLASSIFICAÇÃO...",
-                    "Escolher Tipo", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                        txtProdutoTipo.Focus()
-                        Return
-                    End If
-                    '
-                    oldID = _IDProdutoSubTipo
-                    frmT = New frmProdutoProcurarSubTipo(Me, oldID, _IDProdutoTipo)
-                '
-                Case "txtProdutoCategoria"
-                    '
-                    ' verifica se existe TIPO selecionado
-                    If IsNothing(_IDProdutoTipo) Then
-                        MessageBox.Show("Favor escolher o TIPO de produto, antes de escolher a CATEGORIA...",
-                    "Escolher Tipo", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                        txtProdutoTipo.Focus()
-                        Return
-                    End If
-                    '
-                    oldID = _IDCategoria
-                    frmT = New frmProdutoProcurarCategoria(Me, oldID, _IDProdutoTipo)
-                    '
-            End Select
-            '
-            ' revela o formulario dependendo do controle acionado
-            frmT.ShowDialog()
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Evento..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
-        '
-        ' ao fechar dialog verifica o resultado
-        If frmT.DialogResult <> DialogResult.Cancel Then
-            '
-            Select Case sender.Name
-            '
-                Case "txtAutor"
-                    txtAutor.Text = DirectCast(frmT, frmAutoresProcurar).propAutorEscolhido
-                    '
-                    ' move focus
-                    txtAutor.Focus()
-                    '
-                Case "txtFabricante"
-                    txtFabricante.Text = DirectCast(frmT, frmFabricanteProcurar).propFab_Escolha
-                    _IDFabricante = DirectCast(frmT, frmFabricanteProcurar).propIDFab_Escolha
-                    '
-                    ' Filtra Listagem novamente
-                    If IIf(IsNothing(oldID), 0, oldID) <> IIf(IsNothing(_IDFabricante), 0, _IDFabricante) Then
-                        propHabilitaPesquisa = True
-                    End If
-                    '
-                    ' move focus
-                    txtFabricante.Focus()
-                    '
-                Case "txtProdutoTipo"
-                    txtProdutoTipo.Text = DirectCast(frmT, frmProdutoProcurarTipo).propTipo_Escolha
-                    _IDProdutoTipo = DirectCast(frmT, frmProdutoProcurarTipo).propIdTipo_Escolha
-                    '
-                    ' Filtra Listagem novamente
-                    If IIf(IsNothing(oldID), 0, oldID) <> IIf(IsNothing(_IDProdutoTipo), 0, _IDProdutoTipo) Then
-                        '
-                        ' remove o SUBTIPO e a CATEGORIA porque o TIPO foi alterado
-                        txtProdutoSubTipo.Text = ""
-                        _IDProdutoSubTipo = Nothing
-                        txtProdutoCategoria.Text = ""
-                        _IDCategoria = Nothing
-                        propHabilitaPesquisa = True
-                        '
-                    End If
-                    '
-                    ' move focus
-                    txtProdutoTipo.Focus()
-                    '
-                Case "txtProdutoSubTipo"
-                    '
-                    ' define o SubTipo escolhido
-                    txtProdutoSubTipo.Text = DirectCast(frmT, frmProdutoProcurarSubTipo).propSubTipo_Escolha
-                    _IDProdutoSubTipo = DirectCast(frmT, frmProdutoProcurarSubTipo).propIdSubTipo_Escolha
-                    '
-                    ' Filtra Listagem novamente
-                    If IIf(IsNothing(oldID), 0, oldID) <> IIf(IsNothing(_IDProdutoSubTipo), 0, _IDProdutoSubTipo) Then
-                        propHabilitaPesquisa = True
-                    End If
-                    '
-                    ' move focus
-                    txtProdutoSubTipo.Focus()
-                    '
-                Case "txtProdutoCategoria"
-                    '
-                    ' define a categoria escolhida
-                    txtProdutoCategoria.Text = DirectCast(frmT, frmProdutoProcurarCategoria).propCategoria_Escolha
-                    _IDCategoria = DirectCast(frmT, frmProdutoProcurarCategoria).propIdCategoria_Escolha
-                    '
-                    ' Filtra Listagem novamente
-                    If IIf(IsNothing(oldID), 0, oldID) <> IIf(IsNothing(_IDCategoria), 0, _IDCategoria) Then
-                        propHabilitaPesquisa = True
-                    End If
-                    '
-                    ' move focus
-                    txtProdutoCategoria.Focus()
-                    '
-            End Select
-            '
-        End If
-        '
-    End Sub
-    '
-    '--- FILTRA PELOS DADOS ESCOLHIDOS
-    Private Sub txt_TextChanged(sender As Object, e As EventArgs) Handles txtAutor.TextChanged, txtProduto.TextChanged
-        '
-        FiltrarListagem()
-        '
-    End Sub
-    '
-    '--- AO PRESSIONAR A TECLA (ENTER) ENVIAR (TAB)
-    Private Sub txt_KeyDown(sender As Object, e As KeyEventArgs) _
-        Handles _
-        txtProduto.KeyDown,
-        txtFabricante.KeyDown,
-        txtAutor.KeyDown,
-        txtProdutoTipo.KeyDown,
-        txtProdutoSubTipo.KeyDown,
-        txtProdutoCategoria.KeyDown,
-        rbtInativas.KeyDown,
-        rbtAtivas.KeyDown,
-        rbtTodos.KeyDown
-        '
-        If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-            SendKeys.Send("{Tab}")
-        End If
-        '
-    End Sub
-    '
-    '--- ATIVA | INATIVA
-    Private Sub rbt_CheckedChanged(sender As Object, e As EventArgs) Handles _
-        rbtAtivas.CheckedChanged,
-        rbtInativas.CheckedChanged,
-        rbtTodos.CheckedChanged
-        '
-        Dim newValue As Byte = DirectCast(sender, RadioButton).Tag
-        '
-        If propProdutoAtivo = newValue Then
-            Exit Sub
-        Else
-            propProdutoAtivo = newValue
-        End If
-        '
-    End Sub
-    '
-#End Region '//OUTRAS FUNCOES
     '
 #Region "TRATAMENTO VISUAL"
     '
-    '--- ALTERAR A COR DE FUNDO DO HEADER DO DATAGRIDVIEW
-    Private Sub dgvListagem_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs)
-        If e.RowIndex = -1 Then
-            '--- PRETO
-            'Dim c1 As Color = Color.FromArgb(255, 54, 54, 54)
-            'Dim c2 As Color = Color.FromArgb(255, 62, 62, 62)
-            'Dim c3 As Color = Color.FromArgb(255, 98, 98, 98)
-            '
-            '--- AZUL
-            Dim c1 As Color = Color.FromArgb(255, 143, 154, 168)
-            Dim c2 As Color = Color.FromArgb(255, 100, 113, 130)
-            Dim c3 As Color = Color.FromArgb(255, 74, 84, 96)
-            '
-            Dim br As LinearGradientBrush = New LinearGradientBrush(e.CellBounds, c1, c3, 90, True)
-            Dim cb As ColorBlend = New ColorBlend()
-            '
-            cb.Positions = {0, CSng(0.5), 1}
-            cb.Colors = {c1, c2, c3}
-            br.InterpolationColors = cb
-            e.Graphics.FillRectangle(br, e.CellBounds)
-            e.PaintContent(e.ClipBounds)
-            e.Handled = True
-        End If
-    End Sub
-    '
-    '--- ALTERA A COR DO PAINEL QUANDO RECEBE O FOCO
-    Private Sub pnlAtivas_EnterLeave(sender As Object, e As EventArgs) _
-        Handles _
-        rbtAtivas.GotFocus, rbtAtivas.LostFocus,
-        rbtInativas.GotFocus, rbtInativas.LostFocus,
-        rbtTodos.GotFocus, rbtTodos.LostFocus,
-        cmbMovimento.GotFocus, cmbMovimento.LostFocus
-        '
-        If rbtAtivas.ContainsFocus OrElse rbtInativas.ContainsFocus OrElse rbtTodos.ContainsFocus Then
-            pnlAtivas.BackColor = Color.LightSteelBlue
-            pnlMovimento.BackColor = Color.FromArgb(223, 228, 231)
-        ElseIf cmbMovimento.ContainsFocus Then
-            pnlMovimento.BackColor = Color.LightSteelBlue
-            pnlAtivas.BackColor = Color.FromArgb(223, 228, 231)
-        Else
-            pnlAtivas.BackColor = Color.FromArgb(223, 228, 231)
-            pnlMovimento.BackColor = Color.FromArgb(223, 228, 231)
-        End If
-        '
-    End Sub
-    '
     '--- ALTERA O BACKGROUND DA LISTAGEM QUANDO RECEBE O FOCO
-    Private Sub Listagem_Focus(sender As Object, e As EventArgs) _
-        Handles lstListagem.GotFocus, lstListagem.LostFocus
+    Private Sub Listagem_GetLostFocus(sender As Object, e As EventArgs) _
+        Handles dgvItens.GotFocus, dgvItens.LostFocus
         '
-        If lstListagem.ContainsFocus Then
-            lstListagem.BackColor = Color.FromArgb(244, 246, 247)
-        Else
-            lstListagem.BackColor = Color.White
-        End If
-        '
-    End Sub
-    '
-#End Region '//TRATAMENTO VISUAL
-    '
-#Region "LISTAGEM"
-    '
-    '--- FORMATA LISTAGEM DE CLIENTE
-    Private Sub FormataListagem()
-        '
-        ' RGProduto
-        clnRGProduto.DisplayMember = "RGProduto"
-        clnRGProduto.ValueMember = "IDProduto"
-        clnRGProduto.Width = 70
-        clnRGProduto.AllowResize = False
-        '
-        ' Produto
-        clnProduto.DisplayMember = "Produto"
-        clnProduto.Width = 300
-        clnProduto.AllowResize = True
-        '
-        ' Autor
-        clnAutor.DisplayMember = "Autor"
-        clnAutor.Width = 190
-        clnAutor.AllowResize = True
-        '
-        ' PVenda
-        clnPreco.ValueMember = "PVenda"
-        clnPreco.Width = 80
-        clnPreco.AllowResize = False
-        '
-        ' Estoque
-        clnEstoque.DisplayMember = "Estoque"
-        clnEstoque.ValueMember = "Estoque"
-        clnEstoque.Width = 70
-        clnEstoque.AllowResize = False
-        '
-        ' EstoqueNivel
-        clnEstoqueMinimo.DisplayMember = "EstoqueNivel"
-        clnEstoqueMinimo.ValueMember = "EstoqueNivel"
-        clnEstoqueMinimo.Width = 65
-        clnEstoqueMinimo.AllowResize = False
-        '
-        ' EstoqueIdeal
-        clnEstoqueIdeal.DisplayMember = "EstoqueIdeal"
-        clnEstoqueIdeal.ValueMember = "EstoqueIdeal"
-        clnEstoqueIdeal.Width = 65
-        clnEstoqueIdeal.AllowResize = False
-        '
-        ' ProdutoAtivo
-        clnAtivo.ValueMember = "ProdutoAtivo"
-        clnAtivo.Width = 60
-        clnAtivo.AllowResize = False
-        '
-        ' Tipo
-        clnTipo.DisplayMember = "ProdutoTipo"
-        clnTipo.ValueMember = "IDProdutoTipo"
-        clnTipo.Width = 95
-        clnTipo.AllowResize = False
-        '
-        ' SubTipo
-        clnSubTipo.DisplayMember = "ProdutoSubTipo"
-        clnSubTipo.ValueMember = "IDProdutoSubTipo"
-        clnSubTipo.Width = 95
-        clnSubTipo.AllowResize = False
-        '
-        ' Categoria
-        clnCategoria.DisplayMember = "ProdutoCategoria"
-        clnCategoria.ValueMember = "IDCategoria"
-        clnCategoria.Width = 95
-        clnCategoria.AllowResize = False
-        '
-        ' Fabricante
-        clnFabricante.DisplayMember = "Fabricante"
-        clnFabricante.ValueMember = "IDFabricante"
-        clnFabricante.Width = 100
-        clnFabricante.AllowResize = False
-        '
-        ' setup the list
-        With lstListagem
-            '
-            .BeginUpdate()
-            '
-            .CheckBoxes = BetterListViewCheckBoxes.TwoState
-            .FullRowSelect = True
-            .SortedColumnsRowsHighlight = BetterListViewSortedColumnsRowsHighlight.ShowAlways
-            .View = BetterListViewView.Details
-            '.ContextMenuStrip = mnuListagem
-            '
-            .EndUpdate()
-            '
-        End With
+        'If dgvItens.ContainsFocus Then
+        '    dgvItens.BorderStyle = BorderStyle.Fixed3D
+        'Else
+        '    dgvItens.BorderStyle = BorderStyle.None
+        'End If
         '
     End Sub
     '
-    '--- DESIGN DA LISTAGEM HEADER
-    Private Sub lstListagem_DrawColumnHeader(sender As Object, eventArgs As BetterListViewDrawColumnHeaderEventArgs) Handles lstListagem.DrawColumnHeader
+    Private Sub dgvItens_CellMouseEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellMouseEnter
         '
-        If eventArgs.ColumnHeaderBounds.BoundsOuter.Width > 0 AndAlso
-            eventArgs.ColumnHeaderBounds.BoundsOuter.Height > 0 Then
-            ' Pode Colocar: AndAlso eventArgs.ColumnHeader.Index = 1 AndAlso
-            '
-            Dim brush As Brush = New LinearGradientBrush(eventArgs.ColumnHeaderBounds.BoundsOuter, Color.Transparent, Color.FromArgb(150, Color.LightSlateGray), LinearGradientMode.Vertical)
-
-            Dim p As Pen = New Pen(Color.SlateGray, 2)
-            '
-            eventArgs.Graphics.FillRectangle(brush, eventArgs.ColumnHeaderBounds.BoundsOuter)
-            '
-            eventArgs.Graphics.DrawLine(p, eventArgs.ColumnHeaderBounds.BoundsOuter.X, 'x1
-                                        eventArgs.ColumnHeaderBounds.BoundsOuter.Height, 'y1
-                                        eventArgs.ColumnHeaderBounds.BoundsOuter.Width + eventArgs.ColumnHeaderBounds.BoundsOuter.X, 'x2
-                                        eventArgs.ColumnHeaderBounds.BoundsOuter.Height) 'y2
-            brush.Dispose()
-            p.Dispose()
-        End If
+        If e.RowIndex = -1 Then Exit Sub
+        '--- backup actual color
+        BackupRowBackColor = dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor
+        '--- change to new color
+        dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.Lavender
         '
     End Sub
     '
-    '--- QUANDO DESENHA ITEM
-    Private Sub lstListagem_DrawItem(sender As Object, eventArgs As BetterListViewDrawItemEventArgs) Handles lstListagem.DrawItem
+    Private Sub dgvItens_CellMouseLeave(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellMouseLeave
         '
-        ' Formatacao
-        eventArgs.Item.Text = Format(CInt(eventArgs.Item.Text), "0000")
-        eventArgs.Item.SubItems(3).Text = Format(CDbl(eventArgs.Item.SubItems(3).Value), "#,##0.00")
-        '
-        ' Alinhamento
-        eventArgs.Item.SubItems(3).AlignHorizontal = TextAlignmentHorizontal.Right
-        eventArgs.Item.SubItems(4).AlignHorizontal = TextAlignmentHorizontal.Right
-        eventArgs.Item.SubItems(5).AlignHorizontal = TextAlignmentHorizontal.Right
-        eventArgs.Item.SubItems(6).AlignHorizontal = TextAlignmentHorizontal.Right
-        '
-        ' Imagem Ativo | Inativo
-        If eventArgs.Item.SubItems(7).Value = "True" Then
-            eventArgs.Item.SubItems(7).Image = ImgAtivo
-        Else
-            eventArgs.Item.SubItems(7).Image = ImgInativo
-        End If
-        '
-        eventArgs.Item.SubItems(7).AlignHorizontalImage = BetterListViewImageAlignmentHorizontal.OverlayCenter
-        '
-    End Sub
-    '
-    '--- QUANDO ATIVA O ITEM EDITA A PRODUTO
-    Private Sub lstListagem_ItemActivate(sender As Object, eventArgs As BetterListViewItemActivateEventArgs) Handles lstListagem.ItemActivate
-        '
-        btnEditar_Click(New Object, New System.EventArgs)
+        If e.RowIndex = -1 Then Exit Sub
+        '--- restore backuped color
+        dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = BackupRowBackColor
         '
     End Sub
     '
     '--- SELECIONAR ITEM QUANDO PRESSIONA A TECLA (ENTER) DA LISTAGEM
-    Private Sub lstListagem_KeyDown(sender As Object, e As KeyEventArgs) Handles lstListagem.KeyDown
+    Private Sub dgvItens_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvItens.KeyDown
         '
         If e.KeyCode = Keys.Enter Then
             e.Handled = True
@@ -1007,75 +650,7 @@ Public Class frmProdutoListagem
         '
     End Sub
     '
-    ' --- QUANDO MARCA UM ITEM HABILITA O BTN ALTERAR
-    Private Sub lstListagem_ItemChecked(sender As Object, eventArgs As BetterListViewItemCheckedEventArgs) Handles lstListagem.ItemChecked
-        '
-        chkAlterarProdutos.Checked = False
-        '
-        ' Altera a cor dos produtos selecionados
-        If eventArgs.NewCheckState = CheckState.Checked Then
-            eventArgs.Item.BackColor = Color.MistyRose
-        Else
-            eventArgs.Item.BackColor = Color.White
-        End If
-        '
-        AtualizaLabelSelecionados()
-        '
-    End Sub
-    '
-#End Region '// LISTAGEM
-    '
-#Region "TOOLTIPS"
-    '
-    Private Sub addToolTipHandler()
-        '
-        ' Define o texto da ToolTip para o Button, TextBox, Checkbox e Label
-        txtAutor.Tag = "Digite o Autor ou Pressione '+'  para escolher..."
-        '
-        Dim listControles As New List(Of Control)
-        '
-        listControles.Add(txtProdutoTipo)
-        listControles.Add(txtProdutoSubTipo)
-        listControles.Add(txtProdutoCategoria)
-        listControles.Add(txtAutor)
-        listControles.Add(txtFabricante)
-        '
-        For Each c As Control In listControles
-            AddHandler c.GotFocus, AddressOf showToolTip
-            AddHandler c.MouseHover, AddressOf showToolTip
-        Next
-        '
-    End Sub
-    '
-    Private Sub showToolTip(sender As Object, e As EventArgs)
-        '
-        Dim myControl As Control = DirectCast(sender, Control)
-        '
-        ' Cria a ToolTip e associa com o Form container.
-        Dim toolTip1 As New ToolTip()
-        '
-        ' Define o delay para a ToolTip.
-        With toolTip1
-            .AutoPopDelay = 2000
-            .InitialDelay = 1000
-            .ReshowDelay = 500
-            .IsBalloon = True
-            .UseAnimation = True
-            .UseFading = True
-        End With
-        '
-        If myControl.Tag = "" Then
-            toolTip1.Show("Pressione '+'  para escolher...", myControl, myControl.Width - 30, -40, 1000)
-        Else
-            toolTip1.Show(myControl.Tag, myControl, myControl.Width - 30, -40, 1000)
-        End If
-        '
-        RemoveHandler myControl.GotFocus, AddressOf showToolTip
-        RemoveHandler myControl.MouseHover, AddressOf showToolTip
-        '
-    End Sub
-    '
-#End Region '// TOOLTIPS
+#End Region '//TRATAMENTO VISUAL
     '
 #Region "MENU ALTERACAO"
     '
@@ -1096,8 +671,8 @@ Public Class frmProdutoListagem
     '--- SELECIONA TODOS OS PRODUTOS
     Private Sub chkSelecionarTudo_CheckedChanged(sender As Object, e As EventArgs) Handles chkSelecionarTudo.CheckedChanged
         '
-        For Each i In lstListagem.Items
-            i.Checked = chkSelecionarTudo.Checked
+        For Each r In dgvItens.Rows
+            r.Cells(0).Value = chkSelecionarTudo.Checked
         Next
         '
     End Sub
@@ -1110,7 +685,7 @@ Public Class frmProdutoListagem
     Private Sub itemAtivar_Click(sender As Object, e As EventArgs) Handles itemAtivar.Click
         '
         ' Verifica se existe item selecionado
-        Dim sel = lstListagem.CheckedItems.Count
+        Dim sel = ItensSelecionadosCount()
         '
         If sel = 0 Then
             MessageBox.Show("Não há nenhum produto selecionado para ser alterado...", "Selecione Produtos", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -1131,8 +706,10 @@ Public Class frmProdutoListagem
         Try
             Using pBLL
                 '
-                For Each i In lstListagem.CheckedItems
-                    pBLL.ProdutoAtivarDesativar(i.Value, True)
+                For Each r As DataGridViewRow In dgvItens.Rows
+                    If r.Cells(0).Value = True Then
+                        pBLL.ProdutoAtivarDesativar(r.DataBoundItem.IDProduto, True)
+                    End If
                 Next
                 '
             End Using
@@ -1151,7 +728,7 @@ Public Class frmProdutoListagem
     Private Sub itemDesativar_Click(sender As Object, e As EventArgs) Handles itemDesativar.Click
         '
         ' Verifica se existe item selecionado
-        Dim sel = lstListagem.CheckedItems.Count
+        Dim sel = ItensSelecionadosCount()
         '
         If sel = 0 Then
             MessageBox.Show("Não há nenhum produto selecionado para ser alterado...", "Selecione Produtos", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -1172,8 +749,10 @@ Public Class frmProdutoListagem
         Try
             Using pBLL
                 '
-                For Each i In lstListagem.CheckedItems
-                    pBLL.ProdutoAtivarDesativar(i.Value, False)
+                For Each r As DataGridViewRow In dgvItens.Rows
+                    If r.Cells(0).Value = True Then
+                        pBLL.ProdutoAtivarDesativar(r.DataBoundItem.IDProduto, False)
+                    End If
                 Next
                 '
             End Using
@@ -1218,20 +797,25 @@ Public Class frmProdutoListagem
         Dim idCat As Integer?
         Dim idTipo As Integer?
         Dim strIncompat As String = ""
+        Dim prod As clProduto = Nothing
         '
-        For Each i In lstListagem.CheckedItems
-            '
-            idCat = i.SubItems(10).Value
-            idTipo = i.SubItems(8).Value
-            '
-            If Not IsNothing(idCat) Then
+        For Each r As DataGridViewRow In dgvItens.Rows
+            If r.Cells(0).Value = True Then
                 '
-                If idTipo <> newIDTipo Then
-                    strIncompat = strIncompat + i.SubItems(1).Text.ToUpper + vbNewLine
+                prod = DirectCast(r.DataBoundItem, clProduto)
+                '
+                idCat = prod.IDCategoria
+                idTipo = prod.IDProdutoTipo
+                '
+                If Not IsNothing(idCat) Then
+                    '
+                    If idTipo <> newIDTipo Then
+                        strIncompat = strIncompat + prod.Produto.ToUpper + vbNewLine
+                    End If
+                    '
                 End If
                 '
             End If
-            '
         Next
         '
         If strIncompat.Length > 0 Then
@@ -1252,15 +836,19 @@ Public Class frmProdutoListagem
             Dim pBLL As New ProdutoBLL
             Using pBLL
                 '
-                For Each i In lstListagem.CheckedItems
-                    '
-                    ' verifica alteracao de tipo para limpar a categoria
-                    If i.SubItems(8).Value <> newIDTipo Then
-                        pBLL.ProdutoAlterarTipoSubTipo(i.Value, newIDTipo, newIDSubTipo, True)
-                    Else
-                        pBLL.ProdutoAlterarTipoSubTipo(i.Value, newIDTipo, newIDSubTipo, False)
+                For Each r As DataGridViewRow In dgvItens.Rows
+                    If r.Cells(0).Value = True Then
+                        '
+                        prod = DirectCast(r.DataBoundItem, clProduto)
+                        '
+                        ' verifica alteracao de tipo para limpar a categoria
+                        If prod.IDProdutoTipo <> newIDTipo Then
+                            pBLL.ProdutoAlterarTipoSubTipo(prod.IDProduto, newIDTipo, newIDSubTipo, True)
+                        Else
+                            pBLL.ProdutoAlterarTipoSubTipo(prod.IDProduto, newIDTipo, newIDSubTipo, False)
+                        End If
+                        '
                     End If
-                    '
                 Next
                 '
             End Using
@@ -1279,7 +867,7 @@ Public Class frmProdutoListagem
     Private Sub itemAlterarFabricante_Click(sender As Object, e As EventArgs) Handles itemAlterarFabricante.Click
         '
         ' Verifica se existe item selecionado
-        Dim sel = lstListagem.CheckedItems.Count
+        Dim sel = ItensSelecionadosCount()
         '
         If sel = 0 Then
             MessageBox.Show("Não há nenhum produto selecionado para ser alterado...", "Selecione Produtos", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -1311,8 +899,10 @@ Public Class frmProdutoListagem
         Try
             Using pBLL
                 '
-                For Each i In lstListagem.CheckedItems
-                    pBLL.ProdutoAlterarFabricante(i.Value, newIDFab)
+                For Each r As DataGridViewRow In dgvItens.Rows
+                    If r.Cells(0).Value = True Then
+                        pBLL.ProdutoAlterarFabricante(r.DataBoundItem.IDProduto, newIDFab)
+                    End If
                 Next
                 '
             End Using
@@ -1331,7 +921,7 @@ Public Class frmProdutoListagem
     Private Sub itemAlterarCategoria_Click(sender As Object, e As EventArgs) Handles itemAlterarCategoria.Click
         '
         ' Verifica se existe item selecionado
-        Dim sel = lstListagem.CheckedItems.Count
+        Dim sel = ItensSelecionadosCount()
         '
         If sel = 0 Then
             MessageBox.Show("Não há nenhum produto selecionado para ser alterado...", "Selecione Produtos", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -1339,21 +929,27 @@ Public Class frmProdutoListagem
         End If
         '
         ' Verifica se todos os produtos selecionados possuem o mesmo TIPO de Produto
-        Dim idTipo As Integer = lstListagem.CheckedItems(0).SubItems(8).Value
+        Dim idTipo As Integer? = Nothing
         '
-        For Each i In lstListagem.CheckedItems
-            '
-            If idTipo <> i.SubItems(8).Value Then
+        For Each r As DataGridViewRow In dgvItens.Rows
+            If r.Cells(0).Value = True Then
                 '
-                MessageBox.Show("Não é possível alterar a CATEGORIA de Tipos de Produtos diferentes." & vbNewLine &
+                If IsNothing(idTipo) Then
+                    idTipo = r.DataBoundItem.IDProdutoTipo
+                End If
+                '
+                If idTipo <> r.DataBoundItem.IDProdutoTipo Then
+                    '
+                    MessageBox.Show("Não é possível alterar a CATEGORIA de Tipos de Produtos diferentes." & vbNewLine &
                                 "Todos os produtos selecionados devem ser do mesmo TIPO.",
                                 "Tipos Diferentes",
                                 MessageBoxButtons.OK,
                                 MessageBoxIcon.Exclamation)
-                Return
+                    Return
+                    '
+                End If
                 '
             End If
-            '
         Next
         '
         ' Abre o dialog frmProdutoProcurarCategoria para escolher nova Categoria
@@ -1382,8 +978,10 @@ Public Class frmProdutoListagem
         Try
             Using pBLL
                 '
-                For Each i In lstListagem.CheckedItems
-                    pBLL.ProdutoAlterarCategoria(i.Value, newIDCat)
+                For Each r As DataGridViewRow In dgvItens.Rows
+                    If r.Cells(0).Value = True Then
+                        pBLL.ProdutoAlterarCategoria(r.DataBoundItem.IDProduto, newIDCat)
+                    End If
                 Next
                 '
             End Using
@@ -1402,7 +1000,7 @@ Public Class frmProdutoListagem
     Private Sub itemAlterarEstMinimoIdeal_Click(sender As Object, e As EventArgs) Handles itemAlterarEstMinimoIdeal.Click
         '
         ' Verifica se existe item selecionado
-        Dim sel = lstListagem.CheckedItems.Count
+        Dim sel = ItensSelecionadosCount()
         '
         If sel = 0 Then
             MessageBox.Show("Não há nenhum produto selecionado para ser alterado...",
@@ -1441,37 +1039,41 @@ Public Class frmProdutoListagem
         Try
             Using pBLL
                 '
-                For Each i In lstListagem.CheckedItems
-                    '
-                    ' verifica se o est minimo é maior que o est ideal
-                    If IsNothing(newEstMinimo) Then
+                For Each r As DataGridViewRow In dgvItens.Rows
+                    If r.Cells(0).Value = True Then
                         '
-                        ' verifica o estoque minimo atual do produto que será preservado
-                        Dim estMinimo As Integer = IIf(i.SubItems(5).Text.Length = 0, 0, i.SubItems(5).Text)
+                        Dim prod = DirectCast(r.DataBoundItem, clProduto)
                         '
-                        If newEstIdeal < estMinimo Then
-                            pBLL.ProdutoAlterarEstoqueMinimoIdeal(i.Value, _IDFilial, newEstIdeal, newEstIdeal)
+                        ' verifica se o est minimo é maior que o est ideal
+                        If IsNothing(newEstMinimo) Then
+                            '
+                            ' verifica o estoque minimo atual do produto que será preservado
+                            Dim estMinimo As Integer = prod.EstoqueNivel
+                            '
+                            If newEstIdeal < estMinimo Then
+                                pBLL.ProdutoAlterarEstoqueMinimoIdeal(prod.IDProduto, _IDFilial, newEstIdeal, newEstIdeal)
+                            Else
+                                pBLL.ProdutoAlterarEstoqueMinimoIdeal(prod.IDProduto, _IDFilial, Nothing, newEstIdeal)
+                            End If
+                            '
+                        ElseIf IsNothing(newEstIdeal) Then
+                            '
+                            ' verifica o estoque ideal atual do produto que será preservado
+                            Dim estIdeal As Integer = prod.EstoqueIdeal
+                            '
+                            If newEstMinimo > estIdeal Then
+                                pBLL.ProdutoAlterarEstoqueMinimoIdeal(prod.IDProduto, _IDFilial, newEstMinimo, newEstMinimo)
+                            Else
+                                pBLL.ProdutoAlterarEstoqueMinimoIdeal(prod.IDProduto, _IDFilial, newEstMinimo, Nothing)
+                            End If
+                            '
                         Else
-                            pBLL.ProdutoAlterarEstoqueMinimoIdeal(i.Value, _IDFilial, Nothing, newEstIdeal)
+                            '
+                            pBLL.ProdutoAlterarEstoqueMinimoIdeal(prod.IDProduto, _IDFilial, newEstMinimo, newEstIdeal)
+                            '
                         End If
-                        '
-                    ElseIf IsNothing(newEstIdeal) Then
-                        '
-                        ' verifica o estoque ideal atual do produto que será preservado
-                        Dim estIdeal As Integer = IIf(i.SubItems(6).Text.Length = 0, 0, i.SubItems(6).Text)
-                        '
-                        If newEstMinimo > estIdeal Then
-                            pBLL.ProdutoAlterarEstoqueMinimoIdeal(i.Value, _IDFilial, newEstMinimo, newEstMinimo)
-                        Else
-                            pBLL.ProdutoAlterarEstoqueMinimoIdeal(i.Value, _IDFilial, newEstMinimo, Nothing)
-                        End If
-                        '
-                    Else
-                        '
-                        pBLL.ProdutoAlterarEstoqueMinimoIdeal(i.Value, _IDFilial, newEstMinimo, newEstIdeal)
                         '
                     End If
-
                 Next
                 '
             End Using
@@ -1488,5 +1090,80 @@ Public Class frmProdutoListagem
     End Sub
     '
 #End Region '// MENU ALTERACAO
+    '
+#Region "PAGINACAO"
+    '
+    '--- VERIFICA BTN DE NAVEGACAO
+    '----------------------------------------------------------------------------------
+    Private Sub VerificaNavegacaoButtons()
+        '
+        If _totalProdutos < 10 Then
+            If _totalProdutos = 0 Then
+                lblPaginas.Text = "Pag. 0 de 0"
+            Else
+                lblPaginas.Text = "Pag. 1 de 1"
+            End If
+            btnFirst.Enabled = False
+            btnFirst.Image = My.Resources.First_32px_disabled
+            btnPrev.Enabled = False
+            btnPrev.Image = My.Resources.Previous_32px_disabled
+            btnNext.Enabled = False
+            btnNext.Image = My.Resources.Next_32px_disabled
+            btnLast.Enabled = False
+            btnLast.Image = My.Resources.Last_32px_disabled
+        Else
+            Dim pags As Integer = Math.Ceiling(_totalProdutos / _itemsPorPagina)
+            lblPaginas.Text = "Pag. " & _paginaAtual & " de " & pags
+            '
+            If _paginaAtual = 1 Then
+                btnFirst.Enabled = False
+                btnFirst.Image = My.Resources.First_32px_disabled
+                btnPrev.Enabled = False
+                btnPrev.Image = My.Resources.Previous_32px_disabled
+                btnNext.Enabled = True
+                btnNext.Image = My.Resources.Next_32px
+                btnLast.Enabled = True
+                btnLast.Image = My.Resources.Last_32px
+            ElseIf _paginaAtual = pags Then
+                btnFirst.Enabled = True
+                btnFirst.Image = My.Resources.First_32px
+                btnPrev.Enabled = True
+                btnPrev.Image = My.Resources.Previous_32px
+                btnNext.Enabled = False
+                btnNext.Image = My.Resources.Next_32px_disabled
+                btnLast.Enabled = False
+                btnLast.Image = My.Resources.Last_32px_disabled
+            Else
+                btnFirst.Enabled = True
+                btnFirst.Image = My.Resources.First_32px
+                btnPrev.Enabled = True
+                btnPrev.Image = My.Resources.Previous_32px
+                btnNext.Enabled = True
+                btnNext.Image = My.Resources.Next_32px
+                btnLast.Enabled = True
+                btnLast.Image = My.Resources.Last_32px
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    Private Sub btnPrev_Click(sender As Object, e As EventArgs) Handles btnPrev.Click
+        PaginaAtual -= 1
+    End Sub
+    '
+    Private Sub btnNext_Click(sender As Object, e As EventArgs) Handles btnNext.Click
+        PaginaAtual += 1
+    End Sub
+    '
+    Private Sub btnLast_Click(sender As Object, e As EventArgs) Handles btnLast.Click
+        PaginaAtual = Math.Ceiling(_totalProdutos / _itemsPorPagina)
+    End Sub
+    '
+    Private Sub btnFirst_Click(sender As Object, e As EventArgs) Handles btnFirst.Click
+        PaginaAtual = 1
+    End Sub
+    '
+#End Region '/ PAGINACAO
     '
 End Class

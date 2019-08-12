@@ -493,6 +493,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property First_32px_disabled() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("First_32px_disabled", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property fornecedor_64px() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("fornecedor_64px", resourceCulture)
@@ -583,6 +593,16 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property Last_32px_disabled() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Last_32px_disabled", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property limpar_24x24() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("limpar_24x24", resourceCulture)
@@ -661,6 +681,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Next_32px_disabled() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Next_32px_disabled", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         '''</summary>
         Friend ReadOnly Property NovaSiao_ico_256px() As System.Drawing.Icon
@@ -706,6 +736,16 @@ Namespace My.Resources
         Friend ReadOnly Property Previous_32px() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("Previous_32px", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Previous_32px_disabled() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Previous_32px_disabled", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

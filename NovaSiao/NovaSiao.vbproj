@@ -724,6 +724,12 @@
     <Compile Include="Produtos\frmProdutoListagem.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Produtos\frmProdutoListagemFiltro.Designer.vb">
+      <DependentUpon>frmProdutoListagemFiltro.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Produtos\frmProdutoListagemFiltro.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Produtos\frmProdutoProcurar.Designer.vb">
       <DependentUpon>frmProdutoProcurar.vb</DependentUpon>
     </Compile>
@@ -1187,6 +1193,9 @@
     <EmbeddedResource Include="Produtos\frmProdutoListagem.resx">
       <DependentUpon>frmProdutoListagem.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Produtos\frmProdutoListagemFiltro.resx">
+      <DependentUpon>frmProdutoListagemFiltro.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Produtos\frmProdutoProcurar.resx">
       <DependentUpon>frmProdutoProcurar.vb</DependentUpon>
     </EmbeddedResource>
@@ -1437,6 +1446,10 @@
     <None Include="Resources\First_32px.png" />
     <None Include="Resources\Previous_32px.png" />
     <None Include="Resources\Last_32px.png" />
+    <None Include="Resources\First_32px_disabled.png" />
+    <None Include="Resources\Previous_32px_disabled.png" />
+    <None Include="Resources\Next_32px_disabled.png" />
+    <None Include="Resources\Last_32px_disabled.png" />
     <Content Include="SqlServerTypes\Loader.cs" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">

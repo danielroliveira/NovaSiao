@@ -36,11 +36,11 @@ Public Class ProdutoBLL
     '---------------------------------------------------------------------------------------------------------
     ' GET (LIST OF) COM ESTOQUE + FILTRO WHERE PELA FILIAL + LIMITED BY NUMBER OF RECORDS
     '---------------------------------------------------------------------------------------------------------
-    Public Function GetProdutosWithEstoque_Limited_Where(IDFilial As Integer,
-                                                         Optional myWhere As String = "",
-                                                         Optional maxRecords As Integer = 0,
-                                                         Optional startRecord As Integer = 0,
-                                                         Optional ByRef countTotal As Integer = 0
+    Public Function GetProdutosWithEstoque_Where_Limited(IDFilial As Integer,
+                                                         myWhere As String,
+                                                         maxRecords As Integer,
+                                                         startRecord As Integer,
+                                                         ByRef countTotal As Integer
                                                          ) As List(Of clProduto)
         '
         Dim db As New AcessoDados
@@ -64,7 +64,11 @@ Public Class ProdutoBLL
         Try
             '
             'Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, strSql)
-            Dim dt As DataTable = db.ExecuteQueryLimited_Dt(strSql, 0, 9, countTotal)
+            Dim dt As DataTable = db.ExecuteQueryLimited_Dt(strSql, startRecord, maxRecords, countTotal)
+            '
+            If IsNothing(dt) Then
+                Return Nothing
+            End If
             '
             Return ConvertDT_To_clProduto(dt)
             '

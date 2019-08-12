@@ -20,45 +20,19 @@ Partial Class frmProdutoListagem
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Me.txtAutor = New System.Windows.Forms.TextBox()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.btnFechar = New System.Windows.Forms.Button()
         Me.btnEditar = New System.Windows.Forms.Button()
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
-        Me.txtProdutoTipo = New System.Windows.Forms.TextBox()
-        Me.Label12 = New System.Windows.Forms.Label()
         Me.btnNovo = New System.Windows.Forms.Button()
-        Me.pnlAtivas = New System.Windows.Forms.Panel()
-        Me.rbtInativas = New System.Windows.Forms.RadioButton()
-        Me.rbtTodos = New System.Windows.Forms.RadioButton()
-        Me.rbtAtivas = New System.Windows.Forms.RadioButton()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.txtProduto = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.lblFilial = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.lstListagem = New ComponentOwl.BetterListView.BetterListView()
-        Me.clnRGProduto = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnProduto = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnAutor = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnPreco = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnEstoque = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnEstoqueMinimo = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnEstoqueIdeal = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnAtivo = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnTipo = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnSubTipo = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnCategoria = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.clnFabricante = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.txtProdutoCategoria = New System.Windows.Forms.TextBox()
-        Me.txtProdutoSubTipo = New System.Windows.Forms.TextBox()
-        Me.Label5 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.btnPrintListagem = New System.Windows.Forms.Button()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.txtFabricante = New System.Windows.Forms.TextBox()
-        Me.cmbMovimento = New Controles.ComboBox_OnlyValues()
-        Me.pnlMovimento = New System.Windows.Forms.Panel()
         Me.chkAlterarProdutos = New System.Windows.Forms.CheckBox()
         Me.btnLimpar = New System.Windows.Forms.Button()
         Me.mnuAlteracao = New System.Windows.Forms.ContextMenuStrip(Me.components)
@@ -83,13 +57,25 @@ Partial Class frmProdutoListagem
         Me.btnLast = New VIBlend.WinForms.Controls.vCircularButton()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.lblPaginas = New System.Windows.Forms.Label()
+        Me.dgvItens = New Controles.ctrlDataGridView()
+        Me.clnSelect = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnAutor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnTipo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnSubTipo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnCategoria = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnFabricante = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnEstoque = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnEstoqueNivel = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnEstoqueIdeal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnAtivoImage = New System.Windows.Forms.DataGridViewImageColumn()
         Me.Panel1.SuspendLayout()
-        Me.pnlAtivas.SuspendLayout()
-        CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.pnlMovimento.SuspendLayout()
         Me.mnuAlteracao.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
+        CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -108,29 +94,11 @@ Partial Class frmProdutoListagem
         '
         Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTitulo.Dock = System.Windows.Forms.DockStyle.None
-        Me.lblTitulo.Location = New System.Drawing.Point(2606, 9)
+        Me.lblTitulo.Location = New System.Drawing.Point(11944, 9)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(330, 34)
         Me.lblTitulo.TabIndex = 2
         Me.lblTitulo.Text = "Produtos -  Procura Avançada"
-        '
-        'txtAutor
-        '
-        Me.txtAutor.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtAutor.Location = New System.Drawing.Point(84, 508)
-        Me.txtAutor.Name = "txtAutor"
-        Me.txtAutor.Size = New System.Drawing.Size(346, 27)
-        Me.txtAutor.TabIndex = 4
-        '
-        'Label2
-        '
-        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(34, 511)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(44, 19)
-        Me.Label2.TabIndex = 3
-        Me.Label2.Text = "Autor"
         '
         'btnFechar
         '
@@ -153,7 +121,7 @@ Partial Class frmProdutoListagem
         Me.btnEditar.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnEditar.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnEditar.Image = Global.NovaSiao.My.Resources.Resources.editar
-        Me.btnEditar.Location = New System.Drawing.Point(165, 5)
+        Me.btnEditar.Location = New System.Drawing.Point(168, 5)
         Me.btnEditar.Name = "btnEditar"
         Me.btnEditar.Size = New System.Drawing.Size(153, 41)
         Me.btnEditar.TabIndex = 1
@@ -175,30 +143,10 @@ Partial Class frmProdutoListagem
         Me.btnClose.RoundedCornersMask = CType(15, Byte)
         Me.btnClose.ShowFocusRectangle = False
         Me.btnClose.Size = New System.Drawing.Size(20, 20)
-        Me.btnClose.TabIndex = 3
+        Me.btnClose.TabIndex = 2
         Me.btnClose.TabStop = False
         Me.btnClose.UseVisualStyleBackColor = False
         Me.btnClose.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICE2003SILVER
-        '
-        'txtProdutoTipo
-        '
-        Me.txtProdutoTipo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtProdutoTipo.Location = New System.Drawing.Point(639, 475)
-        Me.txtProdutoTipo.Name = "txtProdutoTipo"
-        Me.txtProdutoTipo.Size = New System.Drawing.Size(199, 27)
-        Me.txtProdutoTipo.TabIndex = 6
-        '
-        'Label12
-        '
-        Me.Label12.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label12.AutoSize = True
-        Me.Label12.BackColor = System.Drawing.Color.Transparent
-        Me.Label12.ForeColor = System.Drawing.Color.Black
-        Me.Label12.Location = New System.Drawing.Point(522, 478)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(111, 19)
-        Me.Label12.TabIndex = 5
-        Me.Label12.Text = "Tipo de Produto"
         '
         'btnNovo
         '
@@ -206,7 +154,7 @@ Partial Class frmProdutoListagem
         Me.btnNovo.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnNovo.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnNovo.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.btnNovo.Location = New System.Drawing.Point(324, 5)
+        Me.btnNovo.Location = New System.Drawing.Point(327, 5)
         Me.btnNovo.Name = "btnNovo"
         Me.btnNovo.Size = New System.Drawing.Size(153, 41)
         Me.btnNovo.TabIndex = 2
@@ -214,81 +162,6 @@ Partial Class frmProdutoListagem
         Me.btnNovo.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnNovo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnNovo.UseVisualStyleBackColor = True
-        '
-        'pnlAtivas
-        '
-        Me.pnlAtivas.BackColor = System.Drawing.Color.FromArgb(CType(CType(223, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(231, Byte), Integer))
-        Me.pnlAtivas.Controls.Add(Me.rbtInativas)
-        Me.pnlAtivas.Controls.Add(Me.rbtTodos)
-        Me.pnlAtivas.Controls.Add(Me.rbtAtivas)
-        Me.pnlAtivas.Location = New System.Drawing.Point(418, 57)
-        Me.pnlAtivas.Name = "pnlAtivas"
-        Me.pnlAtivas.Size = New System.Drawing.Size(289, 39)
-        Me.pnlAtivas.TabIndex = 17
-        '
-        'rbtInativas
-        '
-        Me.rbtInativas.AutoSize = True
-        Me.rbtInativas.Location = New System.Drawing.Point(104, 7)
-        Me.rbtInativas.Name = "rbtInativas"
-        Me.rbtInativas.Size = New System.Drawing.Size(78, 23)
-        Me.rbtInativas.TabIndex = 2
-        Me.rbtInativas.Tag = "2"
-        Me.rbtInativas.Text = "Inativos"
-        Me.rbtInativas.UseVisualStyleBackColor = True
-        '
-        'rbtTodos
-        '
-        Me.rbtTodos.AutoSize = True
-        Me.rbtTodos.Location = New System.Drawing.Point(198, 7)
-        Me.rbtTodos.Name = "rbtTodos"
-        Me.rbtTodos.Size = New System.Drawing.Size(65, 23)
-        Me.rbtTodos.TabIndex = 3
-        Me.rbtTodos.Tag = "3"
-        Me.rbtTodos.Text = "Todos"
-        Me.rbtTodos.UseVisualStyleBackColor = True
-        '
-        'rbtAtivas
-        '
-        Me.rbtAtivas.AutoSize = True
-        Me.rbtAtivas.Checked = True
-        Me.rbtAtivas.Location = New System.Drawing.Point(17, 7)
-        Me.rbtAtivas.Name = "rbtAtivas"
-        Me.rbtAtivas.Size = New System.Drawing.Size(67, 23)
-        Me.rbtAtivas.TabIndex = 0
-        Me.rbtAtivas.TabStop = True
-        Me.rbtAtivas.Tag = "1"
-        Me.rbtAtivas.Text = "Ativos"
-        Me.rbtAtivas.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 9)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(82, 19)
-        Me.Label1.TabIndex = 5
-        Me.Label1.Text = "Movimento"
-        '
-        'txtProduto
-        '
-        Me.txtProduto.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtProduto.Location = New System.Drawing.Point(84, 475)
-        Me.txtProduto.Name = "txtProduto"
-        Me.txtProduto.Size = New System.Drawing.Size(346, 27)
-        Me.txtProduto.TabIndex = 2
-        '
-        'Label3
-        '
-        Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label3.AutoSize = True
-        Me.Label3.BackColor = System.Drawing.Color.Transparent
-        Me.Label3.ForeColor = System.Drawing.Color.Black
-        Me.Label3.Location = New System.Drawing.Point(19, 478)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(59, 19)
-        Me.Label3.TabIndex = 1
-        Me.Label3.Text = "Produto"
         '
         'lblFilial
         '
@@ -317,161 +190,13 @@ Partial Class frmProdutoListagem
         Me.Label6.Text = "Filial"
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
-        'lstListagem
-        '
-        Me.lstListagem.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lstListagem.BackColor = System.Drawing.Color.White
-        Me.lstListagem.CheckBoxes = ComponentOwl.BetterListView.BetterListViewCheckBoxes.TwoState
-        Me.lstListagem.Columns.Add(Me.clnRGProduto)
-        Me.lstListagem.Columns.Add(Me.clnProduto)
-        Me.lstListagem.Columns.Add(Me.clnAutor)
-        Me.lstListagem.Columns.Add(Me.clnPreco)
-        Me.lstListagem.Columns.Add(Me.clnEstoque)
-        Me.lstListagem.Columns.Add(Me.clnEstoqueMinimo)
-        Me.lstListagem.Columns.Add(Me.clnEstoqueIdeal)
-        Me.lstListagem.Columns.Add(Me.clnAtivo)
-        Me.lstListagem.Columns.Add(Me.clnTipo)
-        Me.lstListagem.Columns.Add(Me.clnSubTipo)
-        Me.lstListagem.Columns.Add(Me.clnCategoria)
-        Me.lstListagem.Columns.Add(Me.clnFabricante)
-        Me.lstListagem.Font = New System.Drawing.Font("Pathway Gothic One", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lstListagem.ForeColorColumns = System.Drawing.Color.Black
-        Me.lstListagem.HeaderStyle = ComponentOwl.BetterListView.BetterListViewHeaderStyle.Sortable
-        Me.lstListagem.Location = New System.Drawing.Point(12, 102)
-        Me.lstListagem.Margin = New System.Windows.Forms.Padding(3, 3, 3, 10)
-        Me.lstListagem.MultiSelect = False
-        Me.lstListagem.Name = "lstListagem"
-        Me.lstListagem.Size = New System.Drawing.Size(1326, 360)
-        Me.lstListagem.SmoothScroll = False
-        Me.lstListagem.TabIndex = 19
-        '
-        'clnRGProduto
-        '
-        Me.clnRGProduto.AllowResize = False
-        Me.clnRGProduto.ForeColor = System.Drawing.Color.Black
-        Me.clnRGProduto.Name = "clnRGProduto"
-        Me.clnRGProduto.Text = "Reg."
-        Me.clnRGProduto.Width = 70
-        '
-        'clnProduto
-        '
-        Me.clnProduto.Name = "clnProduto"
-        Me.clnProduto.Text = "Produto"
-        Me.clnProduto.Width = 300
-        '
-        'clnAutor
-        '
-        Me.clnAutor.Name = "clnAutor"
-        Me.clnAutor.Text = "Autor"
-        Me.clnAutor.Width = 200
-        '
-        'clnPreco
-        '
-        Me.clnPreco.AlignHorizontal = ComponentOwl.BetterListView.TextAlignmentHorizontal.Right
-        Me.clnPreco.AllowResize = False
-        Me.clnPreco.Name = "clnPreco"
-        Me.clnPreco.Text = "Preço"
-        Me.clnPreco.Width = 80
-        '
-        'clnEstoque
-        '
-        Me.clnEstoque.AlignHorizontal = ComponentOwl.BetterListView.TextAlignmentHorizontal.Right
-        Me.clnEstoque.AllowResize = False
-        Me.clnEstoque.DisplayMember = "Estoque"
-        Me.clnEstoque.Name = "clnEstoque"
-        Me.clnEstoque.Text = "Estoque"
-        Me.clnEstoque.Width = 70
-        '
-        'clnEstoqueMinimo
-        '
-        Me.clnEstoqueMinimo.AlignHorizontal = ComponentOwl.BetterListView.TextAlignmentHorizontal.Right
-        Me.clnEstoqueMinimo.AllowResize = False
-        Me.clnEstoqueMinimo.DisplayMember = "EstoqueMinimo"
-        Me.clnEstoqueMinimo.Name = "clnEstoqueMinimo"
-        Me.clnEstoqueMinimo.Text = "E.Min."
-        Me.clnEstoqueMinimo.Width = 70
-        '
-        'clnEstoqueIdeal
-        '
-        Me.clnEstoqueIdeal.AlignHorizontal = ComponentOwl.BetterListView.TextAlignmentHorizontal.Right
-        Me.clnEstoqueIdeal.AllowResize = False
-        Me.clnEstoqueIdeal.DisplayMember = "EstoqueIdeal"
-        Me.clnEstoqueIdeal.Name = "clnEstoqueIdeal"
-        Me.clnEstoqueIdeal.Text = "E.Ideal"
-        Me.clnEstoqueIdeal.Width = 70
-        '
-        'clnAtivo
-        '
-        Me.clnAtivo.AlignHorizontal = ComponentOwl.BetterListView.TextAlignmentHorizontal.Center
-        Me.clnAtivo.Name = "clnAtivo"
-        Me.clnAtivo.Text = "Ativo"
-        Me.clnAtivo.Width = 70
-        '
-        'clnTipo
-        '
-        Me.clnTipo.Name = "clnTipo"
-        Me.clnTipo.Text = "Tipo"
-        '
-        'clnSubTipo
-        '
-        Me.clnSubTipo.Name = "clnSubTipo"
-        Me.clnSubTipo.Text = "Subtipo"
-        '
-        'clnCategoria
-        '
-        Me.clnCategoria.Name = "clnCategoria"
-        Me.clnCategoria.Text = "Categoria"
-        '
-        'clnFabricante
-        '
-        Me.clnFabricante.Name = "clnFabricante"
-        Me.clnFabricante.Text = "Fabricante"
-        '
-        'txtProdutoCategoria
-        '
-        Me.txtProdutoCategoria.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtProdutoCategoria.Location = New System.Drawing.Point(639, 541)
-        Me.txtProdutoCategoria.Name = "txtProdutoCategoria"
-        Me.txtProdutoCategoria.Size = New System.Drawing.Size(199, 27)
-        Me.txtProdutoCategoria.TabIndex = 10
-        '
-        'txtProdutoSubTipo
-        '
-        Me.txtProdutoSubTipo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtProdutoSubTipo.Location = New System.Drawing.Point(639, 508)
-        Me.txtProdutoSubTipo.Name = "txtProdutoSubTipo"
-        Me.txtProdutoSubTipo.Size = New System.Drawing.Size(199, 27)
-        Me.txtProdutoSubTipo.TabIndex = 8
-        '
-        'Label5
-        '
-        Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(476, 511)
-        Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(157, 19)
-        Me.Label5.TabIndex = 7
-        Me.Label5.Text = "Subtipo | Classificação"
-        '
-        'Label4
-        '
-        Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(561, 544)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(72, 19)
-        Me.Label4.TabIndex = 9
-        Me.Label4.Text = "Categoria"
-        '
         'btnPrintListagem
         '
         Me.btnPrintListagem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnPrintListagem.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnPrintListagem.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnPrintListagem.Image = Global.NovaSiao.My.Resources.Resources.print
-        Me.btnPrintListagem.Location = New System.Drawing.Point(6, 5)
+        Me.btnPrintListagem.Location = New System.Drawing.Point(9, 5)
         Me.btnPrintListagem.Name = "btnPrintListagem"
         Me.btnPrintListagem.Size = New System.Drawing.Size(153, 41)
         Me.btnPrintListagem.TabIndex = 0
@@ -480,52 +205,13 @@ Partial Class frmProdutoListagem
         Me.btnPrintListagem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnPrintListagem.UseVisualStyleBackColor = True
         '
-        'Label7
-        '
-        Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(556, 577)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(77, 19)
-        Me.Label7.TabIndex = 11
-        Me.Label7.Text = "Fabricante"
-        '
-        'txtFabricante
-        '
-        Me.txtFabricante.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtFabricante.Location = New System.Drawing.Point(639, 574)
-        Me.txtFabricante.Name = "txtFabricante"
-        Me.txtFabricante.Size = New System.Drawing.Size(199, 27)
-        Me.txtFabricante.TabIndex = 12
-        '
-        'cmbMovimento
-        '
-        Me.cmbMovimento.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-        Me.cmbMovimento.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cmbMovimento.FormattingEnabled = True
-        Me.cmbMovimento.Location = New System.Drawing.Point(100, 6)
-        Me.cmbMovimento.Name = "cmbMovimento"
-        Me.cmbMovimento.RestrictContentToListItems = True
-        Me.cmbMovimento.Size = New System.Drawing.Size(175, 27)
-        Me.cmbMovimento.TabIndex = 6
-        '
-        'pnlMovimento
-        '
-        Me.pnlMovimento.BackColor = System.Drawing.Color.FromArgb(CType(CType(223, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(231, Byte), Integer))
-        Me.pnlMovimento.Controls.Add(Me.cmbMovimento)
-        Me.pnlMovimento.Controls.Add(Me.Label1)
-        Me.pnlMovimento.Location = New System.Drawing.Point(721, 57)
-        Me.pnlMovimento.Name = "pnlMovimento"
-        Me.pnlMovimento.Size = New System.Drawing.Size(289, 39)
-        Me.pnlMovimento.TabIndex = 18
-        '
         'chkAlterarProdutos
         '
         Me.chkAlterarProdutos.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.chkAlterarProdutos.Appearance = System.Windows.Forms.Appearance.Button
         Me.chkAlterarProdutos.Enabled = False
         Me.chkAlterarProdutos.Image = Global.NovaSiao.My.Resources.Resources.refresh1
-        Me.chkAlterarProdutos.Location = New System.Drawing.Point(483, 5)
+        Me.chkAlterarProdutos.Location = New System.Drawing.Point(486, 5)
         Me.chkAlterarProdutos.Name = "chkAlterarProdutos"
         Me.chkAlterarProdutos.Size = New System.Drawing.Size(198, 41)
         Me.chkAlterarProdutos.TabIndex = 3
@@ -537,18 +223,21 @@ Partial Class frmProdutoListagem
         'btnLimpar
         '
         Me.btnLimpar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnLimpar.BackColor = System.Drawing.Color.Wheat
         Me.btnLimpar.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnLimpar.FlatAppearance.BorderColor = System.Drawing.Color.DarkRed
+        Me.btnLimpar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLimpar.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnLimpar.ForeColor = System.Drawing.Color.Brown
         Me.btnLimpar.Image = Global.NovaSiao.My.Resources.Resources.limpar_24x24
-        Me.btnLimpar.Location = New System.Drawing.Point(288, 566)
+        Me.btnLimpar.Location = New System.Drawing.Point(171, 565)
         Me.btnLimpar.Name = "btnLimpar"
-        Me.btnLimpar.Size = New System.Drawing.Size(142, 41)
-        Me.btnLimpar.TabIndex = 14
+        Me.btnLimpar.Size = New System.Drawing.Size(153, 52)
+        Me.btnLimpar.TabIndex = 6
         Me.btnLimpar.Text = "&Limpar"
         Me.btnLimpar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnLimpar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnLimpar.UseVisualStyleBackColor = True
+        Me.btnLimpar.UseVisualStyleBackColor = False
         '
         'mnuAlteracao
         '
@@ -611,12 +300,14 @@ Partial Class frmProdutoListagem
         'chkSelecionarTudo
         '
         Me.chkSelecionarTudo.AutoSize = True
-        Me.chkSelecionarTudo.Location = New System.Drawing.Point(24, 67)
+        Me.chkSelecionarTudo.Location = New System.Drawing.Point(21, 55)
+        Me.chkSelecionarTudo.Margin = New System.Windows.Forms.Padding(0)
         Me.chkSelecionarTudo.Name = "chkSelecionarTudo"
         Me.chkSelecionarTudo.Size = New System.Drawing.Size(137, 23)
-        Me.chkSelecionarTudo.TabIndex = 16
+        Me.chkSelecionarTudo.TabIndex = 1
         Me.chkSelecionarTudo.Text = "Selecionar Todos"
         Me.chkSelecionarTudo.UseVisualStyleBackColor = True
+        Me.chkSelecionarTudo.Visible = False
         '
         'Panel2
         '
@@ -631,73 +322,77 @@ Partial Class frmProdutoListagem
         Me.Panel2.Location = New System.Drawing.Point(3, 626)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(1344, 51)
-        Me.Panel2.TabIndex = 15
+        Me.Panel2.TabIndex = 10
         '
         'lblTotalProdutos
         '
         Me.lblTotalProdutos.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTotalProdutos.Location = New System.Drawing.Point(1191, 508)
+        Me.lblTotalProdutos.Location = New System.Drawing.Point(1132, 602)
         Me.lblTotalProdutos.Name = "lblTotalProdutos"
-        Me.lblTotalProdutos.Size = New System.Drawing.Size(148, 19)
-        Me.lblTotalProdutos.TabIndex = 24
-        Me.lblTotalProdutos.Text = "00 Produtos"
+        Me.lblTotalProdutos.Size = New System.Drawing.Size(206, 19)
+        Me.lblTotalProdutos.TabIndex = 9
+        Me.lblTotalProdutos.Text = "00 Produtos Encontrados"
         '
         'Label8
         '
         Me.Label8.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label8.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(1191, 483)
+        Me.Label8.Location = New System.Drawing.Point(1070, 602)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(78, 19)
-        Me.Label8.TabIndex = 24
+        Me.Label8.Size = New System.Drawing.Size(56, 19)
+        Me.Label8.TabIndex = 8
         Me.Label8.Text = "TOTAL:"
         '
         'lblSelecionados
         '
         Me.lblSelecionados.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblSelecionados.Location = New System.Drawing.Point(1191, 566)
+        Me.lblSelecionados.Location = New System.Drawing.Point(307, 56)
         Me.lblSelecionados.Name = "lblSelecionados"
         Me.lblSelecionados.Size = New System.Drawing.Size(148, 19)
-        Me.lblSelecionados.TabIndex = 24
+        Me.lblSelecionados.TabIndex = 3
         Me.lblSelecionados.Text = "00 Produtos"
         '
         'lblSelTitulo
         '
         Me.lblSelTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSelTitulo.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSelTitulo.Location = New System.Drawing.Point(1191, 541)
+        Me.lblSelTitulo.Location = New System.Drawing.Point(192, 56)
         Me.lblSelTitulo.Name = "lblSelTitulo"
         Me.lblSelTitulo.Size = New System.Drawing.Size(121, 19)
-        Me.lblSelTitulo.TabIndex = 24
+        Me.lblSelTitulo.TabIndex = 2
         Me.lblSelTitulo.Text = "SELECIONADOS:"
         '
         'btnPesquisar
         '
         Me.btnPesquisar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnPesquisar.BackColor = System.Drawing.Color.PowderBlue
         Me.btnPesquisar.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnPesquisar.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
+        Me.btnPesquisar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnPesquisar.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnPesquisar.ForeColor = System.Drawing.Color.DarkSlateGray
         Me.btnPesquisar.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
-        Me.btnPesquisar.Location = New System.Drawing.Point(140, 566)
+        Me.btnPesquisar.Location = New System.Drawing.Point(12, 565)
         Me.btnPesquisar.Name = "btnPesquisar"
-        Me.btnPesquisar.Size = New System.Drawing.Size(142, 41)
-        Me.btnPesquisar.TabIndex = 13
+        Me.btnPesquisar.Size = New System.Drawing.Size(153, 52)
+        Me.btnPesquisar.TabIndex = 5
         Me.btnPesquisar.Text = "&Pesquisar"
         Me.btnPesquisar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnPesquisar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnPesquisar.UseVisualStyleBackColor = True
+        Me.btnPesquisar.UseVisualStyleBackColor = False
         '
         'btnFirst
         '
         Me.btnFirst.AllowAnimations = True
         Me.btnFirst.BackColor = System.Drawing.Color.Transparent
-        Me.btnFirst.Image = Global.NovaSiao.My.Resources.Resources.First_32px
+        Me.btnFirst.Image = Global.NovaSiao.My.Resources.Resources.First_32px_disabled
         Me.btnFirst.Location = New System.Drawing.Point(3, 3)
         Me.btnFirst.Name = "btnFirst"
         Me.btnFirst.RoundedCornersMask = CType(15, Byte)
         Me.btnFirst.Size = New System.Drawing.Size(32, 32)
         Me.btnFirst.StyleKey = "CircularButton"
-        Me.btnFirst.TabIndex = 25
+        Me.btnFirst.TabIndex = 0
+        Me.btnFirst.TabStop = False
         Me.btnFirst.UseVisualStyleBackColor = False
         Me.btnFirst.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
         '
@@ -705,13 +400,14 @@ Partial Class frmProdutoListagem
         '
         Me.btnPrev.AllowAnimations = True
         Me.btnPrev.BackColor = System.Drawing.Color.Transparent
-        Me.btnPrev.Image = Global.NovaSiao.My.Resources.Resources.Previous_32px
+        Me.btnPrev.Image = Global.NovaSiao.My.Resources.Resources.Previous_32px_disabled
         Me.btnPrev.Location = New System.Drawing.Point(41, 3)
         Me.btnPrev.Name = "btnPrev"
         Me.btnPrev.RoundedCornersMask = CType(15, Byte)
         Me.btnPrev.Size = New System.Drawing.Size(32, 32)
         Me.btnPrev.StyleKey = "CircularButton"
-        Me.btnPrev.TabIndex = 25
+        Me.btnPrev.TabIndex = 1
+        Me.btnPrev.TabStop = False
         Me.btnPrev.UseVisualStyleBackColor = False
         Me.btnPrev.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
         '
@@ -719,13 +415,16 @@ Partial Class frmProdutoListagem
         '
         Me.btnNext.AllowAnimations = True
         Me.btnNext.BackColor = System.Drawing.Color.Transparent
-        Me.btnNext.Image = Global.NovaSiao.My.Resources.Resources.Next_32px
+        Me.btnNext.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Salmon
+        Me.btnNext.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Silver
+        Me.btnNext.Image = Global.NovaSiao.My.Resources.Resources.Next_32px_disabled
         Me.btnNext.Location = New System.Drawing.Point(194, 3)
         Me.btnNext.Name = "btnNext"
         Me.btnNext.RoundedCornersMask = CType(15, Byte)
         Me.btnNext.Size = New System.Drawing.Size(32, 32)
         Me.btnNext.StyleKey = "CircularButton"
-        Me.btnNext.TabIndex = 25
+        Me.btnNext.TabIndex = 3
+        Me.btnNext.TabStop = False
         Me.btnNext.UseVisualStyleBackColor = False
         Me.btnNext.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
         '
@@ -733,13 +432,14 @@ Partial Class frmProdutoListagem
         '
         Me.btnLast.AllowAnimations = True
         Me.btnLast.BackColor = System.Drawing.Color.Transparent
-        Me.btnLast.Image = Global.NovaSiao.My.Resources.Resources.Last_32px
+        Me.btnLast.Image = Global.NovaSiao.My.Resources.Resources.Last_32px_disabled
         Me.btnLast.Location = New System.Drawing.Point(232, 3)
         Me.btnLast.Name = "btnLast"
         Me.btnLast.RoundedCornersMask = CType(15, Byte)
         Me.btnLast.Size = New System.Drawing.Size(32, 32)
         Me.btnLast.StyleKey = "CircularButton"
-        Me.btnLast.TabIndex = 25
+        Me.btnLast.TabIndex = 4
+        Me.btnLast.TabStop = False
         Me.btnLast.UseVisualStyleBackColor = False
         Me.btnLast.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
         '
@@ -750,126 +450,218 @@ Partial Class frmProdutoListagem
         Me.Panel3.Controls.Add(Me.btnPrev)
         Me.Panel3.Controls.Add(Me.btnNext)
         Me.Panel3.Controls.Add(Me.lblPaginas)
-        Me.Panel3.Location = New System.Drawing.Point(879, 563)
+        Me.Panel3.Location = New System.Drawing.Point(1071, 559)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(268, 38)
-        Me.Panel3.TabIndex = 26
+        Me.Panel3.TabIndex = 7
         '
         'lblPaginas
         '
         Me.lblPaginas.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblPaginas.Location = New System.Drawing.Point(80, 10)
+        Me.lblPaginas.Location = New System.Drawing.Point(80, 9)
         Me.lblPaginas.Name = "lblPaginas"
         Me.lblPaginas.Size = New System.Drawing.Size(108, 19)
-        Me.lblPaginas.TabIndex = 24
+        Me.lblPaginas.TabIndex = 2
         Me.lblPaginas.Text = "Pag. 1 de 1"
         Me.lblPaginas.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'dgvItens
+        '
+        Me.dgvItens.AllowUserToAddRows = False
+        Me.dgvItens.AllowUserToDeleteRows = False
+        Me.dgvItens.AllowUserToResizeColumns = False
+        Me.dgvItens.AllowUserToResizeRows = False
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Azure
+        Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        Me.dgvItens.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.dgvItens.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
+        Me.dgvItens.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.dgvItens.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
+        Me.dgvItens.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable
+        Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        Me.dgvItens.ColumnHeadersHeight = 30
+        Me.dgvItens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnSelect, Me.clnRGProduto, Me.clnProduto, Me.clnAutor, Me.clnTipo, Me.clnSubTipo, Me.clnCategoria, Me.clnFabricante, Me.clnEstoque, Me.clnEstoqueNivel, Me.clnEstoqueIdeal, Me.clnPreco, Me.clnAtivoImage})
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.SteelBlue
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle4
+        Me.dgvItens.EnableHeadersVisualStyles = False
+        Me.dgvItens.GridColor = System.Drawing.SystemColors.ActiveCaption
+        Me.dgvItens.Location = New System.Drawing.Point(12, 85)
+        Me.dgvItens.MultiSelect = False
+        Me.dgvItens.Name = "dgvItens"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
+        Me.dgvItens.RowHeadersVisible = False
+        Me.dgvItens.RowHeadersWidth = 35
+        DataGridViewCellStyle6.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Pathway Gothic One", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.Black
+        Me.dgvItens.RowsDefaultCellStyle = DataGridViewCellStyle6
+        Me.dgvItens.RowTemplate.DefaultCellStyle.Font = New System.Drawing.Font("Pathway Gothic One", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dgvItens.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black
+        Me.dgvItens.RowTemplate.Height = 33
+        Me.dgvItens.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvItens.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvItens.Size = New System.Drawing.Size(1326, 468)
+        Me.dgvItens.TabIndex = 4
+        '
+        'clnSelect
+        '
+        Me.clnSelect.HeaderText = "S"
+        Me.clnSelect.Name = "clnSelect"
+        Me.clnSelect.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.clnSelect.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.clnSelect.Width = 30
+        '
+        'clnRGProduto
+        '
+        DataGridViewCellStyle3.Format = "N0"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.clnRGProduto.DefaultCellStyle = DataGridViewCellStyle3
+        Me.clnRGProduto.HeaderText = "Reg."
+        Me.clnRGProduto.MaxInputLength = 20
+        Me.clnRGProduto.Name = "clnRGProduto"
+        Me.clnRGProduto.Width = 50
+        '
+        'clnProduto
+        '
+        Me.clnProduto.HeaderText = "Produto"
+        Me.clnProduto.MaxInputLength = 50
+        Me.clnProduto.Name = "clnProduto"
+        Me.clnProduto.Width = 300
+        '
+        'clnAutor
+        '
+        Me.clnAutor.HeaderText = "Autor/Artista"
+        Me.clnAutor.MaxInputLength = 50
+        Me.clnAutor.Name = "clnAutor"
+        Me.clnAutor.Width = 190
+        '
+        'clnTipo
+        '
+        Me.clnTipo.HeaderText = "Tipo"
+        Me.clnTipo.Name = "clnTipo"
+        Me.clnTipo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.clnTipo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.clnTipo.Width = 95
+        '
+        'clnSubTipo
+        '
+        Me.clnSubTipo.HeaderText = "Subtipo"
+        Me.clnSubTipo.Name = "clnSubTipo"
+        Me.clnSubTipo.Width = 95
+        '
+        'clnCategoria
+        '
+        Me.clnCategoria.HeaderText = "Categoria"
+        Me.clnCategoria.Name = "clnCategoria"
+        Me.clnCategoria.Width = 95
+        '
+        'clnFabricante
+        '
+        Me.clnFabricante.HeaderText = "Fabricante"
+        Me.clnFabricante.Name = "clnFabricante"
+        Me.clnFabricante.Width = 95
+        '
+        'clnEstoque
+        '
+        Me.clnEstoque.HeaderText = "Est."
+        Me.clnEstoque.Name = "clnEstoque"
+        Me.clnEstoque.Width = 65
+        '
+        'clnEstoqueNivel
+        '
+        Me.clnEstoqueNivel.HeaderText = "Niv."
+        Me.clnEstoqueNivel.MaxInputLength = 10
+        Me.clnEstoqueNivel.Name = "clnEstoqueNivel"
+        Me.clnEstoqueNivel.Width = 65
+        '
+        'clnEstoqueIdeal
+        '
+        Me.clnEstoqueIdeal.HeaderText = "Alvo"
+        Me.clnEstoqueIdeal.MaxInputLength = 10
+        Me.clnEstoqueIdeal.Name = "clnEstoqueIdeal"
+        Me.clnEstoqueIdeal.Width = 65
+        '
+        'clnPreco
+        '
+        Me.clnPreco.HeaderText = "Preço"
+        Me.clnPreco.MaxInputLength = 20
+        Me.clnPreco.Name = "clnPreco"
+        Me.clnPreco.Width = 80
+        '
+        'clnAtivoImage
+        '
+        Me.clnAtivoImage.HeaderText = "Ativo"
+        Me.clnAtivoImage.Name = "clnAtivoImage"
+        Me.clnAtivoImage.Width = 50
         '
         'frmProdutoListagem
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1350, 680)
+        Me.Controls.Add(Me.dgvItens)
+        Me.Controls.Add(Me.lblSelecionados)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.lblSelTitulo)
         Me.Controls.Add(Me.Label8)
-        Me.Controls.Add(Me.lblSelecionados)
         Me.Controls.Add(Me.lblTotalProdutos)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.chkSelecionarTudo)
-        Me.Controls.Add(Me.pnlMovimento)
-        Me.Controls.Add(Me.txtFabricante)
-        Me.Controls.Add(Me.txtProdutoCategoria)
-        Me.Controls.Add(Me.txtProdutoSubTipo)
-        Me.Controls.Add(Me.Label7)
-        Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.lstListagem)
-        Me.Controls.Add(Me.txtProduto)
-        Me.Controls.Add(Me.pnlAtivas)
-        Me.Controls.Add(Me.txtProdutoTipo)
-        Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label12)
         Me.Controls.Add(Me.btnPesquisar)
         Me.Controls.Add(Me.btnLimpar)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.txtAutor)
         Me.KeyPreview = True
         Me.Name = "frmProdutoListagem"
         Me.Text = "Procurar Saída de Produto"
-        Me.Controls.SetChildIndex(Me.txtAutor, 0)
-        Me.Controls.SetChildIndex(Me.Label2, 0)
         Me.Controls.SetChildIndex(Me.btnLimpar, 0)
         Me.Controls.SetChildIndex(Me.btnPesquisar, 0)
-        Me.Controls.SetChildIndex(Me.Label12, 0)
-        Me.Controls.SetChildIndex(Me.Label3, 0)
-        Me.Controls.SetChildIndex(Me.txtProdutoTipo, 0)
-        Me.Controls.SetChildIndex(Me.pnlAtivas, 0)
-        Me.Controls.SetChildIndex(Me.txtProduto, 0)
-        Me.Controls.SetChildIndex(Me.lstListagem, 0)
-        Me.Controls.SetChildIndex(Me.Label4, 0)
-        Me.Controls.SetChildIndex(Me.Label5, 0)
-        Me.Controls.SetChildIndex(Me.Label7, 0)
-        Me.Controls.SetChildIndex(Me.txtProdutoSubTipo, 0)
-        Me.Controls.SetChildIndex(Me.txtProdutoCategoria, 0)
-        Me.Controls.SetChildIndex(Me.txtFabricante, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
-        Me.Controls.SetChildIndex(Me.pnlMovimento, 0)
         Me.Controls.SetChildIndex(Me.chkSelecionarTudo, 0)
         Me.Controls.SetChildIndex(Me.Panel2, 0)
         Me.Controls.SetChildIndex(Me.lblTotalProdutos, 0)
-        Me.Controls.SetChildIndex(Me.lblSelecionados, 0)
         Me.Controls.SetChildIndex(Me.Label8, 0)
         Me.Controls.SetChildIndex(Me.lblSelTitulo, 0)
         Me.Controls.SetChildIndex(Me.Panel3, 0)
+        Me.Controls.SetChildIndex(Me.lblSelecionados, 0)
+        Me.Controls.SetChildIndex(Me.dgvItens, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.pnlAtivas.ResumeLayout(False)
-        Me.pnlAtivas.PerformLayout()
-        CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.pnlMovimento.ResumeLayout(False)
-        Me.pnlMovimento.PerformLayout()
         Me.mnuAlteracao.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
+        CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents txtAutor As TextBox
-    Friend WithEvents Label2 As Label
     Friend WithEvents btnFechar As Button
     Friend WithEvents btnEditar As Button
     Friend WithEvents btnClose As VIBlend.WinForms.Controls.vFormButton
-    Friend WithEvents txtProdutoTipo As TextBox
-    Friend WithEvents Label12 As Label
     Friend WithEvents btnNovo As Button
-    Friend WithEvents pnlAtivas As Panel
-    Friend WithEvents rbtInativas As RadioButton
-    Friend WithEvents rbtAtivas As RadioButton
-    Friend WithEvents cmbMovimento As Controles.ComboBox_OnlyValues
-    Friend WithEvents Label1 As Label
-    Friend WithEvents txtProduto As TextBox
-    Friend WithEvents Label3 As Label
     Friend WithEvents lblFilial As Label
     Friend WithEvents Label6 As Label
-    Friend WithEvents lstListagem As ComponentOwl.BetterListView.BetterListView
-    Friend WithEvents clnRGProduto As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents clnPreco As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents clnEstoque As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents clnEstoqueMinimo As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents clnEstoqueIdeal As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents clnProduto As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents clnAutor As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents clnAtivo As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents txtProdutoCategoria As TextBox
-    Friend WithEvents txtProdutoSubTipo As TextBox
-    Friend WithEvents Label5 As Label
-    Friend WithEvents Label4 As Label
-    Friend WithEvents rbtTodos As RadioButton
     Friend WithEvents btnPrintListagem As Button
-    Friend WithEvents Label7 As Label
-    Friend WithEvents txtFabricante As TextBox
-    Friend WithEvents pnlMovimento As Panel
     Friend WithEvents chkAlterarProdutos As CheckBox
     Friend WithEvents btnLimpar As Button
     Friend WithEvents mnuAlteracao As ContextMenuStrip
@@ -886,10 +678,6 @@ Partial Class frmProdutoListagem
     Friend WithEvents Label8 As Label
     Friend WithEvents lblSelecionados As Label
     Friend WithEvents lblSelTitulo As Label
-    Friend WithEvents clnTipo As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents clnSubTipo As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents clnCategoria As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents clnFabricante As ComponentOwl.BetterListView.BetterListViewColumnHeader
     Friend WithEvents itemAlterarCategoria As ToolStripMenuItem
     Friend WithEvents btnPesquisar As Button
     Friend WithEvents btnFirst As VIBlend.WinForms.Controls.vCircularButton
@@ -898,4 +686,18 @@ Partial Class frmProdutoListagem
     Friend WithEvents btnLast As VIBlend.WinForms.Controls.vCircularButton
     Friend WithEvents Panel3 As Panel
     Friend WithEvents lblPaginas As Label
+    Friend WithEvents dgvItens As Controles.ctrlDataGridView
+    Friend WithEvents clnSelect As DataGridViewCheckBoxColumn
+    Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
+    Friend WithEvents clnProduto As DataGridViewTextBoxColumn
+    Friend WithEvents clnAutor As DataGridViewTextBoxColumn
+    Friend WithEvents clnTipo As DataGridViewTextBoxColumn
+    Friend WithEvents clnSubTipo As DataGridViewTextBoxColumn
+    Friend WithEvents clnCategoria As DataGridViewTextBoxColumn
+    Friend WithEvents clnFabricante As DataGridViewTextBoxColumn
+    Friend WithEvents clnEstoque As DataGridViewTextBoxColumn
+    Friend WithEvents clnEstoqueNivel As DataGridViewTextBoxColumn
+    Friend WithEvents clnEstoqueIdeal As DataGridViewTextBoxColumn
+    Friend WithEvents clnPreco As DataGridViewTextBoxColumn
+    Friend WithEvents clnAtivoImage As DataGridViewImageColumn
 End Class

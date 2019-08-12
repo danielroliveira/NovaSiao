@@ -163,8 +163,11 @@
   <data name="Cliente_Ativo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cliente_Ativo.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="NovoPeq" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\NovoPeq.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Previous_32px_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_32px_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Last_32px" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Last_32px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="search_peq" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\search_peq1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -205,8 +208,8 @@
   <data name="Imprimir" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Imprimir.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="delete_page_24px" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\delete_page_24px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="First_32px_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\First_32px_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Adiconar_Usuário" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Adiconar_Usuário.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -234,6 +237,9 @@
   </data>
   <data name="page_process" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\page_process.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="delete_page_24px" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\delete_page_24px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="block" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\block.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -322,6 +328,9 @@
   <data name="Salvar_32x32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Salvar 32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Next_32px_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_32px_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="APagar_30px" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\APagar_30px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -342,6 +351,9 @@
   </data>
   <data name="limpar_24x24" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\limpar 24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="NovoPeq" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\NovoPeq.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="dbbackup_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\dbbackup_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -373,7 +385,7 @@
   <data name="Salvar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Salvar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Last_32px" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Last_32px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Last_32px_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Last_32px_disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
