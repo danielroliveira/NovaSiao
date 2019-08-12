@@ -25,7 +25,7 @@ Public Class frmProdutoListagem
     '
     '--- PAGINACAO
     Private _totalProdutos As Integer ' quantidade total de produtos da listagem
-    Const _itemsPorPagina As Integer = 13 ' quantidade de itens que cabem na listagem
+    Const _itemsPorPagina As Integer = 14 ' quantidade de itens que cabem na listagem
     Const rowHeight As Integer = 32 '--- define o tamanho da row no DataGridView
     Private _paginaAtual As Integer = 1
     '
@@ -75,13 +75,15 @@ Public Class frmProdutoListagem
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
+            Dim myOrder As String = "Produto"
             '--- Get BD Dados
             Dim startRecord = (PaginaAtual * _itemsPorPagina) - _itemsPorPagina
             prodLista = prodBLL.GetProdutosWithEstoque_Where_Limited(_IDFilial,
                                                                      GetWhere,
                                                                      _itemsPorPagina,
                                                                      startRecord,
-                                                                     totalProdutos)
+                                                                     totalProdutos,
+                                                                     myOrder)
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Obter lista de produtos..." & vbNewLine &
@@ -181,13 +183,19 @@ Public Class frmProdutoListagem
             If value = 0 Then
                 lblTotalProdutos.Text = "Nenhum Produto Encontrado"
                 VerificaNavegacaoButtons()
+                btnLimpar.Enabled = False
+                chkSelecionarTudo.Enabled = False
             ElseIf value = 1 Then
                 lblTotalProdutos.Text = "01 Produto Encontrado"
                 VerificaNavegacaoButtons()
+                btnLimpar.Enabled = True
+                chkSelecionarTudo.Enabled = True
             Else
                 lblTotalProdutos.Text = Format(value, "00") & " Produtos Encontrados"
                 lblPaginas.Text = "Pag. 1 de 1"
                 VerificaNavegacaoButtons()
+                btnLimpar.Enabled = True
+                chkSelecionarTudo.Enabled = True
             End If
             '
         End Set
@@ -521,9 +529,8 @@ Public Class frmProdutoListagem
         AtualizaListagem()
         '
     End Sub
-
     '
-    Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
+    Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click, miEditarProduto.Click
 
         If dgvItens.SelectedRows.Count = 0 Then
             MessageBox.Show("Não existe nenhum PRODUTO selecionado na listagem", "Escolher",
@@ -533,15 +540,8 @@ Public Class frmProdutoListagem
         '
         Dim clProd As clProduto = dgvItens.SelectedRows(0).DataBoundItem
         '
-        Dim frm As Form = New frmProdutoTransacoes(clProd, Me)
-        frm.ShowDialog()
-
-        Exit Sub
-
-
-        '
         '--- Verifica se o form Produto ja esta aberto
-        'Dim frm As Form = Nothing
+        Dim frm As Form = Nothing
         '
         For Each f As Form In Application.OpenForms
             If f.Name = "frmProduto" Then
@@ -563,7 +563,7 @@ Public Class frmProdutoListagem
         ''
     End Sub
     '
-    Private Sub dgvListagem_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs)
+    Private Sub dgvItens_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
         btnEditar_Click(New Object, New EventArgs)
     End Sub
     '
@@ -671,6 +671,11 @@ Public Class frmProdutoListagem
     '--- SELECIONA TODOS OS PRODUTOS
     Private Sub chkSelecionarTudo_CheckedChanged(sender As Object, e As EventArgs) Handles chkSelecionarTudo.CheckedChanged
         '
+        If dgvItens.Rows.Count = 0 Then
+            chkSelecionarTudo.Checked = False
+            Return
+        End If
+        '
         For Each r In dgvItens.Rows
             r.Cells(0).Value = chkSelecionarTudo.Checked
         Next
@@ -727,7 +732,27 @@ Public Class frmProdutoListagem
     '
     Private Sub itemDesativar_Click(sender As Object, e As EventArgs) Handles itemDesativar.Click
         '
-        ' Verifica se existe item selecionado
+        '--- check Estoque
+        For Each r As DataGridViewRow In dgvItens.Rows
+            If r.Cells(0).Value = True Then
+                Dim clProd As clProduto = r.DataBoundItem
+                '
+                If Not IsNothing(clProd.Estoque) AndAlso clProd.Estoque > 0 Then
+                    '
+                    AbrirDialog("Os produto " + clProd.Produto + " ainda possui quantidade em estoque..." + vbCrLf +
+                                "Não é possível desativar um produto que possui estoque." + vbCrLf +
+                                "Esse produto será retirado da seleção...",
+                                "Produto com Estoque",
+                                frmDialog.DialogType.OK,
+                                frmDialog.DialogIcon.Information)
+                    r.Cells(0).Value = False
+                    '
+                End If
+                '
+            End If
+        Next
+        '
+        ' Verifica se ainda existem produtos selecionados
         Dim sel = ItensSelecionadosCount()
         '
         If sel = 0 Then
@@ -1010,7 +1035,7 @@ Public Class frmProdutoListagem
             Return
         End If
         '
-        ' Abre o dialog frmProdutoAlterarEstMinimoIdeal para escolher novo Fabricante
+        ' Abre o dialog frmProdutoAlterarEstMinimoIdeal
         Dim frmF As New frmProdutoAlterarEstMinimoIdeal(Me)
         '
         frmF.ShowDialog()
@@ -1165,5 +1190,144 @@ Public Class frmProdutoListagem
     End Sub
     '
 #End Region '/ PAGINACAO
+    '
+#Region "MENU PRODUTO | ITENS"
+    '
+    ' CONTROLE DO MENU SUSPENSO
+    '----------------------------------------------------------------------------------------------------------
+    Private Sub dgvItens_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvItens.MouseDown
+        '
+        If e.Button = MouseButtons.Right Then
+            '
+            Dim c As Control = DirectCast(sender, Control)
+            Dim hit As DataGridView.HitTestInfo = dgvItens.HitTest(e.X, e.Y)
+            dgvItens.ClearSelection()
+            '
+            '---VERIFICAÇÕES NECESSÁRIAS
+            If Not hit.Type = DataGridViewHitTestType.Cell Then Exit Sub
+            '
+            ' seleciona o ROW
+            dgvItens.Rows(hit.RowIndex).Cells(0).Selected = True
+            dgvItens.Rows(hit.RowIndex).Selected = True
+            '
+
+            ' Habilita | Desabilita itens do menu
+            Dim prod As clProduto = dgvItens.Rows(hit.RowIndex).DataBoundItem
+            '
+            If prod.ProdutoAtivo = True Then
+                miAtivarProduto.Enabled = False
+                miDesativarProduto.Enabled = True
+            Else
+                miAtivarProduto.Enabled = True
+                miDesativarProduto.Enabled = False
+            End If
+            '
+            ' revela menu
+            mnuProduto.Show(c.PointToScreen(e.Location))
+            '
+        End If
+        '
+    End Sub
+
+    Private Sub miFornecedores_Click(sender As Object, e As EventArgs) Handles miFornecedores.Click
+        '
+        If dgvItens.SelectedRows.Count = 0 Then
+            MessageBox.Show("Não existe nenhum PRODUTO selecionado na listagem", "Escolher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Exit Sub
+        End If
+        '
+        Dim clProd As clProduto = dgvItens.SelectedRows(0).DataBoundItem
+        '
+        Dim frm As Form = New frmProdutoFornecedor(clProd, Me)
+        frm.ShowDialog()
+        '
+    End Sub
+
+    Private Sub miTransacoes_Click(sender As Object, e As EventArgs) Handles miTransacoes.Click
+        '
+        If dgvItens.SelectedRows.Count = 0 Then
+            MessageBox.Show("Não existe nenhum PRODUTO selecionado na listagem", "Escolher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Exit Sub
+        End If
+        '
+        Dim clProd As clProduto = dgvItens.SelectedRows(0).DataBoundItem
+        '
+        Dim frm As Form = New frmProdutoTransacoes(clProd, Me)
+        frm.ShowDialog()
+        '
+    End Sub
+
+    Private Sub miAtivarProduto_Click(sender As Object, e As EventArgs) Handles miAtivarProduto.Click
+        '
+        If dgvItens.SelectedRows.Count = 0 Then
+            MessageBox.Show("Não existe nenhum PRODUTO selecionado na listagem", "Escolher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Exit Sub
+        End If
+        '
+        ' realiza a ATIVACAO
+        Try
+            Using pBLL As New ProdutoBLL
+                '
+                pBLL.ProdutoAtivarDesativar(dgvItens.SelectedRows(0).DataBoundItem.IDProduto, True)
+                '
+            End Using
+            '
+            AtualizaListagem()
+            '
+            MessageBox.Show("Ativação de Produto realizada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Ativar Produtos..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        '
+    End Sub
+
+    Private Sub miDesativarProduto_Click(sender As Object, e As EventArgs) Handles miDesativarProduto.Click
+        '
+        If dgvItens.SelectedRows.Count = 0 Then
+            MessageBox.Show("Não existe nenhum PRODUTO selecionado na listagem", "Escolher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Exit Sub
+        End If
+        '
+        '--- check Estoque
+        Dim clProd As clProduto = dgvItens.SelectedRows(0).DataBoundItem
+        '
+        If Not IsNothing(clProd.Estoque) AndAlso clProd.Estoque > 0 Then
+            '
+            AbrirDialog("Os produto " + clProd.Produto + " ainda possui quantidade em estoque..." + vbCrLf +
+                        "Não é possível desativar um produto que possui estoque.",
+                        "Produto com Estoque",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
+            '
+            Exit Sub
+            '
+        End If
+        '
+        ' realiza a DESATIVACAO
+        Try
+            Using pBLL As New ProdutoBLL
+                '
+                pBLL.ProdutoAtivarDesativar(dgvItens.SelectedRows(0).DataBoundItem.IDProduto, False)
+                '
+            End Using
+            '
+            AtualizaListagem()
+            '
+            MessageBox.Show("Inativação de Produto realizada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Desativar Produtos..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        '
+    End Sub
+    '
+#End Region '/ MENU PRODUTO | ITENS
     '
 End Class

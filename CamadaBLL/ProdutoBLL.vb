@@ -40,7 +40,8 @@ Public Class ProdutoBLL
                                                          myWhere As String,
                                                          maxRecords As Integer,
                                                          startRecord As Integer,
-                                                         ByRef countTotal As Integer
+                                                         ByRef countTotal As Integer,
+                                                         Optional myOrder As String = ""
                                                          ) As List(Of clProduto)
         '
         Dim db As New AcessoDados
@@ -64,7 +65,7 @@ Public Class ProdutoBLL
         Try
             '
             'Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, strSql)
-            Dim dt As DataTable = db.ExecuteQueryLimited_Dt(strSql, startRecord, maxRecords, countTotal)
+            Dim dt As DataTable = db.ExecuteQueryLimited_Dt(strSql, startRecord, maxRecords, countTotal, myOrder)
             '
             If IsNothing(dt) Then
                 Return Nothing

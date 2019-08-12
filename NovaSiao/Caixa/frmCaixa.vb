@@ -1424,7 +1424,7 @@ Public Class frmCaixa
             dgvListagem.CurrentCell = dgvListagem.Rows(i).Cells(0)
             '
             '--- seleciona o entrada no datagrid
-            dgvSaldos.CurrentCell = dgvSaldos.Rows(dgvSaldos.Rows.Count - 1).Cells(0)
+            dgvListagem.CurrentCell = dgvListagem.Rows(dgvListagem.Rows.Count - 1).Cells(0)
 
         Catch ex As Exception
             MessageBox.Show("Uma execeção ocorreu ao Inserir Entrada..." & vbNewLine &

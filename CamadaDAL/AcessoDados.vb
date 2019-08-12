@@ -446,7 +446,8 @@ Public Class AcessoDados
     Public Function ExecuteQueryLimited_Dt(QuerySQL As String,
                                            ByVal startRecord As Integer,
                                            ByVal maxRecords As Integer,
-                                           Optional ByRef countTotal As Integer = 0) As DataTable
+                                           Optional ByRef countTotal As Integer = 0,
+                                           Optional myOrder As String = "") As DataTable
         Try
             '--- Abre a conexão
             If conn.State = ConnectionState.Closed Then Connect()
@@ -506,7 +507,12 @@ Public Class AcessoDados
             '--- add params
             ParamList.ForEach(Sub(p) cmd.Parameters.Add(p))
             '
+            '--- add order by
+            If myOrder.Trim.Length > 0 Then
+                QuerySQL += " ORDER BY " + myOrder
+            End If
             cmd.CommandText = QuerySQL
+
             cmd.CommandTimeout = 1800
             sqlDtAdapter = New SqlDataAdapter(cmd)
             '

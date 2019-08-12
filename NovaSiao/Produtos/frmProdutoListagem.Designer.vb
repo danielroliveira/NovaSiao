@@ -20,12 +20,12 @@ Partial Class frmProdutoListagem
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.btnFechar = New System.Windows.Forms.Button()
         Me.btnEditar = New System.Windows.Forms.Button()
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
@@ -58,6 +58,14 @@ Partial Class frmProdutoListagem
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.lblPaginas = New System.Windows.Forms.Label()
         Me.dgvItens = New Controles.ctrlDataGridView()
+        Me.mnuProduto = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.miEditarProduto = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.miTransacoes = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miFornecedores = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.miAtivarProduto = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miDesativarProduto = New System.Windows.Forms.ToolStripMenuItem()
         Me.clnSelect = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -76,6 +84,7 @@ Partial Class frmProdutoListagem
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mnuProduto.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -94,7 +103,7 @@ Partial Class frmProdutoListagem
         '
         Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTitulo.Dock = System.Windows.Forms.DockStyle.None
-        Me.lblTitulo.Location = New System.Drawing.Point(11944, 9)
+        Me.lblTitulo.Location = New System.Drawing.Point(15598, 9)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(330, 34)
         Me.lblTitulo.TabIndex = 2
@@ -223,14 +232,15 @@ Partial Class frmProdutoListagem
         'btnLimpar
         '
         Me.btnLimpar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnLimpar.BackColor = System.Drawing.Color.Wheat
+        Me.btnLimpar.BackColor = System.Drawing.Color.AntiqueWhite
         Me.btnLimpar.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnLimpar.FlatAppearance.BorderColor = System.Drawing.Color.DarkRed
+        Me.btnLimpar.Enabled = False
+        Me.btnLimpar.FlatAppearance.BorderColor = System.Drawing.Color.Sienna
         Me.btnLimpar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.btnLimpar.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnLimpar.ForeColor = System.Drawing.Color.Brown
         Me.btnLimpar.Image = Global.NovaSiao.My.Resources.Resources.limpar_24x24
-        Me.btnLimpar.Location = New System.Drawing.Point(171, 565)
+        Me.btnLimpar.Location = New System.Drawing.Point(171, 566)
         Me.btnLimpar.Name = "btnLimpar"
         Me.btnLimpar.Size = New System.Drawing.Size(153, 52)
         Me.btnLimpar.TabIndex = 6
@@ -300,7 +310,8 @@ Partial Class frmProdutoListagem
         'chkSelecionarTudo
         '
         Me.chkSelecionarTudo.AutoSize = True
-        Me.chkSelecionarTudo.Location = New System.Drawing.Point(21, 55)
+        Me.chkSelecionarTudo.Enabled = False
+        Me.chkSelecionarTudo.Location = New System.Drawing.Point(21, 53)
         Me.chkSelecionarTudo.Margin = New System.Windows.Forms.Padding(0)
         Me.chkSelecionarTudo.Name = "chkSelecionarTudo"
         Me.chkSelecionarTudo.Size = New System.Drawing.Size(137, 23)
@@ -327,7 +338,7 @@ Partial Class frmProdutoListagem
         'lblTotalProdutos
         '
         Me.lblTotalProdutos.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTotalProdutos.Location = New System.Drawing.Point(1132, 602)
+        Me.lblTotalProdutos.Location = New System.Drawing.Point(1132, 604)
         Me.lblTotalProdutos.Name = "lblTotalProdutos"
         Me.lblTotalProdutos.Size = New System.Drawing.Size(206, 19)
         Me.lblTotalProdutos.TabIndex = 9
@@ -337,7 +348,7 @@ Partial Class frmProdutoListagem
         '
         Me.Label8.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label8.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(1070, 602)
+        Me.Label8.Location = New System.Drawing.Point(1070, 604)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(56, 19)
         Me.Label8.TabIndex = 8
@@ -346,7 +357,7 @@ Partial Class frmProdutoListagem
         'lblSelecionados
         '
         Me.lblSelecionados.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblSelecionados.Location = New System.Drawing.Point(307, 56)
+        Me.lblSelecionados.Location = New System.Drawing.Point(307, 54)
         Me.lblSelecionados.Name = "lblSelecionados"
         Me.lblSelecionados.Size = New System.Drawing.Size(148, 19)
         Me.lblSelecionados.TabIndex = 3
@@ -356,7 +367,7 @@ Partial Class frmProdutoListagem
         '
         Me.lblSelTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSelTitulo.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblSelTitulo.Location = New System.Drawing.Point(192, 56)
+        Me.lblSelTitulo.Location = New System.Drawing.Point(192, 54)
         Me.lblSelTitulo.Name = "lblSelTitulo"
         Me.lblSelTitulo.Size = New System.Drawing.Size(121, 19)
         Me.lblSelTitulo.TabIndex = 2
@@ -372,7 +383,7 @@ Partial Class frmProdutoListagem
         Me.btnPesquisar.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.btnPesquisar.ForeColor = System.Drawing.Color.DarkSlateGray
         Me.btnPesquisar.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
-        Me.btnPesquisar.Location = New System.Drawing.Point(12, 565)
+        Me.btnPesquisar.Location = New System.Drawing.Point(12, 566)
         Me.btnPesquisar.Name = "btnPesquisar"
         Me.btnPesquisar.Size = New System.Drawing.Size(153, 52)
         Me.btnPesquisar.TabIndex = 5
@@ -450,7 +461,7 @@ Partial Class frmProdutoListagem
         Me.Panel3.Controls.Add(Me.btnPrev)
         Me.Panel3.Controls.Add(Me.btnNext)
         Me.Panel3.Controls.Add(Me.lblPaginas)
-        Me.Panel3.Location = New System.Drawing.Point(1071, 559)
+        Me.Panel3.Location = New System.Drawing.Point(1071, 563)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(268, 38)
         Me.Panel3.TabIndex = 7
@@ -471,8 +482,8 @@ Partial Class frmProdutoListagem
         Me.dgvItens.AllowUserToDeleteRows = False
         Me.dgvItens.AllowUserToResizeColumns = False
         Me.dgvItens.AllowUserToResizeRows = False
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Azure
-        Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle13.BackColor = System.Drawing.Color.Azure
+        Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle13
         Me.dgvItens.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.dgvItens.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
@@ -480,51 +491,102 @@ Partial Class frmProdutoListagem
         Me.dgvItens.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
         Me.dgvItens.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable
         Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle14.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
         Me.dgvItens.ColumnHeadersHeight = 30
         Me.dgvItens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnSelect, Me.clnRGProduto, Me.clnProduto, Me.clnAutor, Me.clnTipo, Me.clnSubTipo, Me.clnCategoria, Me.clnFabricante, Me.clnEstoque, Me.clnEstoqueNivel, Me.clnEstoqueIdeal, Me.clnPreco, Me.clnAtivoImage})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.SteelBlue
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle16.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle16.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.Color.SteelBlue
+        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle16
         Me.dgvItens.EnableHeadersVisualStyles = False
         Me.dgvItens.GridColor = System.Drawing.SystemColors.ActiveCaption
-        Me.dgvItens.Location = New System.Drawing.Point(12, 85)
+        Me.dgvItens.Location = New System.Drawing.Point(12, 79)
         Me.dgvItens.MultiSelect = False
         Me.dgvItens.Name = "dgvItens"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItens.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle17.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
+        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.RowHeadersDefaultCellStyle = DataGridViewCellStyle17
         Me.dgvItens.RowHeadersVisible = False
         Me.dgvItens.RowHeadersWidth = 35
-        DataGridViewCellStyle6.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Pathway Gothic One", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.Black
-        Me.dgvItens.RowsDefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle18.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle18.Font = New System.Drawing.Font("Pathway Gothic One", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle18.ForeColor = System.Drawing.Color.Black
+        Me.dgvItens.RowsDefaultCellStyle = DataGridViewCellStyle18
         Me.dgvItens.RowTemplate.DefaultCellStyle.Font = New System.Drawing.Font("Pathway Gothic One", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dgvItens.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black
         Me.dgvItens.RowTemplate.Height = 33
         Me.dgvItens.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvItens.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvItens.Size = New System.Drawing.Size(1326, 468)
+        Me.dgvItens.Size = New System.Drawing.Size(1326, 480)
         Me.dgvItens.TabIndex = 4
+        '
+        'mnuProduto
+        '
+        Me.mnuProduto.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miEditarProduto, Me.ToolStripSeparator3, Me.miTransacoes, Me.miFornecedores, Me.ToolStripSeparator4, Me.miAtivarProduto, Me.miDesativarProduto})
+        Me.mnuProduto.Name = "mnuProduto"
+        Me.mnuProduto.Size = New System.Drawing.Size(169, 126)
+        '
+        'miEditarProduto
+        '
+        Me.miEditarProduto.Image = Global.NovaSiao.My.Resources.Resources.editar
+        Me.miEditarProduto.Name = "miEditarProduto"
+        Me.miEditarProduto.Size = New System.Drawing.Size(168, 22)
+        Me.miEditarProduto.Text = "Editar Produto"
+        '
+        'ToolStripSeparator3
+        '
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(165, 6)
+        '
+        'miTransacoes
+        '
+        Me.miTransacoes.Image = Global.NovaSiao.My.Resources.Resources.search_peq
+        Me.miTransacoes.Name = "miTransacoes"
+        Me.miTransacoes.Size = New System.Drawing.Size(168, 22)
+        Me.miTransacoes.Text = "Ver Transações"
+        '
+        'miFornecedores
+        '
+        Me.miFornecedores.Image = Global.NovaSiao.My.Resources.Resources.search_peq
+        Me.miFornecedores.Name = "miFornecedores"
+        Me.miFornecedores.Size = New System.Drawing.Size(168, 22)
+        Me.miFornecedores.Text = "Ver Fornecedores"
+        '
+        'ToolStripSeparator4
+        '
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(165, 6)
+        '
+        'miAtivarProduto
+        '
+        Me.miAtivarProduto.Image = Global.NovaSiao.My.Resources.Resources.accept
+        Me.miAtivarProduto.Name = "miAtivarProduto"
+        Me.miAtivarProduto.Size = New System.Drawing.Size(168, 22)
+        Me.miAtivarProduto.Text = "Ativar Produto"
+        '
+        'miDesativarProduto
+        '
+        Me.miDesativarProduto.Image = Global.NovaSiao.My.Resources.Resources.block
+        Me.miDesativarProduto.Name = "miDesativarProduto"
+        Me.miDesativarProduto.Size = New System.Drawing.Size(168, 22)
+        Me.miDesativarProduto.Text = "Desativar Produto"
         '
         'clnSelect
         '
@@ -536,9 +598,9 @@ Partial Class frmProdutoListagem
         '
         'clnRGProduto
         '
-        DataGridViewCellStyle3.Format = "N0"
-        DataGridViewCellStyle3.NullValue = Nothing
-        Me.clnRGProduto.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle15.Format = "N0"
+        DataGridViewCellStyle15.NullValue = Nothing
+        Me.clnRGProduto.DefaultCellStyle = DataGridViewCellStyle15
         Me.clnRGProduto.HeaderText = "Reg."
         Me.clnRGProduto.MaxInputLength = 20
         Me.clnRGProduto.Name = "clnRGProduto"
@@ -549,14 +611,14 @@ Partial Class frmProdutoListagem
         Me.clnProduto.HeaderText = "Produto"
         Me.clnProduto.MaxInputLength = 50
         Me.clnProduto.Name = "clnProduto"
-        Me.clnProduto.Width = 300
+        Me.clnProduto.Width = 310
         '
         'clnAutor
         '
         Me.clnAutor.HeaderText = "Autor/Artista"
         Me.clnAutor.MaxInputLength = 50
         Me.clnAutor.Name = "clnAutor"
-        Me.clnAutor.Width = 190
+        Me.clnAutor.Width = 200
         '
         'clnTipo
         '
@@ -582,7 +644,7 @@ Partial Class frmProdutoListagem
         '
         Me.clnFabricante.HeaderText = "Fabricante"
         Me.clnFabricante.Name = "clnFabricante"
-        Me.clnFabricante.Width = 95
+        Me.clnFabricante.Width = 124
         '
         'clnEstoque
         '
@@ -651,6 +713,7 @@ Partial Class frmProdutoListagem
         Me.Panel2.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.mnuProduto.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -687,6 +750,14 @@ Partial Class frmProdutoListagem
     Friend WithEvents Panel3 As Panel
     Friend WithEvents lblPaginas As Label
     Friend WithEvents dgvItens As Controles.ctrlDataGridView
+    Friend WithEvents mnuProduto As ContextMenuStrip
+    Friend WithEvents miEditarProduto As ToolStripMenuItem
+    Friend WithEvents miFornecedores As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+    Friend WithEvents miTransacoes As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
+    Friend WithEvents miAtivarProduto As ToolStripMenuItem
+    Friend WithEvents miDesativarProduto As ToolStripMenuItem
     Friend WithEvents clnSelect As DataGridViewCheckBoxColumn
     Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
     Friend WithEvents clnProduto As DataGridViewTextBoxColumn
