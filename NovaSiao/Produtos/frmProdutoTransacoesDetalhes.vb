@@ -1,7 +1,7 @@
 ﻿Imports CamadaBLL
 Imports CamadaDTO
 
-Public Class frmProdutoTransacoes
+Public Class frmProdutoTransacoesDetalhes
     '
     'Private _list As New List(Of clTransacaoItem)
     Private itensDt As DataTable
@@ -49,7 +49,7 @@ Public Class frmProdutoTransacoes
         '
     End Sub
     '
-    Private Sub frmProdutoTransacoes_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Private Sub frmProdutoTransacoesDetalhes_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         '
         If IsNothing(_Produto) OrElse IsNothing(_Produto.IDProduto) Then
             '

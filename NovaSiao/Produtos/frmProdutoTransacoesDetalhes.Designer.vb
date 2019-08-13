@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
-Partial Class frmProdutoTransacoes
+Partial Class frmProdutoTransacoesDetalhes
     Inherits NovaSiao.frmModFinBorder
 
     'Form overrides dispose to clean up the component list.
@@ -27,45 +27,34 @@ Partial Class frmProdutoTransacoes
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
         Me.btnFechar = New System.Windows.Forms.Button()
         Me.dgvItens = New Controles.ctrlDataGridView()
-        Me.clnData = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnOperacao = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnQuantidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnValor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lblProduto = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblRGProduto = New System.Windows.Forms.Label()
         Me.btnTransacao = New System.Windows.Forms.Button()
-        Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.rbtSaidas = New System.Windows.Forms.RadioButton()
-        Me.rbtEntradas = New System.Windows.Forms.RadioButton()
-        Me.rbtEntradaConsignacao = New System.Windows.Forms.RadioButton()
-        Me.rbtEntradaTroca = New System.Windows.Forms.RadioButton()
-        Me.rbtDevolucaoConsignacao = New System.Windows.Forms.RadioButton()
-        Me.rbtDevolucaoCompra = New System.Windows.Forms.RadioButton()
-        Me.rbtSimplesEntrada = New System.Windows.Forms.RadioButton()
-        Me.rbtSimplesSaida = New System.Windows.Forms.RadioButton()
-        Me.rbtCompras = New System.Windows.Forms.RadioButton()
-        Me.rbtVenda = New System.Windows.Forms.RadioButton()
+        Me.clnData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnQuantidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.btnClose)
-        Me.Panel1.Size = New System.Drawing.Size(782, 50)
+        Me.Panel1.Size = New System.Drawing.Size(526, 50)
         Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.btnClose, 0)
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(517, 0)
-        Me.lblTitulo.Size = New System.Drawing.Size(265, 50)
+        Me.lblTitulo.Location = New System.Drawing.Point(273, 0)
+        Me.lblTitulo.Size = New System.Drawing.Size(253, 50)
         Me.lblTitulo.TabIndex = 0
-        Me.lblTitulo.Text = "Produto | Transações"
+        Me.lblTitulo.Text = "Transações Produto"
         Me.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'btnClose
@@ -75,7 +64,7 @@ Partial Class frmProdutoTransacoes
         Me.btnClose.BackColor = System.Drawing.Color.Transparent
         Me.btnClose.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.CloseButton
         Me.btnClose.ForeColor = System.Drawing.Color.Firebrick
-        Me.btnClose.Location = New System.Drawing.Point(750, 12)
+        Me.btnClose.Location = New System.Drawing.Point(494, 12)
         Me.btnClose.Name = "btnClose"
         Me.btnClose.RibbonStyle = False
         Me.btnClose.RoundedCornersMask = CType(15, Byte)
@@ -88,9 +77,8 @@ Partial Class frmProdutoTransacoes
         '
         'btnFechar
         '
-        Me.btnFechar.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar_24x24
-        Me.btnFechar.Location = New System.Drawing.Point(392, 428)
+        Me.btnFechar.Location = New System.Drawing.Point(390, 428)
         Me.btnFechar.Margin = New System.Windows.Forms.Padding(6)
         Me.btnFechar.Name = "btnFechar"
         Me.btnFechar.Size = New System.Drawing.Size(123, 40)
@@ -121,7 +109,7 @@ Partial Class frmProdutoTransacoes
         Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvItens.ColumnHeadersHeight = 30
         Me.dgvItens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnData, Me.clnOperacao, Me.clnQuantidade, Me.clnValor})
+        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnData, Me.clnQuantidade, Me.clnDesconto, Me.clnPreco, Me.clnTotal})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -156,36 +144,6 @@ Partial Class frmProdutoTransacoes
         Me.dgvItens.Size = New System.Drawing.Size(503, 316)
         Me.dgvItens.TabIndex = 5
         '
-        'clnData
-        '
-        Me.clnData.HeaderText = "Data"
-        Me.clnData.MaxInputLength = 80
-        Me.clnData.Name = "clnData"
-        Me.clnData.ReadOnly = True
-        Me.clnData.Width = 120
-        '
-        'clnOperacao
-        '
-        Me.clnOperacao.HeaderText = "Operação"
-        Me.clnOperacao.Name = "clnOperacao"
-        Me.clnOperacao.ReadOnly = True
-        Me.clnOperacao.Width = 110
-        '
-        'clnQuantidade
-        '
-        Me.clnQuantidade.HeaderText = "Quant"
-        Me.clnQuantidade.MaxInputLength = 50
-        Me.clnQuantidade.Name = "clnQuantidade"
-        Me.clnQuantidade.ReadOnly = True
-        Me.clnQuantidade.Width = 80
-        '
-        'clnValor
-        '
-        Me.clnValor.HeaderText = "Total"
-        Me.clnValor.MaxInputLength = 20
-        Me.clnValor.Name = "clnValor"
-        Me.clnValor.ReadOnly = True
-        '
         'Label1
         '
         Me.Label1.AutoSize = True
@@ -200,7 +158,7 @@ Partial Class frmProdutoTransacoes
         Me.lblProduto.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblProduto.Location = New System.Drawing.Point(225, 63)
         Me.lblProduto.Name = "lblProduto"
-        Me.lblProduto.Size = New System.Drawing.Size(502, 28)
+        Me.lblProduto.Size = New System.Drawing.Size(290, 28)
         Me.lblProduto.TabIndex = 4
         Me.lblProduto.Text = "Produto"
         '
@@ -224,167 +182,58 @@ Partial Class frmProdutoTransacoes
         '
         'btnTransacao
         '
-        Me.btnTransacao.Anchor = System.Windows.Forms.AnchorStyles.Top
         Me.btnTransacao.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
-        Me.btnTransacao.Location = New System.Drawing.Point(12, 429)
+        Me.btnTransacao.Location = New System.Drawing.Point(10, 429)
         Me.btnTransacao.Margin = New System.Windows.Forms.Padding(6)
         Me.btnTransacao.Name = "btnTransacao"
-        Me.btnTransacao.Size = New System.Drawing.Size(190, 40)
+        Me.btnTransacao.Size = New System.Drawing.Size(165, 40)
         Me.btnTransacao.TabIndex = 7
-        Me.btnTransacao.Text = "&Listar Transações"
+        Me.btnTransacao.Text = "&Abrir Transação"
         Me.btnTransacao.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnTransacao.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnTransacao.UseVisualStyleBackColor = True
         '
-        'Panel2
+        'clnData
         '
-        Me.Panel2.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.Panel2.Controls.Add(Me.rbtSaidas)
-        Me.Panel2.Controls.Add(Me.rbtEntradas)
-        Me.Panel2.Controls.Add(Me.rbtEntradaConsignacao)
-        Me.Panel2.Controls.Add(Me.rbtEntradaTroca)
-        Me.Panel2.Controls.Add(Me.rbtDevolucaoConsignacao)
-        Me.Panel2.Controls.Add(Me.rbtDevolucaoCompra)
-        Me.Panel2.Controls.Add(Me.rbtSimplesEntrada)
-        Me.Panel2.Controls.Add(Me.rbtSimplesSaida)
-        Me.Panel2.Controls.Add(Me.rbtCompras)
-        Me.Panel2.Controls.Add(Me.rbtVenda)
-        Me.Panel2.Location = New System.Drawing.Point(529, 103)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(238, 365)
-        Me.Panel2.TabIndex = 6
+        Me.clnData.HeaderText = "Data"
+        Me.clnData.MaxInputLength = 70
+        Me.clnData.Name = "clnData"
+        Me.clnData.ReadOnly = True
+        Me.clnData.Width = 90
         '
-        'rbtSaidas
+        'clnQuantidade
         '
-        Me.rbtSaidas.AutoSize = True
-        Me.rbtSaidas.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold)
-        Me.rbtSaidas.ForeColor = System.Drawing.Color.Firebrick
-        Me.rbtSaidas.Location = New System.Drawing.Point(72, 9)
-        Me.rbtSaidas.Name = "rbtSaidas"
-        Me.rbtSaidas.Size = New System.Drawing.Size(95, 30)
-        Me.rbtSaidas.TabIndex = 0
-        Me.rbtSaidas.TabStop = True
-        Me.rbtSaidas.Tag = "100"
-        Me.rbtSaidas.Text = "SAÍDAS"
-        Me.rbtSaidas.UseVisualStyleBackColor = True
+        Me.clnQuantidade.HeaderText = "Quant"
+        Me.clnQuantidade.MaxInputLength = 40
+        Me.clnQuantidade.Name = "clnQuantidade"
+        Me.clnQuantidade.ReadOnly = True
+        Me.clnQuantidade.Width = 80
         '
-        'rbtEntradas
+        'clnDesconto
         '
-        Me.rbtEntradas.AutoSize = True
-        Me.rbtEntradas.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold)
-        Me.rbtEntradas.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.rbtEntradas.Location = New System.Drawing.Point(55, 180)
-        Me.rbtEntradas.Name = "rbtEntradas"
-        Me.rbtEntradas.Size = New System.Drawing.Size(125, 30)
-        Me.rbtEntradas.TabIndex = 5
-        Me.rbtEntradas.TabStop = True
-        Me.rbtEntradas.Tag = "101"
-        Me.rbtEntradas.Text = "ENTRADAS"
-        Me.rbtEntradas.UseVisualStyleBackColor = True
+        Me.clnDesconto.HeaderText = "Desc"
+        Me.clnDesconto.Name = "clnDesconto"
+        Me.clnDesconto.ReadOnly = True
+        Me.clnDesconto.Width = 50
         '
-        'rbtEntradaConsignacao
+        'clnPreco
         '
-        Me.rbtEntradaConsignacao.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtEntradaConsignacao.Location = New System.Drawing.Point(21, 316)
-        Me.rbtEntradaConsignacao.Name = "rbtEntradaConsignacao"
-        Me.rbtEntradaConsignacao.Size = New System.Drawing.Size(196, 29)
-        Me.rbtEntradaConsignacao.TabIndex = 9
-        Me.rbtEntradaConsignacao.Tag = "7"
-        Me.rbtEntradaConsignacao.Text = "Entrada de Consignação"
-        Me.rbtEntradaConsignacao.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rbtEntradaConsignacao.UseVisualStyleBackColor = True
+        Me.clnPreco.HeaderText = "Preço"
+        Me.clnPreco.MaxInputLength = 20
+        Me.clnPreco.Name = "clnPreco"
+        Me.clnPreco.ReadOnly = True
+        Me.clnPreco.Width = 80
         '
-        'rbtEntradaTroca
+        'clnTotal
         '
-        Me.rbtEntradaTroca.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtEntradaTroca.Location = New System.Drawing.Point(21, 281)
-        Me.rbtEntradaTroca.Name = "rbtEntradaTroca"
-        Me.rbtEntradaTroca.Size = New System.Drawing.Size(196, 29)
-        Me.rbtEntradaTroca.TabIndex = 8
-        Me.rbtEntradaTroca.Tag = "5"
-        Me.rbtEntradaTroca.Text = "Entrada de Troca"
-        Me.rbtEntradaTroca.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rbtEntradaTroca.UseVisualStyleBackColor = True
+        Me.clnTotal.HeaderText = "Total"
+        Me.clnTotal.Name = "clnTotal"
+        Me.clnTotal.ReadOnly = True
         '
-        'rbtDevolucaoConsignacao
-        '
-        Me.rbtDevolucaoConsignacao.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtDevolucaoConsignacao.Location = New System.Drawing.Point(19, 145)
-        Me.rbtDevolucaoConsignacao.Name = "rbtDevolucaoConsignacao"
-        Me.rbtDevolucaoConsignacao.Size = New System.Drawing.Size(200, 29)
-        Me.rbtDevolucaoConsignacao.TabIndex = 4
-        Me.rbtDevolucaoConsignacao.Tag = "8"
-        Me.rbtDevolucaoConsignacao.Text = "Devolução de Consignação"
-        Me.rbtDevolucaoConsignacao.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rbtDevolucaoConsignacao.UseVisualStyleBackColor = True
-        '
-        'rbtDevolucaoCompra
-        '
-        Me.rbtDevolucaoCompra.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtDevolucaoCompra.Location = New System.Drawing.Point(19, 110)
-        Me.rbtDevolucaoCompra.Name = "rbtDevolucaoCompra"
-        Me.rbtDevolucaoCompra.Size = New System.Drawing.Size(200, 29)
-        Me.rbtDevolucaoCompra.TabIndex = 3
-        Me.rbtDevolucaoCompra.Tag = "6"
-        Me.rbtDevolucaoCompra.Text = "Devolução de Compra"
-        Me.rbtDevolucaoCompra.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rbtDevolucaoCompra.UseVisualStyleBackColor = True
-        '
-        'rbtSimplesEntrada
-        '
-        Me.rbtSimplesEntrada.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtSimplesEntrada.Location = New System.Drawing.Point(21, 246)
-        Me.rbtSimplesEntrada.Name = "rbtSimplesEntrada"
-        Me.rbtSimplesEntrada.Size = New System.Drawing.Size(196, 29)
-        Me.rbtSimplesEntrada.TabIndex = 7
-        Me.rbtSimplesEntrada.Tag = "3"
-        Me.rbtSimplesEntrada.Text = "Simples Entradas"
-        Me.rbtSimplesEntrada.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rbtSimplesEntrada.UseVisualStyleBackColor = True
-        '
-        'rbtSimplesSaida
-        '
-        Me.rbtSimplesSaida.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtSimplesSaida.Location = New System.Drawing.Point(19, 75)
-        Me.rbtSimplesSaida.Name = "rbtSimplesSaida"
-        Me.rbtSimplesSaida.Size = New System.Drawing.Size(200, 29)
-        Me.rbtSimplesSaida.TabIndex = 2
-        Me.rbtSimplesSaida.Tag = "4"
-        Me.rbtSimplesSaida.Text = "Simples Saídas"
-        Me.rbtSimplesSaida.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rbtSimplesSaida.UseVisualStyleBackColor = True
-        '
-        'rbtCompras
-        '
-        Me.rbtCompras.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtCompras.Location = New System.Drawing.Point(21, 211)
-        Me.rbtCompras.Name = "rbtCompras"
-        Me.rbtCompras.Size = New System.Drawing.Size(196, 29)
-        Me.rbtCompras.TabIndex = 6
-        Me.rbtCompras.Tag = "2"
-        Me.rbtCompras.Text = "Compras"
-        Me.rbtCompras.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rbtCompras.UseVisualStyleBackColor = True
-        '
-        'rbtVenda
-        '
-        Me.rbtVenda.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtVenda.Checked = True
-        Me.rbtVenda.Location = New System.Drawing.Point(19, 40)
-        Me.rbtVenda.Name = "rbtVenda"
-        Me.rbtVenda.Size = New System.Drawing.Size(200, 29)
-        Me.rbtVenda.TabIndex = 1
-        Me.rbtVenda.TabStop = True
-        Me.rbtVenda.Tag = "1"
-        Me.rbtVenda.Text = "Vendas"
-        Me.rbtVenda.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rbtVenda.UseVisualStyleBackColor = True
-        '
-        'frmProdutoTransacoes
+        'frmProdutoTransacoesDetalhes
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(782, 484)
-        Me.Controls.Add(Me.Panel2)
+        Me.ClientSize = New System.Drawing.Size(526, 477)
         Me.Controls.Add(Me.lblRGProduto)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.lblProduto)
@@ -392,7 +241,7 @@ Partial Class frmProdutoTransacoes
         Me.Controls.Add(Me.dgvItens)
         Me.Controls.Add(Me.btnTransacao)
         Me.Controls.Add(Me.btnFechar)
-        Me.Name = "frmProdutoTransacoes"
+        Me.Name = "frmProdutoTransacoesDetalhes"
         Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.btnFechar, 0)
         Me.Controls.SetChildIndex(Me.btnTransacao, 0)
@@ -401,11 +250,8 @@ Partial Class frmProdutoTransacoes
         Me.Controls.SetChildIndex(Me.lblProduto, 0)
         Me.Controls.SetChildIndex(Me.Label2, 0)
         Me.Controls.SetChildIndex(Me.lblRGProduto, 0)
-        Me.Controls.SetChildIndex(Me.Panel2, 0)
         Me.Panel1.ResumeLayout(False)
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -419,19 +265,9 @@ Partial Class frmProdutoTransacoes
     Friend WithEvents Label2 As Label
     Friend WithEvents lblRGProduto As Label
     Friend WithEvents btnTransacao As Button
-    Friend WithEvents Panel2 As Panel
-    Friend WithEvents rbtDevolucaoCompra As RadioButton
-    Friend WithEvents rbtSimplesSaida As RadioButton
-    Friend WithEvents rbtVenda As RadioButton
-    Friend WithEvents rbtEntradaTroca As RadioButton
-    Friend WithEvents rbtSimplesEntrada As RadioButton
-    Friend WithEvents rbtCompras As RadioButton
-    Friend WithEvents rbtEntradaConsignacao As RadioButton
-    Friend WithEvents rbtDevolucaoConsignacao As RadioButton
-    Friend WithEvents rbtEntradas As RadioButton
-    Friend WithEvents rbtSaidas As RadioButton
     Friend WithEvents clnData As DataGridViewTextBoxColumn
-    Friend WithEvents clnOperacao As DataGridViewTextBoxColumn
     Friend WithEvents clnQuantidade As DataGridViewTextBoxColumn
-    Friend WithEvents clnValor As DataGridViewTextBoxColumn
+    Friend WithEvents clnDesconto As DataGridViewTextBoxColumn
+    Friend WithEvents clnPreco As DataGridViewTextBoxColumn
+    Friend WithEvents clnTotal As DataGridViewTextBoxColumn
 End Class

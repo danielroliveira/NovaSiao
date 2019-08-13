@@ -766,6 +766,12 @@
     <Compile Include="Produtos\frmProdutoTransacoes.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Produtos\frmProdutoTransacoesDetalhes.designer.vb">
+      <DependentUpon>frmProdutoTransacoesDetalhes.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Produtos\frmProdutoTransacoesDetalhes.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Produtos\frmProdutoValorDesconto.Designer.vb">
       <DependentUpon>frmProdutoValorDesconto.vb</DependentUpon>
     </Compile>
@@ -1213,6 +1219,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Produtos\frmProdutoTransacoes.resx">
       <DependentUpon>frmProdutoTransacoes.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Produtos\frmProdutoTransacoesDetalhes.resx">
+      <DependentUpon>frmProdutoTransacoesDetalhes.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Produtos\frmProdutoValorDesconto.resx">
       <DependentUpon>frmProdutoValorDesconto.vb</DependentUpon>
