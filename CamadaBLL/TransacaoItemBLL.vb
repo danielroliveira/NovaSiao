@@ -328,7 +328,7 @@ Public Class TransacaoItemBLL
     End Function
     '
     '---------------------------------------------------------------------------------------------------------
-    '--- ULTIMAS TRANSACOES (COMPRA | VENDA | SIMPLES | DEVOLUCAO ) DO PRODUTO --> DATATABLE
+    '--- ULTIMAS TRANSACOES (COMPRA | VENDA | SIMPLES | DEVOLUCAO ) DO PRODUTO --> LIST CLTRANSACAOITEM
     '---------------------------------------------------------------------------------------------------------
     Public Function ProdutoTransacoes(IDProduto As Integer,
                                       MovTipo As EnumMovimento,
@@ -410,7 +410,6 @@ Public Class TransacaoItemBLL
                 itn.Preco = IIf(IsDBNull(r("Preco")), Nothing, r("Preco"))
                 itn.Quantidade = IIf(IsDBNull(r("Quantidade")), Nothing, r("Quantidade"))
                 itn.Desconto = IIf(IsDBNull(r("Desconto")), Nothing, r("Desconto"))
-                '--- Itens Importados tblTransacaoItensCustos
                 itn.TransacaoData = IIf(IsDBNull(r("TransacaoData")), Nothing, r("TransacaoData"))
                 itn.IDOperacao = IIf(IsDBNull(r("IDOperacao")), Nothing, r("IDOperacao"))
                 itn.Operacao = IIf(IsDBNull(r("Operacao")), Nothing, r("Operacao"))

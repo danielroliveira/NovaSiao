@@ -53,9 +53,8 @@ Public Class frmTrocaProcurar
             If chkPeriodoTodos.Checked = True Then
                 trcLista = tBLL.GetTrocaLista_Procura()
             Else
-                Dim f As New Utilidades
-                Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
-                Dim dtFinal As Date = f.LastDayOfMonth(myMes)
+                Dim dtInicial As Date = Utilidades.FirstDayOfMonth(myMes)
+                Dim dtFinal As Date = Utilidades.LastDayOfMonth(myMes)
                 '
                 trcLista = tBLL.GetTrocaLista_Procura(dtInicial, dtFinal)
             End If

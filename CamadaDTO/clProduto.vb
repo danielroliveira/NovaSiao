@@ -75,6 +75,7 @@ Public Class clProduto
             ._Estoque = 0
             ._EstoqueNivel = 0
             ._EstoqueIdeal = 0
+            ._Movimento = 1 '--- NORMAL
         End With
     End Sub
     Public Sub BeginEdit() Implements IEditableObject.BeginEdit
@@ -550,11 +551,11 @@ Public Class clProduto
 #Region "ENUM PRODUTO MOVIMENTO"
     '
     Public Enum EnumProdutoMovimento As Byte
-        '0:Normal | 1:Sem Movimento | 2:Protegido | 3:Periodico
-        NORMAL = 0
-        SEM_MOVIMENTO = 1
-        PROTEGIDO = 2
-        PERIODICO = 3
+        '1:Normal | 2:Sem Movimento | 3:Protegido | 4:Periodico
+        NORMAL = 1
+        SEM_MOVIMENTO = 2
+        PROTEGIDO = 3
+        PERIODICO = 4
     End Enum
     '
 #End Region '/ ENUM PRODUTO MOVIMENTO

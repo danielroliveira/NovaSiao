@@ -104,8 +104,8 @@ Public Class frmCaixaProcurar
                 cxLista = cxBLL.GetCaixaLista_Procura(propIDConta)
             Else
                 Dim f As New Utilidades
-                Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
-                Dim dtFinal As Date = f.LastDayOfMonth(myMes)
+                Dim dtInicial As Date = Utilidades.FirstDayOfMonth(myMes)
+                Dim dtFinal As Date = Utilidades.LastDayOfMonth(myMes)
                 '
                 cxLista = cxBLL.GetCaixaLista_Procura(propIDConta, dtInicial, dtFinal)
             End If

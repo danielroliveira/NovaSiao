@@ -85,9 +85,8 @@ Public Class frmFreteProcurar
             If chkPeriodoTodos.Checked = True Then
                 freteLista = freteBLL.GetAPagarLista_Procura(IDFilial, cobradas, IDTransportadora)
             Else
-                Dim f As New Utilidades
-                Dim dtInicial As Date = f.FirstDayOfMonth(myMes)
-                Dim dtFinal As Date = f.LastDayOfMonth(myMes)
+                Dim dtInicial As Date = Utilidades.FirstDayOfMonth(myMes)
+                Dim dtFinal As Date = Utilidades.LastDayOfMonth(myMes)
                 '
                 freteLista = freteBLL.GetAPagarLista_Procura(IDFilial, cobradas, IDTransportadora, dtInicial, dtFinal)
             End If

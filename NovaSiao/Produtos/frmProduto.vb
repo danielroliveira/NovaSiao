@@ -234,10 +234,11 @@ Public Class frmProduto
         'For Each e As clProduto.EnumProdutoMovimento In System.Enum.GetValues(GetType(clProduto.EnumProdutoMovimento))
         '    dtMovimento.Rows.Add(New Object() {CByte(e), e.ToString})
         'Next
-        dtMovimento.Rows.Add(New Object() {0, "Normal"})
-        dtMovimento.Rows.Add(New Object() {1, "Sem Movimento"})
-        dtMovimento.Rows.Add(New Object() {2, "Protegido"})
-        dtMovimento.Rows.Add(New Object() {3, "Periódico"})
+
+        dtMovimento.Rows.Add(New Object() {1, "Normal"})
+        dtMovimento.Rows.Add(New Object() {2, "Sem Movimento"})
+        dtMovimento.Rows.Add(New Object() {3, "Protegido"})
+        dtMovimento.Rows.Add(New Object() {4, "Periódico"})
         '
         With cmbMovimento
             .DataSource = dtMovimento
@@ -309,6 +310,7 @@ Public Class frmProduto
                                 MessageBoxButtons.OK, MessageBoxIcon.Information)
                 '--- fecha o formulario de cadastro
                 DialogResult = DialogResult.OK
+                _formOrigem.Show()
                 '
             End If
         Else
@@ -507,7 +509,9 @@ Public Class frmProduto
             MostraMenuPrincipal()
         Else
             DialogResult = DialogResult.Cancel
+            Close()
             RGEscolhido = Nothing
+            _formOrigem.Visible = True
         End If
         '
     End Sub

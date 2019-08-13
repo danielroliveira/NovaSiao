@@ -27,10 +27,6 @@ Partial Class frmProdutoTransacoes
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
         Me.btnFechar = New System.Windows.Forms.Button()
         Me.dgvItens = New Controles.ctrlDataGridView()
-        Me.clnData = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnOperacao = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnQuantidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnValor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lblProduto = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -47,6 +43,10 @@ Partial Class frmProdutoTransacoes
         Me.rbtSimplesSaida = New System.Windows.Forms.RadioButton()
         Me.rbtCompras = New System.Windows.Forms.RadioButton()
         Me.rbtVenda = New System.Windows.Forms.RadioButton()
+        Me.clnData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnOperacao = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnQuantidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnValor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
@@ -155,36 +155,6 @@ Partial Class frmProdutoTransacoes
         Me.dgvItens.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvItens.Size = New System.Drawing.Size(503, 316)
         Me.dgvItens.TabIndex = 5
-        '
-        'clnData
-        '
-        Me.clnData.HeaderText = "Data"
-        Me.clnData.MaxInputLength = 80
-        Me.clnData.Name = "clnData"
-        Me.clnData.ReadOnly = True
-        Me.clnData.Width = 120
-        '
-        'clnOperacao
-        '
-        Me.clnOperacao.HeaderText = "Operação"
-        Me.clnOperacao.Name = "clnOperacao"
-        Me.clnOperacao.ReadOnly = True
-        Me.clnOperacao.Width = 110
-        '
-        'clnQuantidade
-        '
-        Me.clnQuantidade.HeaderText = "Quant"
-        Me.clnQuantidade.MaxInputLength = 50
-        Me.clnQuantidade.Name = "clnQuantidade"
-        Me.clnQuantidade.ReadOnly = True
-        Me.clnQuantidade.Width = 80
-        '
-        'clnValor
-        '
-        Me.clnValor.HeaderText = "Total"
-        Me.clnValor.MaxInputLength = 20
-        Me.clnValor.Name = "clnValor"
-        Me.clnValor.ReadOnly = True
         '
         'Label1
         '
@@ -379,6 +349,36 @@ Partial Class frmProdutoTransacoes
         Me.rbtVenda.Text = "Vendas"
         Me.rbtVenda.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.rbtVenda.UseVisualStyleBackColor = True
+        '
+        'clnData
+        '
+        Me.clnData.HeaderText = "Período"
+        Me.clnData.MaxInputLength = 80
+        Me.clnData.Name = "clnData"
+        Me.clnData.ReadOnly = True
+        Me.clnData.Width = 120
+        '
+        'clnOperacao
+        '
+        Me.clnOperacao.HeaderText = "Operação"
+        Me.clnOperacao.Name = "clnOperacao"
+        Me.clnOperacao.ReadOnly = True
+        Me.clnOperacao.Width = 110
+        '
+        'clnQuantidade
+        '
+        Me.clnQuantidade.HeaderText = "Quant"
+        Me.clnQuantidade.MaxInputLength = 50
+        Me.clnQuantidade.Name = "clnQuantidade"
+        Me.clnQuantidade.ReadOnly = True
+        Me.clnQuantidade.Width = 80
+        '
+        'clnValor
+        '
+        Me.clnValor.HeaderText = "Total"
+        Me.clnValor.MaxInputLength = 20
+        Me.clnValor.Name = "clnValor"
+        Me.clnValor.ReadOnly = True
         '
         'frmProdutoTransacoes
         '

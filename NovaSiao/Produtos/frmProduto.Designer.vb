@@ -871,7 +871,7 @@ Partial Class frmProduto
         'Label23
         '
         Me.Label23.AutoSize = True
-        Me.Label23.Location = New System.Drawing.Point(112, 366)
+        Me.Label23.Location = New System.Drawing.Point(112, 371)
         Me.Label23.Name = "Label23"
         Me.Label23.Size = New System.Drawing.Size(143, 19)
         Me.Label23.TabIndex = 29

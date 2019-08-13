@@ -337,43 +337,33 @@ Public Class frmFornecedor
         '
         Dim f As New Utilidades
         '
-        If Not f.VerificaControlesForm(txtRazaoSocial, "Razão Social", EProvider) Then
-            Return False
-        End If
+        If Not f.VerificaControlesForm(txtRazaoSocial, "Razão Social", EProvider) Then Return False
         '
-        If Not f.VerificaControlesForm(txtCNPJ, "CNPJ", EProvider) Then
-            Return False
-        End If
+        If Not f.VerificaControlesForm(txtCNPJ, "CNPJ", EProvider) Then Return False
         '
-        If Not f.VerificaControlesForm(txtInscricao, "Inscrição Estadual", EProvider) Then
-            Return False
-        End If
+        If Not f.VerificaControlesForm(txtInscricao, "Inscrição Estadual", EProvider) Then Return False
         '
-        If Not f.VerificaControlesForm(txtEndereco, "Endereço", EProvider) Then
-            Return False
-        End If
+        If Not f.VerificaControlesForm(txtEndereco, "Endereço", EProvider) Then Return False
         '
-        If Not f.VerificaControlesForm(txtBairro, "Bairro", EProvider) Then
-            Return False
-        End If
+        If Not f.VerificaControlesForm(txtBairro, "Bairro", EProvider) Then Return False
         '
-        If Not f.VerificaControlesForm(txtCidade, "Cidade", EProvider) Then
-            Return False
-        End If
+        If Not f.VerificaControlesForm(txtCidade, "Cidade", EProvider) Then Return False
         '
-        If Not f.VerificaControlesForm(txtUF, "UF", EProvider) Then
-            Return False
-        End If
+        If Not f.VerificaControlesForm(txtUF, "UF", EProvider) Then Return False
         '
-        If Not f.VerificaControlesForm(txtCEP, "CEP", EProvider) Then
-            Return False
-        End If
+        If Not f.VerificaControlesForm(txtCEP, "CEP", EProvider) Then Return False
         '
-        If Not f.VerificaControlesForm(txtTelefoneA, "Telefone", EProvider) Then
-            Return False
-        End If
+        If Not f.VerificaControlesForm(txtVendedor, "Nome do Vendedor", EProvider) Then Return False
         '
-        If Not f.VerificaControlesForm(txtVendedor, "Nome do Vendedor", EProvider) Then
+        '--- Verifica se existe pelo menos um telefone Inserido na Fornecedor
+        Dim telA As Boolean = IsNothing(_forn.TelefoneA) Or _forn.TelefoneA.Length = 0
+        Dim telB As Boolean = IsNothing(_forn.TelefoneB) Or _forn.TelefoneB.Length = 0
+        '
+        If telA And telB Then
+            AbrirDialog("Deve haver pelo menos um telefone cadastrado nos dados da Reserva...",
+                        "Telefone de Contato", frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Exclamation)
+            txtTelefoneA.Focus()
             Return False
         End If
         '

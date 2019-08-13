@@ -153,14 +153,14 @@ Public Class Utilidades
     '--------------------------------------------------------------------------------------------------------------
     '--- GET THE FIRST DAY OF THE MONTH
     '--------------------------------------------------------------------------------------------------------------
-    Public Function FirstDayOfMonth(ByVal sourceDate As Date) As Date
+    Shared Function FirstDayOfMonth(ByVal sourceDate As Date) As Date
         Return New DateTime(sourceDate.Year, sourceDate.Month, 1)
     End Function
     '
     '--------------------------------------------------------------------------------------------------------------
     '--- GET THE LAST DAY OF THE MONTH
     '--------------------------------------------------------------------------------------------------------------
-    Public Function LastDayOfMonth(ByVal sourceDate As Date) As Date
+    Shared Function LastDayOfMonth(ByVal sourceDate As Date) As Date
         Dim lastDay As DateTime = New DateTime(sourceDate.Year, sourceDate.Month, 1)
         Return lastDay.AddMonths(1).AddDays(-1)
     End Function

@@ -43,9 +43,8 @@ Public Class frmAPagarProcurar
         '
         Set(ByVal value As Date)
             '
-            Dim f As New Utilidades
-            dtInicial = f.FirstDayOfMonth(value)
-            dtFinal = f.LastDayOfMonth(value)
+            dtInicial = Utilidades.FirstDayOfMonth(value)
+            dtFinal = Utilidades.LastDayOfMonth(value)
             '
             _myMes = value
             lblPeriodo.Text = Format(_myMes, "MMMM | yyyy")

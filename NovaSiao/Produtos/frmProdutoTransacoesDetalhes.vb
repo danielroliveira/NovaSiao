@@ -3,17 +3,18 @@ Imports CamadaDTO
 
 Public Class frmProdutoTransacoesDetalhes
     '
-    'Private _list As New List(Of clTransacaoItem)
-    Private itensDt As DataTable
+    Private _list As New List(Of clTransacaoItem)
     Private bindList As New BindingSource
     Private _formOrigem As Form
     Private _Produto As clProduto
     Private _IDFilial As Integer
     Private _Operacao As Byte
+    Private _dtInicial As Date
+    Private _dtFinal As Date
     '
 #Region "SUB NEW"
     '
-    Sub New(Produto As clProduto, formOrigem As Form)
+    Sub New(Produto As clProduto, Operacao As Byte, dtInicial As Date, dtFinal As Date, formOrigem As Form)
         '
         ' This call is required by the designer.
         InitializeComponent()
@@ -22,33 +23,25 @@ Public Class frmProdutoTransacoesDetalhes
         _IDFilial = Obter_FilialPadrao()
         _formOrigem = formOrigem
         _Produto = Produto
-        Operacao = 1 '--- VENDA
+        _dtInicial = dtInicial
+        _dtFinal = dtFinal
+        propOperacao = Operacao
         '
         PreencheLabels()
         PreencheItens()
-        CreateRbtHandlers()
         '
     End Sub
     '
-    Sub New(IDProduto As Integer, formOrigem As Form)
+    '--- LOAD
+    Private Sub frmProdutoTransacoesDetalhes_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         '
-        ' This call is required by the designer.
-        InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        _IDFilial = Obter_FilialPadrao()
-        _formOrigem = formOrigem
-        '
-        _Produto = getProdutoByID(IDProduto)
-        '
-        Operacao = 1 '--- VENDA
-        '
-        PreencheLabels()
-        PreencheItens()
-        CreateRbtHandlers()
+        '--- posiciona o form
+        Top = _formOrigem.Top
+        'Left = _formOrigem.Left + _formOrigem.Width - 270
         '
     End Sub
     '
+    '--- SHOW
     Private Sub frmProdutoTransacoesDetalhes_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         '
         If IsNothing(_Produto) OrElse IsNothing(_Produto.IDProduto) Then
@@ -60,42 +53,77 @@ Public Class frmProdutoTransacoesDetalhes
         '
     End Sub
     '
+    '--- PREENCHER OS LABELS
     Private Sub PreencheLabels()
         '
         If IsNothing(_Produto) OrElse IsNothing(_Produto.IDProduto) Then Exit Sub
         '
         lblProduto.Text = _Produto.Produto
-        lblRGProduto.Text = Format(_Produto.RGProduto, "0000")
+        lblPeriodo.Text = "Período: " + Format(_dtInicial, "dd/MMM/yyyy") + " até " + Format(_dtFinal, "dd/MMM/yyyy")
+        '
+        Select Case propOperacao
+            Case 1
+                lblTitulo.Text = "VENDAS"
+            Case 2
+                lblTitulo.Text = "COMPRAS"
+            Case 3
+                lblTitulo.Text = "SIMPLES ENTRADAS"
+            Case 4
+                lblTitulo.Text = "SIMPLES SAÍDAS"
+            Case 5
+                lblTitulo.Text = "DEVOLUÇÃO DE VENDA"
+            Case 6
+                lblTitulo.Text = "DEVOLUÇÃO DE COMPRA"
+            Case 7
+                lblTitulo.Text = "CONSIGNAÇÃO DE ENTRADA"
+            Case 8
+                lblTitulo.Text = "DEVOLUÇÃO DE CONSIGNAÇÃO"
+            Case 100
+                lblTitulo.Text = "SAÍDAS DE PRODUTOS"
+            Case 101
+                lblTitulo.Text = "ENTRADAS DE PRODUTOS"
+        End Select
+        '
+        'Venda = 1               '--- Vendas                                  --> SAIDA
+        'Compra = 2              '--- Compras                                 --> ENTRADA
+        'SimplesEntrada = 3      '--- Simples Entrada                         --> ENTRADA
+        'SimplesSaida = 4        '--- Simples Saída                           --> SAIDA
+        'DevolucaoDeEntrada = 5  '--- Quando o Cliente devolve uma venda      --> ENTRADA
+        'DevolucaoDeSaida = 6    '--- Quando a Filial Devolve uma Compra      --> SAIDA
+        'ConsignacaoEntrada = 7  '--- Quando a Filial recebe uma Consignação  --> ENTRADA
+        'ConsignacaoSaida = 8    '--- Quando a Filial devolve uma Consignação --> SAIDA
         '
     End Sub
     '
-    Private Property Operacao As Byte
+    Private Property propOperacao As Byte
+        '
         Get
             Return _Operacao
         End Get
+        '
         Set(value As Byte)
             _Operacao = value
             '
-            If Operacao < 100 Then
-                If Operacao = 1 Or Operacao = 4 Or Operacao = 6 Or Operacao = 8 Then
+            If _Operacao < 100 Then
+                If _Operacao = 1 Or _Operacao = 4 Or _Operacao = 6 Or _Operacao = 8 Then
                     '--- operacoes de SAIDA
-                    itensDt = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.SAIDA, Operacao)
+                    _list = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.SAIDA, _Operacao)
                 Else
                     '--- operacoes de ENTRADA
-                    itensDt = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.ENTRADA, Operacao)
+                    _list = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.ENTRADA, _Operacao)
                 End If
             Else
-                If Operacao = 100 Then
+                If _Operacao = 100 Then
                     '--- TODAS operacoes de SAIDA
-                    itensDt = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.SAIDA)
-                ElseIf Operacao = 101 Then
+                    _list = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.SAIDA)
+                ElseIf _Operacao = 101 Then
                     '--- TODAS operacoes de ENTRADA
-                    itensDt = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.ENTRADA)
+                    _list = GetListByID(_Produto.IDProduto, TransacaoItemBLL.EnumMovimento.ENTRADA)
                 End If
             End If
             '
             '--- DEFINE O BINDING
-            bindList.DataSource = itensDt
+            bindList.DataSource = _list
             '
             'Venda = 1               '--- Vendas                                  --> SAIDA
             'Compra = 2              '--- Compras                                 --> ENTRADA
@@ -116,7 +144,7 @@ Public Class frmProdutoTransacoesDetalhes
     '
     Private Function GetListByID(IDProduto As Integer,
                                  Mov As TransacaoItemBLL.EnumMovimento,
-                                 Optional Operacao? As TransacaoBLL.EnumOperacao = Nothing) As DataTable
+                                 Optional Operacao? As TransacaoBLL.EnumOperacao = Nothing) As List(Of clTransacaoItem)
         '
         Try
             '--- Ampulheta ON
@@ -124,11 +152,7 @@ Public Class frmProdutoTransacoesDetalhes
             '
             Dim itemBLL As New TransacaoItemBLL
             '
-            If IsNothing(Operacao) Then
-                Return itemBLL.ProdutoTransacoesGroup(IDProduto, Mov, _IDFilial)
-            Else
-                Return itemBLL.ProdutoTransacoesGroup(IDProduto, Mov, _IDFilial, Operacao)
-            End If
+            Return itemBLL.ProdutoTransacoes(IDProduto, Mov, _IDFilial, Operacao, _dtInicial, _dtFinal)
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Obter a lista de Transações do Produto..." & vbNewLine &
@@ -139,28 +163,6 @@ Public Class frmProdutoTransacoesDetalhes
         End Try
         '
         Return Nothing
-        '
-    End Function
-    '
-    '--- GET PRODUTO PELO ID
-    '----------------------------------------------------------------------------------
-    Private Function getProdutoByID(IDProduto As Integer) As clProduto
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            Dim pBLL As New ProdutoBLL
-            Return pBLL.GetProduto_PorID(IDProduto, Obter_FilialPadrao)
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao obter Produto pelo ID..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return Nothing
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
         '
     End Function
     '
@@ -176,7 +178,7 @@ Public Class frmProdutoTransacoesDetalhes
         '
         ' altera as propriedades importantes
         dgvItens.MultiSelect = False
-        dgvItens.SelectionMode = DataGridViewSelectionMode.RowHeaderSelect
+        dgvItens.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         dgvItens.ColumnHeadersVisible = True
         dgvItens.AllowUserToResizeRows = False
         dgvItens.AllowUserToResizeColumns = False
@@ -200,30 +202,20 @@ Public Class frmProdutoTransacoesDetalhes
     '
     Private Sub FormataColunas_Itens()
         '
-        ' (0) COLUNA Data
+        ' COLUNA Data
         With clnData
-            .DataPropertyName = "Ano"
+            .DataPropertyName = "TransacaoData"
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
-            '.DefaultCellStyle.Format = "dd/MM/yyyy"
+            .DefaultCellStyle.Format = "dd/MM/yyyy"
             .SortMode = DataGridViewColumnSortMode.NotSortable
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        ' (1) COLUNA COD OPERACAO
-        With clnOperacao
-            .DataPropertyName = "Operacao"
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = False
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
-        ' (2) COLUNA QUANTIDADE
+        ' COLUNA QUANTIDADE
         With clnQuantidade
-            .DataPropertyName = "QuantidadeTotal"
+            .DataPropertyName = "Quantidade"
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
@@ -232,9 +224,32 @@ Public Class frmProdutoTransacoesDetalhes
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
         End With
         '
-        ' (3) COLUNA PRECO
-        With clnValor
-            .DataPropertyName = "ValorTotal"
+        ' COLUNA DESCONTO
+        With clnDesconto
+            .DataPropertyName = "Desconto"
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Format = "0.00"
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' COLUNA PRECO
+        With clnPreco
+            .DataPropertyName = "Preco"
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Format = "C"
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+        End With
+        '
+        ' COLUNA TOTAL
+        With clnTotal
+            .DataPropertyName = "Total"
             .Resizable = DataGridViewTriState.False
             .Visible = True
             .ReadOnly = True
@@ -245,21 +260,19 @@ Public Class frmProdutoTransacoesDetalhes
         End With
         '
         '--- adiciona as colunas editadas
-        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnData, clnOperacao,
-                                  clnQuantidade, clnValor})
+        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnData, clnQuantidade,
+                                  clnDesconto, clnPreco, clnTotal})
         '
     End Sub
     '
     Private Sub dgvListagem_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
-        'btnEditar_Click(New Object, New EventArgs)
+        btnTransacao_Click(New Object, New EventArgs)
     End Sub
     '
     Private Sub dgvItens_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvItens.CellFormatting
         '
-        If e.ColumnIndex = clnData.Index Then
-            Dim r As DataRowView = dgvItens.Rows(e.RowIndex).DataBoundItem
-            Dim dt As Date = DateSerial(r("Ano"), r("Mes"), 1)
-            e.Value = Format(dt, "MMMM | yyyy")
+        If e.ColumnIndex = clnDesconto.Index Then
+            e.Value = Format(e.Value, "0.00") & "%"
         End If
         '
     End Sub
@@ -274,7 +287,7 @@ Public Class frmProdutoTransacoesDetalhes
     '
     '--- ABRIR A COMPRA
     '----------------------------------------------------------------------------------
-    Private Sub btnCompra_Click(sender As Object, e As EventArgs) Handles btnTransacao.Click
+    Private Sub btnTransacao_Click(sender As Object, e As EventArgs) Handles btnTransacao.Click
         '
         AbrirDialog("Desculpe, ainda não foi implementado...",
                     "Em implementação", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
@@ -326,48 +339,31 @@ Public Class frmProdutoTransacoesDetalhes
     '
 #End Region '/ FUNCTION BUTTONS
     '
-#Region "CHANGE OPERACAO RADIO BUTTONS"
-    '
-    Private Sub rbt_CheckedChanged(sender As Object, e As EventArgs)
-        '
-        Dim novaOp As Byte = DirectCast(sender, Control).Tag
-        '
-        If Operacao <> novaOp Then Operacao = novaOp
-        '
-    End Sub
-    '
-    Private Sub CreateRbtHandlers()
-        '
-        AddHandler rbtVenda.CheckedChanged, AddressOf rbt_CheckedChanged
-        AddHandler rbtSimplesSaida.CheckedChanged, AddressOf rbt_CheckedChanged
-        AddHandler rbtDevolucaoCompra.CheckedChanged, AddressOf rbt_CheckedChanged
-        AddHandler rbtDevolucaoConsignacao.CheckedChanged, AddressOf rbt_CheckedChanged
-        AddHandler rbtCompras.CheckedChanged, AddressOf rbt_CheckedChanged
-        AddHandler rbtSimplesEntrada.CheckedChanged, AddressOf rbt_CheckedChanged
-        AddHandler rbtEntradaTroca.CheckedChanged, AddressOf rbt_CheckedChanged
-        AddHandler rbtEntradaConsignacao.CheckedChanged, AddressOf rbt_CheckedChanged
-        AddHandler rbtSaidas.CheckedChanged, AddressOf rbt_CheckedChanged
-        AddHandler rbtEntradas.CheckedChanged, AddressOf rbt_CheckedChanged
-        '
-    End Sub
-    '
-#End Region '/ CHANGE OPERACAO RADIO BUTTONS
-    '
 #Region "EFEITOS VISUAIS"
     '
     '-------------------------------------------------------------------------------------------------
     ' CRIAR EFEITO VISUAL DE FORM SELECIONADO
     '-------------------------------------------------------------------------------------------------
     Private Sub form_Activated(sender As Object, e As EventArgs) Handles Me.Activated
+        '
         If Not IsNothing(_formOrigem) Then
-            _formOrigem.Hide()
+            '
+            _formOrigem.Controls("Panel1").BackColor = Color.Silver
+            '
+            If IsNothing(_formOrigem.ParentForm) Then
+                _formOrigem.Opacity = 0.6
+            End If
         End If
+        '
     End Sub
     '
     Private Sub frmProdutoProcurar_Closed(sender As Object, e As EventArgs) Handles Me.Closed
+        '
         If Not IsNothing(_formOrigem) Then
-            _formOrigem.Show()
+            _formOrigem.Controls("Panel1").BackColor = Color.SlateGray
+            _formOrigem.Opacity = 1
         End If
+        '
     End Sub
     '
 #End Region

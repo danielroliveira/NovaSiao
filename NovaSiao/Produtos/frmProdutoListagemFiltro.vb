@@ -89,7 +89,6 @@
         If _ProdutoAtivo = newValue Then Exit Sub
         '
         _ProdutoAtivo = newValue
-
         '
     End Sub
     '
@@ -101,10 +100,11 @@
         'Adiciona todas as possibilidades de movimentacao
         dtMov.Columns.Add("Movimento")
         dtMov.Columns.Add("MovDescricao")
-        dtMov.Rows.Add(New Object() {0, "Normal"})
-        dtMov.Rows.Add(New Object() {1, "Sem Movimento"})
-        dtMov.Rows.Add(New Object() {2, "Protegido"})
-        dtMov.Rows.Add(New Object() {3, "Periódico"})
+        dtMov.Rows.Add(New Object() {0, "TODAS"})
+        dtMov.Rows.Add(New Object() {1, "Normal"})
+        dtMov.Rows.Add(New Object() {2, "Sem Movimento"})
+        dtMov.Rows.Add(New Object() {3, "Protegido"})
+        dtMov.Rows.Add(New Object() {4, "Periódico"})
 
         With cmbMovimento
             .DataSource = dtMov

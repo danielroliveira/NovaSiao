@@ -1,6 +1,5 @@
 ﻿Imports CamadaBLL
 Imports CamadaDTO
-Imports System.Drawing.Drawing2D
 '
 Public Class frmProdutoListagem
     '
@@ -55,7 +54,7 @@ Public Class frmProdutoListagem
         '
         '--- preenche a listagem
         _ProdutoAtivo = 1 '--- ATIVO
-        _Movimento = 0 '--- MOV NORMAL
+        _Movimento = 0 '--- TODOS MOVIMENTOS
         ConfiguraDatagrid()
         AtualizaLabelSelecionados()
         totalProdutos = 0
@@ -76,6 +75,7 @@ Public Class frmProdutoListagem
             Cursor = Cursors.WaitCursor
             '
             Dim myOrder As String = "Produto"
+            '
             '--- Get BD Dados
             Dim startRecord = (PaginaAtual * _itemsPorPagina) - _itemsPorPagina
             prodLista = prodBLL.GetProdutosWithEstoque_Where_Limited(_IDFilial,
@@ -84,6 +84,12 @@ Public Class frmProdutoListagem
                                                                      startRecord,
                                                                      totalProdutos,
                                                                      myOrder)
+            '
+            '--- verifica se o record inicial é maior que o total dos produtos
+            '    se for, refaz a consulta e alterando a pagina atual para 1 
+            If totalProdutos > 0 AndAlso startRecord + 1 > totalProdutos Then
+                PaginaAtual = 1
+            End If
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Obter lista de produtos..." & vbNewLine &
@@ -112,7 +118,7 @@ Public Class frmProdutoListagem
         End If
         '
         '--- Produto MOVIMENTO
-        If Not IsNothing(_Movimento) Then
+        If Not IsNothing(_Movimento) AndAlso _Movimento <> 0 Then
             myWhere += IIf(myWhere.Length = 0, "", " AND ")
             myWhere += "Movimento = " & _Movimento
         End If
@@ -211,7 +217,7 @@ Public Class frmProdutoListagem
         Set(ByVal value As Integer)
             Dim pags As Integer = Math.Ceiling(_totalProdutos / _itemsPorPagina)
             '
-            If value <= pags And value > 0 Then
+            If value <= pags Or value = 1 Then
                 _paginaAtual = value
                 VerificaNavegacaoButtons()
                 AtualizaListagem()
@@ -526,7 +532,7 @@ Public Class frmProdutoListagem
         _IDFabricante = f._IDFabricante
         _Fabricante = f._Fabricante
         '
-        AtualizaListagem()
+        PaginaAtual = 1
         '
     End Sub
     '
@@ -550,10 +556,10 @@ Public Class frmProdutoListagem
         Next
         '
         If IsNothing(frm) Then '--- o frmProduto não esta aberto
-            frm = New frmProduto(EnumFlagAcao.EDITAR, clProd)
+            frm = New frmProduto(EnumFlagAcao.EDITAR, clProd, Me)
             frm.MdiParent = frmPrincipal
             frm.StartPosition = FormStartPosition.CenterScreen
-            Close()
+            Me.Visible = False
             frm.Show()
         Else '--- o frmProduto já esta aberto
             DirectCast(frm, frmProduto).propProduto = clProd
@@ -1239,8 +1245,20 @@ Public Class frmProdutoListagem
         '
         Dim clProd As clProduto = dgvItens.SelectedRows(0).DataBoundItem
         '
-        Dim frm As Form = New frmProdutoFornecedor(clProd, Me)
-        frm.ShowDialog()
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frm As Form = New frmProdutoFornecedor(clProd, Me)
+            frm.ShowDialog()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Abrir o formulário de fornecedores do produto..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
 
@@ -1254,8 +1272,20 @@ Public Class frmProdutoListagem
         '
         Dim clProd As clProduto = dgvItens.SelectedRows(0).DataBoundItem
         '
-        Dim frm As Form = New frmProdutoTransacoes(clProd, Me)
-        frm.ShowDialog()
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frm As Form = New frmProdutoTransacoes(clProd, Me)
+            frm.ShowDialog()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir formulário de transações do produto..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
 
@@ -1269,6 +1299,10 @@ Public Class frmProdutoListagem
         '
         ' realiza a ATIVACAO
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Using pBLL As New ProdutoBLL
                 '
                 pBLL.ProdutoAtivarDesativar(dgvItens.SelectedRows(0).DataBoundItem.IDProduto, True)
@@ -1282,6 +1316,11 @@ Public Class frmProdutoListagem
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Ativar Produtos..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -1311,6 +1350,10 @@ Public Class frmProdutoListagem
         '
         ' realiza a DESATIVACAO
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Using pBLL As New ProdutoBLL
                 '
                 pBLL.ProdutoAtivarDesativar(dgvItens.SelectedRows(0).DataBoundItem.IDProduto, False)
@@ -1324,6 +1367,11 @@ Public Class frmProdutoListagem
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Desativar Produtos..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub

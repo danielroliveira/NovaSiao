@@ -176,7 +176,7 @@ Public Class frmProdutoTransacoes
         '
         ' altera as propriedades importantes
         dgvItens.MultiSelect = False
-        dgvItens.SelectionMode = DataGridViewSelectionMode.RowHeaderSelect
+        dgvItens.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         dgvItens.ColumnHeadersVisible = True
         dgvItens.AllowUserToResizeRows = False
         dgvItens.AllowUserToResizeColumns = False
@@ -251,7 +251,7 @@ Public Class frmProdutoTransacoes
     End Sub
     '
     Private Sub dgvListagem_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
-        'btnEditar_Click(New Object, New EventArgs)
+        btnTransacao_Click(New Object, New EventArgs)
     End Sub
     '
     Private Sub dgvItens_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvItens.CellFormatting
@@ -272,50 +272,31 @@ Public Class frmProdutoTransacoes
         Close()
     End Sub
     '
-    '--- ABRIR A COMPRA
+    '--- ABRIR A LISTAGEM DE TRANSACOES
     '----------------------------------------------------------------------------------
-    Private Sub btnCompra_Click(sender As Object, e As EventArgs) Handles btnTransacao.Click
-        '
-        AbrirDialog("Desculpe, ainda não foi implementado...",
-                    "Em implementação", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
-        Exit Sub
+    Private Sub btnTransacao_Click(sender As Object, e As EventArgs) Handles btnTransacao.Click
         '
         If IsNothing(dgvItens.CurrentRow) Then
-            AbrirDialog("Selecione um registro na listagem para ir para a transação...",
+            AbrirDialog("Selecione um registro na listagem para ver todas as transações...",
                         "Selecionar Registro", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             Exit Sub
         End If
         '
-        Dim selItem As clProdutoFornecedor = dgvItens.CurrentRow.DataBoundItem
+        Dim r As DataRowView = dgvItens.CurrentRow.DataBoundItem
         '
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Dim cBLL As New CompraBLL
-            Dim _cmp As clCompra = cBLL.GetCompra_PorID_OBJ(selItem.IDTransacao)
+            Dim dtInicial As Date = DateSerial(r("Ano"), r("Mes"), 1)
+            Dim lastDay As Integer = Utilidades.LastDayOfMonth(dtInicial).Day
+            Dim dtFinal As Date = DateSerial(r("Ano"), r("Mes"), lastDay)
             '
-            If IsNothing(_cmp) Then
-                Throw New Exception("Não foi encontrado registro de Compra com esse ID..." & vbCrLf &
-                                    "Talvez a transação não seja de Compra.")
-            End If
-            '
-            '--- close FORM frmProduto
-            If Not IsNothing(_formOrigem) Then
-                _formOrigem.Close()
-                _formOrigem = Nothing
-            End If
-            '
-            Dim frm As New frmCompra(_cmp) With {
-                        .MdiParent = frmPrincipal,
-                        .StartPosition = FormStartPosition.CenterScreen
-                    }
-            '--- close ME and OPEN COMPRA
-            Close()
-            frm.Show()
+            Dim frm As New frmProdutoTransacoesDetalhes(_Produto, Operacao, dtInicial, dtFinal, Me)
+            frm.ShowDialog()
             '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao abrir o formulario de Compras..." & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao abrir a relação de Transações..." & vbNewLine &
             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '--- Ampulheta OFF
@@ -323,6 +304,27 @@ Public Class frmProdutoTransacoes
         End Try
         '
     End Sub
+    '
+    Dim ret As New Rectangle
+    Private Sub PaintRetangle()
+        '
+        ret.Y = Me.Top
+        ret.X = Me.Left
+        ret.Width = Width
+        ret.Height = Height
+        '
+        'Dim myBrush As New SolidBrush(Color.Red)
+        Dim c As Color = Color.FromArgb(100, Color.Black)
+        Dim myBrush As New SolidBrush(c)
+        Dim formGraphics As Graphics
+        Dim principal As Form = Application.OpenForms().Item(0)
+        formGraphics = principal.CreateGraphics()
+        formGraphics.FillRectangle(myBrush, ret)
+        myBrush.Dispose()
+        formGraphics.Dispose()
+        '
+    End Sub
+
     '
 #End Region '/ FUNCTION BUTTONS
     '
@@ -372,4 +374,9 @@ Public Class frmProdutoTransacoes
     '
 #End Region
     '
+
+
+
+
+
 End Class
