@@ -295,6 +295,16 @@ Public Class frmProdutoTransacoes
             Dim frm As New frmProdutoTransacoesDetalhes(_Produto, Operacao, dtInicial, dtFinal, Me)
             frm.ShowDialog()
             '
+            If frm.DialogResult = DialogResult.Abort Then '---> ABORT significa que a transacao foi aberta
+                '
+                If Not IsNothing(_formOrigem) Then
+                    _formOrigem.Close()
+                End If
+                '
+                Me.Close()
+                '
+            End If
+            '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao abrir a relação de Transações..." & vbNewLine &
             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)

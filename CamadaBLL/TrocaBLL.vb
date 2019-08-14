@@ -40,7 +40,7 @@ Public Class TrocaBLL
     End Function
     '
     '--------------------------------------------------------------------------------------------
-    ' GET REGISTRO POR ID/RG
+    ' GET REGISTRO DE TROCA POR ID DA VENDA
     '--------------------------------------------------------------------------------------------
     Public Function GetTroca_PorIDVenda_clTroca(ByVal myIDVenda As Integer) As clTroca
         '
@@ -48,6 +48,32 @@ Public Class TrocaBLL
         Dim strSql As String = ""
         '
         strSql = "SELECT * FROM qryTroca WHERE IDVenda = " & myIDVenda
+        '
+        Try
+            Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
+            Dim r As DataRow = Nothing
+            '
+            If dt.Rows.Count > 0 Then
+                r = dt.Rows(0)
+                Return ConvertDtRow_clTroca(r)
+            Else
+                Return Nothing
+            End If
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '--------------------------------------------------------------------------------------------
+    ' GET REGISTRO DE TROCA POR ID TROCA
+    '--------------------------------------------------------------------------------------------
+    Public Function GetTroca_PorID_clTroca(IDTroca As Integer) As clTroca
+        '
+        Dim objdb As New AcessoDados
+        Dim strSql As String = ""
+        '
+        strSql = "SELECT * FROM qryTroca WHERE IDTroca = " & IDTroca
         '
         Try
             Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)

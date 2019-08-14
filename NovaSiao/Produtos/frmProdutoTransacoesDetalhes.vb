@@ -289,47 +289,65 @@ Public Class frmProdutoTransacoesDetalhes
     '----------------------------------------------------------------------------------
     Private Sub btnTransacao_Click(sender As Object, e As EventArgs) Handles btnTransacao.Click
         '
-        AbrirDialog("Desculpe, ainda não foi implementado...",
-                    "Em implementação", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
-        Exit Sub
-        '
         If IsNothing(dgvItens.CurrentRow) Then
             AbrirDialog("Selecione um registro na listagem para ir para a transação...",
                         "Selecionar Registro", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             Exit Sub
         End If
         '
-        Dim selItem As clProdutoFornecedor = dgvItens.CurrentRow.DataBoundItem
+        Dim selItem As clTransacaoItem = dgvItens.CurrentRow.DataBoundItem
+        Dim IDOperacao As Byte = selItem.IDOperacao
+        '
+        If IsNothing(IDOperacao) Or IsNothing(selItem.IDTransacao) Then
+            '
+            MessageBox.Show("Uma exceção ocorreu ao tentar Abrir a Transação..." & vbNewLine &
+                            "Não há ID da transação e/ou ID da operação disponível",
+                            "Exceção",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        End If
         '
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Dim cBLL As New CompraBLL
-            Dim _cmp As clCompra = cBLL.GetCompra_PorID_OBJ(selItem.IDTransacao)
+            Select Case IDOperacao
+                Case 1 '--- VENDA
+                    OpenVenda(selItem.IDTransacao)
+
+                Case 2 '--- COMPRA
+                    OpenCompra(selItem.IDTransacao)
+
+                Case 3 '--- SIMPLES ENTRADAS
+                    OpenSimplesEntrada(selItem.IDTransacao)
+
+                Case 4 '--- SIMPLES SAIDAS
+                    OpenSimplesSaida(selItem.IDTransacao)
+
+                Case 5 '--- DEVOLUCAO DE VENDA | TROCA
+                    OpenDevolucaoTroca(selItem.IDTransacao)
+
+                Case 6 '--- DEVOLUCAO DE COMPRA
+                    OpenDevolucaoSaida(selItem.IDTransacao)
+                    Return
+
+                Case 7 '--- CONSIGNAÇÃO DE COMPRA
+                    MsgBox("Em implementação...")
+                    Return
+
+                Case 8 '--- DEVOLUCAO DE CONSIGNACAO
+                    MsgBox("Em implementação...")
+                    Return
+
+            End Select
             '
-            If IsNothing(_cmp) Then
-                Throw New Exception("Não foi encontrado registro de Compra com esse ID..." & vbCrLf &
-                                    "Talvez a transação não seja de Compra.")
-            End If
-            '
-            '--- close FORM frmProduto
-            If Not IsNothing(_formOrigem) Then
-                _formOrigem.Close()
-                _formOrigem = Nothing
-            End If
-            '
-            Dim frm As New frmCompra(_cmp) With {
-                        .MdiParent = frmPrincipal,
-                        .StartPosition = FormStartPosition.CenterScreen
-                    }
             '--- close ME and OPEN COMPRA
+            DialogResult = DialogResult.Abort
             Close()
-            frm.Show()
             '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao abrir o formulario de Compras..." & vbNewLine &
-            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MessageBox.Show("Uma exceção ocorreu ao abrir a transação..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '--- Ampulheta OFF
             Cursor = Cursors.Default
@@ -338,6 +356,199 @@ Public Class frmProdutoTransacoesDetalhes
     End Sub
     '
 #End Region '/ FUNCTION BUTTONS
+    '
+#Region "OPEN TRANSACAO BY OPERACAO TYPE"
+    '
+    Private Sub OpenCompra(ID As Integer)
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim cBLL As New CompraBLL
+            Dim _cmp As clCompra = cBLL.GetCompra_PorID_OBJ(ID)
+            '
+            If IsNothing(_cmp) Then
+                Throw New Exception("Não foi encontrado registro de Compra com esse ID..." & vbCrLf &
+                                    "Talvez a transação não seja de Compra.")
+            End If
+            '
+            Dim frm As New frmCompra(_cmp) With {
+                        .MdiParent = frmPrincipal,
+                        .StartPosition = FormStartPosition.CenterScreen
+                    }
+            '
+            '--- OPEN
+            frm.Show()
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub OpenVenda(ID As Integer)
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim vBLL As New VendaBLL
+            Dim _venda As clVenda = vBLL.GetVenda_PorID_OBJ(ID)
+            '
+            If IsNothing(_venda) Then
+                Throw New Exception("Não foi encontrado registro de Venda com esse ID..." & vbCrLf &
+                                    "Talvez a transação não seja de Venda.")
+            End If
+            '
+            If _venda.CobrancaTipo = 1 Then ' VENDA À VISTA
+                Dim frm As New frmVendaVista(_venda) With {
+                            .MdiParent = frmPrincipal,
+                            .StartPosition = FormStartPosition.CenterScreen
+                        }
+                frm.Show()
+            ElseIf _venda.CobrancaTipo = 2 Then ' VENDA PARCELADA
+                Dim frm As New frmVendaPrazo(_venda) With {
+                            .MdiParent = frmPrincipal,
+                            .StartPosition = FormStartPosition.CenterScreen
+                        }
+                frm.Show()
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub OpenSimplesEntrada(ID As Integer)
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim sBLL As New SimplesMovimentacaoBLL
+            Dim _simples As clSimplesEntrada = sBLL.GetSimplesEntrada_PorID(ID)
+            '
+            If IsNothing(_simples) Then
+                Throw New Exception("Não foi encontrado registro de Simples Entrada com esse ID...")
+            End If
+            '
+            '
+            Dim frm As New frmSimplesEntrada(_simples) With {
+                        .MdiParent = frmPrincipal,
+                        .StartPosition = FormStartPosition.CenterScreen
+                    }
+            '
+            '--- OPEN
+            frm.Show()
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub OpenSimplesSaida(ID As Integer)
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim sBLL As New SimplesMovimentacaoBLL
+            Dim _simples As clSimplesSaida = sBLL.GetSimplesSaida_PorID(ID)
+            '
+            If IsNothing(_simples) Then
+                Throw New Exception("Não foi encontrado registro de Simples Saída com esse ID...")
+            End If
+            '
+            '
+            Dim frm As New frmSimplesSaida(_simples) With {
+                        .MdiParent = frmPrincipal,
+                        .StartPosition = FormStartPosition.CenterScreen
+                    }
+            '
+            '--- OPEN
+            frm.Show()
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub OpenDevolucaoSaida(ID As Integer)
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim dBLL As New DevolucaoSaidaBLL
+            Dim _devolucao As clDevolucaoSaida = dBLL.GetDevolucao_PorID(ID)
+            '
+            If IsNothing(_devolucao) Then
+                Throw New Exception("Não foi encontrado registro de Devolução com esse ID...")
+            End If
+            '
+            '
+            Dim frm As New frmDevolucaoSaida(_devolucao) With {
+                        .MdiParent = frmPrincipal,
+                        .StartPosition = FormStartPosition.CenterScreen
+                    }
+            '
+            '--- OPEN
+            frm.Show()
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub OpenDevolucaoTroca(ID As Integer)
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            AbrirDialog("Como é uma operação de Devolução para TROCA e esta vinculada a uma VENDA," & vbCrLf &
+                        "a VENDA relacionada a troca é que será aberta...",
+                        "Verificar Troca", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            '
+            Dim tBLL As New TrocaBLL
+            Dim _troca As clTroca = tBLL.GetTroca_PorID_clTroca(ID)
+            '
+            If IsNothing(_troca) Then
+                Throw New Exception("Não foi encontrado registro de Devolução de entrada | Troca com esse ID...")
+            End If
+            '
+            OpenVenda(_troca.IDVenda)
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+#End Region '/ OPEN TRANSACAO BY OPERACAO TYPE
     '
 #Region "EFEITOS VISUAIS"
     '
