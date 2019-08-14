@@ -166,8 +166,8 @@ Public Class frmPedido
         btnProcTransportadora.Enabled = v
         btnMensagemPadrao.Enabled = v
         btnExcluir.Enabled = v
-        btnVerificarEstoque.Enabled = v
-        btnVerificarReservas.Enabled = v
+        btnVerificarAdicionar.Enabled = v
+        btnProdutosFornecedor.Enabled = v
         btnImportarExportar.Enabled = v
         '
     End Sub
@@ -867,7 +867,7 @@ Public Class frmPedido
     End Function
     '
     '--- PRESSIONA FORÇA A ABERURA DO MENU
-    Private Sub tsbButtonClick(sender As Object, e As EventArgs) Handles btnVerificarEstoque.ButtonClick, btnVerificarReservas.ButtonClick
+    Private Sub tsbButtonClick(sender As Object, e As EventArgs) Handles btnVerificarAdicionar.ButtonClick
         '
         DirectCast(sender, ToolStripSplitButton).ShowDropDown()
         '
@@ -2024,7 +2024,21 @@ Public Class frmPedido
         '
     End Sub
     '
-    Private Sub miFornecedorProdutos_Click(sender As Object, e As EventArgs) Handles miFornecedorProdutos.Click
+    Private Sub miPelaReseervaPorFornecedor_Click(sender As Object, e As EventArgs) Handles miPelaReseervaPorFornecedor.Click
+        MsgBox("Desculpe, ainda está em implementação...")
+    End Sub
+    '
+    Private Sub miPelaReseervaPorTipo_Click(sender As Object, e As EventArgs) Handles miPelaReseervaPorTipo.Click
+        MsgBox("Desculpe, ainda está em implementação...")
+
+    End Sub
+    '
+    Private Sub miPelaReseervaPorFabricante_Click(sender As Object, e As EventArgs) Handles miPelaReseervaPorFabricante.Click
+        MsgBox("Desculpe, ainda está em implementação...")
+
+    End Sub
+    '
+    Private Sub miFornecedorProdutos_Click(sender As Object, e As EventArgs) Handles btnProdutosFornecedor.Click
         '
         If IsNothing(_pedido.IDFornecedor) OrElse _pedido.IDFornecedor = 0 Then
             AbrirDialog("Ainda não existe nenhum Fornecedor relacionado ao pedido.",

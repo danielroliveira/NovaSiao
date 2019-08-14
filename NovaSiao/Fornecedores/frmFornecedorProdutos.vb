@@ -12,6 +12,7 @@ Public Class frmFornecedorProdutos
     Private _rowSit As EnumFlagEstado
     Private ImgInativo As Image = My.Resources.full_page
     Private ImgAtivo As Image = My.Resources.accept
+    Private IDFilial As Integer? = Nothing
     '
 #Region "SUB NEW"
     '
@@ -81,11 +82,9 @@ Public Class frmFornecedorProdutos
         If _list.Count = 0 Then
             btnExcluir.Enabled = False
             btnEditar.Enabled = False
-            btnDefinirPadrao.Enabled = False
         Else
             btnExcluir.Enabled = True
             btnEditar.Enabled = True
-            btnDefinirPadrao.Enabled = True
         End If
         '
     End Sub
@@ -473,16 +472,16 @@ Public Class frmFornecedorProdutos
         '
         If IsNothing(pf.IDTransacao) Then
             btnExcluir.Enabled = True
-            btnCompra.Enabled = False
+            miUltimaCompra.Enabled = False
         Else
             btnExcluir.Enabled = False
-            btnCompra.Enabled = True
+            miUltimaCompra.Enabled = True
         End If
         '
         If pf.FornecedorPadrao Then
-            btnDefinirPadrao.Enabled = False
+            miDefinirFonecedorComoPadrao.Enabled = False
         Else
-            btnDefinirPadrao.Enabled = True
+            miDefinirFonecedorComoPadrao.Enabled = True
         End If
         '
     End Sub
@@ -662,7 +661,7 @@ Public Class frmFornecedorProdutos
         '
     End Sub
     '
-    Private Sub btnDefinirPadrao_Click(sender As Object, e As EventArgs) Handles btnDefinirPadrao.Click
+    Private Sub btnDefinirPadrao_Click(sender As Object, e As EventArgs) Handles miDefinirFonecedorComoPadrao.Click
         '
         If IsNothing(dgvItens.CurrentRow) Then
             AbrirDialog("Selecione um registro na listagem para Definir como Padrão...",
@@ -679,7 +678,7 @@ Public Class frmFornecedorProdutos
     '
     '--- ABRIR A COMPRA
     '----------------------------------------------------------------------------------
-    Private Sub btnCompra_Click(sender As Object, e As EventArgs) Handles btnCompra.Click
+    Private Sub btnCompra_Click(sender As Object, e As EventArgs) Handles miUltimaCompra.Click
         '
         If IsNothing(dgvItens.CurrentRow) Then
             AbrirDialog("Selecione um registro na listagem para ver a compra...",
@@ -709,10 +708,30 @@ Public Class frmFornecedorProdutos
                                     "Talvez a transação não seja de Compra.")
             End If
             '
-            '--- close FORM frmFornecedor
+            '--- close FORM frmFornecedor ou frmPedido
             If Not IsNothing(_formOrigem) Then
+                '
+                '--- ask user if his want to close
+                '
+                Dim formOrigemName As String = "Origem"
+                '
+                If TypeOf _formOrigem Is frmPedido Then
+                    formOrigemName = "PEDIDOS "
+                ElseIf TypeOf _formOrigem Is frmFornecedor Then
+                    formOrigemName = "FORNECEDORES "
+                End If
+                '
+                If AbrirDialog("Deseja realmente FECHAR o formulário de " + formOrigemName +
+                               "para abrir a última compra?",
+                               "Abrir a última Compra",
+                               frmDialog.DialogType.SIM_NAO,
+                               frmDialog.DialogIcon.Question,
+                               frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Return
+                '
+                '--- if YES, close the FORM ORIGEM
                 _formOrigem.Close()
                 _formOrigem = Nothing
+                '
             End If
             '
             Dim frm As New frmCompra(_cmp) With {
@@ -760,6 +779,114 @@ Public Class frmFornecedorProdutos
     End Function
     '
 #End Region '/ OUTRAS FUNCOES
+    '
+#Region "MENU PRODUTO | ITENS"
+    '
+    ' CONTROLE DO MENU SUSPENSO
+    '----------------------------------------------------------------------------------------------------------
+    Private Sub dgvItens_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvItens.MouseDown
+        '
+        If e.Button = MouseButtons.Right Then
+            '
+            Dim c As Control = DirectCast(sender, Control)
+            Dim hit As DataGridView.HitTestInfo = dgvItens.HitTest(e.X, e.Y)
+            dgvItens.ClearSelection()
+            '
+            '---VERIFICAÇÕES NECESSÁRIAS
+            If Not hit.Type = DataGridViewHitTestType.Cell Then Exit Sub
+            '
+            ' seleciona o ROW
+            dgvItens.Rows(hit.RowIndex).Cells(0).Selected = True
+            dgvItens.Rows(hit.RowIndex).Selected = True
+            '
+            '
+            ' Habilita | Desabilita itens do menu
+            Dim prod As clProdutoFornecedor = dgvItens.Rows(hit.RowIndex).DataBoundItem
+            '
+            If prod.FornecedorPadrao = True Then
+                miDefinirFonecedorComoPadrao.Enabled = False
+            Else
+                miDefinirFonecedorComoPadrao.Enabled = True
+            End If
+            '
+            If Not IsNothing(_formOrigem) AndAlso TypeOf _formOrigem Is frmPedido Then
+                miAdicionarProdutoAoPedido.Enabled = True
+            Else
+                miAdicionarProdutoAoPedido.Enabled = True
+            End If
+            '
+            ' revela menu
+            mnuItens.Show(c.PointToScreen(e.Location))
+            '
+        End If
+        '
+    End Sub
+    '
+    Private Sub miConfereEstoque_Click(sender As Object, e As EventArgs) Handles miConfereEstoque.Click
+        '
+        If IsNothing(dgvItens.CurrentRow) Then
+            AbrirDialog("Selecione um produto na listagem para conferir o estoque atual...",
+                        "Selecionar Registro", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Dim selItem As clProdutoFornecedor = dgvItens.CurrentRow.DataBoundItem
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            If IsNothing(IDFilial) Then IDFilial = Obter_FilialPadrao()
+            '
+            Dim prod As clProduto = Nothing
+            Using pBLL As New ProdutoBLL
+                '
+                prod = pBLL.GetProduto_PorID(selItem.IDProduto, IDFilial)
+                '
+            End Using
+            '
+            If IsNothing(prod) OrElse IsNothing(prod.Estoque) Then
+                AbrirDialog("Esse produto não foi encontrado nos registros de estoque da Filial Atual...",
+                            "Estoque não encontrado",
+                            frmDialog.DialogType.OK,
+                            frmDialog.DialogIcon.Information)
+                Return
+            End If
+            '
+            Dim msn As String = ""
+            msn += "Produto: " + prod.Produto + vbCrLf
+            msn += "Estoque Atual:      " + Format(prod.Estoque, "00").ToString + vbCrLf
+            msn += "Estoque Ideal:      " + Format(prod.EstoqueIdeal, "00").ToString + vbCrLf
+            msn += "Estoque Mínimo: " + Format(prod.EstoqueNivel, "00").ToString + vbCrLf
+            '
+            If miAdicionarProdutoAoPedido.Enabled = True Then
+                msn += "Deseja INSERIR o produto ao PEDIDO?"
+                If AbrirDialog(msn, "Informação do Estoque",
+                               frmDialog.DialogType.SIM_NAO,
+                               frmDialog.DialogIcon.Question) = DialogResult.No Then Exit Sub
+                '
+                'add produto in pedido
+                miAdicionarProdutoAoPedido_Click(sender, e)
+                '
+            Else
+                AbrirDialog(msn, "Informação do Estoque", frmDialog.DialogType.OK, frmDialog.DialogIcon.Question)
+            End If
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Conferir o Estoque..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub miAdicionarProdutoAoPedido_Click(sender As Object, e As EventArgs) Handles miAdicionarProdutoAoPedido.Click
+
+    End Sub
+    '
+#End Region '/ MENU PRODUTO | ITENS
     '
 #Region "EFEITOS VISUAIS"
     '

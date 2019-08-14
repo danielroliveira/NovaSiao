@@ -176,7 +176,7 @@ Public Class ProdutoBLL
         objdb.AdicionarParametros("@IDProduto", IDProduto)
         objdb.AdicionarParametros("@IDFilial", IDFilial)
         '
-        Dim query As String = "SELECT P.*, E.Quantidade, E.EstoqueNivel, E.EstoqueIdeal " +
+        Dim query As String = "SELECT P.*, E.Quantidade AS Estoque, E.EstoqueNivel, E.EstoqueIdeal " +
                               "FROM qryProdutos AS P " +
                               "LEFT JOIN tblEstoque AS E " +
                               "ON E.IDProduto = P.IDProduto AND E.IDFilial = @IDFilial " +

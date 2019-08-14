@@ -36,15 +36,15 @@ Partial Class frmPedido
         Me.btnCancelar = New System.Windows.Forms.ToolStripButton()
         Me.btnExcluir = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnVerificarEstoque = New System.Windows.Forms.ToolStripSplitButton()
+        Me.btnVerificarAdicionar = New System.Windows.Forms.ToolStripSplitButton()
         Me.miPeloEstoquePorFornecedor = New System.Windows.Forms.ToolStripMenuItem()
         Me.miPeloEstoquePorTipo = New System.Windows.Forms.ToolStripMenuItem()
         Me.miPeloEstoquePorFabricante = New System.Windows.Forms.ToolStripMenuItem()
-        Me.miFornecedorProdutos = New System.Windows.Forms.ToolStripMenuItem()
-        Me.btnVerificarReservas = New System.Windows.Forms.ToolStripSplitButton()
-        Me.miPelaReservaPorFornecedor = New System.Windows.Forms.ToolStripMenuItem()
-        Me.miPelaReservaPorTipo = New System.Windows.Forms.ToolStripMenuItem()
-        Me.miPelaReservaPorFabricante = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.miPelaReseervaPorFornecedor = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miPelaReseervaPorTipo = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miPelaReseervaPorFabricante = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnProdutosFornecedor = New System.Windows.Forms.ToolStripButton()
         Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripDropDownButton1 = New System.Windows.Forms.ToolStripDropDownButton()
@@ -180,7 +180,7 @@ Partial Class frmPedido
         Me.tsMenu.Dock = System.Windows.Forms.DockStyle.None
         Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
-        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnProcurar, Me.btnNovo, Me.btnSalvar, Me.ToolStripSeparator5, Me.btnCancelar, Me.btnExcluir, Me.ToolStripSeparator2, Me.btnVerificarEstoque, Me.btnVerificarReservas, Me.btnFechar, Me.ToolStripSeparator1, Me.ToolStripDropDownButton1, Me.btnImportarExportar})
+        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnProcurar, Me.btnNovo, Me.btnSalvar, Me.ToolStripSeparator5, Me.btnCancelar, Me.btnExcluir, Me.ToolStripSeparator2, Me.btnVerificarAdicionar, Me.btnProdutosFornecedor, Me.btnFechar, Me.ToolStripSeparator1, Me.ToolStripDropDownButton1, Me.btnImportarExportar})
         Me.tsMenu.Location = New System.Drawing.Point(2, 630)
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
@@ -248,79 +248,76 @@ Partial Class frmPedido
         Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
         Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 48)
         '
-        'btnVerificarEstoque
+        'btnVerificarAdicionar
         '
-        Me.btnVerificarEstoque.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miPeloEstoquePorFornecedor, Me.miPeloEstoquePorTipo, Me.miPeloEstoquePorFabricante, Me.miFornecedorProdutos})
-        Me.btnVerificarEstoque.Image = Global.NovaSiao.My.Resources.Resources.search1
-        Me.btnVerificarEstoque.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnVerificarEstoque.Name = "btnVerificarEstoque"
-        Me.btnVerificarEstoque.Size = New System.Drawing.Size(164, 45)
-        Me.btnVerificarEstoque.Text = "Verificar Estoque"
+        Me.btnVerificarAdicionar.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miPeloEstoquePorFornecedor, Me.miPeloEstoquePorTipo, Me.miPeloEstoquePorFabricante, Me.ToolStripSeparator3, Me.miPelaReseervaPorFornecedor, Me.miPelaReseervaPorTipo, Me.miPelaReseervaPorFabricante})
+        Me.btnVerificarAdicionar.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
+        Me.btnVerificarAdicionar.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.btnVerificarAdicionar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnVerificarAdicionar.Name = "btnVerificarAdicionar"
+        Me.btnVerificarAdicionar.Size = New System.Drawing.Size(215, 45)
+        Me.btnVerificarAdicionar.Text = "Verificar e Adicionar Itens"
         '
         'miPeloEstoquePorFornecedor
         '
         Me.miPeloEstoquePorFornecedor.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.miPeloEstoquePorFornecedor.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.miPeloEstoquePorFornecedor.Name = "miPeloEstoquePorFornecedor"
-        Me.miPeloEstoquePorFornecedor.Size = New System.Drawing.Size(245, 36)
-        Me.miPeloEstoquePorFornecedor.Text = "Por Fornecedor"
+        Me.miPeloEstoquePorFornecedor.Size = New System.Drawing.Size(269, 30)
+        Me.miPeloEstoquePorFornecedor.Text = "Estoque por Fornecedor"
         '
         'miPeloEstoquePorTipo
         '
         Me.miPeloEstoquePorTipo.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.miPeloEstoquePorTipo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.miPeloEstoquePorTipo.Name = "miPeloEstoquePorTipo"
-        Me.miPeloEstoquePorTipo.Size = New System.Drawing.Size(245, 36)
-        Me.miPeloEstoquePorTipo.Text = "Por Tipo de Produto"
+        Me.miPeloEstoquePorTipo.Size = New System.Drawing.Size(269, 30)
+        Me.miPeloEstoquePorTipo.Text = "Estoque por Tipo de Produto"
         '
         'miPeloEstoquePorFabricante
         '
         Me.miPeloEstoquePorFabricante.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.miPeloEstoquePorFabricante.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.miPeloEstoquePorFabricante.Name = "miPeloEstoquePorFabricante"
-        Me.miPeloEstoquePorFabricante.Size = New System.Drawing.Size(245, 36)
-        Me.miPeloEstoquePorFabricante.Text = "Por Fabricante"
+        Me.miPeloEstoquePorFabricante.Size = New System.Drawing.Size(269, 30)
+        Me.miPeloEstoquePorFabricante.Text = "Estoque por Fabricante"
         '
-        'miFornecedorProdutos
+        'ToolStripSeparator3
         '
-        Me.miFornecedorProdutos.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
-        Me.miFornecedorProdutos.Name = "miFornecedorProdutos"
-        Me.miFornecedorProdutos.Size = New System.Drawing.Size(245, 36)
-        Me.miFornecedorProdutos.Text = "Produtos do Fornecedor"
-        Me.miFornecedorProdutos.ToolTipText = "Exibir lista de produtos do Fornecedor"
+        Me.ToolStripSeparator3.Name = "ToolStripSeparator3"
+        Me.ToolStripSeparator3.Size = New System.Drawing.Size(266, 6)
         '
-        'btnVerificarReservas
+        'miPelaReseervaPorFornecedor
         '
-        Me.btnVerificarReservas.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miPelaReservaPorFornecedor, Me.miPelaReservaPorTipo, Me.miPelaReservaPorFabricante})
-        Me.btnVerificarReservas.Image = Global.NovaSiao.My.Resources.Resources.search1
-        Me.btnVerificarReservas.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnVerificarReservas.Name = "btnVerificarReservas"
-        Me.btnVerificarReservas.Size = New System.Drawing.Size(171, 45)
-        Me.btnVerificarReservas.Text = "Verificar Reservas"
+        Me.miPelaReseervaPorFornecedor.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
+        Me.miPelaReseervaPorFornecedor.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miPelaReseervaPorFornecedor.Name = "miPelaReseervaPorFornecedor"
+        Me.miPelaReseervaPorFornecedor.Size = New System.Drawing.Size(269, 30)
+        Me.miPelaReseervaPorFornecedor.Text = "Reserva por Fornecedor"
         '
-        'miPelaReservaPorFornecedor
+        'miPelaReseervaPorTipo
         '
-        Me.miPelaReservaPorFornecedor.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.miPelaReservaPorFornecedor.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.miPelaReservaPorFornecedor.Name = "miPelaReservaPorFornecedor"
-        Me.miPelaReservaPorFornecedor.Size = New System.Drawing.Size(213, 30)
-        Me.miPelaReservaPorFornecedor.Text = "Por Fornecedor"
+        Me.miPelaReseervaPorTipo.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
+        Me.miPelaReseervaPorTipo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miPelaReseervaPorTipo.Name = "miPelaReseervaPorTipo"
+        Me.miPelaReseervaPorTipo.Size = New System.Drawing.Size(269, 30)
+        Me.miPelaReseervaPorTipo.Text = "Reserva por Tipo de Produto"
         '
-        'miPelaReservaPorTipo
+        'miPelaReseervaPorFabricante
         '
-        Me.miPelaReservaPorTipo.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.miPelaReservaPorTipo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.miPelaReservaPorTipo.Name = "miPelaReservaPorTipo"
-        Me.miPelaReservaPorTipo.Size = New System.Drawing.Size(213, 30)
-        Me.miPelaReservaPorTipo.Text = "Por Tipo de Produto"
+        Me.miPelaReseervaPorFabricante.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
+        Me.miPelaReseervaPorFabricante.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miPelaReseervaPorFabricante.Name = "miPelaReseervaPorFabricante"
+        Me.miPelaReseervaPorFabricante.Size = New System.Drawing.Size(269, 30)
+        Me.miPelaReseervaPorFabricante.Text = "Reserva por Fabricante"
         '
-        'miPelaReservaPorFabricante
+        'btnProdutosFornecedor
         '
-        Me.miPelaReservaPorFabricante.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.miPelaReservaPorFabricante.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.miPelaReservaPorFabricante.Name = "miPelaReservaPorFabricante"
-        Me.miPelaReservaPorFabricante.Size = New System.Drawing.Size(213, 30)
-        Me.miPelaReservaPorFabricante.Text = "Por Fabricante"
+        Me.btnProdutosFornecedor.Image = Global.NovaSiao.My.Resources.Resources.search1
+        Me.btnProdutosFornecedor.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnProdutosFornecedor.Name = "btnProdutosFornecedor"
+        Me.btnProdutosFornecedor.Size = New System.Drawing.Size(196, 45)
+        Me.btnProdutosFornecedor.Text = "Produtos do Fornecedor"
         '
         'btnFechar
         '
@@ -378,13 +375,13 @@ Partial Class frmPedido
         'miImportarItens
         '
         Me.miImportarItens.Name = "miImportarItens"
-        Me.miImportarItens.Size = New System.Drawing.Size(180, 24)
+        Me.miImportarItens.Size = New System.Drawing.Size(169, 24)
         Me.miImportarItens.Text = "Importar Itens"
         '
         'miExportarItens
         '
         Me.miExportarItens.Name = "miExportarItens"
-        Me.miExportarItens.Size = New System.Drawing.Size(180, 24)
+        Me.miExportarItens.Size = New System.Drawing.Size(169, 24)
         Me.miExportarItens.Text = "Exportar Itens"
         '
         'lblID
@@ -1249,15 +1246,11 @@ Partial Class frmPedido
     Friend WithEvents Label11 As Label
     Friend WithEvents btnClose As VIBlend.WinForms.Controls.vFormButton
     Friend WithEvents btnExcluir As ToolStripButton
-    Friend WithEvents btnVerificarEstoque As ToolStripSplitButton
+    Friend WithEvents btnVerificarAdicionar As ToolStripSplitButton
     Friend WithEvents miPeloEstoquePorFornecedor As ToolStripMenuItem
     Friend WithEvents miPeloEstoquePorTipo As ToolStripMenuItem
     Friend WithEvents miPeloEstoquePorFabricante As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
-    Friend WithEvents btnVerificarReservas As ToolStripSplitButton
-    Friend WithEvents miPelaReservaPorFornecedor As ToolStripMenuItem
-    Friend WithEvents miPelaReservaPorTipo As ToolStripMenuItem
-    Friend WithEvents miPelaReservaPorFabricante As ToolStripMenuItem
     Friend WithEvents lblValorTotal As Label
     Friend WithEvents Label4 As Label
     Friend WithEvents dgvMensagens As DataGridView
@@ -1291,5 +1284,9 @@ Partial Class frmPedido
     Friend WithEvents clnSubTotal As DataGridViewTextBoxColumn
     Friend WithEvents clnMensagem As DataGridViewTextBoxColumn
     Friend WithEvents clnIDMensagem As DataGridViewTextBoxColumn
-    Friend WithEvents miFornecedorProdutos As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+    Friend WithEvents miPelaReseervaPorFornecedor As ToolStripMenuItem
+    Friend WithEvents miPelaReseervaPorTipo As ToolStripMenuItem
+    Friend WithEvents miPelaReseervaPorFabricante As ToolStripMenuItem
+    Friend WithEvents btnProdutosFornecedor As ToolStripButton
 End Class

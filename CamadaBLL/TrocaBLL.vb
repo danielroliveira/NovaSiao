@@ -73,7 +73,7 @@ Public Class TrocaBLL
         Dim objdb As New AcessoDados
         Dim strSql As String = ""
         '
-        strSql = "SELECT * FROM qryTroca WHERE IDTroca = " & IDTroca
+        strSql = "SELECT * FROM qryTroca WHERE IDTransacaoEntrada = " & IDTroca
         '
         Try
             Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
