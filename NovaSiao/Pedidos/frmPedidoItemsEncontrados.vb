@@ -15,12 +15,19 @@ Public Class frmPedidoItemsEncontrados
 #Region "SUB NEW"
     '
     Sub New(ItensList As List(Of clPedidoItem),
+            OrigemReserva As Boolean,
             formOrigem As frmPedido)
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
+        If OrigemReserva Then
+            lblTitulo.Text = "Produtos Encontrados nas Reservas"
+        Else
+            lblTitulo.Text = "Produtos Encontrados sem Estoque"
+        End If
+
         _formOrigem = formOrigem
         _ItensList = ItensList
         bindItens.DataSource = _ItensList
@@ -229,16 +236,15 @@ Public Class frmPedidoItemsEncontrados
             '
             Dim myOrigem As Byte = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clPedidoItem).Origem
             '
-            Select Case myOrigem
-                Case 0, 1, 2 '--- Origem PEDIDO
-                    dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.White
-                    dgvItens.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = SystemColors.Highlight
-                    e.CellStyle.ForeColor = Color.Black
-                Case 10 '--- ITEM ALREADY INSERTED
-                    dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.MistyRose
-                    dgvItens.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = Color.Firebrick
-                    e.CellStyle.ForeColor = Color.Red
-            End Select
+            If myOrigem >= 10 Then
+                dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.MistyRose
+                dgvItens.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = Color.Firebrick
+                e.CellStyle.ForeColor = Color.Red
+            Else
+                dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.White
+                dgvItens.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = SystemColors.Highlight
+                e.CellStyle.ForeColor = Color.Black
+            End If
             '
         End If
         '
@@ -445,7 +451,33 @@ Public Class frmPedidoItemsEncontrados
     '--- AO SELECIONAR O ITEM ALTERA A CONTAGEM
     Private Sub dgvItens_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellValueChanged
         '
-        If e.ColumnIndex = 0 Then
+        If e.ColumnIndex = 0 And e.RowIndex >= 0 Then
+            '
+            '--- check if already quantity
+            If dgvItens.Rows(e.RowIndex).Cells(0).Value = True Then
+                '
+                Dim item As clPedidoItem = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clPedidoItem)
+                '
+                '--- check if ORIGEM is RESERVA AND ESTOQUE is greater than ZERO
+                If (item.Origem = 1 Or item.Origem = 11) AndAlso item.Estoque > 0 Then
+                    '--- message to USER
+                    If AbrirDialog("O produto: " + item.Produto + vbCrLf +
+                           "possui quantidade suficiente no estoque atual para atender a reserva..." + vbCrLf +
+                           "Deseja inserir esse produto no pedido assim mesmo?",
+                           "Produto com Estoque",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.No Then
+                        '
+                        dgvItens.Rows(e.RowIndex).Cells(0).Value = False
+                        dgvItens.CancelEdit()
+                        Exit Sub
+                        '
+                    End If
+                    '
+                End If
+                '
+            End If
+            '
             Dim quant As Integer = 0
             '
             For Each row As DataGridViewRow In dgvItens.Rows
@@ -513,7 +545,7 @@ Public Class frmPedidoItemsEncontrados
         '
         For Each item In _ItensList
             If lista.Exists(Function(x) If(x.IDProduto, 0) = item.IDProduto) Then
-                item.Origem = 10
+                item.Origem += 10
                 ItensInseridos += 1
             End If
         Next
@@ -559,33 +591,65 @@ Public Class frmPedidoItemsEncontrados
     '
 #Region "TRANSFERIR ITENS"
     '
-    Private Sub ItemTransferir(item As clPedidoItem, emitirMensagem As Boolean)
+    Private Sub ItemTransferir(item As clPedidoItem, Optional emitirMensagem As Boolean = True)
         '
-        If emitirMensagem AndAlso item.Origem = 10 Then
+        '--- IF FROM RESERVA CHECK QUANTITY IN ESTOQUE AND ASK TO USER
+        If emitirMensagem Then
+
+            If (item.Origem = 1 Or item.Origem = 11) And item.Estoque > 0 Then
+                '
+                If AbrirDialog("O produto: " + item.Produto + vbCrLf +
+                           "possui quantidade suficiente no estoque atual para atender a reserva..." + vbCrLf +
+                           "Deseja inserir esse produto no pedido assim mesmo?",
+                           "Produto com Estoque",
+                frmDialog.DialogType.SIM_NAO,
+                frmDialog.DialogIcon.Question) = DialogResult.No Then Exit Sub
+                '
+            End If
             '
-            If AbrirDialog("O produto: " + item.Produto + vbCrLf +
+            If item.Origem >= 10 Then
+                '
+                If AbrirDialog("O produto: " + item.Produto + vbCrLf +
                            "já foi inserido no pedido..." + vbCrLf +
-                           "Deseja inserir esse produto assim mesmo?",
+                           "Deseja inserir esse produto no pedido assim mesmo?",
                            "Produto Já Inserido",
-                           frmDialog.DialogType.SIM_NAO,
-                           frmDialog.DialogIcon.Question) = DialogResult.No Then Exit Sub
+                frmDialog.DialogType.SIM_NAO,
+                frmDialog.DialogIcon.Question) = DialogResult.No Then Exit Sub
+                '
+            End If
             '
         End If
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- verifica se o item esta marcado como repetido (origem >= 10)
+            '--- se sim, retorna a origem correta ao item
+            If item.Origem >= 10 Then
+                item.Origem -= 10
+            End If
+            '
             _ItensInseridos.Add(item)
             _formOrigem.ItemInserir(item)
             _formOrigem.bindItens.ResetBindings(False)
             _formOrigem.AtualizaTotalGeral()
             bindItens.Remove(item)
+            '
         Catch ex As Exception
             '
             Throw ex
             '
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
-
+    '
     Private Sub btnInserirSelecionados_Click(sender As Object, e As EventArgs) Handles btnInserirSelecionados.Click
         '
         Dim quant As Integer = 0
@@ -599,19 +663,29 @@ Public Class frmPedidoItemsEncontrados
         If AbrirDialog("Existe(m) " + Format(quant, "00") + " produto(s) que" + vbCrLf +
                        "já foram inseridos no pedido..." + vbCrLf +
                        "Deseja inserir os produtos selecionados mesmo assim?",
-                       "Produto Já Inserido",
+                       "Produto(s) Já Inserido(s)",
                        frmDialog.DialogType.SIM_NAO,
                        frmDialog.DialogIcon.Question) = DialogResult.No Then Exit Sub
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             For Each row As DataGridViewRow In dgvItens.Rows
                 If row.Cells(0).Value = True Then
                     ItemTransferir(row.DataBoundItem, False)
                 End If
             Next
+            '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Transferir os Items para o pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub

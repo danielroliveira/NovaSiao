@@ -64,6 +64,9 @@ Public Class frmPedidoProcurar
                 Case 3 '--- Cancelados
                     rbtCancelados.Focus()
                     lblDtFinal.Text = "Dt. do Cancelamento"
+                Case 4 '--- Migrados
+                    rbtMigrados.Focus()
+                    lblDtFinal.Text = "Dt. da Migração"
                 Case Else '--- Todas
                     lblDtFinal.Text = "Dt. da Revisão"
             End Select
@@ -96,6 +99,11 @@ Public Class frmPedidoProcurar
                 clnRevisaoData.DataPropertyName = "RevisaoData"
                 btnExcluir.Enabled = True
                 btnEditar.Text = "&Editar"
+            Case 3 '--- Migrados
+                lblDtFinal.Text = "Dt. Migração"
+                clnRevisaoData.DataPropertyName = "MigracaoData"
+                btnExcluir.Enabled = True
+                btnEditar.Text = "&Abrir"
         End Select
     End Sub
     '
@@ -126,7 +134,6 @@ Public Class frmPedidoProcurar
         '
         '--- consulta o banco de dados
         Try
-            'MsgBox("get")
             '
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
@@ -436,19 +443,31 @@ Public Class frmPedidoProcurar
         Dim ped As clPedido = dgvListagem.SelectedRows(0).DataBoundItem
         '
         '--- pergunta ao usuario
-        If MessageBox.Show("Você realmente deseja excluir o registro de Pedido..." & vbNewLine &
-                           ped.Fornecedor.ToUpper & vbNewLine &
-                           "Data: " & ped.InicioData, "Excluir Pedido",
-                           MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                           MessageBoxDefaultButton.Button2) = vbNo Then Exit Sub
+        If AbrirDialog("Você realmente deseja excluir o registro de Pedido..." & vbNewLine &
+                       ped.Fornecedor.ToUpper & vbNewLine &
+                       "Data: " & ped.InicioData,
+                       "Excluir Pedido",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question,
+                       frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Exit Sub
         '
         '--- exclui o registro de pedido
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             _pedBLL.Pedido_Excluir(ped.IDPedido)
             Get_Dados()
+            '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Excluir registro de Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -482,17 +501,21 @@ Public Class frmPedidoProcurar
 #Region "CONTROLE DOS BTN PESQUISA"
     '
     Private Sub AdicionaHandler()
+        '
         AddHandler rbtCompondo.CheckedChanged, AddressOf Butons_CheckedChanged
         AddHandler rbtRecebidos.CheckedChanged, AddressOf Butons_CheckedChanged
         AddHandler rbtCancelados.CheckedChanged, AddressOf Butons_CheckedChanged
         AddHandler rbtEnviado.CheckedChanged, AddressOf Butons_CheckedChanged
+        '
     End Sub
     '
     Private Sub RemoverHandler()
+        '
         RemoveHandler rbtCompondo.CheckedChanged, AddressOf Butons_CheckedChanged
         RemoveHandler rbtRecebidos.CheckedChanged, AddressOf Butons_CheckedChanged
         RemoveHandler rbtCancelados.CheckedChanged, AddressOf Butons_CheckedChanged
         RemoveHandler rbtEnviado.CheckedChanged, AddressOf Butons_CheckedChanged
+        '
     End Sub
     '
     Private Sub Butons_CheckedChanged(sender As Object, e As EventArgs)
@@ -507,6 +530,8 @@ Public Class frmPedidoProcurar
             valorAlterado = 2 '--- Recebidos
         ElseIf rbtCancelados.Checked = True Then
             valorAlterado = 3 '--- Cancelados
+        ElseIf rbtMigrados.Checked = True Then
+            valorAlterado = 4 '--- Migrados
         Else
             valorAlterado = Nothing
         End If
@@ -596,10 +621,18 @@ Public Class frmPedidoProcurar
                 miCancelado.Enabled = False
                 miAlteraData.Enabled = False
                 '
+            ElseIf pedItem.Situacao = 4 Then '--- Migrado
+                miCompondo.Enabled = False
+                miEnviado.Enabled = False
+                miRecebido.Enabled = False
+                miCancelado.Enabled = False
+                miAlteraData.Enabled = False
+                '
             End If
             '
             ' revela menu
             mnuOperacoes.Show(c.PointToScreen(e.Location))
+            '
         End If
     End Sub
     ' 

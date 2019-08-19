@@ -30,6 +30,7 @@ Public Class clPedido
         Dim _Observacao As String
         Dim _TotalPedido As Decimal
         Dim _TotalRecebido As Decimal
+        Dim _IDMigracao As Integer?
         '
     End Structure
 #End Region
@@ -52,6 +53,7 @@ Public Class clPedido
             ._VendedorNome = ""
             ._TotalPedido = 0
             ._TotalRecebido = 0
+            ._IDMigracao = Nothing
         End With
     End Sub
     '
@@ -372,6 +374,20 @@ Public Class clPedido
         End Set
     End Property
     '
+    '--- Propriedade IDMigracao
+    '------------------------------------------------------
+    Public Property IDMigracao() As Integer?
+        Get
+            Return PData._IDMigracao
+        End Get
+        Set(ByVal value As Integer?)
+            If value <> PData._IDMigracao Then
+                RaiseEvent AoAlterar()
+            End If
+            PData._IDMigracao = value
+        End Set
+    End Property
+    '
 #End Region
     '
 End Class
@@ -641,6 +657,12 @@ Public Class clPedidoItem
     End Property
     '
     '--- Propriedade OrigemDescricao
+    '------------------------------------------------------
+    'WHEN 0 THEN Pedido Local'
+    'WHEN 1 THEN Reserva Local'
+    'WHEN 2 THEN Pedido Filial'
+    'WHEN 3 THEN Reserva Filial'
+    'WHEN 4 THEN Migracao Local'
     '------------------------------------------------------
     Public Property OrigemDescricao() As String
         Get

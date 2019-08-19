@@ -69,7 +69,7 @@ Public Class ReservaBLL
         db.AdicionarParametros("@TemWathsapp", myReserva.TemWathsapp)
         db.AdicionarParametros("@ClienteEmail", If(myReserva.ClienteEmail, DBNull.Value))
         db.AdicionarParametros("@ProdutoConhecido", myReserva.ProdutoConhecido)
-        db.AdicionarParametros("@RGProduto", If(myReserva.RGProduto, DBNull.Value))
+        db.AdicionarParametros("@IDProduto", If(myReserva.IDProduto, DBNull.Value))
         db.AdicionarParametros("@Produto", myReserva.Produto)
         db.AdicionarParametros("@Autor", If(myReserva.Autor, DBNull.Value))
         db.AdicionarParametros("@IDFornecedor", If(myReserva.IDFornecedor, DBNull.Value))
@@ -80,12 +80,12 @@ Public Class ReservaBLL
             "INSERT INTO tblReserva " +
             "( ReservaData, IDFuncionario, IDFilial, ClienteNome " +
             ", TelefoneA, TelefoneB, TemWathsapp, ClienteEmail " +
-            ", ProdutoConhecido, RGProduto, Produto, Autor " +
+            ", ProdutoConhecido, IDProduto, Produto, Autor " +
             ", IDFornecedor, IDFabricante, IDProdutoTipo, IDSituacaoReserva ) " +
             "VALUES " +
             "( @ReservaData, @IDFuncionario, @IDFilial, @ClienteNome " +
             ", @TelefoneA, @TelefoneB, @TemWathsapp, @ClienteEmail " +
-            ", @ProdutoConhecido, @RGProduto, @Produto, @Autor " +
+            ", @ProdutoConhecido, @IDProduto, @Produto, @Autor " +
             ", @IDFornecedor, @IDFabricante, @IDProdutoTipo, 1 )"
         '
         Try
@@ -140,7 +140,7 @@ Public Class ReservaBLL
         bd.AdicionarParametros("@TemWathsapp", myReserva.TemWathsapp)
         bd.AdicionarParametros("@ClienteEmail", If(myReserva.ClienteEmail, DBNull.Value))
         bd.AdicionarParametros("@ProdutoConhecido", myReserva.ProdutoConhecido)
-        bd.AdicionarParametros("@RGProduto", If(myReserva.RGProduto, DBNull.Value))
+        bd.AdicionarParametros("@IDProduto", If(myReserva.IDProduto, DBNull.Value))
         bd.AdicionarParametros("@Produto", myReserva.Produto)
         bd.AdicionarParametros("@Autor", If(myReserva.Autor, DBNull.Value))
         bd.AdicionarParametros("@IDFornecedor", If(myReserva.IDFornecedor, DBNull.Value))
@@ -160,7 +160,7 @@ Public Class ReservaBLL
                     ", TemWathsapp = @TemWathsapp " +
                     ", ClienteEmail = @ClienteEmail " +
                     ", ProdutoConhecido = @ProdutoConhecido " +
-                    ", RGProduto = @RGProduto " +
+                    ", IDProduto = @IDProduto " +
                     ", Produto = @Produto " +
                     ", Autor = @Autor " +
                     ", IDFornecedor = @IDFornecedor " +
@@ -257,6 +257,7 @@ Public Class ReservaBLL
         res.TemWathsapp = IIf(IsDBNull(r("TemWathsapp")), Nothing, r("TemWathsapp"))
         res.ClienteEmail = IIf(IsDBNull(r("ClienteEmail")), String.Empty, r("ClienteEmail"))
         res.ProdutoConhecido = IIf(IsDBNull(r("ProdutoConhecido")), Nothing, r("ProdutoConhecido"))
+        res.IDProduto = IIf(IsDBNull(r("IDProduto")), Nothing, r("IDProduto"))
         res.RGProduto = IIf(IsDBNull(r("RGProduto")), Nothing, r("RGProduto"))
         res.Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto"))
         res.PVenda = IIf(IsDBNull(r("PVenda")), Nothing, r("PVenda"))
@@ -276,5 +277,28 @@ Public Class ReservaBLL
         Return res
         '
     End Function
+    ' 
+    '==========================================================================================
+    ' INSERT PEDIDO IN RESERVA AND CHANGE SITUACAO OF RESERVA
+    '==========================================================================================
+    Public Sub ResolveReservaWithPedido(IDReserva As Integer, IDPedido As Integer, dbTran As AcessoDados)
+        '
+        Try
+            '
+            dbTran.LimparParametros()
+            dbTran.AdicionarParametros("@IDReserva", IDReserva)
+            dbTran.AdicionarParametros("@IDPedido", IDPedido)
+            '
+            Dim query As String = "UPDATE tblReserva SET IDPedido = @IDPedido, " +
+                                  "IDSituacaoReserva = 2 " +
+                                  "WHERE IDReserva = @IDReserva"
+            '
+            dbTran.ExecutarManipulacao(CommandType.Text, query)
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
     '
 End Class

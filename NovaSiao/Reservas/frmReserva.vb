@@ -601,7 +601,8 @@ Public Class frmReserva
         If _Reserva.ProdutoConhecido = True Then
             '
             If Sit <> EnumFlagEstado.RegistroSalvo Then
-                If _Reserva.RGProduto Is Nothing Then
+                If _Reserva.IDProduto Is Nothing Then
+                    _Reserva.RGProduto = Nothing
                     _Reserva.Produto = String.Empty
                     _Reserva.IDProdutoTipo = Nothing
                     _Reserva.ProdutoTipo = String.Empty
@@ -632,6 +633,7 @@ Public Class frmReserva
         Else '--- PRODUTO DESCONHECIDO
             '
             If Sit <> EnumFlagEstado.RegistroSalvo Then
+                _Reserva.IDProduto = Nothing
                 _Reserva.RGProduto = Nothing
                 _Reserva.Produto = Nothing
                 _Reserva.IDFornecedor = Nothing
@@ -719,6 +721,7 @@ Public Class frmReserva
             End If
             '
             '--- Define os itens do produto encontrado
+            _Reserva.IDProduto = prod.IDProduto
             _Reserva.Produto = prod.Produto
             _Reserva.IDFabricante = prod.IDFabricante
             _Reserva.Fabricante = prod.Fabricante

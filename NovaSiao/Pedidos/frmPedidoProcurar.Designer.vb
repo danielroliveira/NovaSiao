@@ -20,9 +20,13 @@ Partial Class frmPedidoProcurar
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvListagem = New System.Windows.Forms.DataGridView()
+        Me.clnInicioData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnFornecedor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnTotalPedido = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnRevisaoData = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.pnlTitulo = New System.Windows.Forms.Panel()
         Me.lblDtFinal = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -56,10 +60,7 @@ Partial Class frmPedidoProcurar
         Me.btnFornecedor = New System.Windows.Forms.ToolStripButton()
         Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.btnMensagens = New System.Windows.Forms.ToolStripButton()
-        Me.clnInicioData = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnFornecedor = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnTotalPedido = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnRevisaoData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.rbtMigrados = New System.Windows.Forms.RadioButton()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvListagem, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlTitulo.SuspendLayout()
@@ -88,8 +89,8 @@ Partial Class frmPedidoProcurar
         '
         Me.dgvListagem.AllowUserToAddRows = False
         Me.dgvListagem.AllowUserToDeleteRows = False
-        DataGridViewCellStyle7.BackColor = System.Drawing.Color.Azure
-        Me.dgvListagem.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.Azure
+        Me.dgvListagem.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvListagem.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvListagem.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnInicioData, Me.clnFornecedor, Me.clnTotalPedido, Me.clnRevisaoData})
         Me.dgvListagem.GridColor = System.Drawing.Color.LightSteelBlue
@@ -98,10 +99,42 @@ Partial Class frmPedidoProcurar
         Me.dgvListagem.Name = "dgvListagem"
         Me.dgvListagem.ReadOnly = True
         Me.dgvListagem.RowHeadersWidth = 30
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.LightSlateGray
-        Me.dgvListagem.RowsDefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.LightSlateGray
+        Me.dgvListagem.RowsDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvListagem.Size = New System.Drawing.Size(790, 368)
         Me.dgvListagem.TabIndex = 8
+        '
+        'clnInicioData
+        '
+        Me.clnInicioData.Frozen = True
+        Me.clnInicioData.HeaderText = "Data Inicial"
+        Me.clnInicioData.Name = "clnInicioData"
+        Me.clnInicioData.ReadOnly = True
+        Me.clnInicioData.Width = 130
+        '
+        'clnFornecedor
+        '
+        Me.clnFornecedor.Frozen = True
+        Me.clnFornecedor.HeaderText = "Fornecedor"
+        Me.clnFornecedor.Name = "clnFornecedor"
+        Me.clnFornecedor.ReadOnly = True
+        Me.clnFornecedor.Width = 330
+        '
+        'clnTotalPedido
+        '
+        Me.clnTotalPedido.Frozen = True
+        Me.clnTotalPedido.HeaderText = "Total do Pedido"
+        Me.clnTotalPedido.Name = "clnTotalPedido"
+        Me.clnTotalPedido.ReadOnly = True
+        Me.clnTotalPedido.Width = 130
+        '
+        'clnRevisaoData
+        '
+        Me.clnRevisaoData.Frozen = True
+        Me.clnRevisaoData.HeaderText = "Rever Em"
+        Me.clnRevisaoData.Name = "clnRevisaoData"
+        Me.clnRevisaoData.ReadOnly = True
+        Me.clnRevisaoData.Width = 130
         '
         'pnlTitulo
         '
@@ -175,6 +208,7 @@ Partial Class frmPedidoProcurar
         'pnlSituacao
         '
         Me.pnlSituacao.BackColor = System.Drawing.Color.LightSteelBlue
+        Me.pnlSituacao.Controls.Add(Me.rbtMigrados)
         Me.pnlSituacao.Controls.Add(Me.rbtCancelados)
         Me.pnlSituacao.Controls.Add(Me.rbtRecebidos)
         Me.pnlSituacao.Controls.Add(Me.rbtCompondo)
@@ -187,7 +221,7 @@ Partial Class frmPedidoProcurar
         'rbtCancelados
         '
         Me.rbtCancelados.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtCancelados.Location = New System.Drawing.Point(555, 5)
+        Me.rbtCancelados.Location = New System.Drawing.Point(478, 5)
         Me.rbtCancelados.Name = "rbtCancelados"
         Me.rbtCancelados.Size = New System.Drawing.Size(131, 33)
         Me.rbtCancelados.TabIndex = 4
@@ -199,7 +233,7 @@ Partial Class frmPedidoProcurar
         'rbtRecebidos
         '
         Me.rbtRecebidos.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtRecebidos.Location = New System.Drawing.Point(405, 5)
+        Me.rbtRecebidos.Location = New System.Drawing.Point(328, 5)
         Me.rbtRecebidos.Name = "rbtRecebidos"
         Me.rbtRecebidos.Size = New System.Drawing.Size(131, 33)
         Me.rbtRecebidos.TabIndex = 3
@@ -211,7 +245,7 @@ Partial Class frmPedidoProcurar
         'rbtCompondo
         '
         Me.rbtCompondo.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtCompondo.Location = New System.Drawing.Point(105, 5)
+        Me.rbtCompondo.Location = New System.Drawing.Point(28, 5)
         Me.rbtCompondo.Name = "rbtCompondo"
         Me.rbtCompondo.Size = New System.Drawing.Size(131, 33)
         Me.rbtCompondo.TabIndex = 1
@@ -223,7 +257,7 @@ Partial Class frmPedidoProcurar
         'rbtEnviado
         '
         Me.rbtEnviado.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtEnviado.Location = New System.Drawing.Point(255, 5)
+        Me.rbtEnviado.Location = New System.Drawing.Point(178, 5)
         Me.rbtEnviado.Name = "rbtEnviado"
         Me.rbtEnviado.Size = New System.Drawing.Size(131, 33)
         Me.rbtEnviado.TabIndex = 2
@@ -441,37 +475,17 @@ Partial Class frmPedidoProcurar
         Me.btnMensagens.Size = New System.Drawing.Size(161, 37)
         Me.btnMensagens.Text = "Mensagens Padrão"
         '
-        'clnInicioData
+        'rbtMigrados
         '
-        Me.clnInicioData.Frozen = True
-        Me.clnInicioData.HeaderText = "Data Inicial"
-        Me.clnInicioData.Name = "clnInicioData"
-        Me.clnInicioData.ReadOnly = True
-        Me.clnInicioData.Width = 130
-        '
-        'clnFornecedor
-        '
-        Me.clnFornecedor.Frozen = True
-        Me.clnFornecedor.HeaderText = "Fornecedor"
-        Me.clnFornecedor.Name = "clnFornecedor"
-        Me.clnFornecedor.ReadOnly = True
-        Me.clnFornecedor.Width = 330
-        '
-        'clnTotalPedido
-        '
-        Me.clnTotalPedido.Frozen = True
-        Me.clnTotalPedido.HeaderText = "Total do Pedido"
-        Me.clnTotalPedido.Name = "clnTotalPedido"
-        Me.clnTotalPedido.ReadOnly = True
-        Me.clnTotalPedido.Width = 130
-        '
-        'clnRevisaoData
-        '
-        Me.clnRevisaoData.Frozen = True
-        Me.clnRevisaoData.HeaderText = "Rever Em"
-        Me.clnRevisaoData.Name = "clnRevisaoData"
-        Me.clnRevisaoData.ReadOnly = True
-        Me.clnRevisaoData.Width = 130
+        Me.rbtMigrados.Appearance = System.Windows.Forms.Appearance.Button
+        Me.rbtMigrados.Location = New System.Drawing.Point(628, 5)
+        Me.rbtMigrados.Name = "rbtMigrados"
+        Me.rbtMigrados.Size = New System.Drawing.Size(131, 33)
+        Me.rbtMigrados.TabIndex = 5
+        Me.rbtMigrados.TabStop = True
+        Me.rbtMigrados.Text = "Migrados"
+        Me.rbtMigrados.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.rbtMigrados.UseVisualStyleBackColor = True
         '
         'frmPedidoProcurar
         '
@@ -553,4 +567,5 @@ Partial Class frmPedidoProcurar
     Friend WithEvents clnFornecedor As DataGridViewTextBoxColumn
     Friend WithEvents clnTotalPedido As DataGridViewTextBoxColumn
     Friend WithEvents clnRevisaoData As DataGridViewTextBoxColumn
+    Friend WithEvents rbtMigrados As RadioButton
 End Class

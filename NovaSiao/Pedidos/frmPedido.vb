@@ -450,29 +450,33 @@ Public Class frmPedido
     '
     Private Sub dgvItens_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvItens.CellFormatting
         '
+        'WHEN 0 THEN Pedido Local'
+        'WHEN 1 THEN Reserva Local'
+        'WHEN 2 THEN Pedido Filial'
+        'WHEN 3 THEN Reserva Filial'
+        'WHEN 4 THEN Migracao Local'
+        '
         If e.ColumnIndex = 1 Then
             '
-            Dim myOrigem As Byte
-            '
-            If Not IsNothing(dgvItens.Rows(e.RowIndex).DataBoundItem) Then
-                myOrigem = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clPedidoItem).Origem
-            Else
-                myOrigem = 0
-            End If
+            Dim myOrigem As Byte = If(IsNothing(dgvItens.Rows(e.RowIndex).DataBoundItem), 0, dgvItens.Rows(e.RowIndex).DataBoundItem.Origem)
             '
             Select Case myOrigem
-                Case 0 '--- Origem PEDIDO
+                Case 0 '--- Origem PEDIDO LOCAL
                     dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.White
                     dgvItens.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = SystemColors.Highlight
                     e.CellStyle.ForeColor = Color.Black
-                Case 1 '--- Origem RESERVA
+                Case 1 '--- Origem RESERVA LOCAL
                     dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.LightCyan
                     dgvItens.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = SystemColors.Highlight
                     e.CellStyle.ForeColor = Color.Black
-                Case 2 '--- Origem FILIAL
+                Case 2, 3 '--- Origem FILIAL, RESERVA FILIAL
                     dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.MistyRose
                     dgvItens.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = Color.Firebrick
                     e.CellStyle.ForeColor = Color.Red
+                Case 4 '--- Origem MIGRACAO LOCAL
+                    dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.LightGreen
+                    dgvItens.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = Color.DarkSeaGreen
+                    e.CellStyle.ForeColor = Color.Black
             End Select
             '
         End If
@@ -547,20 +551,31 @@ Public Class frmPedido
     Private Sub btnExcluir_Click(sender As Object, e As EventArgs) Handles btnExcluir.Click
         '
         '--- pergunta ao usuario
-        If MessageBox.Show("Você realmente deseja excluir o registro de Pedido..." & vbNewLine &
-                           _pedido.Fornecedor.ToUpper & vbNewLine &
-                           "Data: " & _pedido.InicioData, "Excluir Pedido",
-                           MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                           MessageBoxDefaultButton.Button2) = vbNo Then Exit Sub
+        If AbrirDialog("Você realmente deseja excluir o registro de Pedido..." & vbNewLine &
+                       _pedido.Fornecedor.ToUpper & vbNewLine &
+                       "Data: " & _pedido.InicioData,
+                       "Excluir Pedido",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question,
+                       frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Exit Sub
         '
         '--- exclui o registro de pedido
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             _pedBLL.Pedido_Excluir(_pedido.IDPedido)
             Close()
             MostraMenuPrincipal()
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Excluir registro de Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -885,6 +900,21 @@ Public Class frmPedido
         If dgvItens.Rows(e.RowIndex).IsNewRow Then
             _rowSit = EnumFlagEstado.NovoRegistro
         Else
+            '
+            '--- verifica se esse item tem origem na reserva e bloqueia alteracao do produto
+            If dgvItens.Rows(e.RowIndex).DataBoundItem.Origem = 1 Then
+                '
+                If e.ColumnIndex <= 4 Then '--- RGProduto, Produto, Tipo, Autor
+                    e.Cancel = True
+                    AbrirDialog("O Produto desse item no pedido não pode ser alterado " +
+                                "porque está vinculado a uma reserva de produto...",
+                                "Item Reservado", frmDialog.DialogType.OK,
+                                frmDialog.DialogIcon.Information)
+                    Return
+                End If
+                '
+            End If
+            '
             _rowSit = EnumFlagEstado.Alterado
         End If
         '
@@ -1224,9 +1254,12 @@ Public Class frmPedido
         '
         '--- obter as informacoes do produto digitado
         Try
-            Dim dtProduto As DataTable = _pedBLL.ProdutoGet_PeloRG(myRG, _pedido.IDFilial)
+            Dim prod As clProduto = Nothing
+            Using pBLL As New ProdutoBLL
+                prod = pBLL.GetProduto_PorRG(myRG, _pedido.IDFilial)
+            End Using
             '
-            If dtProduto.Rows.Count = 0 Then
+            If IsNothing(prod) Then
                 MessageBox.Show("Registro de Produto não encontrado..." & vbNewLine &
                                 "Favor digite um Registro válido.", "Reg. Inválido",
                                 MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -1234,18 +1267,18 @@ Public Class frmPedido
             End If
             '
             Dim clitem As clPedidoItem = bindItens.Current
-            Dim r As DataRow = dtProduto.Rows(0)
             '
-            clitem.RGProduto = IIf(IsDBNull(r("RGProduto")), Nothing, r("RGProduto"))
-            clitem.IDProduto = IIf(IsDBNull(r("IDProduto")), Nothing, r("IDProduto"))
-            clitem.Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto"))
-            clitem.Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor"))
-            clitem.IDProdutoTipo = IIf(IsDBNull(r("IDProdutoTipo")), Nothing, r("IDProdutoTipo"))
-            clitem.Estoque = IIf(IsDBNull(r("Estoque")), 0, r("Estoque"))
-            clitem.EstoqueNivel = IIf(IsDBNull(r("EstoqueNivel")), 0, r("EstoqueNivel"))
-            clitem.EstoqueIdeal = IIf(IsDBNull(r("EstoqueIdeal")), 0, r("EstoqueIdeal"))
-            clitem.Preco = IIf(IsDBNull(r("PCompra")), 0, r("PCompra"))
-            clitem.Desconto = IIf(IsDBNull(r("DescontoCompra")), 0, r("DescontoCompra"))
+            clitem.RGProduto = prod.RGProduto
+            clitem.IDProduto = prod.IDProduto
+            clitem.Produto = prod.Produto
+            clitem.Autor = prod.Autor
+            clitem.IDProdutoTipo = prod.IDProdutoTipo
+            clitem.Estoque = prod.Estoque
+            clitem.EstoqueNivel = prod.EstoqueNivel
+            clitem.EstoqueIdeal = prod.EstoqueIdeal
+            clitem.Preco = prod.PCompra
+            clitem.Desconto = prod.DescontoCompra
+            clitem.Origem = 0
             '
             Return True
             '
@@ -1316,7 +1349,7 @@ Public Class frmPedido
         '
         Try
             '
-            _pedBLL.PedidoItem_Excluir(delItem.IDPedidoItem)
+            _pedBLL.PedidoItem_Excluir(delItem)
             e.Cancel = False
             AtualizaTotalGeral()
             '
@@ -1327,6 +1360,69 @@ Public Class frmPedido
         End Try
         '
     End Sub
+    '
+    '--- INSERT PRODUTO DE UM FORMULARIO EXTERNO
+    '---------------------------------------------------------------------------------------------
+    Public Function InsertProdutoPedido(IDProduto) As Boolean
+        '
+        '--- verifica se o produto ja foi inserido
+        If ItensList.Where(Function(x) x.IDProduto = IDProduto).Count > 0 Then
+            Throw New Exception("Esse produto já está presente no pedido...")
+            Return False
+        End If
+        '
+        '--- obter as informacoes do produto digitado
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- GET PRODUTO AND CONVERT TO PEDIDO ITEM
+            Dim prod As clProduto = Nothing
+            Using pBLL As New ProdutoBLL
+                prod = pBLL.GetProduto_PorID(IDProduto, _pedido.IDFilial)
+            End Using
+            '
+            If IsNothing(prod) Then
+                Throw New Exception("Produto não encontrado com esse ID...")
+            End If
+            '
+            '--- CONVERT TO PEDIDO ITEM
+            Dim clitem As New clPedidoItem
+            '
+            clitem.IDPedido = _pedido.IDPedido
+            clitem.IDFilialOrigem = _pedido.IDFilial
+            clitem.RGProduto = prod.RGProduto
+            clitem.IDProduto = prod.IDProduto
+            clitem.Produto = prod.Produto
+            clitem.Autor = prod.Autor
+            clitem.IDProdutoTipo = prod.IDProdutoTipo
+            clitem.Estoque = prod.Estoque
+            clitem.EstoqueNivel = prod.EstoqueNivel
+            clitem.EstoqueIdeal = prod.EstoqueIdeal
+            clitem.Preco = prod.PCompra
+            clitem.Desconto = prod.DescontoCompra
+            clitem.Origem = 0
+            '
+            '--- INSERT ITEM IN BD
+            ItemInserir(clitem)
+            '
+            '--- INSERT ITEM IN BINDLIST
+            bindItens.Add(clitem)
+            bindItens.ResetBindings(False)
+            '
+            Return True
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Function
     '
 #End Region
     '
@@ -1664,6 +1760,14 @@ Public Class frmPedido
     '
     Private Sub miExportarItens_Click(sender As Object, e As EventArgs) Handles miExportarItens.Click
         '
+        '--------------------------------------------------------------------------------------
+        AbrirDialog("Essa operação só é permitida em Banco de Dados locais...",
+                    "Operação não permitida",
+                    frmDialog.DialogType.OK,
+                    frmDialog.DialogIcon.Warning)
+        Return
+        '--------------------------------------------------------------------------------------
+        '
         '--- verifica se existem itens no pedido
         If ItensList.Count = 0 Then
             MessageBox.Show("O pedido ainda não tem nenhum item inserido..." & vbNewLine &
@@ -1771,6 +1875,14 @@ Public Class frmPedido
     End Function
     '
     Private Sub miImportarItens_Click(sender As Object, e As EventArgs) Handles miImportarItens.Click
+        '
+        '--------------------------------------------------------------------------------------
+        AbrirDialog("Essa operação só é permitida em Banco de Dados locais...",
+                    "Operação não permitida",
+                    frmDialog.DialogType.OK,
+                    frmDialog.DialogIcon.Warning)
+        Return
+        '--------------------------------------------------------------------------------------
         '
         '--- verifica se a situacao do pedido
         If Sit = EnumFlagEstado.NovoRegistro Then
@@ -1912,7 +2024,6 @@ Public Class frmPedido
         Return True
         '
     End Function
-
     '
 #End Region
     '
@@ -1940,7 +2051,7 @@ Public Class frmPedido
                 Exit Sub
             End If
             '
-            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, Me)
+            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, False, Me)
             formSelecionados.ShowDialog()
             '
         Catch ex As Exception
@@ -1975,7 +2086,7 @@ Public Class frmPedido
                 Exit Sub
             End If
             '
-            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, Me)
+            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, False, Me)
             formSelecionados.ShowDialog()
             '
         Catch ex As Exception
@@ -2011,7 +2122,7 @@ Public Class frmPedido
                 Exit Sub
             End If
             '
-            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, Me)
+            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, False, Me)
             formSelecionados.ShowDialog()
             '
         Catch ex As Exception
@@ -2024,8 +2135,40 @@ Public Class frmPedido
         '
     End Sub
     '
-    Private Sub miPelaReseervaPorFornecedor_Click(sender As Object, e As EventArgs) Handles miPelaReseervaPorFornecedor.Click
-        MsgBox("Desculpe, ainda está em implementação...")
+    Private Sub miPelaReservaPorFornecedor_Click(sender As Object, e As EventArgs) Handles miPelaReservaPorFornecedor.Click
+        '
+        If IsNothing(_pedido.IDFornecedor) OrElse _pedido.IDFornecedor = 0 Then
+            AbrirDialog("Como esse Pedido não tem um Fornecedor já cadastrado não é possível verificar os produtos pelo Fornecedor",
+                        "Fornecedor Indefinido",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim newItems As List(Of clPedidoItem) = _pedBLL.VerificaProdutoReservaFornecedor(_pedido.IDFornecedor, _pedido)
+            '
+            If newItems.Count = 0 Then
+                AbrirDialog("Não há produtos desse FORNECEDOR em Reserva...",
+                            "Nenhum produto selecionado",
+                            frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Exit Sub
+            End If
+            '
+            Dim formSelecionados As New frmPedidoItemsEncontrados(newItems, True, Me)
+            formSelecionados.ShowDialog()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao pesquisar e inserir produtos no pedido..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
     End Sub
     '
     Private Sub miPelaReseervaPorTipo_Click(sender As Object, e As EventArgs) Handles miPelaReseervaPorTipo.Click

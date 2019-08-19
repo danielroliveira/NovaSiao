@@ -22,6 +22,7 @@ Public Class clReserva
         Dim _ClienteEmail As String
         Dim _ProdutoConhecido As Boolean
         '--- tblProduto
+        Dim _IDProduto As Integer?
         Dim _RGProduto As Integer?
         Dim _Produto As String
         Dim _PVenda As Decimal?
@@ -39,6 +40,8 @@ Public Class clReserva
         Dim _Observacao As String
         Dim _ReservaAtiva As Boolean
         '
+        Dim _IDPedido As Integer?
+        '
     End Structure
 #End Region
     '
@@ -55,10 +58,12 @@ Public Class clReserva
         With RData
             ._IDReserva = Nothing
             ._ProdutoConhecido = True
+            ._IDProduto = Nothing
             ._RGProduto = Nothing
             ._TemWathsapp = False
             ._IDSituacaoReserva = 1
             ._ReservaData = Today.ToShortDateString
+            ._IDPedido = Nothing
         End With
     End Sub
     '
@@ -256,12 +261,26 @@ Public Class clReserva
         End Set
     End Property
     '
+    '--- Propriedade IDProduto
+    Public Property IDProduto() As Integer?
+        Get
+            Return RData._IDProduto
+        End Get
+        Set(value As Integer?)
+            If value <> RData._IDProduto Then
+                RaiseEvent AoAlterar()
+            End If
+            RData._IDProduto = value
+        End Set
+    End Property
+    '
     '--- Propriedade RGProduto
+    '------------------------------------------------------
     Public Property RGProduto() As Integer?
         Get
             Return RData._RGProduto
         End Get
-        Set(value As Integer?)
+        Set(ByVal value As Integer?)
             If value <> RData._RGProduto Then
                 RaiseEvent AoAlterar()
             End If
@@ -452,6 +471,20 @@ Public Class clReserva
                 RaiseEvent AoAlterar()
             End If
             RData._ReservaAtiva = value
+        End Set
+    End Property
+    '
+    '--- Propriedade IDPedido
+    '------------------------------------------------------
+    Public Property IDPedido() As Integer?
+        Get
+            Return RData._IDPedido
+        End Get
+        Set(ByVal value As Integer?)
+            If value <> RData._IDPedido Then
+                RaiseEvent AoAlterar()
+            End If
+            RData._IDPedido = value
         End Set
     End Property
     '

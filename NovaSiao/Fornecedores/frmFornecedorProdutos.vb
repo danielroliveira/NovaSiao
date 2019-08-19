@@ -812,7 +812,7 @@ Public Class frmFornecedorProdutos
             If Not IsNothing(_formOrigem) AndAlso TypeOf _formOrigem Is frmPedido Then
                 miAdicionarProdutoAoPedido.Enabled = True
             Else
-                miAdicionarProdutoAoPedido.Enabled = True
+                miAdicionarProdutoAoPedido.Enabled = False
             End If
             '
             ' revela menu
@@ -855,9 +855,9 @@ Public Class frmFornecedorProdutos
             '
             Dim msn As String = ""
             msn += "Produto: " + prod.Produto + vbCrLf
-            msn += "Estoque Atual:      " + Format(prod.Estoque, "00").ToString + vbCrLf
-            msn += "Estoque Ideal:      " + Format(prod.EstoqueIdeal, "00").ToString + vbCrLf
-            msn += "Estoque Mínimo: " + Format(prod.EstoqueNivel, "00").ToString + vbCrLf
+            msn += "Estoque Atual:         " + Format(prod.Estoque, "00").ToString + vbCrLf
+            msn += "Estoque Ideal:         " + Format(prod.EstoqueIdeal, "00").ToString + vbCrLf
+            msn += "Estoque Mínimo:    " + Format(prod.EstoqueNivel, "00").ToString + vbCrLf
             '
             If miAdicionarProdutoAoPedido.Enabled = True Then
                 msn += "Deseja INSERIR o produto ao PEDIDO?"
@@ -883,7 +883,30 @@ Public Class frmFornecedorProdutos
     End Sub
     '
     Private Sub miAdicionarProdutoAoPedido_Click(sender As Object, e As EventArgs) Handles miAdicionarProdutoAoPedido.Click
-
+        '
+        If IsNothing(_formOrigem) OrElse TypeOf _formOrigem IsNot frmPedido Then
+            Return
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim selItem As clProdutoFornecedor = dgvItens.CurrentRow.DataBoundItem
+            '
+            If DirectCast(_formOrigem, frmPedido).InsertProdutoPedido(selItem.IDProduto) Then
+                AbrirDialog("Produto inserido com sucesso...", "Produto Inserido",
+                            frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            End If
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Inserir Produto ao Pedido..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
     End Sub
     '
 #End Region '/ MENU PRODUTO | ITENS
