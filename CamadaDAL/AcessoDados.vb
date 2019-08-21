@@ -150,6 +150,61 @@ Public Class AcessoDados
 #Region "COMMANDS QUERY | INSERT | UPDATE | DELETE"
     '
     '-------------------------------------------------------------------------------------------------------
+    '--- EXECUTAR INSERT AND GET THE ID
+    '-------------------------------------------------------------------------------------------------------
+    Public Function ExecutarInsertGetID(QuerySQL As String) As Integer
+        '
+        Try
+            '
+            If conn.State = ConnectionState.Closed Then Connect()
+            '
+            cmd = New SqlConnection().CreateCommand
+            cmd.Connection = conn
+            cmd.CommandType = CommandType.Text
+            cmd.CommandText = QuerySQL
+            cmd.CommandTimeout = 7200
+            '
+            ParamList.ForEach(Sub(p) cmd.Parameters.Add(p))
+            '
+            If Not isTran Then
+                '
+                '--- EXECUTE
+                cmd.ExecuteScalar()
+                '
+                '--- GET NEW ID
+                Dim obj As Integer = GetNewID()
+                '
+                '--- CLOSE DB CONNECTION
+                CloseConn()
+                '
+                '--- RETURN
+                Return obj
+                '
+            Else
+                '
+                '--- ADD TRANSACTION TO COMMAND
+                cmd.Transaction = trans
+                '
+                '--- EXECUTE
+                cmd.ExecuteScalar()
+                '
+                '--- GET NEW ID
+                Dim obj As Integer = GetNewID()
+                '
+                '--- RETURN
+                Return obj
+                '
+            End If
+            '
+        Catch ex As Exception
+            '
+            Throw ex
+            '
+        End Try
+        '
+    End Function
+    '
+    '-------------------------------------------------------------------------------------------------------
     '--- EXECUTAR INSERT, UPDATE, DELETE
     '-------------------------------------------------------------------------------------------------------
     Public Function ExecutarManipulacao(comandType As CommandType, nomeStoredProcedureOuTextoSQL As String) As Object
@@ -535,6 +590,27 @@ Public Class AcessoDados
         End Try
         '
     End Function
+    '
+    '----------------------------------------------------------------------------
+    ' GET THE LAST ID OF INSERTED REGISTRY
+    '----------------------------------------------------------------------------
+    Private Function GetNewID() As Object
+        '
+        '--- obter NewID
+        LimparParametros()
+        Dim myQuery As String = "SELECT @@IDENTITY As LastID;"
+        Dim dt As DataTable = ExecutarConsulta(CommandType.Text, myQuery)
+        '
+        Dim newID As Object = dt.Rows(0)(0)
+        '
+        If IsNumeric(newID) Then
+            Return newID
+        Else
+            Throw New Exception(newID.ToString)
+        End If
+        '
+    End Function
+    '
 #End Region '/ COMMANDS QUERY | INSERT | UPDATE | DELETE
     '
 #Region "TRANSACTION"

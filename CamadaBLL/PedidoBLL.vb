@@ -9,6 +9,7 @@ Public Class PedidoBLL
     ' OBTER LISTA COMPLETA DE PEDIDO PELA SITUACAO, MES E ANO
     '===================================================================================================
     Public Function Pedido_GET_List(Situacao As Byte,
+                                    IDFilial As Integer,
                                     Optional Ano As Integer? = Nothing,
                                     Optional Mes As Integer? = Nothing) As List(Of clPedido)
         '
@@ -17,9 +18,10 @@ Public Class PedidoBLL
         '
         bd.LimparParametros()
         bd.AdicionarParametros("@Situacao", Situacao)
+        bd.AdicionarParametros("@IDFilial", IDFilial)
         '
         '--- CREATE SQL QUERY
-        Dim query As String = "SELECT * FROM qryPedidos WHERE Situacao = @Situacao "
+        Dim query As String = "SELECT * FROM qryPedidos WHERE Situacao = @Situacao AND IDFilial = @IDFilial "
         '
         If Not IsNothing(Ano) Then
             bd.AdicionarParametros("@Ano", Ano)
@@ -35,31 +37,8 @@ Public Class PedidoBLL
             Dim dt As DataTable = bd.ExecutarConsulta(CommandType.Text, query)
             '
             For Each r As DataRow In dt.Rows
-                Dim ped As New clPedido
-
-                ped.IDPedido = IIf(IsDBNull(r("IDPedido")), Nothing, r("IDPedido"))
-                ped.IDFilial = IIf(IsDBNull(r("IDFilial")), Nothing, r("IDFilial"))
-                ped.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
-                ped.IDFornecedor = IIf(IsDBNull(r("IDFornecedor")), Nothing, r("IDFornecedor"))
-                ped.Fornecedor = IIf(IsDBNull(r("Fornecedor")), String.Empty, r("Fornecedor"))
-                ped.VendedorNome = IIf(IsDBNull(r("VendedorNome")), String.Empty, r("VendedorNome"))
-                ped.EmailVendas = IIf(IsDBNull(r("EmailVendas")), String.Empty, r("EmailVendas"))
-                ped.TelefoneContato = IIf(IsDBNull(r("TelefoneContato")), String.Empty, r("TelefoneContato"))
-                ped.IDTransportadora = IIf(IsDBNull(r("IDTransportadora")), Nothing, r("IDTransportadora"))
-                ped.Transportadora = IIf(IsDBNull(r("Transportadora")), String.Empty, r("Transportadora"))
-                ped.TelefoneATransportadora = IIf(IsDBNull(r("TelefoneATransportadora")), String.Empty, r("TelefoneATransportadora"))
-                ped.Situacao = IIf(IsDBNull(r("Situacao")), Nothing, r("Situacao"))
-                ped.SituacaoDescricao = IIf(IsDBNull(r("SituacaoDescricao")), String.Empty, r("SituacaoDescricao"))
-                ped.InicioData = IIf(IsDBNull(r("InicioData")), Nothing, r("InicioData"))
-                ped.RevisaoData = IIf(IsDBNull(r("RevisaoData")), Nothing, r("RevisaoData"))
-                ped.EnvioData = IIf(IsDBNull(r("EnvioData")), Nothing, r("EnvioData"))
-                ped.ChegadaData = IIf(IsDBNull(r("ChegadaData")), Nothing, r("ChegadaData"))
-                ped.Observacao = IIf(IsDBNull(r("Observacao")), String.Empty, r("Observacao"))
-                ped.TotalPedido = IIf(IsDBNull(r("TotalPedido")), Nothing, r("TotalPedido"))
-                ped.TotalRecebido = IIf(IsDBNull(r("TotalRecebido")), Nothing, r("TotalRecebido"))
-                ped.IDMigracao = IIf(IsDBNull(r("IDMigracao")), Nothing, r("IDMigracao"))
                 '
-                lst.Add(ped)
+                lst.Add(ConvertRowInPedido(r))
                 '
             Next
             '
@@ -68,6 +47,39 @@ Public Class PedidoBLL
         Catch ex As Exception
             Throw ex
         End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' CONVERT ROW IN CLPEDIDO
+    '==========================================================================================
+    Private Function ConvertRowInPedido(r As DataRow) As clPedido
+        '
+        Dim ped As New clPedido
+        '
+        ped.IDPedido = IIf(IsDBNull(r("IDPedido")), Nothing, r("IDPedido"))
+        ped.IDFilial = IIf(IsDBNull(r("IDFilial")), Nothing, r("IDFilial"))
+        ped.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
+        ped.IDFornecedor = IIf(IsDBNull(r("IDFornecedor")), Nothing, r("IDFornecedor"))
+        ped.Fornecedor = IIf(IsDBNull(r("Fornecedor")), String.Empty, r("Fornecedor"))
+        ped.VendedorNome = IIf(IsDBNull(r("VendedorNome")), String.Empty, r("VendedorNome"))
+        ped.EmailVendas = IIf(IsDBNull(r("EmailVendas")), String.Empty, r("EmailVendas"))
+        ped.TelefoneContato = IIf(IsDBNull(r("TelefoneContato")), String.Empty, r("TelefoneContato"))
+        ped.IDTransportadora = IIf(IsDBNull(r("IDTransportadora")), Nothing, r("IDTransportadora"))
+        ped.Transportadora = IIf(IsDBNull(r("Transportadora")), String.Empty, r("Transportadora"))
+        ped.TelefoneATransportadora = IIf(IsDBNull(r("TelefoneATransportadora")), String.Empty, r("TelefoneATransportadora"))
+        ped.Situacao = IIf(IsDBNull(r("Situacao")), Nothing, r("Situacao"))
+        ped.SituacaoDescricao = IIf(IsDBNull(r("SituacaoDescricao")), String.Empty, r("SituacaoDescricao"))
+        ped.InicioData = IIf(IsDBNull(r("InicioData")), Nothing, r("InicioData"))
+        ped.RevisaoData = IIf(IsDBNull(r("RevisaoData")), Nothing, r("RevisaoData"))
+        ped.EnvioData = IIf(IsDBNull(r("EnvioData")), Nothing, r("EnvioData"))
+        ped.ChegadaData = IIf(IsDBNull(r("ChegadaData")), Nothing, r("ChegadaData"))
+        ped.Observacao = IIf(IsDBNull(r("Observacao")), String.Empty, r("Observacao"))
+        ped.TotalPedido = IIf(IsDBNull(r("TotalPedido")), Nothing, r("TotalPedido"))
+        ped.TotalRecebido = IIf(IsDBNull(r("TotalRecebido")), Nothing, r("TotalRecebido"))
+        ped.IDMigracao = IIf(IsDBNull(r("IDMigracao")), Nothing, r("IDMigracao"))
+        '
+        Return ped
         '
     End Function
     '
@@ -154,6 +166,14 @@ Public Class PedidoBLL
     '===================================================================================================
     Public Function Pedido_Excluir(IDPedido As Integer) As Boolean
         '
+        '--- CHECK MIGRACAO OF PEDIDO
+        '-----------------------------------------------------------------------
+        If CountPedidosMigrados(IDPedido) > 0 Then
+            Throw New Exception("Esse pedido não pode ser excluído porque tem outros pedidos migrados a ele." & vbCrLf &
+                                "Remova todas as migrações associadas antes de tentar excluir novamente.")
+            Return False
+        End If
+        '
         Dim db As New AcessoDados
         db.BeginTransaction()
         '
@@ -222,42 +242,47 @@ Public Class PedidoBLL
     Public Function Pedido_AlteraSituacao(IDPedido As Integer,
                                           NewSituacao As Byte,
                                           AlteracaoData As Date) As Boolean
-        Dim SQL As New SQLControl
+        '
+        Dim db As New AcessoDados
         Dim mySQL As String = ""
+        '
+        db.LimparParametros()
+        db.AdicionarParametros("@IDPedido", IDPedido)
+        db.AdicionarParametros("@Situacao", NewSituacao)
+        db.AdicionarParametros("@AlteracaoData", AlteracaoData)
         '
         Select Case NewSituacao
             '
             Case 0 '--- COMPONDO
-                mySQL = String.Format("UPDATE tblPedido SET Situacao = {0}, InicioData = '{2}', " &
-                                      "EnvioData = NULL, RevisaoData = NULL, " &
-                                      "ChegadaData = NULL WHERE IDPedido = {1}",
-                                      NewSituacao, IDPedido, AlteracaoData.ToShortDateString)
+                mySQL = "UPDATE tblPedido SET Situacao = @Situacao, InicioData = @AlteracaoData, " &
+                        "EnvioData = NULL, RevisaoData = NULL, " &
+                        "ChegadaData = NULL WHERE IDPedido = @IDPedido"
 
             Case 1 '--- ENVIADO
-                mySQL = String.Format("UPDATE tblPedido SET Situacao = {0}, " &
-                                      "EnvioData = '{2}', " &
-                                      "ChegadaData = NULL WHERE IDPedido = {1}",
-                                      NewSituacao, IDPedido, AlteracaoData.ToShortDateString)
+                mySQL = "UPDATE tblPedido SET Situacao = @Situacao, " &
+                        "EnvioData = @AlteracaoData, " &
+                        "ChegadaData = NULL WHERE IDPedido = @IDPedido"
+
             Case 2 '--- RECEBIDO
-                mySQL = String.Format("UPDATE tblPedido SET Situacao = {0}, " &
-                                      "ChegadaData = '{2}' WHERE IDPedido = {1}",
-                                      NewSituacao, IDPedido, AlteracaoData.ToShortDateString)
+                mySQL = "UPDATE tblPedido SET Situacao = @Situacao, " &
+                        "ChegadaData = @AlteracaoData WHERE IDPedido = {1}"
+
             Case 3 '--- CANCELADO
-                mySQL = String.Format("UPDATE tblPedido SET Situacao = {0}, " &
-                                      "EnvioData = NULL, RevisaoData = '{2}', " &
-                                      "ChegadaData = NULL WHERE IDPedido = {1}",
-                                      NewSituacao, IDPedido, AlteracaoData.ToShortDateString)
+                '
+                '--- check if Pedido has a migration
+                If CountPedidosMigrados(IDPedido) > 0 Then
+                    Throw New Exception("Esse pedido não pode ser cancelado pois existem outros pedidos migrados nele...")
+                    Return False
+                End If
+                '
+                mySQL = "UPDATE tblPedido SET Situacao = @Situacao, " &
+                        "EnvioData = NULL, RevisaoData = @AlteracaoData, " &
+                        "ChegadaData = NULL WHERE IDPedido = @IDPedido"
         End Select
         '
         '--- executa a alteracao no DB
         Try
-            SQL.ExecQuery(mySQL)
-
-            If SQL.HasException Then
-                Throw New Exception(SQL.Exception)
-            Else
-                Return True
-            End If
+            db.ExecutarManipulacao(CommandType.Text, mySQL)
         Catch ex As Exception
             Throw ex
         End Try
@@ -417,19 +442,22 @@ Public Class PedidoBLL
             db.AdicionarParametros("@Autor", myItem.Autor)
             db.AdicionarParametros("@Preco", myItem.Preco)
             db.AdicionarParametros("@Quantidade", myItem.Quantidade)
+            db.AdicionarParametros("@Desconto", myItem.Desconto)
             db.AdicionarParametros("@Origem", myItem.Origem)
-            db.AdicionarParametros("@IDOrigem", myItem.IDOrigem)
+            db.AdicionarParametros("@IDOrigem", If(myItem.IDOrigem, DBNull.Value))
             db.AdicionarParametros("@IDFilialOrigem", myItem.IDFilialOrigem)
             '
-            Dim myID As Object = db.ExecutarManipulacao(CommandType.StoredProcedure, "uspPedidoItem_Inserir")
+            Dim query As String = "INSERT INTO tblPedidoItens " +
+                                  "(IDPedido ,IDProduto ,Produto ,IDProdutoTipo ,Autor " +
+                                  ",Quantidade ,Preco ,Desconto ,Origem ,IDOrigem,IDFilialOrigem) " +
+                                  "VALUES " +
+                                  "(@IDPedido ,@IDProduto ,@Produto ,@IDProdutoTipo ,@Autor " +
+                                  ",@Quantidade ,@Preco ,@Desconto ,@Origem ,@IDOrigem ,@IDFilialOrigem);"
             '
-            If IsNumeric(myID) Then
-                Return myID
-            Else
-                Throw New Exception(myID.ToString)
-            End If
+            Dim myID As Integer = db.ExecutarInsertGetID(query)
             '
             db.CommitTransaction()
+            Return myID
             '
         Catch ex As Exception
             db.RollBackTransaction()
@@ -455,18 +483,29 @@ Public Class PedidoBLL
         bd.AdicionarParametros("@Autor", myItem.Autor)
         bd.AdicionarParametros("@Quantidade", myItem.Quantidade)
         bd.AdicionarParametros("@Preco", myItem.Preco)
+        bd.AdicionarParametros("@Desconto", myItem.Desconto)
         bd.AdicionarParametros("@Origem", myItem.Origem)
-        bd.AdicionarParametros("@IDOrigem", myItem.IDOrigem)
+        bd.AdicionarParametros("@IDOrigem", If(myItem.IDOrigem, DBNull.Value))
         bd.AdicionarParametros("@IDFilialOrigem", myItem.IDFilialOrigem)
         '
+        Dim query As String = "UPDATE tblPedidoItens SET " +
+                              "IDPedido = @IDPedido " +
+                              ",IDProduto = @IDProduto " +
+                              ",Produto = @Produto " +
+                              ",IDProdutoTipo = @IDProdutoTipo " +
+                              ",Autor = @Autor " +
+                              ",Quantidade = @Quantidade " +
+                              ",Preco = @Preco " +
+                              ",Desconto = @Desconto " +
+                              ",Origem = @Origem " +
+                              ",IDOrigem = @IDOrigem " +
+                              ",IDFilialOrigem = @IDFilialOrigem " +
+                              "WHERE IDPedidoItem = @IDPedidoItem;"
+        '
         Try
-            Dim myID As Object = bd.ExecutarManipulacao(CommandType.StoredProcedure, "uspPedidoItem_Alterar")
+            Dim myID As Object = bd.ExecutarManipulacao(CommandType.Text, query)
             '
-            If IsNumeric(myID) Then
-                Return myID
-            Else
-                Throw New Exception(myID.ToString)
-            End If
+            Return myItem.IDPedidoItem
             '
         Catch ex As Exception
             Throw ex
@@ -744,8 +783,8 @@ Public Class PedidoBLL
                                   "FROM qryProdutos " +
                                   "LEFT JOIN tblEstoque AS E " +
                                   "ON qryProdutos.IDProduto = E.IDProduto AND E.IDFilial = @IDFilial " +
-                                  "WHERE Quantidade < EstoqueNivel AND " +
-                                  "qryProdutos.IDProduto IN (SELECT IDProduto FROM tblProdutoFornecedor WHERE IDFornecedor = @IDFornecedor) "
+                                  "WHERE Quantidade < EstoqueNivel " +
+                                  "AND qryProdutos.IDProduto IN (SELECT IDProduto FROM tblProdutoFornecedor WHERE IDFornecedor = @IDFornecedor) "
             '
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             '
@@ -786,11 +825,154 @@ Public Class PedidoBLL
             db.AdicionarParametros("@IDFornecedor", IDFornecedor)
             db.AdicionarParametros("@IDFilial", Pedido.IDFilial)
             '
+            ' SELECT * FROM qryReserva WHERE IDProduto = (SELECT IDProduto FROM tblProdutoFornecedor WHERE IDFornecedor = 38)
+            '
             Dim query As String = "SELECT *, E.EstoqueIdeal, E.EstoqueNivel, E.Quantidade AS Estoque, E.IDFilial " +
                                   "FROM qryReserva " +
                                   "LEFT JOIN tblEstoque AS E " +
                                   "ON qryReserva.IDProduto = E.IDProduto AND E.IDFilial = @IDFilial " +
                                   "WHERE IDFornecedor = @IDFornecedor " +
+                                  "AND qryReserva.IDFilial = @IDFilial " +
+                                  "AND IDSituacaoReserva = 1 "
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return itemsList
+            '
+            For Each r In dt.Rows
+                '
+                Dim item As clPedidoItem = ConvertRowInClass(r, Pedido, 1, r("IDReserva"))
+                itemsList.Add(item)
+                '
+            Next
+            '
+            Return itemsList
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' VERIFICA E OBTEM PRODUTOS PELA RESERVA POR FORNECEDOR SECUNDARIO
+    '==========================================================================================
+    Public Function VerificaProdutoReservaFornecedorSecundario(IDFornecedor As Integer,
+                                                               Pedido As clPedido) As List(Of clPedidoItem)
+        '
+        Try
+            '
+            If IsNothing(Pedido.IDFilial) Then
+                Throw New Exception("O pedido ainda não tem Filial...")
+                Return Nothing
+            End If
+            '
+            Dim itemsList As New List(Of clPedidoItem)
+            Dim db As New AcessoDados
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
+            db.AdicionarParametros("@IDFilial", Pedido.IDFilial)
+            '
+            Dim query As String = "SELECT *, E.EstoqueIdeal, E.EstoqueNivel, E.Quantidade AS Estoque, E.IDFilial " +
+                                  "FROM qryReserva " +
+                                  "LEFT JOIN tblEstoque AS E " +
+                                  "ON qryReserva.IDProduto = E.IDProduto AND E.IDFilial = @IDFilial " +
+                                  "WHERE qryReserva.IDFilial = @IDFilial " +
+                                  "AND qryReserva.IDSituacaoReserva = 1 " +
+                                  "AND qryReserva.IDProduto IN (SELECT IDProduto FROM tblProdutoFornecedor WHERE IDFornecedor = @IDFornecedor);"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return itemsList
+            '
+            For Each r In dt.Rows
+                '
+                Dim item As clPedidoItem = ConvertRowInClass(r, Pedido, 1, r("IDReserva"))
+                itemsList.Add(item)
+                '
+            Next
+            '
+            Return itemsList
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' VERIFICA E OBTEM PRODUTOS PELA RESERVA PELO TIPO DO PRODUTO
+    '==========================================================================================
+    Public Function VerificaProdutoReservaTipo(IDTipo As Integer,
+                                               Pedido As clPedido) As List(Of clPedidoItem)
+        '
+        Try
+            '
+            If IsNothing(Pedido.IDFilial) Then
+                Throw New Exception("O pedido ainda não tem Filial...")
+                Return Nothing
+            End If
+            '
+            Dim itemsList As New List(Of clPedidoItem)
+            Dim db As New AcessoDados
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDTipo", IDTipo)
+            db.AdicionarParametros("@IDFilial", Pedido.IDFilial)
+            '
+            Dim query As String = "SELECT *, E.EstoqueIdeal, E.EstoqueNivel, E.Quantidade AS Estoque, E.IDFilial " +
+                                  "FROM qryReserva " +
+                                  "LEFT JOIN tblEstoque AS E " +
+                                  "ON qryReserva.IDProduto = E.IDProduto AND E.IDFilial = @IDFilial " +
+                                  "WHERE IDProdutoTipo = @IDTipo " +
+                                  "AND qryReserva.IDFilial = @IDFilial " +
+                                  "AND IDSituacaoReserva = 1 "
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return itemsList
+            '
+            For Each r In dt.Rows
+                '
+                Dim item As clPedidoItem = ConvertRowInClass(r, Pedido, 1, r("IDReserva"))
+                itemsList.Add(item)
+                '
+            Next
+            '
+            Return itemsList
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' VERIFICA E OBTEM PRODUTOS PELA RESERVA PELO FABRICANTE DO PRODUTO
+    '==========================================================================================
+    Public Function VerificaProdutoReservaFabricante(IDFabricante As Integer,
+                                                     Pedido As clPedido) As List(Of clPedidoItem)
+        '
+        Try
+            '
+            If IsNothing(Pedido.IDFilial) Then
+                Throw New Exception("O pedido ainda não tem Filial...")
+                Return Nothing
+            End If
+            '
+            Dim itemsList As New List(Of clPedidoItem)
+            Dim db As New AcessoDados
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDFabricante", IDFabricante)
+            db.AdicionarParametros("@IDFilial", Pedido.IDFilial)
+            '
+            Dim query As String = "SELECT *, E.EstoqueIdeal, E.EstoqueNivel, E.Quantidade AS Estoque, E.IDFilial " +
+                                  "FROM qryReserva " +
+                                  "LEFT JOIN tblEstoque AS E " +
+                                  "ON qryReserva.IDProduto = E.IDProduto AND E.IDFilial = @IDFilial " +
+                                  "WHERE IDFabricante = @IDFabricante " +
                                   "AND qryReserva.IDFilial = @IDFilial " +
                                   "AND IDSituacaoReserva = 1 "
             '
@@ -860,5 +1042,161 @@ Public Class PedidoBLL
     End Function
     '
 #End Region '/ VERIFICAR E ADICIONAR ITEMS AO PEDIDO
+    '
+#Region "MIGRACAO DE PEDIDOS"
+    '
+    '==========================================================================================
+    ' GET LIST OF PEDIDOS MIGRATED TO OTHER BY IDMIGRACAO
+    '==========================================================================================
+    Public Function GetPedidosMigrados(IDMigracao As Integer) As List(Of clPedido)
+        '
+        Try
+            '
+            Dim db As New AcessoDados
+            db.LimparParametros()
+            db.AdicionarParametros("@IDMigracao", IDMigracao)
+            Dim query As String = "SELECT * FROM qryPedidos WHERE IDMigracao = @IDMigracao"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            Dim list As New List(Of clPedido)
+            If dt.Rows.Count = 0 Then Return list
+            '
+            For Each r In dt.Rows
+                list.Add(ConvertRowInPedido(r))
+            Next
+            '
+            Return list
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' COUNT PEDIDOS MIGRATED TO OTHER BY IDMIGRACAO
+    '==========================================================================================
+    Public Function CountPedidosMigrados(IDMigracao As Integer) As Integer
+        '
+        Try
+            '
+            Dim db As New AcessoDados
+            db.LimparParametros()
+            db.AdicionarParametros("@IDMigracao", IDMigracao)
+            Dim query As String = "SELECT COUNT(*) FROM qryPedidos WHERE IDMigracao = @IDMigracao"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then
+                Return 0
+            Else
+                Dim obj As Object = dt.Rows(0).Item(0)
+                '
+                If IsNumeric(obj) Then
+                    Return obj
+                Else
+                    Throw New Exception(obj.ToString)
+                End If
+                '
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' CREATE MIGRACAO
+    '==========================================================================================
+    Public Function MakeMigracao(IDPedido As Integer, IDMigracao As Integer) As Boolean
+        '
+        Try
+            Dim bd As New AcessoDados
+            '
+            bd.LimparParametros()
+            '
+            '--- ADICIONA OS PARAMENTROS NECESSARIOS
+            bd.AdicionarParametros("@IDPedido", IDPedido)
+            bd.AdicionarParametros("@IDMigracao", IDMigracao)
+            bd.AdicionarParametros("@RevisaoData", Today)
+            '
+            Dim query As String = "UPDATE tblPedido " +
+                "SET IDMigracao = @IDMigracao, Situacao = 4, RevisaoData = @RevisaoData " +
+                "WHERE IDPedido = @IDPedido"
+            '
+            bd.ExecutarManipulacao(CommandType.Text, query)
+            Return True
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' REMOVE MIGRACAO
+    '==========================================================================================
+    Public Function RemoveMigracao(IDPedido As Integer,
+                                   Optional dbTran As Object = Nothing) As Boolean
+        '
+        Try
+            Dim bd As AcessoDados = If(dbTran, New AcessoDados)
+            '
+            bd.LimparParametros()
+            '
+            '--- ADICIONA OS PARAMENTROS NECESSARIOS
+            bd.AdicionarParametros("@IDPedido", IDPedido)
+            bd.AdicionarParametros("@IDMigracao", DBNull.Value)
+            bd.AdicionarParametros("@RevisaoData", Today)
+            '
+            Dim query As String = "UPDATE tblPedido SET " +
+                "IDMigracao = @IDMigracao, Situacao = 0, RevisaoData = @RevisaoData " +
+                "WHERE IDPedido = @IDPedido"
+            '
+            bd.ExecutarManipulacao(CommandType.Text, query)
+            Return True
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' GET SITUACAO OF PEDIDO MIGRADO
+    '==========================================================================================
+    Public Function GetPedidoMigradoSituacaoOrigem(IDMigracao As Integer) As Byte
+        '
+        Try
+            Dim db As New AcessoDados
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDMigracao", IDMigracao)
+            '
+            Dim query As String = "SELECT Situacao FROM tblPedido WHERE IDPedido = @IDMigracao"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then
+                Throw New Exception("Não há pedido de origem com o ID informado...")
+            End If
+            '
+            Dim obj As Object = dt.Rows(0).Item(0)
+            '
+            If IsNumeric(obj) Then
+                Return obj
+            Else
+                Throw New Exception(obj.ToString)
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+#End Region '/ MIGRACAO
     '
 End Class

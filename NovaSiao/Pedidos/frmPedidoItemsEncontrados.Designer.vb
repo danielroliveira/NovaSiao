@@ -26,14 +26,6 @@ Partial Class frmPedidoItemsEncontrados
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvItens = New Controles.ctrlDataGridView()
-        Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
-        Me.btnFechar = New System.Windows.Forms.Button()
-        Me.lblInseridos = New System.Windows.Forms.Label()
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
-        Me.lblEncontrados = New System.Windows.Forms.Label()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.btnInserirSelecionados = New System.Windows.Forms.Button()
-        Me.lblSelecionados = New System.Windows.Forms.Label()
         Me.clnSelect = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -46,6 +38,14 @@ Partial Class frmPedidoItemsEncontrados
         Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnSubTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
+        Me.btnFechar = New System.Windows.Forms.Button()
+        Me.lblInseridos = New System.Windows.Forms.Label()
+        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
+        Me.lblEncontrados = New System.Windows.Forms.Label()
+        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.btnInserirSelecionados = New System.Windows.Forms.Button()
+        Me.lblSelecionados = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -61,9 +61,9 @@ Partial Class frmPedidoItemsEncontrados
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(895, 0)
+        Me.lblTitulo.Location = New System.Drawing.Point(576, 0)
         Me.lblTitulo.Padding = New System.Windows.Forms.Padding(0, 0, 32, 6)
-        Me.lblTitulo.Size = New System.Drawing.Size(445, 50)
+        Me.lblTitulo.Size = New System.Drawing.Size(764, 50)
         Me.lblTitulo.Text = "Produtos Encontrados"
         '
         'dgvItens
@@ -122,6 +122,93 @@ Partial Class frmPedidoItemsEncontrados
         Me.dgvItens.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvItens.Size = New System.Drawing.Size(1315, 503)
         Me.dgvItens.TabIndex = 2
+        '
+        'clnSelect
+        '
+        Me.clnSelect.HeaderText = "S"
+        Me.clnSelect.Name = "clnSelect"
+        Me.clnSelect.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.clnSelect.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.clnSelect.Width = 31
+        '
+        'clnRGProduto
+        '
+        DataGridViewCellStyle3.Format = "N0"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.clnRGProduto.DefaultCellStyle = DataGridViewCellStyle3
+        Me.clnRGProduto.HeaderText = "Reg."
+        Me.clnRGProduto.MaxInputLength = 20
+        Me.clnRGProduto.Name = "clnRGProduto"
+        Me.clnRGProduto.Width = 60
+        '
+        'clnProduto
+        '
+        Me.clnProduto.HeaderText = "Produto"
+        Me.clnProduto.MaxInputLength = 50
+        Me.clnProduto.Name = "clnProduto"
+        Me.clnProduto.Width = 400
+        '
+        'clnAutor
+        '
+        Me.clnAutor.HeaderText = "Autor/Artista"
+        Me.clnAutor.MaxInputLength = 50
+        Me.clnAutor.Name = "clnAutor"
+        Me.clnAutor.Width = 220
+        '
+        'clnIDProdutoTipo
+        '
+        Me.clnIDProdutoTipo.HeaderText = "Tipo de Produto"
+        Me.clnIDProdutoTipo.Name = "clnIDProdutoTipo"
+        Me.clnIDProdutoTipo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.clnIDProdutoTipo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.clnIDProdutoTipo.Width = 120
+        '
+        'clnEstoque
+        '
+        Me.clnEstoque.HeaderText = "Est."
+        Me.clnEstoque.Name = "clnEstoque"
+        Me.clnEstoque.Width = 50
+        '
+        'clnEstoqueNivel
+        '
+        Me.clnEstoqueNivel.HeaderText = "Niv."
+        Me.clnEstoqueNivel.MaxInputLength = 10
+        Me.clnEstoqueNivel.Name = "clnEstoqueNivel"
+        Me.clnEstoqueNivel.Width = 50
+        '
+        'clnEstoqueIdeal
+        '
+        Me.clnEstoqueIdeal.HeaderText = "Alvo"
+        Me.clnEstoqueIdeal.MaxInputLength = 10
+        Me.clnEstoqueIdeal.Name = "clnEstoqueIdeal"
+        Me.clnEstoqueIdeal.Width = 50
+        '
+        'clnQuantidade
+        '
+        Me.clnQuantidade.HeaderText = "Qtde"
+        Me.clnQuantidade.MaxInputLength = 10
+        Me.clnQuantidade.Name = "clnQuantidade"
+        Me.clnQuantidade.Width = 70
+        '
+        'clnPreco
+        '
+        Me.clnPreco.HeaderText = "Preço"
+        Me.clnPreco.MaxInputLength = 20
+        Me.clnPreco.Name = "clnPreco"
+        Me.clnPreco.Width = 70
+        '
+        'clnDesconto
+        '
+        Me.clnDesconto.HeaderText = "Desc(%)"
+        Me.clnDesconto.MaxInputLength = 20
+        Me.clnDesconto.Name = "clnDesconto"
+        Me.clnDesconto.Width = 70
+        '
+        'clnSubTotal
+        '
+        Me.clnSubTotal.HeaderText = "SubTotal"
+        Me.clnSubTotal.Name = "clnSubTotal"
+        Me.clnSubTotal.Width = 80
         '
         'btnClose
         '
@@ -226,93 +313,6 @@ Partial Class frmPedidoItemsEncontrados
         Me.lblSelecionados.Text = "00 Itens Selecionados"
         Me.lblSelecionados.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.lblSelecionados.Visible = False
-        '
-        'clnSelect
-        '
-        Me.clnSelect.HeaderText = "S"
-        Me.clnSelect.Name = "clnSelect"
-        Me.clnSelect.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.clnSelect.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.clnSelect.Width = 31
-        '
-        'clnRGProduto
-        '
-        DataGridViewCellStyle3.Format = "N0"
-        DataGridViewCellStyle3.NullValue = Nothing
-        Me.clnRGProduto.DefaultCellStyle = DataGridViewCellStyle3
-        Me.clnRGProduto.HeaderText = "Reg."
-        Me.clnRGProduto.MaxInputLength = 20
-        Me.clnRGProduto.Name = "clnRGProduto"
-        Me.clnRGProduto.Width = 60
-        '
-        'clnProduto
-        '
-        Me.clnProduto.HeaderText = "Produto"
-        Me.clnProduto.MaxInputLength = 50
-        Me.clnProduto.Name = "clnProduto"
-        Me.clnProduto.Width = 400
-        '
-        'clnAutor
-        '
-        Me.clnAutor.HeaderText = "Autor/Artista"
-        Me.clnAutor.MaxInputLength = 50
-        Me.clnAutor.Name = "clnAutor"
-        Me.clnAutor.Width = 220
-        '
-        'clnIDProdutoTipo
-        '
-        Me.clnIDProdutoTipo.HeaderText = "Tipo de Produto"
-        Me.clnIDProdutoTipo.Name = "clnIDProdutoTipo"
-        Me.clnIDProdutoTipo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.clnIDProdutoTipo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.clnIDProdutoTipo.Width = 120
-        '
-        'clnEstoque
-        '
-        Me.clnEstoque.HeaderText = "Est."
-        Me.clnEstoque.Name = "clnEstoque"
-        Me.clnEstoque.Width = 50
-        '
-        'clnEstoqueNivel
-        '
-        Me.clnEstoqueNivel.HeaderText = "Niv."
-        Me.clnEstoqueNivel.MaxInputLength = 10
-        Me.clnEstoqueNivel.Name = "clnEstoqueNivel"
-        Me.clnEstoqueNivel.Width = 50
-        '
-        'clnEstoqueIdeal
-        '
-        Me.clnEstoqueIdeal.HeaderText = "Alvo"
-        Me.clnEstoqueIdeal.MaxInputLength = 10
-        Me.clnEstoqueIdeal.Name = "clnEstoqueIdeal"
-        Me.clnEstoqueIdeal.Width = 50
-        '
-        'clnQuantidade
-        '
-        Me.clnQuantidade.HeaderText = "Qtde"
-        Me.clnQuantidade.MaxInputLength = 10
-        Me.clnQuantidade.Name = "clnQuantidade"
-        Me.clnQuantidade.Width = 70
-        '
-        'clnPreco
-        '
-        Me.clnPreco.HeaderText = "Preço"
-        Me.clnPreco.MaxInputLength = 20
-        Me.clnPreco.Name = "clnPreco"
-        Me.clnPreco.Width = 70
-        '
-        'clnDesconto
-        '
-        Me.clnDesconto.HeaderText = "Desc(%)"
-        Me.clnDesconto.MaxInputLength = 20
-        Me.clnDesconto.Name = "clnDesconto"
-        Me.clnDesconto.Width = 70
-        '
-        'clnSubTotal
-        '
-        Me.clnSubTotal.HeaderText = "SubTotal"
-        Me.clnSubTotal.Name = "clnSubTotal"
-        Me.clnSubTotal.Width = 80
         '
         'frmPedidoItemsEncontrados
         '

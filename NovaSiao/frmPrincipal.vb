@@ -107,7 +107,6 @@ Public Class frmPrincipal
         '
         ' DETERMINA A CONTA ATIVA | FILIAL ATIVA | DATAPADRAO
         '----------------------------------------------------------------
-        '
         Try
             '
             If IsNothing(contaInicial.IDFilial) Then

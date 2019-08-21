@@ -265,6 +265,7 @@ Public Class clPedido
     '--- Propriedade SituacaoDescricao
     '------------------------------------------------------
     Public Property SituacaoDescricao() As String
+        'Compondo = 0 | Enviado = 1 | Recebido = 2 | Cancelado = 3 | Migrado = 4
         Get
             Return PData._SituacaoDescricao
         End Get

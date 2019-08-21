@@ -20,14 +20,14 @@ Partial Class frmPedido
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.tsMenu = New System.Windows.Forms.ToolStrip()
         Me.btnProcurar = New System.Windows.Forms.ToolStripButton()
         Me.btnNovo = New System.Windows.Forms.ToolStripButton()
@@ -42,8 +42,8 @@ Partial Class frmPedido
         Me.miPeloEstoquePorFabricante = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator3 = New System.Windows.Forms.ToolStripSeparator()
         Me.miPelaReservaPorFornecedor = New System.Windows.Forms.ToolStripMenuItem()
-        Me.miPelaReseervaPorTipo = New System.Windows.Forms.ToolStripMenuItem()
-        Me.miPelaReseervaPorFabricante = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miPelaReservaPorTipo = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miPelaReservaPorFabricante = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnProdutosFornecedor = New System.Windows.Forms.ToolStripButton()
         Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -51,6 +51,9 @@ Partial Class frmPedido
         Me.miImprimir = New System.Windows.Forms.ToolStripMenuItem()
         Me.miEnviarPorEmail = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnImportarExportar = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.miImportarPedido = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miMigrarPara = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator4 = New System.Windows.Forms.ToolStripSeparator()
         Me.miImportarItens = New System.Windows.Forms.ToolStripMenuItem()
         Me.miExportarItens = New System.Windows.Forms.ToolStripMenuItem()
         Me.lblID = New System.Windows.Forms.Label()
@@ -201,7 +204,7 @@ Partial Class frmPedido
         Me.btnProcurar.Name = "btnProcurar"
         Me.btnProcurar.Size = New System.Drawing.Size(97, 45)
         Me.btnProcurar.Text = "&Procurar"
-        Me.btnProcurar.ToolTipText = "Procurar Cliente"
+        Me.btnProcurar.ToolTipText = "Procurar Pedido"
         '
         'btnNovo
         '
@@ -210,7 +213,7 @@ Partial Class frmPedido
         Me.btnNovo.Name = "btnNovo"
         Me.btnNovo.Size = New System.Drawing.Size(76, 45)
         Me.btnNovo.Text = "&Nova"
-        Me.btnNovo.ToolTipText = "Novo Funcionário"
+        Me.btnNovo.ToolTipText = "Novo Pedido"
         '
         'btnSalvar
         '
@@ -253,7 +256,7 @@ Partial Class frmPedido
         '
         'btnVerificarAdicionar
         '
-        Me.btnVerificarAdicionar.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miPeloEstoquePorFornecedor, Me.miPeloEstoquePorTipo, Me.miPeloEstoquePorFabricante, Me.ToolStripSeparator3, Me.miPelaReservaPorFornecedor, Me.miPelaReseervaPorTipo, Me.miPelaReseervaPorFabricante})
+        Me.btnVerificarAdicionar.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miPeloEstoquePorFornecedor, Me.miPeloEstoquePorTipo, Me.miPeloEstoquePorFabricante, Me.ToolStripSeparator3, Me.miPelaReservaPorFornecedor, Me.miPelaReservaPorTipo, Me.miPelaReservaPorFabricante})
         Me.btnVerificarAdicionar.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.btnVerificarAdicionar.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.btnVerificarAdicionar.ImageTransparentColor = System.Drawing.Color.Magenta
@@ -298,21 +301,21 @@ Partial Class frmPedido
         Me.miPelaReservaPorFornecedor.Size = New System.Drawing.Size(269, 30)
         Me.miPelaReservaPorFornecedor.Text = "Reserva por Fornecedor"
         '
-        'miPelaReseervaPorTipo
+        'miPelaReservaPorTipo
         '
-        Me.miPelaReseervaPorTipo.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.miPelaReseervaPorTipo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.miPelaReseervaPorTipo.Name = "miPelaReseervaPorTipo"
-        Me.miPelaReseervaPorTipo.Size = New System.Drawing.Size(269, 30)
-        Me.miPelaReseervaPorTipo.Text = "Reserva por Tipo de Produto"
+        Me.miPelaReservaPorTipo.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
+        Me.miPelaReservaPorTipo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miPelaReservaPorTipo.Name = "miPelaReservaPorTipo"
+        Me.miPelaReservaPorTipo.Size = New System.Drawing.Size(269, 30)
+        Me.miPelaReservaPorTipo.Text = "Reserva por Tipo de Produto"
         '
-        'miPelaReseervaPorFabricante
+        'miPelaReservaPorFabricante
         '
-        Me.miPelaReseervaPorFabricante.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-        Me.miPelaReseervaPorFabricante.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.miPelaReseervaPorFabricante.Name = "miPelaReseervaPorFabricante"
-        Me.miPelaReseervaPorFabricante.Size = New System.Drawing.Size(269, 30)
-        Me.miPelaReseervaPorFabricante.Text = "Reserva por Fabricante"
+        Me.miPelaReservaPorFabricante.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
+        Me.miPelaReservaPorFabricante.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miPelaReservaPorFabricante.Name = "miPelaReservaPorFabricante"
+        Me.miPelaReservaPorFabricante.Size = New System.Drawing.Size(269, 30)
+        Me.miPelaReservaPorFabricante.Text = "Reserva por Fabricante"
         '
         'btnProdutosFornecedor
         '
@@ -368,24 +371,45 @@ Partial Class frmPedido
         '
         'btnImportarExportar
         '
-        Me.btnImportarExportar.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miImportarItens, Me.miExportarItens})
+        Me.btnImportarExportar.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miImportarPedido, Me.miMigrarPara, Me.ToolStripSeparator4, Me.miImportarItens, Me.miExportarItens})
         Me.btnImportarExportar.Image = Global.NovaSiao.My.Resources.Resources.refresh1
         Me.btnImportarExportar.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnImportarExportar.Name = "btnImportarExportar"
         Me.btnImportarExportar.Size = New System.Drawing.Size(167, 45)
         Me.btnImportarExportar.Text = "Importar/Exportar"
         '
+        'miImportarPedido
+        '
+        Me.miImportarPedido.Image = Global.NovaSiao.My.Resources.Resources.download_button
+        Me.miImportarPedido.Name = "miImportarPedido"
+        Me.miImportarPedido.Size = New System.Drawing.Size(254, 36)
+        Me.miImportarPedido.Text = "Importar de outro Pedido"
+        '
+        'miMigrarPara
+        '
+        Me.miMigrarPara.Image = Global.NovaSiao.My.Resources.Resources.upload_button
+        Me.miMigrarPara.Name = "miMigrarPara"
+        Me.miMigrarPara.Size = New System.Drawing.Size(254, 36)
+        Me.miMigrarPara.Text = "Migrar para outro Pedido"
+        '
+        'ToolStripSeparator4
+        '
+        Me.ToolStripSeparator4.Name = "ToolStripSeparator4"
+        Me.ToolStripSeparator4.Size = New System.Drawing.Size(251, 6)
+        '
         'miImportarItens
         '
+        Me.miImportarItens.Image = Global.NovaSiao.My.Resources.Resources.download
         Me.miImportarItens.Name = "miImportarItens"
-        Me.miImportarItens.Size = New System.Drawing.Size(169, 24)
-        Me.miImportarItens.Text = "Importar Itens"
+        Me.miImportarItens.Size = New System.Drawing.Size(254, 36)
+        Me.miImportarItens.Text = "Importar Itens XML"
         '
         'miExportarItens
         '
+        Me.miExportarItens.Image = Global.NovaSiao.My.Resources.Resources.download
         Me.miExportarItens.Name = "miExportarItens"
-        Me.miExportarItens.Size = New System.Drawing.Size(169, 24)
-        Me.miExportarItens.Text = "Exportar Itens"
+        Me.miExportarItens.Size = New System.Drawing.Size(254, 36)
+        Me.miExportarItens.Text = "Exportar Itens XML"
         '
         'lblID
         '
@@ -631,9 +655,9 @@ Partial Class frmPedido
         Me.Label15.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label15.Location = New System.Drawing.Point(461, 395)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(101, 15)
+        Me.Label15.Size = New System.Drawing.Size(95, 15)
         Me.Label15.TabIndex = 4
-        Me.Label15.Text = "Produto Migrado"
+        Me.Label15.Text = "Pedido Migrado"
         '
         'Label13
         '
@@ -742,51 +766,51 @@ Partial Class frmPedido
         '
         Me.dgvItens.AllowUserToResizeColumns = False
         Me.dgvItens.AllowUserToResizeRows = False
-        DataGridViewCellStyle9.BackColor = System.Drawing.Color.White
-        Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.White
+        Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvItens.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvItens.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
         Me.dgvItens.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle10.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle10.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvItens.ColumnHeadersHeight = 30
         Me.dgvItens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDPedidoItem, Me.clnRGProduto, Me.clnProduto, Me.clnAutor, Me.clnIDProdutoTipo, Me.clnEstoque, Me.clnEstoqueNivel, Me.clnEstoqueIdeal, Me.clnQuantidade, Me.clnPreco, Me.clnDesconto, Me.clnSubTotal})
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle12.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.SteelBlue
-        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
-        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.SteelBlue
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle4
         Me.dgvItens.EnableHeadersVisualStyles = False
         Me.dgvItens.GridColor = System.Drawing.SystemColors.ActiveCaption
         Me.dgvItens.Location = New System.Drawing.Point(7, 5)
         Me.dgvItens.MultiSelect = False
         Me.dgvItens.Name = "dgvItens"
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle13.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
-        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItens.RowHeadersDefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
         Me.dgvItens.RowHeadersWidth = 35
-        DataGridViewCellStyle14.BackColor = System.Drawing.Color.White
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle14.ForeColor = System.Drawing.Color.Black
-        Me.dgvItens.RowsDefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle6.BackColor = System.Drawing.Color.White
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.Color.Black
+        Me.dgvItens.RowsDefaultCellStyle = DataGridViewCellStyle6
         Me.dgvItens.RowTemplate.DefaultCellStyle.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.dgvItens.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black
         Me.dgvItens.RowTemplate.Height = 33
@@ -802,9 +826,9 @@ Partial Class frmPedido
         '
         'clnRGProduto
         '
-        DataGridViewCellStyle11.Format = "N0"
-        DataGridViewCellStyle11.NullValue = Nothing
-        Me.clnRGProduto.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle3.Format = "N0"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.clnRGProduto.DefaultCellStyle = DataGridViewCellStyle3
         Me.clnRGProduto.HeaderText = "Reg."
         Me.clnRGProduto.MaxInputLength = 20
         Me.clnRGProduto.Name = "clnRGProduto"
@@ -905,14 +929,14 @@ Partial Class frmPedido
         '
         Me.dgvMensagens.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(202, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(233, Byte), Integer))
         Me.dgvMensagens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle15.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle15.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvMensagens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle7.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvMensagens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
         Me.dgvMensagens.ColumnHeadersHeight = 30
         Me.dgvMensagens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvMensagens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnMensagem, Me.clnIDMensagem})
@@ -1076,9 +1100,9 @@ Partial Class frmPedido
         '
         'DataGridViewTextBoxColumn2
         '
-        DataGridViewCellStyle16.Format = "N0"
-        DataGridViewCellStyle16.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle8.Format = "N0"
+        DataGridViewCellStyle8.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn2.DefaultCellStyle = DataGridViewCellStyle8
         Me.DataGridViewTextBoxColumn2.HeaderText = "Reg."
         Me.DataGridViewTextBoxColumn2.MaxInputLength = 20
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
@@ -1315,9 +1339,12 @@ Partial Class frmPedido
     Friend WithEvents clnIDMensagem As DataGridViewTextBoxColumn
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
     Friend WithEvents miPelaReservaPorFornecedor As ToolStripMenuItem
-    Friend WithEvents miPelaReseervaPorTipo As ToolStripMenuItem
-    Friend WithEvents miPelaReseervaPorFabricante As ToolStripMenuItem
+    Friend WithEvents miPelaReservaPorTipo As ToolStripMenuItem
+    Friend WithEvents miPelaReservaPorFabricante As ToolStripMenuItem
     Friend WithEvents btnProdutosFornecedor As ToolStripButton
     Friend WithEvents Label15 As Label
     Friend WithEvents PictureBox4 As PictureBox
+    Friend WithEvents miImportarPedido As ToolStripMenuItem
+    Friend WithEvents miMigrarPara As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
 End Class

@@ -8,6 +8,7 @@ Public Class frmPedidoProcurar
     Private SituacaoAtual As Byte? '--- property
     Private _formOrigem As Form
     Private _IDFornecedor As Integer? = Nothing
+    Private _IDFilialPadrao As Integer
     Private _pedBLL As New PedidoBLL
     '
 #Region "NEW | PROPERTY | LOAD"
@@ -19,6 +20,7 @@ Public Class frmPedidoProcurar
         '
         ' Add any initialization after the InitializeComponent() call.
         If Not formOrigem Is Nothing Then _formOrigem = formOrigem
+        _IDFilialPadrao = Obter_FilialPadrao()
         rbtCompondo.Checked = True
         propSituacaoAtual = 0
         CarregaCmbMes()
@@ -140,19 +142,19 @@ Public Class frmPedidoProcurar
             '
             '--- verifica o filtro das datas
             If cmbAno.SelectedValue = 0 AndAlso cmbMes.SelectedValue = 0 Then 'ANO e MES nulos
-                pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual)
+                pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual, _IDFilialPadrao)
                 '
             ElseIf cmbAno.SelectedValue = 0 AndAlso cmbMes.SelectedValue > 0 Then ' ANO NULO E MES PREENCHIDO
-                pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual, Nothing, CInt(cmbMes.SelectedValue))
+                pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual, _IDFilialPadrao, Nothing, CInt(cmbMes.SelectedValue))
                 '
             ElseIf cmbMes.SelectedValue = 0 AndAlso cmbAno.SelectedValue > 0 Then ' ANO PREENCHIDO E MES NULO
-                pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual, CInt(cmbAno.SelectedValue), Nothing)
+                pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual, _IDFilialPadrao, CInt(cmbAno.SelectedValue), Nothing)
                 '
             ElseIf cmbMes.SelectedValue > 0 AndAlso cmbAno.SelectedValue > 0 Then ' ANO E MES PREENCHIDOS
-                pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual, CInt(cmbAno.SelectedValue), CInt(cmbMes.SelectedValue))
+                pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual, _IDFilialPadrao, CInt(cmbAno.SelectedValue), CInt(cmbMes.SelectedValue))
                 '
             Else ' ANO E MES VAZIOS
-                pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual)
+                pedLista = _pedBLL.Pedido_GET_List(propSituacaoAtual, _IDFilialPadrao)
                 '
             End If
             '
@@ -328,22 +330,34 @@ Public Class frmPedidoProcurar
             Exit Sub
         End If
         '
-        Dim clP As clPedido = dgvListagem.SelectedRows(0).DataBoundItem
-        '
-        '--- verifica se o frmPedido ja esta aberto
-        Dim frm = Application.OpenForms("frmPedido")
-        '
-        '--- se não esta cria um new
-        If IsNothing(frm) Then
-            frm = New frmPedido(clP)
-        Else
-            DirectCast(frm, frmPedido).propPedido = clP
-        End If
-        '
-        frm.MdiParent = frmPrincipal
-        frm.StartPosition = FormStartPosition.CenterScreen
-        Close()
-        frm.Show()
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim clP As clPedido = dgvListagem.SelectedRows(0).DataBoundItem
+            '
+            '--- verifica se o frmPedido ja esta aberto
+            Dim frm = Application.OpenForms("frmPedido")
+            '
+            '--- se não esta cria um new
+            If IsNothing(frm) Then
+                frm = New frmPedido(clP)
+            Else
+                DirectCast(frm, frmPedido).propPedido = clP
+            End If
+            '
+            frm.MdiParent = frmPrincipal
+            frm.StartPosition = FormStartPosition.CenterScreen
+            Close()
+            frm.Show()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Abrir o Pedido..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '
@@ -506,6 +520,7 @@ Public Class frmPedidoProcurar
         AddHandler rbtRecebidos.CheckedChanged, AddressOf Butons_CheckedChanged
         AddHandler rbtCancelados.CheckedChanged, AddressOf Butons_CheckedChanged
         AddHandler rbtEnviado.CheckedChanged, AddressOf Butons_CheckedChanged
+        AddHandler rbtMigrados.CheckedChanged, AddressOf Butons_CheckedChanged
         '
     End Sub
     '
@@ -515,6 +530,7 @@ Public Class frmPedidoProcurar
         RemoveHandler rbtRecebidos.CheckedChanged, AddressOf Butons_CheckedChanged
         RemoveHandler rbtCancelados.CheckedChanged, AddressOf Butons_CheckedChanged
         RemoveHandler rbtEnviado.CheckedChanged, AddressOf Butons_CheckedChanged
+        RemoveHandler rbtMigrados.CheckedChanged, AddressOf Butons_CheckedChanged
         '
     End Sub
     '
@@ -536,7 +552,7 @@ Public Class frmPedidoProcurar
             valorAlterado = Nothing
         End If
         '
-        If If(propSituacaoAtual, 4) <> If(valorAlterado, 4) Then
+        If If(propSituacaoAtual, 5) <> If(valorAlterado, 5) Then
             propSituacaoAtual = valorAlterado
             Get_Dados()
         End If
@@ -578,6 +594,7 @@ Public Class frmPedidoProcurar
 #Region "MENU SUSPENSO"
     '
     Private Sub dgvListagem_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvListagem.MouseDown
+        '
         If e.Button = MouseButtons.Right Then
             Dim c As Control = DirectCast(sender, Control)
             Dim hit As DataGridView.HitTestInfo = dgvListagem.HitTest(e.X, e.Y)
@@ -599,6 +616,7 @@ Public Class frmPedidoProcurar
                 miRecebido.Enabled = False
                 miCancelado.Enabled = True
                 miAlteraData.Enabled = True
+                miRemoverMigracao.Enabled = False
                 '
             ElseIf pedItem.Situacao = 1 Then '--- Enviado
                 miCompondo.Enabled = True
@@ -606,6 +624,7 @@ Public Class frmPedidoProcurar
                 miRecebido.Enabled = True
                 miCancelado.Enabled = True
                 miAlteraData.Enabled = False
+                miRemoverMigracao.Enabled = False
                 '
             ElseIf pedItem.Situacao = 2 Then '--- Recebido
                 miCompondo.Enabled = True
@@ -613,6 +632,7 @@ Public Class frmPedidoProcurar
                 miRecebido.Enabled = False
                 miCancelado.Enabled = True
                 miAlteraData.Enabled = False
+                miRemoverMigracao.Enabled = False
                 '
             ElseIf pedItem.Situacao = 3 Then '--- Cancelado
                 miCompondo.Enabled = True
@@ -620,6 +640,7 @@ Public Class frmPedidoProcurar
                 miRecebido.Enabled = False
                 miCancelado.Enabled = False
                 miAlteraData.Enabled = False
+                miRemoverMigracao.Enabled = False
                 '
             ElseIf pedItem.Situacao = 4 Then '--- Migrado
                 miCompondo.Enabled = False
@@ -627,6 +648,7 @@ Public Class frmPedidoProcurar
                 miRecebido.Enabled = False
                 miCancelado.Enabled = False
                 miAlteraData.Enabled = False
+                miRemoverMigracao.Enabled = True
                 '
             End If
             '
@@ -641,6 +663,10 @@ Public Class frmPedidoProcurar
     Private Sub miCompondo_Click(sender As Object, e As EventArgs) Handles miCompondo.Click
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Dim myPed As clPedido = dgvListagem.CurrentRow.DataBoundItem
             _pedBLL.Pedido_AlteraSituacao(myPed.IDPedido, 0, Now)
             myPed.Situacao = 0
@@ -649,6 +675,11 @@ Public Class frmPedidoProcurar
         Catch ex As Exception
             MessageBox.Show("Houve uma execeção inesperada ao alterar a situação do Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -666,6 +697,10 @@ Public Class frmPedidoProcurar
         End If
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Dim myPed As clPedido = dgvListagem.CurrentRow.DataBoundItem
             _pedBLL.Pedido_AlteraSituacao(myPed.IDPedido, 1, dt)
             myPed.Situacao = 1
@@ -674,6 +709,11 @@ Public Class frmPedidoProcurar
         Catch ex As Exception
             MessageBox.Show("Houve uma execeção inesperada ao alterar a situação do Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -690,6 +730,10 @@ Public Class frmPedidoProcurar
         End If
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Dim myPed As clPedido = dgvListagem.CurrentRow.DataBoundItem
             _pedBLL.Pedido_AlteraSituacao(myPed.IDPedido, 2, dt)
             myPed.Situacao = 2
@@ -698,6 +742,11 @@ Public Class frmPedidoProcurar
         Catch ex As Exception
             MessageBox.Show("Houve uma execeção inesperada ao alterar a situação do Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -707,6 +756,10 @@ Public Class frmPedidoProcurar
     Private Sub miCancelado_Click(sender As Object, e As EventArgs) Handles miCancelado.Click
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Dim myPed As clPedido = dgvListagem.CurrentRow.DataBoundItem
             _pedBLL.Pedido_AlteraSituacao(myPed.IDPedido, 3, Today)
             myPed.Situacao = 3
@@ -715,6 +768,11 @@ Public Class frmPedidoProcurar
         Catch ex As Exception
             MessageBox.Show("Houve uma execeção inesperada ao alterar a situação do Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -731,6 +789,10 @@ Public Class frmPedidoProcurar
         End If
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             Dim myPed As clPedido = dgvListagem.CurrentRow.DataBoundItem
             _pedBLL.Pedido_AlteraDataRevisao(myPed.IDPedido, dt)
             dgvListagem.CurrentRow.Cells("clnRevisaoData").Value = CType(dt, Date).ToShortDateString
@@ -738,6 +800,45 @@ Public Class frmPedidoProcurar
         Catch ex As Exception
             MessageBox.Show("Houve uma execeção inesperada ao alterar a DATA de REVISÃO do Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
+    '
+    '--- REMOVER A MIGRACAO DO PEDIDO
+    '-------------------------------------------------------------------------------------------------------
+    Private Sub miRemoverMigracao_Click(sender As Object, e As EventArgs) Handles miRemoverMigracao.Click
+        '
+        Dim myPed As clPedido = dgvListagem.CurrentRow.DataBoundItem
+        '
+        If AbrirDialog("Deseja remover a migração do Pedido para: " & vbCrLf &
+                       myPed.Fornecedor & vbCrLf & "tornando esse pedido independente?",
+                       "Remover Migração",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question,
+                       frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Exit Sub
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            _pedBLL.RemoveMigracao(myPed.IDPedido)
+            myPed.Situacao = 1
+            propSituacaoAtual = 0
+            Get_Dados()
+        Catch ex As Exception
+            MessageBox.Show("Houve uma execeção inesperada ao remover a migração do Pedido..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub

@@ -16,6 +16,7 @@ Public Class frmPedidoItemsEncontrados
     '
     Sub New(ItensList As List(Of clPedidoItem),
             OrigemReserva As Boolean,
+            TipoProcura As String,
             formOrigem As frmPedido)
         '
         ' This call is required by the designer.
@@ -23,9 +24,9 @@ Public Class frmPedidoItemsEncontrados
         '
         ' Add any initialization after the InitializeComponent() call.
         If OrigemReserva Then
-            lblTitulo.Text = "Produtos Encontrados nas Reservas"
+            lblTitulo.Text = "Produtos Encontrados nas Reservas - " + TipoProcura
         Else
-            lblTitulo.Text = "Produtos Encontrados sem Estoque"
+            lblTitulo.Text = "Produtos Encontrados sem Estoque - " + TipoProcura
         End If
 
         _formOrigem = formOrigem
@@ -610,9 +611,9 @@ Public Class frmPedidoItemsEncontrados
             If item.Origem >= 10 Then
                 '
                 If AbrirDialog("O produto: " + item.Produto + vbCrLf +
-                           "já foi inserido no pedido..." + vbCrLf +
-                           "Deseja inserir esse produto no pedido assim mesmo?",
-                           "Produto Já Inserido",
+                               "já foi inserido no pedido..." + vbCrLf +
+                               "Deseja inserir esse produto no pedido assim mesmo?",
+                               "Produto Já Inserido",
                 frmDialog.DialogType.SIM_NAO,
                 frmDialog.DialogIcon.Question) = DialogResult.No Then Exit Sub
                 '
@@ -631,8 +632,8 @@ Public Class frmPedidoItemsEncontrados
                 item.Origem -= 10
             End If
             '
-            _ItensInseridos.Add(item)
             _formOrigem.ItemInserir(item)
+            _ItensInseridos.Add(item)
             _formOrigem.bindItens.ResetBindings(False)
             _formOrigem.AtualizaTotalGeral()
             bindItens.Remove(item)

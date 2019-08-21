@@ -640,6 +640,12 @@
     <Compile Include="Pedidos\frmPedido.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Pedidos\frmPedidoImportarMigrar.Designer.vb">
+      <DependentUpon>frmPedidoImportarMigrar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Pedidos\frmPedidoImportarMigrar.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Pedidos\frmPedidoItemsEncontrados.Designer.vb">
       <DependentUpon>frmPedidoItemsEncontrados.vb</DependentUpon>
     </Compile>
@@ -1156,6 +1162,9 @@
     <EmbeddedResource Include="Pedidos\frmPedido.resx">
       <DependentUpon>frmPedido.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Pedidos\frmPedidoImportarMigrar.resx">
+      <DependentUpon>frmPedidoImportarMigrar.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Pedidos\frmPedidoItemsEncontrados.resx">
       <DependentUpon>frmPedidoItemsEncontrados.vb</DependentUpon>
     </EmbeddedResource>
@@ -1459,6 +1468,8 @@
     <None Include="Resources\Previous_32px_disabled.png" />
     <None Include="Resources\Next_32px_disabled.png" />
     <None Include="Resources\Last_32px_disabled.png" />
+    <None Include="Resources\download_button.png" />
+    <None Include="Resources\upload_button.png" />
     <Content Include="SqlServerTypes\Loader.cs" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">

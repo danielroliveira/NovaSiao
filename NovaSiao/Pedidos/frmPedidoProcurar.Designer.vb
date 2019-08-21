@@ -34,6 +34,7 @@ Partial Class frmPedidoProcurar
         Me.Label8 = New System.Windows.Forms.Label()
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
         Me.pnlSituacao = New System.Windows.Forms.Panel()
+        Me.rbtMigrados = New System.Windows.Forms.RadioButton()
         Me.rbtCancelados = New System.Windows.Forms.RadioButton()
         Me.rbtRecebidos = New System.Windows.Forms.RadioButton()
         Me.rbtCompondo = New System.Windows.Forms.RadioButton()
@@ -44,6 +45,7 @@ Partial Class frmPedidoProcurar
         Me.miRecebido = New System.Windows.Forms.ToolStripMenuItem()
         Me.miCancelado = New System.Windows.Forms.ToolStripMenuItem()
         Me.miAlteraData = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miRemoverMigracao = New System.Windows.Forms.ToolStripMenuItem()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.btnProcFornecedores = New VIBlend.WinForms.Controls.vButton()
         Me.txtFornecedor = New System.Windows.Forms.TextBox()
@@ -60,7 +62,6 @@ Partial Class frmPedidoProcurar
         Me.btnFornecedor = New System.Windows.Forms.ToolStripButton()
         Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.btnMensagens = New System.Windows.Forms.ToolStripButton()
-        Me.rbtMigrados = New System.Windows.Forms.RadioButton()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvListagem, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlTitulo.SuspendLayout()
@@ -218,6 +219,18 @@ Partial Class frmPedidoProcurar
         Me.pnlSituacao.Size = New System.Drawing.Size(790, 42)
         Me.pnlSituacao.TabIndex = 9
         '
+        'rbtMigrados
+        '
+        Me.rbtMigrados.Appearance = System.Windows.Forms.Appearance.Button
+        Me.rbtMigrados.Location = New System.Drawing.Point(628, 5)
+        Me.rbtMigrados.Name = "rbtMigrados"
+        Me.rbtMigrados.Size = New System.Drawing.Size(131, 33)
+        Me.rbtMigrados.TabIndex = 5
+        Me.rbtMigrados.TabStop = True
+        Me.rbtMigrados.Text = "Migrados"
+        Me.rbtMigrados.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.rbtMigrados.UseVisualStyleBackColor = True
+        '
         'rbtCancelados
         '
         Me.rbtCancelados.Appearance = System.Windows.Forms.Appearance.Button
@@ -268,44 +281,52 @@ Partial Class frmPedidoProcurar
         '
         'mnuOperacoes
         '
-        Me.mnuOperacoes.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miCompondo, Me.miEnviado, Me.miRecebido, Me.miCancelado, Me.miAlteraData})
+        Me.mnuOperacoes.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.mnuOperacoes.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miCompondo, Me.miEnviado, Me.miRecebido, Me.miCancelado, Me.miAlteraData, Me.miRemoverMigracao})
         Me.mnuOperacoes.Name = "mnuOperacoes"
-        Me.mnuOperacoes.Size = New System.Drawing.Size(192, 114)
+        Me.mnuOperacoes.Size = New System.Drawing.Size(216, 136)
         '
         'miCompondo
         '
         Me.miCompondo.Image = Global.NovaSiao.My.Resources.Resources.editar
         Me.miCompondo.Name = "miCompondo"
-        Me.miCompondo.Size = New System.Drawing.Size(191, 22)
+        Me.miCompondo.Size = New System.Drawing.Size(215, 22)
         Me.miCompondo.Text = "Em Composição"
         '
         'miEnviado
         '
         Me.miEnviado.Image = Global.NovaSiao.My.Resources.Resources.editar
         Me.miEnviado.Name = "miEnviado"
-        Me.miEnviado.Size = New System.Drawing.Size(191, 22)
+        Me.miEnviado.Size = New System.Drawing.Size(215, 22)
         Me.miEnviado.Text = "Pedido Enviado"
         '
         'miRecebido
         '
         Me.miRecebido.Image = Global.NovaSiao.My.Resources.Resources.editar
         Me.miRecebido.Name = "miRecebido"
-        Me.miRecebido.Size = New System.Drawing.Size(191, 22)
+        Me.miRecebido.Size = New System.Drawing.Size(215, 22)
         Me.miRecebido.Text = "Pedido Recebido"
         '
         'miCancelado
         '
         Me.miCancelado.Image = Global.NovaSiao.My.Resources.Resources.editar
         Me.miCancelado.Name = "miCancelado"
-        Me.miCancelado.Size = New System.Drawing.Size(191, 22)
+        Me.miCancelado.Size = New System.Drawing.Size(215, 22)
         Me.miCancelado.Text = "Pedido Cancelado"
         '
         'miAlteraData
         '
         Me.miAlteraData.Image = Global.NovaSiao.My.Resources.Resources.refresh
         Me.miAlteraData.Name = "miAlteraData"
-        Me.miAlteraData.Size = New System.Drawing.Size(191, 22)
+        Me.miAlteraData.Size = New System.Drawing.Size(215, 22)
         Me.miAlteraData.Text = "Altera Data de Revisão"
+        '
+        'miRemoverMigracao
+        '
+        Me.miRemoverMigracao.Image = Global.NovaSiao.My.Resources.Resources.refresh
+        Me.miRemoverMigracao.Name = "miRemoverMigracao"
+        Me.miRemoverMigracao.Size = New System.Drawing.Size(215, 22)
+        Me.miRemoverMigracao.Text = "Remover Migração"
         '
         'Label1
         '
@@ -475,18 +496,6 @@ Partial Class frmPedidoProcurar
         Me.btnMensagens.Size = New System.Drawing.Size(161, 37)
         Me.btnMensagens.Text = "Mensagens Padrão"
         '
-        'rbtMigrados
-        '
-        Me.rbtMigrados.Appearance = System.Windows.Forms.Appearance.Button
-        Me.rbtMigrados.Location = New System.Drawing.Point(628, 5)
-        Me.rbtMigrados.Name = "rbtMigrados"
-        Me.rbtMigrados.Size = New System.Drawing.Size(131, 33)
-        Me.rbtMigrados.TabIndex = 5
-        Me.rbtMigrados.TabStop = True
-        Me.rbtMigrados.Text = "Migrados"
-        Me.rbtMigrados.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.rbtMigrados.UseVisualStyleBackColor = True
-        '
         'frmPedidoProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
@@ -568,4 +577,5 @@ Partial Class frmPedidoProcurar
     Friend WithEvents clnTotalPedido As DataGridViewTextBoxColumn
     Friend WithEvents clnRevisaoData As DataGridViewTextBoxColumn
     Friend WithEvents rbtMigrados As RadioButton
+    Friend WithEvents miRemoverMigracao As ToolStripMenuItem
 End Class
