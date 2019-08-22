@@ -474,6 +474,8 @@ Public Class frmPedidoProcurar
             _pedBLL.Pedido_Excluir(ped.IDPedido)
             Get_Dados()
             '
+        Catch ex As AppException
+            AbrirDialog(ex.Message, "Exceção", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Excluir registro de Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -765,6 +767,8 @@ Public Class frmPedidoProcurar
             myPed.Situacao = 3
             propSituacaoAtual = 3
             Get_Dados()
+        Catch ex As AppException
+            AbrirDialog(ex.Message, "Falha", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
         Catch ex As Exception
             MessageBox.Show("Houve uma execeção inesperada ao alterar a situação do Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -827,10 +831,12 @@ Public Class frmPedidoProcurar
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            _pedBLL.RemoveMigracao(myPed.IDPedido)
+            _pedBLL.RemoveMigracao(myPed.IDPedido, myPed.IDMigracao)
             myPed.Situacao = 1
             propSituacaoAtual = 0
             Get_Dados()
+        Catch ex As AppException
+            AbrirDialog(ex.Message, "Falha", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
         Catch ex As Exception
             MessageBox.Show("Houve uma execeção inesperada ao remover a migração do Pedido..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)

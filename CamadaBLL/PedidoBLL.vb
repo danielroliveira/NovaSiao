@@ -169,8 +169,9 @@ Public Class PedidoBLL
         '--- CHECK MIGRACAO OF PEDIDO
         '-----------------------------------------------------------------------
         If CountPedidosMigrados(IDPedido) > 0 Then
-            Throw New Exception("Esse pedido não pode ser excluído porque tem outros pedidos migrados a ele." & vbCrLf &
-                                "Remova todas as migrações associadas antes de tentar excluir novamente.")
+            Throw New AppException("Esse pedido não pode ser excluído porque tem outros pedidos migrados a ele." & vbCrLf &
+                                   "Remova todas as migrações associadas antes de tentar excluir novamente.")
+
             Return False
         End If
         '
@@ -187,7 +188,7 @@ Public Class PedidoBLL
             db.AdicionarParametros("@IDPedido", IDPedido)
             '
             '--- altera a reserva para aguardando pedido
-            query = "UPDATE tblReserva SET IDPedido = NULL, IDSituacaoReserva = 1 " +
+            query = "UPDATE tblReserva SET IDPedidos = NULL, IDSituacaoReserva = 1 " +
                     "WHERE IDSituacaoReserva = 2 " +
                     "AND IDReserva = (" +
                     "SELECT IDOrigem FROM tblPedidoItens WHERE IDPedido = @IDPedido AND Origem = 1)"
@@ -271,7 +272,7 @@ Public Class PedidoBLL
                 '
                 '--- check if Pedido has a migration
                 If CountPedidosMigrados(IDPedido) > 0 Then
-                    Throw New Exception("Esse pedido não pode ser cancelado pois existem outros pedidos migrados nele...")
+                    Throw New AppException("Esse pedido não pode ser cancelado pois existem outros pedidos migrados nele...")
                     Return False
                 End If
                 '
@@ -676,7 +677,7 @@ Public Class PedidoBLL
         Try
             '
             If IsNothing(Pedido.IDFilial) Then
-                Throw New Exception("O pedido ainda não tem Filial...")
+                Throw New AppException("O pedido ainda não tem Filial...")
                 Return Nothing
             End If
             '
@@ -722,7 +723,7 @@ Public Class PedidoBLL
         Try
             '
             If IsNothing(Pedido.IDFilial) Then
-                Throw New Exception("O pedido ainda não tem Filial...")
+                Throw New AppException("O pedido ainda não tem Filial...")
                 Return Nothing
             End If
             '
@@ -768,7 +769,7 @@ Public Class PedidoBLL
         Try
             '
             If IsNothing(Pedido.IDFilial) Then
-                Throw New Exception("O pedido ainda não tem Filial...")
+                Throw New AppException("O pedido ainda não tem Filial...")
                 Return Nothing
             End If
             '
@@ -814,7 +815,7 @@ Public Class PedidoBLL
         Try
             '
             If IsNothing(Pedido.IDFilial) Then
-                Throw New Exception("O pedido ainda não tem Filial...")
+                Throw New AppException("O pedido ainda não tem Filial...")
                 Return Nothing
             End If
             '
@@ -863,7 +864,7 @@ Public Class PedidoBLL
         Try
             '
             If IsNothing(Pedido.IDFilial) Then
-                Throw New Exception("O pedido ainda não tem Filial...")
+                Throw New AppException("O pedido ainda não tem Filial...")
                 Return Nothing
             End If
             '
@@ -910,7 +911,7 @@ Public Class PedidoBLL
         Try
             '
             If IsNothing(Pedido.IDFilial) Then
-                Throw New Exception("O pedido ainda não tem Filial...")
+                Throw New AppException("O pedido ainda não tem Filial...")
                 Return Nothing
             End If
             '
@@ -957,7 +958,7 @@ Public Class PedidoBLL
         Try
             '
             If IsNothing(Pedido.IDFilial) Then
-                Throw New Exception("O pedido ainda não tem Filial...")
+                Throw New AppException("O pedido ainda não tem Filial...")
                 Return Nothing
             End If
             '
@@ -1139,9 +1140,17 @@ Public Class PedidoBLL
     ' REMOVE MIGRACAO
     '==========================================================================================
     Public Function RemoveMigracao(IDPedido As Integer,
+                                   IDMigracao As Integer,
                                    Optional dbTran As Object = Nothing) As Boolean
         '
         Try
+            '
+            If GetPedidoMigradoSituacaoOrigem(IDMigracao) <> 0 Then
+                Throw New AppException("Não é possível remover a migração desse pedido porque " +
+                                       "o pedido para o qual foi migrado já foi enviado ou recebido.")
+                Return False
+            End If
+            '
             Dim bd As AcessoDados = If(dbTran, New AcessoDados)
             '
             bd.LimparParametros()
@@ -1180,7 +1189,7 @@ Public Class PedidoBLL
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             '
             If dt.Rows.Count = 0 Then
-                Throw New Exception("Não há pedido de origem com o ID informado...")
+                Throw New AppException("Não há pedido de origem com o ID informado...")
             End If
             '
             Dim obj As Object = dt.Rows(0).Item(0)

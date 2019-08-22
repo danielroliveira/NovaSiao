@@ -53,6 +53,7 @@ Partial Class frmReservaProcurar
         Me.chkAlterarSituacao = New System.Windows.Forms.CheckBox()
         Me.btnPrintEtiquetas = New System.Windows.Forms.Button()
         Me.btnPrintListagem = New System.Windows.Forms.Button()
+        Me.btnFinalizar = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.pnlAtivas.SuspendLayout()
         CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -74,7 +75,7 @@ Partial Class frmReservaProcurar
         '
         Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblTitulo.Dock = System.Windows.Forms.DockStyle.None
-        Me.lblTitulo.Location = New System.Drawing.Point(1040, 6)
+        Me.lblTitulo.Location = New System.Drawing.Point(2464, 6)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.lblTitulo.Size = New System.Drawing.Size(226, 34)
         Me.lblTitulo.TabIndex = 2
@@ -389,7 +390,9 @@ Partial Class frmReservaProcurar
         '
         Me.chkAlterarSituacao.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.chkAlterarSituacao.Appearance = System.Windows.Forms.Appearance.Button
+        Me.chkAlterarSituacao.BackColor = System.Drawing.Color.Azure
         Me.chkAlterarSituacao.Enabled = False
+        Me.chkAlterarSituacao.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.chkAlterarSituacao.Image = Global.NovaSiao.My.Resources.Resources.refresh1
         Me.chkAlterarSituacao.Location = New System.Drawing.Point(12, 628)
         Me.chkAlterarSituacao.Name = "chkAlterarSituacao"
@@ -398,16 +401,17 @@ Partial Class frmReservaProcurar
         Me.chkAlterarSituacao.Text = "Alterar Situação"
         Me.chkAlterarSituacao.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         Me.chkAlterarSituacao.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.chkAlterarSituacao.UseVisualStyleBackColor = True
+        Me.chkAlterarSituacao.UseVisualStyleBackColor = False
         '
         'btnPrintEtiquetas
         '
         Me.btnPrintEtiquetas.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnPrintEtiquetas.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnPrintEtiquetas.Enabled = False
+        Me.btnPrintEtiquetas.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btnPrintEtiquetas.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnPrintEtiquetas.Image = Global.NovaSiao.My.Resources.Resources.print
-        Me.btnPrintEtiquetas.Location = New System.Drawing.Point(185, 628)
+        Me.btnPrintEtiquetas.Location = New System.Drawing.Point(358, 628)
         Me.btnPrintEtiquetas.Name = "btnPrintEtiquetas"
         Me.btnPrintEtiquetas.Size = New System.Drawing.Size(121, 41)
         Me.btnPrintEtiquetas.TabIndex = 13
@@ -420,9 +424,10 @@ Partial Class frmReservaProcurar
         '
         Me.btnPrintListagem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnPrintListagem.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnPrintListagem.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btnPrintListagem.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnPrintListagem.Image = Global.NovaSiao.My.Resources.Resources.print
-        Me.btnPrintListagem.Location = New System.Drawing.Point(312, 628)
+        Me.btnPrintListagem.Location = New System.Drawing.Point(485, 628)
         Me.btnPrintListagem.Name = "btnPrintListagem"
         Me.btnPrintListagem.Size = New System.Drawing.Size(121, 41)
         Me.btnPrintListagem.TabIndex = 14
@@ -430,6 +435,24 @@ Partial Class frmReservaProcurar
         Me.btnPrintListagem.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnPrintListagem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnPrintListagem.UseVisualStyleBackColor = True
+        '
+        'btnFinalizar
+        '
+        Me.btnFinalizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnFinalizar.BackColor = System.Drawing.Color.SeaShell
+        Me.btnFinalizar.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnFinalizar.FlatAppearance.BorderColor = System.Drawing.Color.DarkRed
+        Me.btnFinalizar.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+        Me.btnFinalizar.ForeColor = System.Drawing.Color.DarkRed
+        Me.btnFinalizar.Image = Global.NovaSiao.My.Resources.Resources.refresh1
+        Me.btnFinalizar.Location = New System.Drawing.Point(185, 628)
+        Me.btnFinalizar.Name = "btnFinalizar"
+        Me.btnFinalizar.Size = New System.Drawing.Size(167, 41)
+        Me.btnFinalizar.TabIndex = 13
+        Me.btnFinalizar.Text = "&Finalizar Reserva"
+        Me.btnFinalizar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnFinalizar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnFinalizar.UseVisualStyleBackColor = False
         '
         'frmReservaProcurar
         '
@@ -446,6 +469,7 @@ Partial Class frmReservaProcurar
         Me.Controls.Add(Me.Label12)
         Me.Controls.Add(Me.btnNova)
         Me.Controls.Add(Me.btnPrintListagem)
+        Me.Controls.Add(Me.btnFinalizar)
         Me.Controls.Add(Me.btnPrintEtiquetas)
         Me.Controls.Add(Me.btnEditar)
         Me.Controls.Add(Me.btnFechar)
@@ -460,6 +484,7 @@ Partial Class frmReservaProcurar
         Me.Controls.SetChildIndex(Me.btnFechar, 0)
         Me.Controls.SetChildIndex(Me.btnEditar, 0)
         Me.Controls.SetChildIndex(Me.btnPrintEtiquetas, 0)
+        Me.Controls.SetChildIndex(Me.btnFinalizar, 0)
         Me.Controls.SetChildIndex(Me.btnPrintListagem, 0)
         Me.Controls.SetChildIndex(Me.btnNova, 0)
         Me.Controls.SetChildIndex(Me.Label12, 0)
@@ -514,4 +539,5 @@ Partial Class frmReservaProcurar
     Friend WithEvents chkAlterarSituacao As CheckBox
     Friend WithEvents btnPrintEtiquetas As Button
     Friend WithEvents btnPrintListagem As Button
+    Friend WithEvents btnFinalizar As Button
 End Class

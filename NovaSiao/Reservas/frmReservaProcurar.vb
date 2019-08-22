@@ -254,6 +254,11 @@ Public Class frmReservaProcurar
         MsgBox("Em implementação")
     End Sub
     '
+    '--- FINALIZAR
+    Private Sub btnFinalizar_Click(sender As Object, e As EventArgs) Handles btnFinalizar.Click
+
+    End Sub
+    '
 #End Region
     '
 #Region "OUTRAS FUNCOES"
@@ -443,7 +448,7 @@ Public Class frmReservaProcurar
             .FullRowSelect = True
             .SortedColumnsRowsHighlight = BetterListViewSortedColumnsRowsHighlight.ShowAlways
             .View = BetterListViewView.Details
-            .ContextMenuStrip = mnuListagem
+            '.ContextMenuStrip = mnuListagem
             '
             .EndUpdate()
             '
@@ -613,7 +618,11 @@ Public Class frmReservaProcurar
             miOpcao2.Click, miOpcao3.Click, miOpcao4.Click, miOpcao5.Click
         '
         '--- verifica a quantidade de itens selecionados
-        If lstListagem.CheckedItems.Count = 0 Then Exit Sub
+        If lstListagem.CheckedItems.Count = 0 Then
+            AbrirDialog("Necessário selecionar as reservas para alterar a situação...",
+                        "Selecionar", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
         '
         '--- obtem o item escolhido
         Dim mnu As ToolStripMenuItem = DirectCast(sender, ToolStripMenuItem)

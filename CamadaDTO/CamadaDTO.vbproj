@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="clAPagar.vb" />
+    <Compile Include="clAppException.vb" />
     <Compile Include="clAReceber.vb" />
     <Compile Include="clCadastro.vb" />
     <Compile Include="clCaixa.vb" />

@@ -196,8 +196,8 @@ Public Class frmPedido
         btnProcTransportadora.Enabled = compondo
         btnMensagemPadrao.Enabled = compondo
         btnExcluir.Enabled = compondo
-        btnVerificarAdicionar.Enabled = compondo
-        btnProdutosFornecedor.Enabled = compondo
+        btnVerificarAdicionar.Enabled = IIf(_pedido.Situacao = 4, destino, compondo)
+        btnProdutosFornecedor.Enabled = IIf(_pedido.Situacao = 4, destino, compondo)
         btnImportarExportar.Enabled = compondo
         '
     End Sub
@@ -1219,7 +1219,7 @@ Public Class frmPedido
                         frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Abrir o formulário de procura de pedidos..." & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao fazer a Importação do pedido" & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '--- Ampulheta OFF
@@ -1232,7 +1232,46 @@ Public Class frmPedido
     '----------------------------------------------------------------------------------
     Private Sub miMigrarPara_Click(sender As Object, e As EventArgs) Handles miMigrarPara.Click
         '
-
+        If _pedMigrados.Count > 0 Then
+            AbrirDialog("Não é possível migrar um pedido que possui outros pedidos migrados a ele.",
+                        "Pedidos Migrados", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        If Sit <> EnumFlagEstado.RegistroSalvo Then
+            AbrirDialog("É necessário salvar o pedido antes de fazer a migração",
+                        "Necessário Salvamento", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- get the pedido that will be imported
+            Dim frm As New frmPedidoImportarMigrar(False, _pedido.IDFornecedor, _pedido.IDPedido)
+            frm.ShowDialog()
+            '
+            If frm.DialogResult <> DialogResult.OK Then Exit Sub
+            '
+            '--- Realiza a migracao
+            _pedBLL.MakeMigracao(_pedido.IDPedido, frm.propPedido.IDPedido)
+            _pedido.IDMigracao = frm.propPedido.IDPedido
+            _pedido.Situacao = 4
+            _pedido.SituacaoDescricao = "Migrado"
+            lblSituacaoDescricao.DataBindings("Text").ReadValue()
+            VerificaBloqueio()
+            '
+            AbrirDialog("Pedido migrado com sucesso!", "Pedido Migrado",
+                        frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao fazer a migração do pedido" & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '

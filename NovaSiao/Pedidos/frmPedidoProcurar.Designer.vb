@@ -284,7 +284,7 @@ Partial Class frmPedidoProcurar
         Me.mnuOperacoes.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.mnuOperacoes.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miCompondo, Me.miEnviado, Me.miRecebido, Me.miCancelado, Me.miAlteraData, Me.miRemoverMigracao})
         Me.mnuOperacoes.Name = "mnuOperacoes"
-        Me.mnuOperacoes.Size = New System.Drawing.Size(216, 136)
+        Me.mnuOperacoes.Size = New System.Drawing.Size(216, 158)
         '
         'miCompondo
         '
