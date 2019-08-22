@@ -214,6 +214,7 @@ Public Class frmPedido
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao obter a situacao do pedido migrado..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return Nothing
         Finally
             '--- Ampulheta OFF
             Cursor = Cursors.Default
@@ -1198,7 +1199,7 @@ Public Class frmPedido
             Cursor = Cursors.WaitCursor
             '
             '--- get the pedido that will be imported
-            Dim frm As New frmPedidoImportarMigrar(True, _pedido.IDFornecedor, _pedido.IDPedido)
+            Dim frm As New frmPedidoImportarMigrar(True, _pedido.IDFornecedor, _pedido.IDPedido, Me)
             frm.ShowDialog()
             '
             If frm.DialogResult <> DialogResult.OK Then Exit Sub
@@ -1249,7 +1250,7 @@ Public Class frmPedido
             Cursor = Cursors.WaitCursor
             '
             '--- get the pedido that will be imported
-            Dim frm As New frmPedidoImportarMigrar(False, _pedido.IDFornecedor, _pedido.IDPedido)
+            Dim frm As New frmPedidoImportarMigrar(False, _pedido.IDFornecedor, _pedido.IDPedido, Me)
             frm.ShowDialog()
             '
             If frm.DialogResult <> DialogResult.OK Then Exit Sub

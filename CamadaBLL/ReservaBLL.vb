@@ -214,23 +214,36 @@ Public Class ReservaBLL
     '===================================================================================================
     ' GET RESERVA SITUACAO
     '===================================================================================================
-    Public Function ReservaSituacao_GET_DT(Optional _ReservaAtiva As Boolean? = Nothing) As DataTable
-        '
-        Dim SQL As New SQLControl
-        Dim str As String = ""
-        '
-        If IsNothing(_ReservaAtiva) Then
-            str = "SELECT * FROM tblReservaSituacao"
-        Else
-            str = "SELECT * FROM tblReservaSituacao WHERE ReservaAtiva = '" & _ReservaAtiva.ToString & "'"
-        End If
+    Public Function ReservaSituacaoGetList(Optional ReservaAtiva As Boolean? = Nothing) As List(Of clReservaSituacao)
         '
         Try
-            SQL.ExecQuery(str)
+            Dim db As New AcessoDados
+            Dim str As String = ""
             '
-            Using dt As DataTable = SQL.DBDT
-                Return dt
-            End Using
+            If IsNothing(ReservaAtiva) Then
+                str = "SELECT * FROM tblReservaSituacao"
+            Else
+                str = "SELECT * FROM tblReservaSituacao WHERE ReservaAtiva = '" & ReservaAtiva.ToString & "'"
+            End If
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, str)
+            '
+            Dim lst As New List(Of clReservaSituacao)
+            '
+            If dt.Rows.Count = 0 Then Return lst
+            '
+            For Each r As DataRow In dt.Rows
+                Dim sit As New clReservaSituacao
+                '
+                sit.IDSituacaoReserva = r("IDSituacaoReserva")
+                sit.SituacaoReserva = r("SituacaoReserva")
+                sit.ReservaAtiva = r("ReservaAtiva")
+                '
+                lst.Add(sit)
+                '
+            Next
+            '
+            Return lst
             '
         Catch ex As Exception
             Throw ex

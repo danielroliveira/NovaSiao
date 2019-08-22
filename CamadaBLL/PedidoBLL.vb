@@ -284,6 +284,7 @@ Public Class PedidoBLL
         '--- executa a alteracao no DB
         Try
             db.ExecutarManipulacao(CommandType.Text, mySQL)
+            Return True
         Catch ex As Exception
             Throw ex
         End Try

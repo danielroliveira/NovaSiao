@@ -5,26 +5,26 @@ Imports ComponentOwl.BetterListView
 '
 Public Class frmReservaProcurar
     Private resLista As New List(Of clReserva)
-    Private dtSituacao As DataTable
     Private IDProdutoTipo As Integer?
     Private IDFilial As Integer?
-    Private _ReservaAtiva As Boolean?
     Private LiberaAtualizacao As Boolean = False
-    '
-    Friend WithEvents miOpcao1 As ToolStripMenuItem
-    Friend WithEvents miOpcao2 As ToolStripMenuItem
-    Friend WithEvents miOpcao3 As ToolStripMenuItem
-    Friend WithEvents miOpcao4 As ToolStripMenuItem
-    Friend WithEvents miOpcao5 As ToolStripMenuItem
+    Private ReservaSituacao As clReservaSituacao
     '
 #Region "NEW | PROPRIEDADES"
+    '
     Sub New()
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
-        propReservaAtiva = True
+        ReservaSituacao = New clReservaSituacao With {
+            .IDSituacaoReserva = 1,
+            .ReservaAtiva = True,
+            .SituacaoReserva = "Aguardando Pedido"
+            }
+        '
+        DefineLabelSituacao()
         '
         '--- verifica a Filial padrao
         IDFilial = Obter_FilialPadrao()
@@ -37,88 +37,15 @@ Public Class frmReservaProcurar
         '
         '--- preenche a listagem
         Get_Dados()
-        Get_Situacao()
         FormataListagem()
         FiltrarListagem()
-        PreencheCombo_Situacao()
-        cmbIDSituacao.SelectedValue = 1
         '
-        CriaMenuAlteracao()
         LiberaAtualizacao = True
         '
     End Sub
     '
-    Private Property propReservaAtiva() As Boolean?
-        Get
-            Return _ReservaAtiva
-        End Get
-        Set(ByVal value As Boolean?)
-            _ReservaAtiva = value
-            '
-            Select Case value
-                '--- seleciona o RADIO BUTON
-                Case True '--- ATIVAS
-                    rbtAtivas.Checked = True
-                    rbtInativas.Checked = False
-                    '
-                Case False '--- INATIVAS
-                    rbtAtivas.Checked = False
-                    rbtInativas.Checked = True
-                    '
-            End Select
-            '
-            If LiberaAtualizacao = True Then
-                PreencheCombo_Situacao()
-                cmbIDSituacao_SelectedValueChanged(New Object, New EventArgs)
-                CriaMenuAlteracao()
-            End If
-            '
-        End Set
-        '
-    End Property
-    '
-    '--- PREENCHE O COMBO COM AS SITUACOES POSSIVEIS
-    Private Sub PreencheCombo_Situacao()
-        '
-        '--- filtra o DataTable pelo Ativo/Inativo
-        dtSituacao.DefaultView.RowFilter = "ReservaAtiva = " & propReservaAtiva
-        '
-        '--- adiciona a situação de TODAS AS SITUAÇÕES
-        Dim r As DataRow = dtSituacao.NewRow()
-        r("IDSituacaoReserva") = 100
-        r("SituacaoReserva") = IIf(propReservaAtiva = True, "TODAS SITUAÇÕES ATIVAS", "TODAS SITUAÇÕES CONCLUÍDAS")
-        r("ReservaAtiva") = propReservaAtiva
-        dtSituacao.Rows(dtSituacao.Rows.Count - 1).Delete()
-        dtSituacao.Rows.Add(r)
-        '
-        dtSituacao.DefaultView.Sort() = "IDSituacaoReserva"
-        '
-        cmbIDSituacao.DataSource = dtSituacao
-        cmbIDSituacao.ValueMember = "IDSituacaoReserva"
-        cmbIDSituacao.DisplayMember = "SituacaoReserva"
-        '
-        '--- Escolhe o valor DEFAULT para Situacao
-        cmbIDSituacao.SelectedValue = DirectCast(cmbIDSituacao.Items(0), DataRowView)("IDSituacaoReserva")
-        '
-    End Sub
-    '
-    Private Sub Get_Situacao()
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            Dim rBLL As New ReservaBLL
-            dtSituacao = rBLL.ReservaSituacao_GET_DT()
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao obter a situação das reservas..." & vbNewLine &
-            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
-        '
+    Private Sub frmReservaProcurar_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        showToolTip()
     End Sub
     '
     Private Sub Get_Dados()
@@ -131,11 +58,7 @@ Public Class frmReservaProcurar
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            If cmbIDSituacao.SelectedValue = 100 Then '--- TODAS AS SITUACOES
-                resLista = ReservaBLL.Reserva_GET_List(IDFilial, , _ReservaAtiva)
-            Else
-                resLista = ReservaBLL.Reserva_GET_List(IDFilial, cmbIDSituacao.SelectedValue, _ReservaAtiva)
-            End If
+            resLista = ReservaBLL.Reserva_GET_List(IDFilial, ReservaSituacao.IDSituacaoReserva, ReservaSituacao.ReservaAtiva)
             '
         Catch ex As Exception
             MessageBox.Show("Ocorreu exceção ao obter a listagem de Reservas..." & vbNewLine &
@@ -147,6 +70,11 @@ Public Class frmReservaProcurar
             '
         End Try
         '
+    End Sub
+    '
+    Private Sub DefineLabelSituacao()
+        lblReservaAtiva.Text = IIf(ReservaSituacao.ReservaAtiva, "Reservas Ativas", "Reservas Concluídas")
+        lblSituacao.Text = ReservaSituacao.SituacaoReserva
     End Sub
     '
 #End Region
@@ -255,24 +183,42 @@ Public Class frmReservaProcurar
     End Sub
     '
     '--- FINALIZAR
-    Private Sub btnFinalizar_Click(sender As Object, e As EventArgs) Handles btnFinalizar.Click
+    Private Sub btnAlterarSituacao_Click(sender As Object, e As EventArgs) Handles btnAlterarSituacao.Click
 
+    End Sub
+    '
+    Private Sub EscolherSituacao_Click(sender As Object, e As EventArgs) Handles lblReservaAtiva.Click, lblSituacao.Click
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frm As New frmReservaSituacaoProcurar(False, ReservaSituacao, Me)
+            '
+            frm.ShowDialog()
+            If frm.DialogResult <> vbOK Then Exit Sub
+            '
+            ReservaSituacao = frm.ReservaSituacaoEscolhida
+            DefineLabelSituacao()
+            '
+            Get_Dados()
+            FiltrarListagem()
+            '
+            pnlAtivas.BackColor = Color.WhiteSmoke
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir o formulário de Procura de Situações..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
     End Sub
     '
 #End Region
     '
 #Region "OUTRAS FUNCOES"
-    '
-    '--- QUANDO ATUALIZAR O COMBO SITUACAO
-    Private Sub cmbIDSituacao_SelectedValueChanged(sender As Object, e As EventArgs) Handles cmbIDSituacao.SelectedValueChanged
-        '
-        If LiberaAtualizacao Then
-            Get_Dados()
-            FiltrarListagem()
-            chkAlterarSituacao.Enabled = False
-        End If
-        '
-    End Sub
     '
     '--- BLOQUEIA PRESS A TECLA (+)
     Private Sub me_KeyPress(sender As Object, e As KeyPressEventArgs) Handles Me.KeyPress
@@ -308,23 +254,11 @@ Public Class frmReservaProcurar
     '
     '--- AO PRESSIONAR A TECLA (ENTER) ENVIAR (TAB)
     Private Sub txt_KeyDown(sender As Object, e As KeyEventArgs) Handles txtNomeCliente.KeyDown,
-        txtProdutoTipo.KeyDown, rbtInativas.KeyDown, rbtAtivas.KeyDown
+        txtProdutoTipo.KeyDown
         '
         If e.KeyCode = Keys.Enter Then
             e.SuppressKeyPress = True
             SendKeys.Send("{Tab}")
-        End If
-        '
-    End Sub
-    '
-    '--- ATIVA | INATIVA
-    Private Sub rbt_CheckedChanged(sender As Object, e As EventArgs) Handles rbtAtivas.CheckedChanged,
-        rbtInativas.CheckedChanged
-        '
-        If rbtAtivas.Checked = True AndAlso propReservaAtiva = False Then
-            propReservaAtiva = True
-        ElseIf rbtInativas.Checked = True AndAlso propReservaAtiva = True Then
-            propReservaAtiva = False
         End If
         '
     End Sub
@@ -448,7 +382,6 @@ Public Class frmReservaProcurar
             .FullRowSelect = True
             .SortedColumnsRowsHighlight = BetterListViewSortedColumnsRowsHighlight.ShowAlways
             .View = BetterListViewView.Details
-            '.ContextMenuStrip = mnuListagem
             '
             .EndUpdate()
             '
@@ -496,13 +429,11 @@ Public Class frmReservaProcurar
     '--- QUANDO MARCA UM ITEM HABILITA O BTN ALTERAR
     Private Sub lstListagem_ItemChecked(sender As Object, eventArgs As BetterListViewItemCheckedEventArgs) Handles lstListagem.ItemChecked
         '
-        chkAlterarSituacao.Checked = False
-        '
         If lstListagem.CheckedItems.Count > 0 Then
-            chkAlterarSituacao.Enabled = True
+            btnAlterarSituacao.Enabled = True
             btnPrintEtiquetas.Enabled = True
         Else
-            chkAlterarSituacao.Enabled = False
+            btnAlterarSituacao.Enabled = False
             btnPrintEtiquetas.Enabled = False
         End If
         '
@@ -521,101 +452,8 @@ Public Class frmReservaProcurar
     '
 #Region "MENU SUSPENSO ALTERAR SITUACAO"
     '
-    '--- REVELA O MENU DE ALTERACAO QUANDO PRESSIONA O BOTAO
-    Private Sub chkAlterarSituacao_CheckedChanged(sender As Object, e As EventArgs) Handles chkAlterarSituacao.CheckedChanged
-        '
-        If chkAlterarSituacao.Checked = False Then
-            mnuListagem.Hide()
-        Else
-            '
-            '--- desabilita o menu caso seja igual ao escolhido
-            For Each t As ToolStripMenuItem In mnuListagem.Items
-                If t.Tag = cmbIDSituacao.SelectedValue Then
-                    t.Enabled = False
-                Else
-                    t.Enabled = True
-                End If
-            Next
-            '
-            '--- revela o menu
-            Dim p As New Point(chkAlterarSituacao.Location.X + chkAlterarSituacao.Width, chkAlterarSituacao.Location.Y)
-            'mnuListagem.Show(Me, p)
-            mnuListagem.Show(Me, p, ToolStripDropDownDirection.AboveLeft)
-            '
-        End If
-        '
-    End Sub
-    '
-    Private Sub chkAlterarSituacao_LostFocus(sender As Object, e As EventArgs) Handles chkAlterarSituacao.LostFocus
-        chkAlterarSituacao.Checked = False
-    End Sub
-    '
-    '--- CRIAR O MENU ALTERACAO
-    Private Sub CriaMenuAlteracao()
-
-        '--- limpa todas os itemns
-        mnuListagem.Items.Clear()
-
-        miOpcao1 = New ToolStripMenuItem()
-        miOpcao2 = New ToolStripMenuItem()
-        miOpcao3 = New ToolStripMenuItem()
-        miOpcao4 = New ToolStripMenuItem()
-        miOpcao5 = New ToolStripMenuItem()
-
-        Dim viewR As DataView = New DataView(dtSituacao)
-        viewR.RowFilter = "IDSituacaoReserva <> 100 AND ReservaAtiva = " & propReservaAtiva
-
-        If dtSituacao.Rows.Count > 0 Then
-
-            Dim maxItens As Byte = 1
-
-            For Each r In viewR.ToTable.Rows
-
-                If r("ReservaAtiva") = propReservaAtiva Then
-
-                    Select Case maxItens
-                        Case 1
-                            miOpcao1.Text = r("SituacaoReserva")
-                            miOpcao1.Tag = r("IDSituacaoReserva")
-                            miOpcao1.Image = Global.NovaSiao.My.Resources.Resources.refresh
-                            Me.mnuListagem.Items.Add(miOpcao1)
-                        Case 2
-                            miOpcao2.Text = r("SituacaoReserva")
-                            miOpcao2.Tag = r("IDSituacaoReserva")
-                            miOpcao2.Image = Global.NovaSiao.My.Resources.Resources.refresh
-                            Me.mnuListagem.Items.Add(miOpcao2)
-                        Case 3
-                            miOpcao3.Text = r("SituacaoReserva")
-                            miOpcao3.Tag = r("IDSituacaoReserva")
-                            miOpcao3.Image = Global.NovaSiao.My.Resources.Resources.refresh
-                            Me.mnuListagem.Items.Add(miOpcao3)
-                        Case 4
-                            miOpcao4.Text = r("SituacaoReserva")
-                            miOpcao4.Tag = r("IDSituacaoReserva")
-                            miOpcao4.Image = Global.NovaSiao.My.Resources.Resources.refresh
-                            Me.mnuListagem.Items.Add(miOpcao4)
-                        Case 5
-                            miOpcao5.Text = r("SituacaoReserva")
-                            miOpcao5.Tag = r("IDSituacaoReserva")
-                            miOpcao5.Image = Global.NovaSiao.My.Resources.Resources.refresh
-                            Me.mnuListagem.Items.Add(miOpcao5)
-                    End Select
-
-                    maxItens += 1
-
-                End If
-
-                If maxItens > 5 Then Exit For
-
-            Next
-
-        End If
-
-    End Sub
-    '
     '--- ALTERAR A SITUACAO
-    Private Sub Alterar_Situacao_Click(sender As Object, e As EventArgs) Handles miOpcao1.Click,
-            miOpcao2.Click, miOpcao3.Click, miOpcao4.Click, miOpcao5.Click
+    Private Sub Alterar_Situacao(sender As Object, e As EventArgs)
         '
         '--- verifica a quantidade de itens selecionados
         If lstListagem.CheckedItems.Count = 0 Then
@@ -665,5 +503,42 @@ Public Class frmReservaProcurar
     End Sub
     '
 #End Region
+    '
+#Region "VISUAL DESIGN"
+    '
+    Sub me_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
+        pnlAtivas.BackColor = Color.WhiteSmoke
+    End Sub
+    '
+    Private Sub panel_MouseEnter(sender As Object, e As EventArgs) Handles lblSituacao.MouseEnter, lblReservaAtiva.MouseEnter, pnlAtivas.MouseEnter
+        pnlAtivas.BackColor = Color.Azure
+    End Sub
+    '
+    Private Sub showToolTip()
+        '
+        Dim myControl As Control = pnlAtivas
+        '
+        ' Cria a ToolTip e associa com o Form container.
+        Dim toolTip1 As New ToolTip()
+        '
+        ' Define o delay para a ToolTip.
+        With toolTip1
+            .AutoPopDelay = 2000
+            .InitialDelay = 1000
+            .ReshowDelay = 500
+            .IsBalloon = True
+            .UseAnimation = True
+            .UseFading = True
+        End With
+        '
+        If myControl.Tag = "" Then
+            toolTip1.Show("Clique aqui para alterar a Situação...", myControl, myControl.Width - 30, -40, 1000)
+        Else
+            toolTip1.Show(myControl.Tag, myControl, myControl.Width - 30, -40, 1000)
+        End If
+        '
+    End Sub
+    '
+#End Region '/ VISUAL DESIGN
     '
 End Class

@@ -491,3 +491,19 @@ Public Class clReserva
 #End Region
     '
 End Class
+'
+' CLASSE RESERVA SITUACAO
+'==================================================================================
+Public Class clReservaSituacao
+    '
+    Sub New()
+        IDSituacaoReserva = Nothing
+        SituacaoReserva = ""
+        ReservaAtiva = Nothing
+    End Sub
+    '
+    Property IDSituacaoReserva As Byte
+    Property SituacaoReserva As String
+    Property ReservaAtiva As Boolean
+    '
+End Class

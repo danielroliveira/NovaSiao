@@ -19,7 +19,6 @@ Partial Class frmReservaProcurar
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
         Me.txtNomeCliente = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.btnFechar = New System.Windows.Forms.Button()
@@ -29,14 +28,10 @@ Partial Class frmReservaProcurar
         Me.txtProdutoTipo = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.btnNova = New System.Windows.Forms.Button()
-        Me.pnlAtivas = New System.Windows.Forms.Panel()
-        Me.rbtInativas = New System.Windows.Forms.RadioButton()
-        Me.rbtAtivas = New System.Windows.Forms.RadioButton()
-        Me.mnuListagem = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lblReservaAtiva = New System.Windows.Forms.Label()
+        Me.lblSituacao = New System.Windows.Forms.Label()
         Me.txtProduto = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.cmbIDSituacao = New Controles.ComboBox_OnlyValues()
         Me.lblFilial = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.lstListagem = New ComponentOwl.BetterListView.BetterListView()
@@ -50,13 +45,14 @@ Partial Class frmReservaProcurar
         Me.clnFornecedor = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
         Me.clnFabricante = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
         Me.clnProdutoTipo = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.chkAlterarSituacao = New System.Windows.Forms.CheckBox()
         Me.btnPrintEtiquetas = New System.Windows.Forms.Button()
         Me.btnPrintListagem = New System.Windows.Forms.Button()
-        Me.btnFinalizar = New System.Windows.Forms.Button()
+        Me.btnAlterarSituacao = New System.Windows.Forms.Button()
+        Me.pnlAtivas = New VIBlend.WinForms.Controls.vPanel()
         Me.Panel1.SuspendLayout()
-        Me.pnlAtivas.SuspendLayout()
         CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.pnlAtivas.Content.SuspendLayout()
+        Me.pnlAtivas.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -73,13 +69,12 @@ Partial Class frmReservaProcurar
         '
         'lblTitulo
         '
-        Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lblTitulo.Dock = System.Windows.Forms.DockStyle.None
-        Me.lblTitulo.Location = New System.Drawing.Point(2464, 6)
+        Me.lblTitulo.Location = New System.Drawing.Point(1059, 0)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblTitulo.Size = New System.Drawing.Size(226, 34)
+        Me.lblTitulo.Size = New System.Drawing.Size(241, 50)
         Me.lblTitulo.TabIndex = 2
         Me.lblTitulo.Text = "Reservas - Procurar"
+        Me.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'txtNomeCliente
         '
@@ -196,51 +191,29 @@ Partial Class frmReservaProcurar
         Me.btnNova.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnNova.UseVisualStyleBackColor = True
         '
-        'pnlAtivas
+        'lblReservaAtiva
         '
-        Me.pnlAtivas.BackColor = System.Drawing.Color.FromArgb(CType(CType(223, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(231, Byte), Integer))
-        Me.pnlAtivas.Controls.Add(Me.rbtInativas)
-        Me.pnlAtivas.Controls.Add(Me.rbtAtivas)
-        Me.pnlAtivas.Location = New System.Drawing.Point(613, 61)
-        Me.pnlAtivas.Name = "pnlAtivas"
-        Me.pnlAtivas.Size = New System.Drawing.Size(253, 39)
-        Me.pnlAtivas.TabIndex = 8
+        Me.lblReservaAtiva.BackColor = System.Drawing.Color.Transparent
+        Me.lblReservaAtiva.Dock = System.Windows.Forms.DockStyle.Top
+        Me.lblReservaAtiva.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblReservaAtiva.Location = New System.Drawing.Point(0, 0)
+        Me.lblReservaAtiva.Name = "lblReservaAtiva"
+        Me.lblReservaAtiva.Size = New System.Drawing.Size(312, 30)
+        Me.lblReservaAtiva.TabIndex = 18
+        Me.lblReservaAtiva.Text = "Reservas Ativas"
+        Me.lblReservaAtiva.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'rbtInativas
+        'lblSituacao
         '
-        Me.rbtInativas.AutoSize = True
-        Me.rbtInativas.Location = New System.Drawing.Point(128, 7)
-        Me.rbtInativas.Name = "rbtInativas"
-        Me.rbtInativas.Size = New System.Drawing.Size(98, 23)
-        Me.rbtInativas.TabIndex = 1
-        Me.rbtInativas.TabStop = True
-        Me.rbtInativas.Text = "Concluídas"
-        Me.rbtInativas.UseVisualStyleBackColor = True
-        '
-        'rbtAtivas
-        '
-        Me.rbtAtivas.AutoSize = True
-        Me.rbtAtivas.Location = New System.Drawing.Point(29, 7)
-        Me.rbtAtivas.Name = "rbtAtivas"
-        Me.rbtAtivas.Size = New System.Drawing.Size(67, 23)
-        Me.rbtAtivas.TabIndex = 0
-        Me.rbtAtivas.TabStop = True
-        Me.rbtAtivas.Text = "Ativas"
-        Me.rbtAtivas.UseVisualStyleBackColor = True
-        '
-        'mnuListagem
-        '
-        Me.mnuListagem.Name = "MenuFab"
-        Me.mnuListagem.Size = New System.Drawing.Size(61, 4)
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(543, 109)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(64, 19)
-        Me.Label1.TabIndex = 9
-        Me.Label1.Text = "Situação"
+        Me.lblSituacao.BackColor = System.Drawing.Color.Transparent
+        Me.lblSituacao.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.lblSituacao.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSituacao.Location = New System.Drawing.Point(0, 31)
+        Me.lblSituacao.Name = "lblSituacao"
+        Me.lblSituacao.Size = New System.Drawing.Size(312, 28)
+        Me.lblSituacao.TabIndex = 18
+        Me.lblSituacao.Text = "Aguardando Pedido"
+        Me.lblSituacao.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'txtProduto
         '
@@ -259,17 +232,6 @@ Partial Class frmReservaProcurar
         Me.Label3.Size = New System.Drawing.Size(59, 19)
         Me.Label3.TabIndex = 4
         Me.Label3.Text = "Produto"
-        '
-        'cmbIDSituacao
-        '
-        Me.cmbIDSituacao.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-        Me.cmbIDSituacao.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cmbIDSituacao.FormattingEnabled = True
-        Me.cmbIDSituacao.Location = New System.Drawing.Point(613, 106)
-        Me.cmbIDSituacao.Name = "cmbIDSituacao"
-        Me.cmbIDSituacao.RestrictContentToListItems = True
-        Me.cmbIDSituacao.Size = New System.Drawing.Size(253, 27)
-        Me.cmbIDSituacao.TabIndex = 10
         '
         'lblFilial
         '
@@ -386,23 +348,6 @@ Partial Class frmReservaProcurar
         Me.clnProdutoTipo.Name = "clnProdutoTipo"
         Me.clnProdutoTipo.Text = "Tipo de Produto"
         '
-        'chkAlterarSituacao
-        '
-        Me.chkAlterarSituacao.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.chkAlterarSituacao.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkAlterarSituacao.BackColor = System.Drawing.Color.Azure
-        Me.chkAlterarSituacao.Enabled = False
-        Me.chkAlterarSituacao.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.chkAlterarSituacao.Image = Global.NovaSiao.My.Resources.Resources.refresh1
-        Me.chkAlterarSituacao.Location = New System.Drawing.Point(12, 628)
-        Me.chkAlterarSituacao.Name = "chkAlterarSituacao"
-        Me.chkAlterarSituacao.Size = New System.Drawing.Size(167, 41)
-        Me.chkAlterarSituacao.TabIndex = 12
-        Me.chkAlterarSituacao.Text = "Alterar Situação"
-        Me.chkAlterarSituacao.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        Me.chkAlterarSituacao.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.chkAlterarSituacao.UseVisualStyleBackColor = False
-        '
         'btnPrintEtiquetas
         '
         Me.btnPrintEtiquetas.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -411,7 +356,7 @@ Partial Class frmReservaProcurar
         Me.btnPrintEtiquetas.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btnPrintEtiquetas.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnPrintEtiquetas.Image = Global.NovaSiao.My.Resources.Resources.print
-        Me.btnPrintEtiquetas.Location = New System.Drawing.Point(358, 628)
+        Me.btnPrintEtiquetas.Location = New System.Drawing.Point(185, 628)
         Me.btnPrintEtiquetas.Name = "btnPrintEtiquetas"
         Me.btnPrintEtiquetas.Size = New System.Drawing.Size(121, 41)
         Me.btnPrintEtiquetas.TabIndex = 13
@@ -427,7 +372,7 @@ Partial Class frmReservaProcurar
         Me.btnPrintListagem.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.btnPrintListagem.ForeColor = System.Drawing.Color.DarkBlue
         Me.btnPrintListagem.Image = Global.NovaSiao.My.Resources.Resources.print
-        Me.btnPrintListagem.Location = New System.Drawing.Point(485, 628)
+        Me.btnPrintListagem.Location = New System.Drawing.Point(312, 628)
         Me.btnPrintListagem.Name = "btnPrintListagem"
         Me.btnPrintListagem.Size = New System.Drawing.Size(121, 41)
         Me.btnPrintListagem.TabIndex = 14
@@ -436,72 +381,94 @@ Partial Class frmReservaProcurar
         Me.btnPrintListagem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnPrintListagem.UseVisualStyleBackColor = True
         '
-        'btnFinalizar
+        'btnAlterarSituacao
         '
-        Me.btnFinalizar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnFinalizar.BackColor = System.Drawing.Color.SeaShell
-        Me.btnFinalizar.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnFinalizar.FlatAppearance.BorderColor = System.Drawing.Color.DarkRed
-        Me.btnFinalizar.FlatStyle = System.Windows.Forms.FlatStyle.Popup
-        Me.btnFinalizar.ForeColor = System.Drawing.Color.DarkRed
-        Me.btnFinalizar.Image = Global.NovaSiao.My.Resources.Resources.refresh1
-        Me.btnFinalizar.Location = New System.Drawing.Point(185, 628)
-        Me.btnFinalizar.Name = "btnFinalizar"
-        Me.btnFinalizar.Size = New System.Drawing.Size(167, 41)
-        Me.btnFinalizar.TabIndex = 13
-        Me.btnFinalizar.Text = "&Finalizar Reserva"
-        Me.btnFinalizar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnFinalizar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnFinalizar.UseVisualStyleBackColor = False
+        Me.btnAlterarSituacao.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnAlterarSituacao.BackColor = System.Drawing.Color.SeaShell
+        Me.btnAlterarSituacao.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.btnAlterarSituacao.Enabled = False
+        Me.btnAlterarSituacao.FlatAppearance.BorderColor = System.Drawing.Color.DarkRed
+        Me.btnAlterarSituacao.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnAlterarSituacao.ForeColor = System.Drawing.Color.DarkRed
+        Me.btnAlterarSituacao.Image = Global.NovaSiao.My.Resources.Resources.refresh1
+        Me.btnAlterarSituacao.Location = New System.Drawing.Point(12, 628)
+        Me.btnAlterarSituacao.Name = "btnAlterarSituacao"
+        Me.btnAlterarSituacao.Size = New System.Drawing.Size(167, 41)
+        Me.btnAlterarSituacao.TabIndex = 13
+        Me.btnAlterarSituacao.Text = "&Alterar Reserva"
+        Me.btnAlterarSituacao.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnAlterarSituacao.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnAlterarSituacao.UseVisualStyleBackColor = False
+        '
+        'pnlAtivas
+        '
+        Me.pnlAtivas.AllowAnimations = True
+        Me.pnlAtivas.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.pnlAtivas.BorderRadius = 0
+        '
+        'pnlAtivas.Content
+        '
+        Me.pnlAtivas.Content.AutoScroll = True
+        Me.pnlAtivas.Content.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.pnlAtivas.Content.Controls.Add(Me.lblSituacao)
+        Me.pnlAtivas.Content.Controls.Add(Me.lblReservaAtiva)
+        Me.pnlAtivas.Content.Location = New System.Drawing.Point(1, 1)
+        Me.pnlAtivas.Content.Name = "Content"
+        Me.pnlAtivas.Content.Size = New System.Drawing.Size(312, 59)
+        Me.pnlAtivas.Content.TabIndex = 3
+        Me.pnlAtivas.Cursor = System.Windows.Forms.Cursors.Hand
+        Me.pnlAtivas.CustomScrollersIntersectionColor = System.Drawing.Color.Empty
+        Me.pnlAtivas.Location = New System.Drawing.Point(973, 64)
+        Me.pnlAtivas.Name = "pnlAtivas"
+        Me.pnlAtivas.Opacity = 1.0!
+        Me.pnlAtivas.PanelBorderColor = System.Drawing.Color.Transparent
+        Me.pnlAtivas.Size = New System.Drawing.Size(314, 61)
+        Me.pnlAtivas.TabIndex = 18
+        Me.pnlAtivas.Text = "VPanel1"
+        Me.pnlAtivas.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
         '
         'frmReservaProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1300, 680)
-        Me.Controls.Add(Me.chkAlterarSituacao)
+        Me.Controls.Add(Me.pnlAtivas)
         Me.Controls.Add(Me.lstListagem)
         Me.Controls.Add(Me.txtProduto)
-        Me.Controls.Add(Me.cmbIDSituacao)
-        Me.Controls.Add(Me.pnlAtivas)
         Me.Controls.Add(Me.btnTipo)
         Me.Controls.Add(Me.txtProdutoTipo)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label12)
         Me.Controls.Add(Me.btnNova)
         Me.Controls.Add(Me.btnPrintListagem)
-        Me.Controls.Add(Me.btnFinalizar)
+        Me.Controls.Add(Me.btnAlterarSituacao)
         Me.Controls.Add(Me.btnPrintEtiquetas)
         Me.Controls.Add(Me.btnEditar)
         Me.Controls.Add(Me.btnFechar)
-        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtNomeCliente)
         Me.Name = "frmReservaProcurar"
         Me.Text = "Procurar Saída de Produto"
         Me.Controls.SetChildIndex(Me.txtNomeCliente, 0)
         Me.Controls.SetChildIndex(Me.Label2, 0)
-        Me.Controls.SetChildIndex(Me.Label1, 0)
         Me.Controls.SetChildIndex(Me.btnFechar, 0)
         Me.Controls.SetChildIndex(Me.btnEditar, 0)
         Me.Controls.SetChildIndex(Me.btnPrintEtiquetas, 0)
-        Me.Controls.SetChildIndex(Me.btnFinalizar, 0)
+        Me.Controls.SetChildIndex(Me.btnAlterarSituacao, 0)
         Me.Controls.SetChildIndex(Me.btnPrintListagem, 0)
         Me.Controls.SetChildIndex(Me.btnNova, 0)
         Me.Controls.SetChildIndex(Me.Label12, 0)
         Me.Controls.SetChildIndex(Me.Label3, 0)
         Me.Controls.SetChildIndex(Me.txtProdutoTipo, 0)
         Me.Controls.SetChildIndex(Me.btnTipo, 0)
-        Me.Controls.SetChildIndex(Me.pnlAtivas, 0)
-        Me.Controls.SetChildIndex(Me.cmbIDSituacao, 0)
         Me.Controls.SetChildIndex(Me.txtProduto, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.lstListagem, 0)
-        Me.Controls.SetChildIndex(Me.chkAlterarSituacao, 0)
+        Me.Controls.SetChildIndex(Me.pnlAtivas, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.pnlAtivas.ResumeLayout(False)
-        Me.pnlAtivas.PerformLayout()
         CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.pnlAtivas.Content.ResumeLayout(False)
+        Me.pnlAtivas.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -515,12 +482,6 @@ Partial Class frmReservaProcurar
     Friend WithEvents txtProdutoTipo As TextBox
     Friend WithEvents Label12 As Label
     Friend WithEvents btnNova As Button
-    Friend WithEvents pnlAtivas As Panel
-    Friend WithEvents rbtInativas As RadioButton
-    Friend WithEvents rbtAtivas As RadioButton
-    Friend WithEvents mnuListagem As ContextMenuStrip
-    Friend WithEvents cmbIDSituacao As Controles.ComboBox_OnlyValues
-    Friend WithEvents Label1 As Label
     Friend WithEvents txtProduto As TextBox
     Friend WithEvents Label3 As Label
     Friend WithEvents lblFilial As Label
@@ -536,8 +497,10 @@ Partial Class frmReservaProcurar
     Friend WithEvents clnFornecedor As ComponentOwl.BetterListView.BetterListViewColumnHeader
     Friend WithEvents clnFabricante As ComponentOwl.BetterListView.BetterListViewColumnHeader
     Friend WithEvents clnProdutoTipo As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents chkAlterarSituacao As CheckBox
     Friend WithEvents btnPrintEtiquetas As Button
     Friend WithEvents btnPrintListagem As Button
-    Friend WithEvents btnFinalizar As Button
+    Friend WithEvents btnAlterarSituacao As Button
+    Friend WithEvents lblSituacao As Label
+    Friend WithEvents lblReservaAtiva As Label
+    Friend WithEvents pnlAtivas As VIBlend.WinForms.Controls.vPanel
 End Class

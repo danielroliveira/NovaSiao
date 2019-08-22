@@ -14,7 +14,7 @@ Public Class frmPedidoImportarMigrar
     '
 #Region "SUB NEW"
     '
-    Sub New(IsImportar As Boolean, IDFornecedor As Integer?, IDPedidoOrigem As Integer)
+    Sub New(IsImportar As Boolean, IDFornecedor As Integer?, IDPedidoOrigem As Integer, formOrigem As Form)
         '
         ' This call is required by the designer.
         InitializeComponent()
@@ -24,6 +24,7 @@ Public Class frmPedidoImportarMigrar
         txtFilial.Text = ObterDefault("FilialDescricao")
         _IDFornecedor = IDFornecedor
         _IDPedidoOrigem = IDPedidoOrigem
+        _formOrigem = formOrigem
         '
         If IsImportar Then
             lblTitulo.Text = "Importar Pedido"

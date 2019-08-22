@@ -808,6 +808,12 @@
     <Compile Include="Reservas\frmReservaProcurar.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Reservas\frmReservaSituacaoProcurar.designer.vb">
+      <DependentUpon>frmReservaSituacaoProcurar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reservas\frmReservaSituacaoProcurar.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Simples\frmAPagarReceberSimples.Designer.vb">
       <DependentUpon>frmAPagarReceberSimples.vb</DependentUpon>
     </Compile>
@@ -1247,6 +1253,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reservas\frmReservaProcurar.resx">
       <DependentUpon>frmReservaProcurar.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reservas\frmReservaSituacaoProcurar.resx">
+      <DependentUpon>frmReservaSituacaoProcurar.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Simples\frmAPagarReceberSimples.resx">
       <DependentUpon>frmAPagarReceberSimples.vb</DependentUpon>
