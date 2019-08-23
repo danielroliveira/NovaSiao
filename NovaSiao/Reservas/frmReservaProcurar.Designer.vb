@@ -19,6 +19,7 @@ Partial Class frmReservaProcurar
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.txtNomeCliente = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.btnFechar = New System.Windows.Forms.Button()
@@ -45,14 +46,24 @@ Partial Class frmReservaProcurar
         Me.clnFornecedor = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
         Me.clnFabricante = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
         Me.clnProdutoTipo = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
+        Me.mnuReserva = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.miEditarReserva = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miExcluirReserva = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.miAbrirPedido = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miDesassociarDoPedido = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnPrintEtiquetas = New System.Windows.Forms.Button()
         Me.btnPrintListagem = New System.Windows.Forms.Button()
         Me.btnAlterarSituacao = New System.Windows.Forms.Button()
         Me.pnlAtivas = New VIBlend.WinForms.Controls.vPanel()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
         Me.Panel1.SuspendLayout()
         CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mnuReserva.SuspendLayout()
         Me.pnlAtivas.Content.SuspendLayout()
         Me.pnlAtivas.SuspendLayout()
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -277,6 +288,7 @@ Partial Class frmReservaProcurar
         Me.lstListagem.Columns.Add(Me.clnFornecedor)
         Me.lstListagem.Columns.Add(Me.clnFabricante)
         Me.lstListagem.Columns.Add(Me.clnProdutoTipo)
+        Me.lstListagem.ContextMenuStrip = Me.mnuReserva
         Me.lstListagem.Font = New System.Drawing.Font("Pathway Gothic One", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lstListagem.ForeColorColumns = System.Drawing.Color.Black
         Me.lstListagem.HeaderStyle = ComponentOwl.BetterListView.BetterListViewHeaderStyle.Sortable
@@ -348,6 +360,46 @@ Partial Class frmReservaProcurar
         Me.clnProdutoTipo.Name = "clnProdutoTipo"
         Me.clnProdutoTipo.Text = "Tipo de Produto"
         '
+        'mnuReserva
+        '
+        Me.mnuReserva.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.mnuReserva.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miEditarReserva, Me.miExcluirReserva, Me.ToolStripSeparator1, Me.miAbrirPedido, Me.miDesassociarDoPedido})
+        Me.mnuReserva.Name = "mnuReserva"
+        Me.mnuReserva.Size = New System.Drawing.Size(215, 98)
+        '
+        'miEditarReserva
+        '
+        Me.miEditarReserva.Image = Global.NovaSiao.My.Resources.Resources.editar
+        Me.miEditarReserva.Name = "miEditarReserva"
+        Me.miEditarReserva.Size = New System.Drawing.Size(214, 22)
+        Me.miEditarReserva.Text = "Editar Reserva"
+        '
+        'miExcluirReserva
+        '
+        Me.miExcluirReserva.Image = Global.NovaSiao.My.Resources.Resources.delete
+        Me.miExcluirReserva.Name = "miExcluirReserva"
+        Me.miExcluirReserva.Size = New System.Drawing.Size(214, 22)
+        Me.miExcluirReserva.Text = "Excluir Reserva"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(211, 6)
+        '
+        'miAbrirPedido
+        '
+        Me.miAbrirPedido.Image = Global.NovaSiao.My.Resources.Resources.full_page
+        Me.miAbrirPedido.Name = "miAbrirPedido"
+        Me.miAbrirPedido.Size = New System.Drawing.Size(214, 22)
+        Me.miAbrirPedido.Text = "Abrir Pedido"
+        '
+        'miDesassociarDoPedido
+        '
+        Me.miDesassociarDoPedido.Image = Global.NovaSiao.My.Resources.Resources.delete_page_24px
+        Me.miDesassociarDoPedido.Name = "miDesassociarDoPedido"
+        Me.miDesassociarDoPedido.Size = New System.Drawing.Size(214, 22)
+        Me.miDesassociarDoPedido.Text = "Desassociar do Pedido"
+        '
         'btnPrintEtiquetas
         '
         Me.btnPrintEtiquetas.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -395,7 +447,7 @@ Partial Class frmReservaProcurar
         Me.btnAlterarSituacao.Name = "btnAlterarSituacao"
         Me.btnAlterarSituacao.Size = New System.Drawing.Size(167, 41)
         Me.btnAlterarSituacao.TabIndex = 13
-        Me.btnAlterarSituacao.Text = "&Alterar Reserva"
+        Me.btnAlterarSituacao.Text = "&Alterar Situação"
         Me.btnAlterarSituacao.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnAlterarSituacao.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnAlterarSituacao.UseVisualStyleBackColor = False
@@ -427,10 +479,35 @@ Partial Class frmReservaProcurar
         Me.pnlAtivas.Text = "VPanel1"
         Me.pnlAtivas.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
         '
+        'Label15
+        '
+        Me.Label15.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.Label15.AutoSize = True
+        Me.Label15.BackColor = System.Drawing.Color.Transparent
+        Me.Label15.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label15.Location = New System.Drawing.Point(510, 642)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(121, 15)
+        Me.Label15.TabIndex = 20
+        Me.Label15.Text = "Vinculada ao Pedido"
+        '
+        'PictureBox4
+        '
+        Me.PictureBox4.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.PictureBox4.BackColor = System.Drawing.Color.PeachPuff
+        Me.PictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.PictureBox4.Location = New System.Drawing.Point(484, 639)
+        Me.PictureBox4.Name = "PictureBox4"
+        Me.PictureBox4.Size = New System.Drawing.Size(20, 20)
+        Me.PictureBox4.TabIndex = 19
+        Me.PictureBox4.TabStop = False
+        '
         'frmReservaProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1300, 680)
+        Me.Controls.Add(Me.Label15)
+        Me.Controls.Add(Me.PictureBox4)
         Me.Controls.Add(Me.pnlAtivas)
         Me.Controls.Add(Me.lstListagem)
         Me.Controls.Add(Me.txtProduto)
@@ -446,6 +523,7 @@ Partial Class frmReservaProcurar
         Me.Controls.Add(Me.btnFechar)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.txtNomeCliente)
+        Me.KeyPreview = True
         Me.Name = "frmReservaProcurar"
         Me.Text = "Procurar Saída de Produto"
         Me.Controls.SetChildIndex(Me.txtNomeCliente, 0)
@@ -464,11 +542,15 @@ Partial Class frmReservaProcurar
         Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.lstListagem, 0)
         Me.Controls.SetChildIndex(Me.pnlAtivas, 0)
+        Me.Controls.SetChildIndex(Me.PictureBox4, 0)
+        Me.Controls.SetChildIndex(Me.Label15, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.mnuReserva.ResumeLayout(False)
         Me.pnlAtivas.Content.ResumeLayout(False)
         Me.pnlAtivas.ResumeLayout(False)
+        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -503,4 +585,12 @@ Partial Class frmReservaProcurar
     Friend WithEvents lblSituacao As Label
     Friend WithEvents lblReservaAtiva As Label
     Friend WithEvents pnlAtivas As VIBlend.WinForms.Controls.vPanel
+    Friend WithEvents Label15 As Label
+    Friend WithEvents PictureBox4 As PictureBox
+    Friend WithEvents mnuReserva As ContextMenuStrip
+    Friend WithEvents miEditarReserva As ToolStripMenuItem
+    Friend WithEvents miExcluirReserva As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents miAbrirPedido As ToolStripMenuItem
+    Friend WithEvents miDesassociarDoPedido As ToolStripMenuItem
 End Class

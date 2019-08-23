@@ -244,6 +244,9 @@ Public Class PedidoBLL
                                           NewSituacao As Byte,
                                           AlteracaoData As Date) As Boolean
         '
+        Throw New AppException("fazer com que haja uma verificacao das reservas anexadas ao pedido para alteracao da situacao delas...")
+        Return False
+        '
         Dim db As New AcessoDados
         Dim mySQL As String = ""
         '

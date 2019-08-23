@@ -75,18 +75,19 @@ Public Class ReservaBLL
         db.AdicionarParametros("@IDFornecedor", If(myReserva.IDFornecedor, DBNull.Value))
         db.AdicionarParametros("@IDFabricante", If(myReserva.IDFabricante, DBNull.Value))
         db.AdicionarParametros("@IDProdutoTipo", If(myReserva.IDProdutoTipo, DBNull.Value))
+        db.AdicionarParametros("@IDPedido", If(myReserva.IDPedido, DBNull.Value))
         '
         Dim query As String =
             "INSERT INTO tblReserva " +
             "( ReservaData, IDFuncionario, IDFilial, ClienteNome " +
             ", TelefoneA, TelefoneB, TemWathsapp, ClienteEmail " +
             ", ProdutoConhecido, IDProduto, Produto, Autor " +
-            ", IDFornecedor, IDFabricante, IDProdutoTipo, IDSituacaoReserva ) " +
+            ", IDFornecedor, IDFabricante, IDProdutoTipo, IDSituacaoReserva, IDPedido ) " +
             "VALUES " +
             "( @ReservaData, @IDFuncionario, @IDFilial, @ClienteNome " +
             ", @TelefoneA, @TelefoneB, @TemWathsapp, @ClienteEmail " +
             ", @ProdutoConhecido, @IDProduto, @Produto, @Autor " +
-            ", @IDFornecedor, @IDFabricante, @IDProdutoTipo, 1 )"
+            ", @IDFornecedor, @IDFabricante, @IDProdutoTipo, 1, @IDPedido )"
         '
         Try
             '
@@ -146,6 +147,7 @@ Public Class ReservaBLL
         bd.AdicionarParametros("@IDFornecedor", If(myReserva.IDFornecedor, DBNull.Value))
         bd.AdicionarParametros("@IDFabricante", If(myReserva.IDFabricante, DBNull.Value))
         bd.AdicionarParametros("@IDProdutoTipo", If(myReserva.IDProdutoTipo, DBNull.Value))
+        bd.AdicionarParametros("@IDPedido", If(myReserva.IDPedido, DBNull.Value))
         bd.AdicionarParametros("@IDSituacaoReserva", myReserva.IDSituacaoReserva)
         bd.AdicionarParametros("@ConclusaoData", If(myReserva.ConclusaoData, DBNull.Value))
         bd.AdicionarParametros("@Observacao", myReserva.Observacao)
@@ -166,6 +168,7 @@ Public Class ReservaBLL
                     ", IDFornecedor = @IDFornecedor " +
                     ", IDFabricante = @IDFabricante " +
                     ", IDProdutoTipo = @IDProdutoTipo " +
+                    ", IDPedido = @IDPedido " +
                     ", IDSituacaoReserva = @IDSituacaoReserva " +
                     ", ConclusaoData = @ConclusaoData " +
                     "WHERE " +
@@ -192,19 +195,21 @@ Public Class ReservaBLL
     '===================================================================================================
     ' ALTERA A SITUCAO DA RESERVA
     '===================================================================================================
-    Public Function Reserva_AlteraSituacao(IDReserva As Integer, IDSituacao As Byte) As Boolean
+    Public Function Reserva_AlteraSituacao(IDReserva As Integer, IDSituacao As Byte, dbTran As Object) As Boolean
         '
-        Dim SQL As New SQLControl
-        Dim mySQL As String = String.Format("UPDATE tblReserva SET IDSituacaoReserva = '{0}' WHERE IDReserva = {1}", IDSituacao, IDReserva)
+        Dim db As AcessoDados = dbTran
+        '
+        db.LimparParametros()
+        db.AdicionarParametros("@IDSituacaoReserva", IDSituacao)
+        db.AdicionarParametros("@IDReserva", IDReserva)
+        '
+        Dim mySQL As String = "UPDATE tblReserva SET IDSituacaoReserva = @IDSituacaoReserva WHERE IDReserva = @IDReserva"
         '
         Try
-            SQL.ExecQuery(mySQL)
-
-            If SQL.HasException Then
-                Throw New Exception(SQL.Exception)
-            Else
-                Return True
-            End If
+            '
+            db.ExecutarManipulacao(CommandType.Text, mySQL)
+            Return True
+            '
         Catch ex As Exception
             Throw ex
         End Try
@@ -286,6 +291,7 @@ Public Class ReservaBLL
         res.ConclusaoData = IIf(IsDBNull(r("ConclusaoData")), Nothing, r("ConclusaoData"))
         res.Observacao = IIf(IsDBNull(r("Observacao")), String.Empty, r("Observacao"))
         res.ReservaAtiva = IIf(IsDBNull(r("ReservaAtiva")), Nothing, r("ReservaAtiva"))
+        res.IDPedido = IIf(IsDBNull(r("IDPedido")), Nothing, r("IDPedido"))
         '
         Return res
         '

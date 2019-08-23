@@ -79,6 +79,144 @@ Public Class frmReservaProcurar
     '
 #End Region
     '
+#Region "LISTAGEM"
+    '
+    '--- FORMATA LISTAGEM DE CLIENTE
+    Private Sub FormataListagem()
+        '
+        clnIDReserva.DisplayMember = "IDReserva"
+        clnIDReserva.ValueMember = "IDReserva"
+        clnIDReserva.Width = 70
+        '
+        clnReservaData.DisplayMember = "ReservaData"
+        clnReservaData.ValueMember = "ReservaData"
+        clnReservaData.Width = 80
+        '
+        clnClienteNome.DisplayMember = "ClienteNome"
+        clnClienteNome.Width = 150
+        '
+        clnTelefoneA.DisplayMember = "TelefoneA"
+        clnTelefoneA.Width = 110
+        '
+        clnTelefoneB.DisplayMember = "TelefoneB"
+        clnTelefoneB.Width = 110
+        '
+        clnProduto.DisplayMember = "Produto"
+        clnProduto.Width = 250
+        '
+        clnAutor.DisplayMember = "Autor"
+        clnAutor.Width = 150
+        '
+        clnFornecedor.DisplayMember = "Fornecedor"
+        clnFornecedor.Width = 100
+        '
+        clnFabricante.DisplayMember = "Fabricante"
+        clnFabricante.Width = 100
+        '
+        clnProdutoTipo.DisplayMember = "ProdutoTipo"
+        clnProdutoTipo.Width = 100
+        '
+        ' setup the list
+        With lstListagem
+            '
+            .BeginUpdate()
+            '
+            .CheckBoxes = BetterListViewCheckBoxes.TwoState
+            .FullRowSelect = True
+            .SortedColumnsRowsHighlight = BetterListViewSortedColumnsRowsHighlight.ShowAlways
+            .View = BetterListViewView.Details
+            '
+            .EndUpdate()
+            '
+        End With
+        '
+    End Sub
+    '
+    '--- DESIGN DA LISTAGEM HEADER
+    Private Sub lstListagem_DrawColumnHeader(sender As Object, eventArgs As BetterListViewDrawColumnHeaderEventArgs) Handles lstListagem.DrawColumnHeader
+        '
+        If eventArgs.ColumnHeaderBounds.BoundsOuter.Width > 0 AndAlso
+            eventArgs.ColumnHeaderBounds.BoundsOuter.Height > 0 Then
+            ' Pode Colocar: AndAlso eventArgs.ColumnHeader.Index = 1 AndAlso
+            '
+            Dim brush As Brush = New LinearGradientBrush(eventArgs.ColumnHeaderBounds.BoundsOuter, Color.Transparent, Color.FromArgb(150, Color.LightSlateGray), LinearGradientMode.Vertical)
+
+            Dim p As Pen = New Pen(Color.SlateGray, 2)
+            '
+            eventArgs.Graphics.FillRectangle(brush, eventArgs.ColumnHeaderBounds.BoundsOuter)
+            '
+            eventArgs.Graphics.DrawLine(p, eventArgs.ColumnHeaderBounds.BoundsOuter.X, 'x1
+                                        eventArgs.ColumnHeaderBounds.BoundsOuter.Height, 'y1
+                                        eventArgs.ColumnHeaderBounds.BoundsOuter.Width + eventArgs.ColumnHeaderBounds.BoundsOuter.X, 'x2
+                                        eventArgs.ColumnHeaderBounds.BoundsOuter.Height) 'y2
+            brush.Dispose()
+            p.Dispose()
+        End If
+        '
+    End Sub
+    '
+    '--- QUANDO DESENHA ITEM
+    Private Sub lstListagem_DrawItem(sender As Object, eventArgs As BetterListViewDrawItemEventArgs) Handles lstListagem.DrawItem
+        '
+        If IsNumeric(eventArgs.Item.Text) Then
+            eventArgs.Item.Text = Format(CInt(eventArgs.Item.Text), "0000")
+            '
+            Dim reserva As clReserva = resLista.First(Function(x) x.IDReserva = eventArgs.Item.Value)
+            '
+            If Not IsNothing(reserva.IDPedido) Then
+                eventArgs.Item.BackColor = Color.PeachPuff
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- QUANDO ATIVA O ITEM EDITA A RESERVA
+    Private Sub lstListagem_ItemActivate(sender As Object, eventArgs As BetterListViewItemActivateEventArgs) Handles lstListagem.ItemActivate
+        btnEditar_Click(New Object, New System.EventArgs)
+    End Sub
+    '
+    '--- QUANDO MARCA UM ITEM HABILITA O BTN ALTERAR
+    Private Sub lstListagem_ItemChecked(sender As Object, eventArgs As BetterListViewItemCheckedEventArgs) Handles lstListagem.ItemChecked
+        '
+        Dim reserva As clReserva = resLista.First(Function(x) x.IDReserva = eventArgs.Item.Value)
+        '
+        If Not IsNothing(reserva.IDPedido) AndAlso eventArgs.NewCheckState = CheckState.Checked Then
+            AbrirDialog("Essa reserva não pode ser marcada para alteração porque está associada a um PEDIDO..." & vbCrLf &
+                        "Para alterá-la, favor remover a associação.",
+                        "Reserva com Pedido", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+            eventArgs.Item.Checked = False
+            Exit Sub
+        End If
+        '
+        VerifyCheckedItens()
+        '
+    End Sub
+    '
+    '--- VERIFY CHECKED ITEMS
+    Private Sub VerifyCheckedItens()
+        '
+        If lstListagem.CheckedItems.Count > 0 Then
+            btnAlterarSituacao.Enabled = True
+            btnPrintEtiquetas.Enabled = True
+        Else
+            btnAlterarSituacao.Enabled = False
+            btnPrintEtiquetas.Enabled = False
+        End If
+        '
+    End Sub
+    '
+    '--- SELECIONAR ITEM QUANDO PRESSIONA A TECLA (ENTER) DA LISTAGEM
+    Private Sub lstListagem_KeyDown(sender As Object, e As KeyEventArgs) Handles lstListagem.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.Handled = True
+            '
+            btnEditar_Click(New Object, New EventArgs)
+        End If
+    End Sub
+    '
+#End Region
+    '
 #Region "ACAO DOS BOTOES"
     '
     Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
@@ -182,9 +320,85 @@ Public Class frmReservaProcurar
         MsgBox("Em implementação")
     End Sub
     '
-    '--- FINALIZAR
+    '--- ALTERAR SITUACAO DAS RESERVAS SELECIONADAS
     Private Sub btnAlterarSituacao_Click(sender As Object, e As EventArgs) Handles btnAlterarSituacao.Click
-
+        '
+        '--- verifica a quantidade de itens selecionados
+        If lstListagem.CheckedItems.Count = 0 Then
+            AbrirDialog("Necessário selecionar as reservas para alterar a situação...",
+                        "Selecionar", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        '--- obtem a nova situacao
+        Dim newSit As clReservaSituacao = Nothing
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frm As New frmReservaSituacaoProcurar(True, ReservaSituacao, Me)
+            '
+            frm.ShowDialog()
+            If frm.DialogResult <> vbOK Then Exit Sub
+            '
+            newSit = frm.ReservaSituacaoEscolhida
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir o formulário de Procura de Situações..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+        '--- pergunta ao usuário se deseja realmente realizar alterações
+        If MessageBox.Show("Você deseja realmente alterar as Reservas escolhidas para" & vbNewLine &
+                           newSit.SituacaoReserva.ToUpper & "?", "Alterar Situação",
+                           MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                           MessageBoxDefaultButton.Button2) = DialogResult.No Then Return
+        '
+        '--- atualiza os registros
+        Dim accessBLL As New AcessoControlBLL
+        Dim db As Object = accessBLL.GetNewAcessoWithTransaction()
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            Dim rBLL As New ReservaBLL
+            '
+            For Each i In lstListagem.CheckedItems
+                rBLL.Reserva_AlteraSituacao(i.Text, newSit.IDSituacaoReserva, db)
+            Next
+            '
+            '--- COMMIT CHANGES
+            accessBLL.CommitAcessoWithTransaction(db)
+            '
+        Catch ex As Exception
+            '
+            '--- ROOLBACK ALL CHANGES
+            accessBLL.RollbackAcessoWithTransaction(db)
+            '
+            '--- ERROR MESSAGE
+            MessageBox.Show("Houve uma exceção inesperada ao Alterar a situação da reserva no BD" & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '--- EXIT
+            Exit Sub
+            '
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+        '--- atualiza a listagem
+        Get_Dados()
+        FiltrarListagem()
+        VerifyCheckedItens()
+        '
     End Sub
     '
     Private Sub EscolherSituacao_Click(sender As Object, e As EventArgs) Handles lblReservaAtiva.Click, lblSituacao.Click
@@ -203,6 +417,7 @@ Public Class frmReservaProcurar
             '
             Get_Dados()
             FiltrarListagem()
+            VerifyCheckedItens()
             '
             pnlAtivas.BackColor = Color.WhiteSmoke
             '
@@ -214,6 +429,17 @@ Public Class frmReservaProcurar
             Cursor = Cursors.Default
         End Try
         '
+    End Sub
+    '
+    '------------------------------------------------------------------------------------------
+    ' ATALHO F5 PARA ALTERAR A SITUACAO
+    '------------------------------------------------------------------------------------------
+    Private Sub Me_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        If e.KeyCode = Keys.F5 Then
+            e.Handled = True
+            '
+            EscolherSituacao_Click(New Object, New EventArgs)
+        End If
     End Sub
     '
 #End Region
@@ -336,174 +562,6 @@ Public Class frmReservaProcurar
     '
 #End Region
     '
-#Region "LISTAGEM"
-    '
-    '--- FORMATA LISTAGEM DE CLIENTE
-    Private Sub FormataListagem()
-        '
-        clnIDReserva.DisplayMember = "IDReserva"
-        clnIDReserva.ValueMember = "IDReserva"
-        clnIDReserva.Width = 70
-        '
-        clnReservaData.DisplayMember = "ReservaData"
-        clnReservaData.ValueMember = "ReservaData"
-        clnReservaData.Width = 80
-        '
-        clnClienteNome.DisplayMember = "ClienteNome"
-        clnClienteNome.Width = 150
-        '
-        clnTelefoneA.DisplayMember = "TelefoneA"
-        clnTelefoneA.Width = 110
-        '
-        clnTelefoneB.DisplayMember = "TelefoneB"
-        clnTelefoneB.Width = 110
-        '
-        clnProduto.DisplayMember = "Produto"
-        clnProduto.Width = 250
-        '
-        clnAutor.DisplayMember = "Autor"
-        clnAutor.Width = 150
-        '
-        clnFornecedor.DisplayMember = "Fornecedor"
-        clnFornecedor.Width = 100
-        '
-        clnFabricante.DisplayMember = "Fabricante"
-        clnFabricante.Width = 100
-        '
-        clnProdutoTipo.DisplayMember = "ProdutoTipo"
-        clnProdutoTipo.Width = 100
-        '
-        ' setup the list
-        With lstListagem
-            '
-            .BeginUpdate()
-            '
-            .CheckBoxes = BetterListViewCheckBoxes.TwoState
-            .FullRowSelect = True
-            .SortedColumnsRowsHighlight = BetterListViewSortedColumnsRowsHighlight.ShowAlways
-            .View = BetterListViewView.Details
-            '
-            .EndUpdate()
-            '
-        End With
-        '
-    End Sub
-    '
-    '--- DESIGN DA LISTAGEM HEADER
-    Private Sub lstListagem_DrawColumnHeader(sender As Object, eventArgs As BetterListViewDrawColumnHeaderEventArgs) Handles lstListagem.DrawColumnHeader
-        '
-        If eventArgs.ColumnHeaderBounds.BoundsOuter.Width > 0 AndAlso
-            eventArgs.ColumnHeaderBounds.BoundsOuter.Height > 0 Then
-            ' Pode Colocar: AndAlso eventArgs.ColumnHeader.Index = 1 AndAlso
-            '
-            Dim brush As Brush = New LinearGradientBrush(eventArgs.ColumnHeaderBounds.BoundsOuter, Color.Transparent, Color.FromArgb(150, Color.LightSlateGray), LinearGradientMode.Vertical)
-
-            Dim p As Pen = New Pen(Color.SlateGray, 2)
-            '
-            eventArgs.Graphics.FillRectangle(brush, eventArgs.ColumnHeaderBounds.BoundsOuter)
-            '
-            eventArgs.Graphics.DrawLine(p, eventArgs.ColumnHeaderBounds.BoundsOuter.X, 'x1
-                                        eventArgs.ColumnHeaderBounds.BoundsOuter.Height, 'y1
-                                        eventArgs.ColumnHeaderBounds.BoundsOuter.Width + eventArgs.ColumnHeaderBounds.BoundsOuter.X, 'x2
-                                        eventArgs.ColumnHeaderBounds.BoundsOuter.Height) 'y2
-            brush.Dispose()
-            p.Dispose()
-        End If
-        '
-    End Sub
-    '
-    '--- QUANDO DESENHA ITEM
-    Private Sub lstListagem_DrawItem(sender As Object, eventArgs As BetterListViewDrawItemEventArgs) Handles lstListagem.DrawItem
-        '
-        If IsNumeric(eventArgs.Item.Text) Then
-            eventArgs.Item.Text = Format(CInt(eventArgs.Item.Text), "0000")
-        End If
-        '
-    End Sub
-    '
-    '--- QUANDO ATIVA O ITEM EDITA A RESERVA
-    Private Sub lstListagem_ItemActivate(sender As Object, eventArgs As BetterListViewItemActivateEventArgs) Handles lstListagem.ItemActivate
-        btnEditar_Click(New Object, New System.EventArgs)
-    End Sub
-    '
-    '--- QUANDO MARCA UM ITEM HABILITA O BTN ALTERAR
-    Private Sub lstListagem_ItemChecked(sender As Object, eventArgs As BetterListViewItemCheckedEventArgs) Handles lstListagem.ItemChecked
-        '
-        If lstListagem.CheckedItems.Count > 0 Then
-            btnAlterarSituacao.Enabled = True
-            btnPrintEtiquetas.Enabled = True
-        Else
-            btnAlterarSituacao.Enabled = False
-            btnPrintEtiquetas.Enabled = False
-        End If
-        '
-    End Sub
-    '
-    '--- SELECIONAR ITEM QUANDO PRESSIONA A TECLA (ENTER) DA LISTAGEM
-    Private Sub lstListagem_KeyDown(sender As Object, e As KeyEventArgs) Handles lstListagem.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            e.Handled = True
-            '
-            btnEditar_Click(New Object, New EventArgs)
-        End If
-    End Sub
-    '
-#End Region
-    '
-#Region "MENU SUSPENSO ALTERAR SITUACAO"
-    '
-    '--- ALTERAR A SITUACAO
-    Private Sub Alterar_Situacao(sender As Object, e As EventArgs)
-        '
-        '--- verifica a quantidade de itens selecionados
-        If lstListagem.CheckedItems.Count = 0 Then
-            AbrirDialog("Necessário selecionar as reservas para alterar a situação...",
-                        "Selecionar", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
-            Exit Sub
-        End If
-        '
-        '--- obtem o item escolhido
-        Dim mnu As ToolStripMenuItem = DirectCast(sender, ToolStripMenuItem)
-        Dim NovaSituacao As Byte = mnu.Tag
-        Dim NovaSituacaoTexto As String = mnu.Text
-        '
-        '--- pergunta ao usuário se deseja realmente realizar alterações
-        If MessageBox.Show("Você deseja realmente alterar as Reservas escolhidas para" & vbNewLine &
-                           NovaSituacaoTexto.ToUpper & "?", "Alterar Situação",
-                           MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                           MessageBoxDefaultButton.Button2) = DialogResult.No Then Return
-        '
-        '--- atualiza os registros
-        For Each i In lstListagem.CheckedItems
-            Dim rBLL As New ReservaBLL
-            '
-            Try
-                '
-                '--- Ampulheta ON
-                Cursor = Cursors.WaitCursor
-                '
-                rBLL.Reserva_AlteraSituacao(i.Text, NovaSituacao)
-                '
-            Catch ex As Exception
-                MessageBox.Show("Houve uma exceção inesperada ao Alterar a situação da reserva no BD" & vbNewLine &
-                                ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Finally
-                '
-                '--- Ampulheta OFF
-                Cursor = Cursors.Default
-                '
-            End Try
-            '
-        Next
-        '
-        '--- atualiza a listagem
-        Get_Dados()
-        FiltrarListagem()
-        '
-    End Sub
-    '
-#End Region
-    '
 #Region "VISUAL DESIGN"
     '
     Sub me_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
@@ -532,7 +590,7 @@ Public Class frmReservaProcurar
         End With
         '
         If myControl.Tag = "" Then
-            toolTip1.Show("Clique aqui para alterar a Situação...", myControl, myControl.Width - 30, -40, 1000)
+            toolTip1.Show("Clique aqui para alterar a Situação ou pressione (F5)", myControl, myControl.Width - 30, -40, 1000)
         Else
             toolTip1.Show(myControl.Tag, myControl, myControl.Width - 30, -40, 1000)
         End If
@@ -540,5 +598,27 @@ Public Class frmReservaProcurar
     End Sub
     '
 #End Region '/ VISUAL DESIGN
+    '
+#Region "MENU CONTEXT RESERVA"
+    '
+    Private Sub mnuReserva_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles mnuReserva.Opening
+        '
+        If lstListagem.SelectedItems.Count = 0 Then
+            e.Cancel = True
+            Exit Sub
+        End If
+        '
+        Dim ID As Integer = lstListagem.SelectedItems(0).Value
+        Dim reserva As clReserva = resLista.First(Function(x) x.IDReserva = ID)
+        Dim inPedido As Boolean = Not IsNothing(reserva.IDPedido)
+        '
+        '--- enable or disable items of menu
+        miAbrirPedido.Enabled = inPedido
+        miDesassociarDoPedido.Enabled = inPedido
+        miExcluirReserva.Enabled = Not inPedido
+
+    End Sub
+    '
+#End Region '/ MENU RESERVA
     '
 End Class

@@ -34,11 +34,13 @@ Partial Class frmReservaSituacaoProcurar
         'Panel1
         '
         Me.Panel1.Size = New System.Drawing.Size(279, 50)
+        Me.Panel1.TabIndex = 0
         '
         'lblTitulo
         '
         Me.lblTitulo.Location = New System.Drawing.Point(10, 0)
         Me.lblTitulo.Size = New System.Drawing.Size(269, 50)
+        Me.lblTitulo.TabIndex = 0
         Me.lblTitulo.Text = "Escolher Situação"
         '
         'lstItens
@@ -62,7 +64,8 @@ Partial Class frmReservaSituacaoProcurar
         Me.lstItens.MultiSelect = False
         Me.lstItens.Name = "lstItens"
         Me.lstItens.Size = New System.Drawing.Size(253, 209)
-        Me.lstItens.TabIndex = 15
+        Me.lstItens.TabIndex = 1
+        Me.lstItens.TabStop = False
         Me.lstItens.ValueMember = "IDSituacaoReserva"
         '
         'clnSituacao
@@ -83,7 +86,8 @@ Partial Class frmReservaSituacaoProcurar
         Me.btnCancelar.Location = New System.Drawing.Point(144, 330)
         Me.btnCancelar.Name = "btnCancelar"
         Me.btnCancelar.Size = New System.Drawing.Size(121, 41)
-        Me.btnCancelar.TabIndex = 16
+        Me.btnCancelar.TabIndex = 3
+        Me.btnCancelar.TabStop = False
         Me.btnCancelar.Text = "&Cancelar"
         Me.btnCancelar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnCancelar.UseVisualStyleBackColor = True
@@ -97,7 +101,8 @@ Partial Class frmReservaSituacaoProcurar
         Me.btnEscolher.Location = New System.Drawing.Point(12, 330)
         Me.btnEscolher.Name = "btnEscolher"
         Me.btnEscolher.Size = New System.Drawing.Size(121, 41)
-        Me.btnEscolher.TabIndex = 16
+        Me.btnEscolher.TabIndex = 2
+        Me.btnEscolher.TabStop = False
         Me.btnEscolher.Text = "&Escolher"
         Me.btnEscolher.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnEscolher.UseVisualStyleBackColor = True
@@ -110,16 +115,16 @@ Partial Class frmReservaSituacaoProcurar
         Me.pnlAtivas.Location = New System.Drawing.Point(12, 60)
         Me.pnlAtivas.Name = "pnlAtivas"
         Me.pnlAtivas.Size = New System.Drawing.Size(253, 39)
-        Me.pnlAtivas.TabIndex = 17
+        Me.pnlAtivas.TabIndex = 4
         '
         'rbtInativas
         '
         Me.rbtInativas.AutoSize = True
-        Me.rbtInativas.Location = New System.Drawing.Point(128, 7)
+        Me.rbtInativas.Location = New System.Drawing.Point(122, 7)
         Me.rbtInativas.Name = "rbtInativas"
-        Me.rbtInativas.Size = New System.Drawing.Size(98, 23)
+        Me.rbtInativas.Size = New System.Drawing.Size(114, 23)
         Me.rbtInativas.TabIndex = 1
-        Me.rbtInativas.Text = "Concluídas"
+        Me.rbtInativas.Text = "2. Concluídas"
         Me.rbtInativas.UseVisualStyleBackColor = True
         '
         'rbtAtivas
@@ -127,9 +132,9 @@ Partial Class frmReservaSituacaoProcurar
         Me.rbtAtivas.AutoSize = True
         Me.rbtAtivas.Location = New System.Drawing.Point(29, 7)
         Me.rbtAtivas.Name = "rbtAtivas"
-        Me.rbtAtivas.Size = New System.Drawing.Size(67, 23)
+        Me.rbtAtivas.Size = New System.Drawing.Size(83, 23)
         Me.rbtAtivas.TabIndex = 0
-        Me.rbtAtivas.Text = "Ativas"
+        Me.rbtAtivas.Text = "1. Ativas"
         Me.rbtAtivas.UseVisualStyleBackColor = True
         '
         'frmReservaSituacaoProcurar

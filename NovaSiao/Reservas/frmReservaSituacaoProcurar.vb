@@ -49,6 +49,10 @@ Public Class frmReservaSituacaoProcurar
         '
     End Sub
     '
+    Private Sub frmReservaSituacaoProcurar_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        lstItens.Focus()
+    End Sub
+    '
     Private Sub GetDados()
         '
         Try
@@ -172,9 +176,32 @@ Public Class frmReservaSituacaoProcurar
         If rbtAtivas.Checked = True AndAlso _ReservaAtiva = False Then
             _ReservaAtiva = True
             PreencheListagem()
+            lstItens.Focus()
         ElseIf rbtInativas.Checked = True AndAlso _ReservaAtiva = True Then
             _ReservaAtiva = False
             PreencheListagem()
+            lstItens.Focus()
+        End If
+        '
+    End Sub
+    '
+    '------------------------------------------------------------------------------------------
+    ' FAZ A TECLA ESC FECHAR O FORM, 
+    '------------------------------------------------------------------------------------------
+    Private Sub Me_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        '
+        If e.KeyCode = Keys.Escape Then
+            e.SuppressKeyPress = True
+            e.Handled = True
+            btnCancelar_Click(New Object, New EventArgs)
+        ElseIf e.KeyCode = Keys.NumPad1 Or e.KeyCode = Keys.D1 Then
+            e.SuppressKeyPress = True
+            e.Handled = True
+            rbtAtivas.Checked = True
+        ElseIf e.KeyCode = Keys.NumPad2 Or e.KeyCode = Keys.D2 Then
+            e.SuppressKeyPress = True
+            e.Handled = True
+            rbtInativas.Checked = True
         End If
         '
     End Sub
