@@ -87,8 +87,10 @@ Public Class frmReserva
             '
             If Not IsNothing(_Reserva.IDPedido) OrElse _Reserva.IDSituacaoReserva > 1 Then
                 RegistroBloqueado = True
+                AddHandlerCancelUpdate()
             Else
                 RegistroBloqueado = False
+                RemoveHandlerCancelUpdate()
             End If
             '
             If Not IsNothing(_formOrigem) AndAlso TypeOf _formOrigem IsNot frmReservaProcurar Then
@@ -98,6 +100,10 @@ Public Class frmReserva
         End Set
         '
     End Property
+    '
+#End Region
+    '
+#Region "REGISTRO BLOQUEADO"
     '
     Private Property RegistroBloqueado As Boolean
         Get
@@ -114,7 +120,53 @@ Public Class frmReserva
         End Set
     End Property
     '
-#End Region
+    Private Sub CancelUpdateHandler(sender As Object, e As KeyPressEventArgs)
+        e.Handled = True
+    End Sub
+    '
+    Private Sub AddHandlerCancelUpdate()
+        '
+        For Each c As Control In Me.Controls
+            '
+            If c.HasChildren Then
+                For Each cp As Control In c.Controls
+                    If TypeOf cp Is TextBox Then
+                        AddHandler cp.KeyPress, AddressOf CancelUpdateHandler
+                    ElseIf TypeOf cp Is DateTimePicker Then
+                        AddHandler cp.KeyPress, AddressOf CancelUpdateHandler
+                    ElseIf TypeOf cp Is CheckBox Then
+                        AddHandler cp.KeyPress, AddressOf CancelUpdateHandler
+                    End If
+                Next
+            Else
+                If TypeOf c Is TextBox Then
+                    AddHandler c.KeyPress, AddressOf CancelUpdateHandler
+                ElseIf TypeOf c Is MaskedTextBox Then
+                    AddHandler c.KeyPress, AddressOf CancelUpdateHandler
+                End If
+            End If
+            '
+        Next
+        '
+    End Sub
+    '
+    Private Sub RemoveHandlerCancelUpdate()
+        '
+        For Each c As Control In Me.Controls
+            '
+            If c.HasChildren Then
+                For Each cp As Control In c.Controls
+                    RemoveHandler cp.KeyPress, AddressOf CancelUpdateHandler
+                Next
+            Else
+                RemoveHandler c.KeyPress, AddressOf CancelUpdateHandler
+            End If
+            '
+        Next
+        '
+    End Sub
+    '
+#End Region '/ REGISTRO BLOQUEADO
     '
 #Region "DATABINDINGS"
 
@@ -268,7 +320,7 @@ Public Class frmReserva
     '
     Private Sub btnProcFuncionario_Click(sender As Object, e As EventArgs) Handles btnProcFuncionario.Click
         '
-        If RegistroBloqueado Then Exit Sub
+        If _RegistroBloqueado Then Exit Sub
         '
         Dim frmF As New frmFuncionarioProcurar(False, Me)
         Dim oldID As Integer? = _Reserva.IDFuncionario
@@ -294,7 +346,7 @@ Public Class frmReserva
     '
     Private Sub btnProcProdutoTipo_Click(sender As Object, e As EventArgs) Handles btnProcProdutoTipo.Click
         '
-        If RegistroBloqueado Then Exit Sub
+        If _RegistroBloqueado Then Exit Sub
         '
         If _Reserva.ProdutoConhecido Then Exit Sub
         '
@@ -322,7 +374,7 @@ Public Class frmReserva
     '
     Private Sub btnProcAutores_Click(sender As Object, e As EventArgs) Handles btnProcAutores.Click
         '
-        If RegistroBloqueado Then Exit Sub
+        If _RegistroBloqueado Then Exit Sub
         '
         If _Reserva.ProdutoConhecido Then Exit Sub
         '
@@ -348,7 +400,7 @@ Public Class frmReserva
     '
     Private Sub btnProcFabricantes_Click(sender As Object, e As EventArgs) Handles btnProcFabricantes.Click
         '
-        If RegistroBloqueado Then Exit Sub
+        If _RegistroBloqueado Then Exit Sub
         '
         If _Reserva.ProdutoConhecido Then Exit Sub
         '
@@ -376,7 +428,7 @@ Public Class frmReserva
     '
     Private Sub btnProcFornecedores_Click(sender As Object, e As EventArgs) Handles btnProcFornecedores.Click
         '
-        If RegistroBloqueado Then Exit Sub
+        If _RegistroBloqueado Then Exit Sub
         '
         Dim frmF As New frmFornecedorProcurar(True, Me)
         Dim oldIDFornecedor As Integer? = _Reserva.IDFornecedor
@@ -537,9 +589,6 @@ Public Class frmReserva
                     If TypeOf cp Is TextBox Then
                         AddHandler cp.GotFocus, AddressOf SelTodoTexto
                         AddHandler cp.KeyDown, AddressOf EnterForTab
-                        'ElseIf TypeOf cp Is MaskedTextBox Then
-                        'AddHandler cp.GotFocus, AddressOf SelTodoTexto
-                        'AddHandler cp.KeyDown, AddressOf EnterForTab
                     ElseIf TypeOf cp Is DateTimePicker Then
                         AddHandler cp.KeyDown, AddressOf EnterForTab
                     ElseIf TypeOf cp Is CheckBox Then

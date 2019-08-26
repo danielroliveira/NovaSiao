@@ -309,6 +309,12 @@
     <Compile Include="Cadastros\frmFilial.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Compras\frmCompraGetNFe.Designer.vb">
+      <DependentUpon>frmCompraGetNFe.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Compras\frmCompraGetNFe.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Fornecedores\frmFornecedor.Designer.vb">
       <DependentUpon>frmFornecedor.vb</DependentUpon>
     </Compile>
@@ -1003,6 +1009,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Cadastros\frmFilial.resx">
       <DependentUpon>frmFilial.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compras\frmCompraGetNFe.resx">
+      <DependentUpon>frmCompraGetNFe.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Fornecedores\frmFornecedor.resx">
       <DependentUpon>frmFornecedor.vb</DependentUpon>

@@ -2502,7 +2502,7 @@ Public Class frmPedido
             .DereferenceLinks = True
             .Filter = "xml files (*.xml)|*.xml"
             .InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)
-            .Title = "Informe onde o arquivo de exportação XML do pedido será salvo..."
+            .Title = "Informe a pasta onde o arquivo de importação XML do pedido está..."
             .Multiselect = False
             .RestoreDirectory = True
             .ShowDialog()
