@@ -83,6 +83,36 @@ Public Class PedidoBLL
         '
     End Function
     '
+    '==========================================================================================
+    ' GET PEDIDO PELO ID
+    '==========================================================================================
+    Public Function GetPedidoPeloID(IDPedido As Integer) As clPedido
+        '
+        Try
+            Dim db As New AcessoDados
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDPedido", IDPedido)
+            Dim query As String = "SELECT * FROM qryPedidos WHERE IDPedido = @IDPedido"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then
+                Throw New AppException("Não existe pedido com o ID informado...")
+            Else
+                If Not IsNumeric(dt.Rows(0).Item(0)) Then
+                    Throw New Exception(dt.Rows(0).ToString)
+                End If
+            End If
+            '
+            Return ConvertRowInPedido(dt.Rows(0))
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
     '===================================================================================================
     ' INSERIR NOVO PEDIDO
     '===================================================================================================

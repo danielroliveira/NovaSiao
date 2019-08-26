@@ -49,6 +49,36 @@ Public Class ReservaBLL
         '
     End Function
     '
+    '==========================================================================================
+    ' GET RESERVA PELO ID
+    '==========================================================================================
+    Public Function GetReservaPeloID(IDReserva As Integer) As clReserva
+        '
+        Try
+            Dim db As New AcessoDados
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDReserva", IDReserva)
+            Dim query As String = "SELECT * FROM qryReserva WHERE IDReserva = @IDReserva"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then
+                Throw New AppException("Não existe reserva com o ID informado...")
+            Else
+                If Not IsNumeric(dt.Rows(0).Item(0)) Then
+                    Throw New Exception(dt.Rows(0).ToString)
+                End If
+            End If
+            '
+            Return ConvertRowClass(dt.Rows(0))
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
     '===================================================================================================
     ' INSERIR NOVO
     '===================================================================================================
@@ -294,6 +324,97 @@ Public Class ReservaBLL
         res.IDPedido = IIf(IsDBNull(r("IDPedido")), Nothing, r("IDPedido"))
         '
         Return res
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' DELETE RESERVA - BEFORE check PEDIDO
+    '==========================================================================================
+    Public Function DeleteReserva(Reserva As clReserva, Optional SubtraiPedido As Boolean = False) As Boolean
+        '
+        Dim db As AcessoDados
+        Dim query As String = ""
+        '
+        Try
+            db = New AcessoDados
+            db.BeginTransaction()
+            '
+            '--- check if is connected with Pedido
+            If Not IsNothing(Reserva.IDPedido) Then
+                '
+                db.LimparParametros()
+                db.AdicionarParametros("@IDPedido", Reserva.IDPedido)
+                db.AdicionarParametros("@IDReserva", Reserva.IDReserva)
+                '
+                If Not SubtraiPedido Then
+                    query = "UPDATE tblPedidoItens SET " &
+                            "Origem = 0, IDOrigem = NULL " &
+                            "WHERE Origem = 1 " & '--- origem RESERVA
+                            "AND IDPedido = @IDPedido " &
+                            "AND IDReserva = @IDReserva"
+                    '
+                    db.ExecutarManipulacao(CommandType.Text, query)
+                    '
+                Else '--- NESSE CASO RETIRA UMA QUANTIDADE DO PEDIDO SE PUDER
+                    '
+                    '--- CHECK old QUANTIDADE of Produto in Pedido
+                    '------------------------------------------------
+                    query = "SELECT tblPedidoItens " &
+                            "WHERE Origem = 1 " & '--- origem RESERVA
+                            "AND IDPedido = @IDPedido " &
+                            "AND IDReserva = @IDReserva"
+                    '
+                    Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+                    '
+                    If dt.Rows.Count = 0 Then
+                        Throw New AppException("Não existe item com o Reserva informada...")
+                    Else
+                        If Not IsNumeric(dt.Rows(0).Item(0)) Then
+                            Throw New Exception(dt.Rows(0).ToString)
+                        End If
+                    End If
+                    '
+                    Dim quant As Integer = dt.Rows(0).Item("Quantidade")
+                    '
+                    '--- UPDATE OR DELETE ITEM PEDIDO
+                    '-------------------------------------------------------------------------
+                    db.LimparParametros()
+                    db.AdicionarParametros("@IDPedido", Reserva.IDPedido)
+                    db.AdicionarParametros("@IDReserva", Reserva.IDReserva)
+                    '
+                    If quant <= 1 Then '--- DELETE ITEM DO PEDIDO
+                        query = "DELETE tblPedidoItens " &
+                                "WHERE Origem = 1 " & '--- origem RESERVA
+                                "AND IDPedido = @IDPedido " &
+                                "AND IDReserva = @IDReserva"
+                    Else '--- REMOVE ONE UNITY OF PEDIDO
+                        db.AdicionarParametros("@Quant", quant - 1)
+                        '
+                        query = "UPDATE tblPedidoItens SET " &
+                                "Origem = 0, IDOrigem = NULL, Quantidade = @Quant " &
+                                "WHERE Origem = 1 " & '--- origem RESERVA
+                                "AND IDPedido = @IDPedido " &
+                                "AND IDReserva = @IDReserva"
+                    End If
+                    '
+                End If
+                '
+            End If
+            '
+            '--- DELETE RESERVA
+            '-------------------------------------------------------------------
+            db.LimparParametros()
+            db.AdicionarParametros("@IDReserva", Reserva.IDReserva)
+            '
+            query = "DELETE tblReserva WHERE IDReserva = @IDReserva"
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            Return True
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
         '
     End Function
     ' 

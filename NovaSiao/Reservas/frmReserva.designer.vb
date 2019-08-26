@@ -63,6 +63,7 @@ Partial Class frmReserva
         Me.txtProdutoTipo = New System.Windows.Forms.TextBox()
         Me.txtFabricante = New System.Windows.Forms.TextBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.dtpReservaData = New System.Windows.Forms.DateTimePicker()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.chkTemWathsapp = New System.Windows.Forms.CheckBox()
         Me.picWathsapp = New System.Windows.Forms.PictureBox()
@@ -75,7 +76,6 @@ Partial Class frmReserva
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.lblFilial = New System.Windows.Forms.Label()
-        Me.dtpReservaData = New System.Windows.Forms.DateTimePicker()
         Me.Panel1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -557,6 +557,15 @@ Partial Class frmReserva
         Me.Panel2.Size = New System.Drawing.Size(604, 45)
         Me.Panel2.TabIndex = 1
         '
+        'dtpReservaData
+        '
+        Me.dtpReservaData.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpReservaData.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpReservaData.Location = New System.Drawing.Point(446, 9)
+        Me.dtpReservaData.Name = "dtpReservaData"
+        Me.dtpReservaData.Size = New System.Drawing.Size(144, 27)
+        Me.dtpReservaData.TabIndex = 4
+        '
         'Panel3
         '
         Me.Panel3.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
@@ -716,15 +725,6 @@ Partial Class frmReserva
         Me.lblFilial.TabIndex = 2
         Me.lblFilial.Text = "Filial"
         Me.lblFilial.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'dtpReservaData
-        '
-        Me.dtpReservaData.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.dtpReservaData.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpReservaData.Location = New System.Drawing.Point(446, 9)
-        Me.dtpReservaData.Name = "dtpReservaData"
-        Me.dtpReservaData.Size = New System.Drawing.Size(144, 27)
-        Me.dtpReservaData.TabIndex = 4
         '
         'frmReserva
         '

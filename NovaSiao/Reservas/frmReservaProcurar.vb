@@ -9,6 +9,7 @@ Public Class frmReservaProcurar
     Private IDFilial As Integer?
     Private LiberaAtualizacao As Boolean = False
     Private ReservaSituacao As clReservaSituacao
+    Private rBLL As New ReservaBLL
     '
 #Region "NEW | PROPRIEDADES"
     '
@@ -50,15 +51,13 @@ Public Class frmReservaProcurar
     '
     Private Sub Get_Dados()
         '
-        Dim ReservaBLL As New ReservaBLL
-        '
         '--- consulta o banco de dados
         Try
             '
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            resLista = ReservaBLL.Reserva_GET_List(IDFilial, ReservaSituacao.IDSituacaoReserva, ReservaSituacao.ReservaAtiva)
+            resLista = rBLL.Reserva_GET_List(IDFilial, ReservaSituacao.IDSituacaoReserva, ReservaSituacao.ReservaAtiva)
             '
         Catch ex As Exception
             MessageBox.Show("Ocorreu exceção ao obter a listagem de Reservas..." & vbNewLine &
@@ -230,26 +229,38 @@ Public Class frmReservaProcurar
         Dim resID As Integer = lstListagem.SelectedItems(0).Value
         Dim clR As clReserva = resLista.Where(Function(x) x.IDReserva = resID)(0)
         '
-        '--- Verifica se o form Reserva ja esta aberto
-        Dim frm As Form = Nothing
-        '
-        For Each f As Form In Application.OpenForms
-            If f.Name = "frmReserva" Then
-                frm = f
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Verifica se o form Reserva ja esta aberto
+            Dim frm As Form = Nothing
+            '
+            For Each f As Form In Application.OpenForms
+                If f.Name = "frmReserva" Then
+                    frm = f
+                End If
+            Next
+            '
+            If IsNothing(frm) Then '--- o frmReserva não esta aberto
+                frm = New frmReserva(clR, Me)
+                frm.MdiParent = frmPrincipal
+                frm.StartPosition = FormStartPosition.CenterScreen
+                Me.Visible = False 'Close()
+                frm.Show()
+            Else '--- o frmReserva já esta aberto
+                DirectCast(frm, frmReserva).propReserva = clR
+                frm.Focus()
+                Me.Visible = False 'Close()
             End If
-        Next
-        '
-        If IsNothing(frm) Then '--- o frmReserva não esta aberto
-            frm = New frmReserva(clR)
-            frm.MdiParent = frmPrincipal
-            frm.StartPosition = FormStartPosition.CenterScreen
-            Close()
-            frm.Show()
-        Else '--- o frmReserva já esta aberto
-            DirectCast(frm, frmReserva).propReserva = clR
-            frm.Focus()
-            Close()
-        End If
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir a reserva..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
         '
     End Sub
     '
@@ -367,7 +378,6 @@ Public Class frmReservaProcurar
             '
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
-            Dim rBLL As New ReservaBLL
             '
             For Each i In lstListagem.CheckedItems
                 rBLL.Reserva_AlteraSituacao(i.Text, newSit.IDSituacaoReserva, db)
@@ -615,8 +625,96 @@ Public Class frmReservaProcurar
         '--- enable or disable items of menu
         miAbrirPedido.Enabled = inPedido
         miDesassociarDoPedido.Enabled = inPedido
-        miExcluirReserva.Enabled = Not inPedido
+        miExcluirReserva.Enabled = Not inPedido And reserva.IDSituacaoReserva = 1
 
+    End Sub
+    '
+    Private Sub miEditarReserva_Click(sender As Object, e As EventArgs) Handles miEditarReserva.Click
+        '
+        btnEditar_Click(sender, e)
+        '
+    End Sub
+    '
+    Private Sub miExcluirReserva_Click(sender As Object, e As EventArgs) Handles miExcluirReserva.Click
+        '
+        If lstListagem.SelectedItems.Count = 0 Then
+            MessageBox.Show("Não existe nenhuma RESERVA selecionada na listagem", "Escolher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Exit Sub
+        End If
+        '
+        Dim resID As Integer = lstListagem.SelectedItems(0).Value
+        Dim clR As clReserva = resLista.Where(Function(x) x.IDReserva = resID)(0)
+        '
+        If AbrirDialog("Deseja realmente excluir a Reserva: " & vbCrLf &
+                       clR.Produto & vbCrLf &
+                       "Para: " & clR.ClienteNome,
+                       "Excluir Reserva",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question,
+                       frmDialog.DialogDefaultButton.Second) = DialogResult.No Then
+            Exit Sub
+        End If
+        '
+        '--- VERIFICA Pedido
+        Dim subtraiPedido As Boolean = False
+        If Not IsNothing(clR.IDPedido) Then
+            If AbrirDialog("Essa reserva já foi inserida em um pedido." & vbCrLf &
+                           "Você deseja remover uma unidade desse do produto: " & vbCrLf &
+                           clR.Produto & vbCrLf &
+                           "do Pedido?",
+                           "Reserva Vinculada",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                subtraiPedido = True
+            End If
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            rBLL.DeleteReserva(clR, subtraiPedido)
+            resLista.Remove(clR)
+            FiltrarListagem()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Excluir a Reserva..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub miAbrirPedido_Click(sender As Object, e As EventArgs) Handles miAbrirPedido.Click
+        '
+        Dim pBLL As New PedidoBLL
+        Dim ID As Integer = lstListagem.SelectedItems(0).Value
+        Dim reserva As clReserva = resLista.First(Function(x) x.IDReserva = ID)
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim pedido As clPedido = pBLL.GetPedidoPeloID(reserva.IDPedido)
+            '
+            Dim frm As New frmPedido(pedido)
+            frm.MdiParent = My.Application.OpenForms().Item(0)
+            '
+            Close()
+            frm.Show()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Abrir o formulário de Pedido..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+        '
     End Sub
     '
 #End Region '/ MENU RESERVA

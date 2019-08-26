@@ -126,6 +126,10 @@ Partial Class frmPedido
         Me.lblSituacaoDescricao = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
+        Me.mnuItens = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.miAbrirReserva = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miAbrirPedidoOrigem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnPedidoMigrado = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -140,6 +144,7 @@ Partial Class frmPedido
         Me.vtab2.SuspendLayout()
         CType(Me.dgvMensagens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
+        Me.mnuItens.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -1170,7 +1175,7 @@ Partial Class frmPedido
         Me.lblSituacaoDescricao.BackColor = System.Drawing.Color.Transparent
         Me.lblSituacaoDescricao.Font = New System.Drawing.Font("Verdana", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblSituacaoDescricao.ForeColor = System.Drawing.Color.AliceBlue
-        Me.lblSituacaoDescricao.Location = New System.Drawing.Point(654, 17)
+        Me.lblSituacaoDescricao.Location = New System.Drawing.Point(692, 17)
         Me.lblSituacaoDescricao.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.lblSituacaoDescricao.Name = "lblSituacaoDescricao"
         Me.lblSituacaoDescricao.Size = New System.Drawing.Size(204, 30)
@@ -1184,7 +1189,7 @@ Partial Class frmPedido
         Me.Label11.BackColor = System.Drawing.Color.Transparent
         Me.Label11.Font = New System.Drawing.Font("Verdana", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label11.ForeColor = System.Drawing.Color.Silver
-        Me.Label11.Location = New System.Drawing.Point(725, 4)
+        Me.Label11.Location = New System.Drawing.Point(763, 4)
         Me.Label11.Margin = New System.Windows.Forms.Padding(2, 0, 2, 0)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(63, 13)
@@ -1210,10 +1215,48 @@ Partial Class frmPedido
         Me.btnClose.UseVisualStyleBackColor = False
         Me.btnClose.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICE2003SILVER
         '
+        'mnuItens
+        '
+        Me.mnuItens.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.mnuItens.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAbrirReserva, Me.miAbrirPedidoOrigem})
+        Me.mnuItens.Name = "mnuItens"
+        Me.mnuItens.Size = New System.Drawing.Size(210, 74)
+        '
+        'miAbrirReserva
+        '
+        Me.miAbrirReserva.Image = Global.NovaSiao.My.Resources.Resources.full_page
+        Me.miAbrirReserva.Name = "miAbrirReserva"
+        Me.miAbrirReserva.Size = New System.Drawing.Size(209, 24)
+        Me.miAbrirReserva.Text = "Abrir Reserva"
+        '
+        'miAbrirPedidoOrigem
+        '
+        Me.miAbrirPedidoOrigem.Image = Global.NovaSiao.My.Resources.Resources.full_page
+        Me.miAbrirPedidoOrigem.Name = "miAbrirPedidoOrigem"
+        Me.miAbrirPedidoOrigem.Size = New System.Drawing.Size(209, 24)
+        Me.miAbrirPedidoOrigem.Text = "Abrir Pedido Origem"
+        '
+        'btnPedidoMigrado
+        '
+        Me.btnPedidoMigrado.BackColor = System.Drawing.Color.Gainsboro
+        Me.btnPedidoMigrado.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
+        Me.btnPedidoMigrado.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MistyRose
+        Me.btnPedidoMigrado.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(CType(CType(202, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(233, Byte), Integer))
+        Me.btnPedidoMigrado.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnPedidoMigrado.Location = New System.Drawing.Point(750, 62)
+        Me.btnPedidoMigrado.Name = "btnPedidoMigrado"
+        Me.btnPedidoMigrado.Size = New System.Drawing.Size(88, 81)
+        Me.btnPedidoMigrado.TabIndex = 6
+        Me.btnPedidoMigrado.TabStop = False
+        Me.btnPedidoMigrado.Text = "Ir para Pedido Migrado"
+        Me.btnPedidoMigrado.UseVisualStyleBackColor = False
+        Me.btnPedidoMigrado.Visible = False
+        '
         'frmPedido
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1350, 680)
+        Me.Controls.Add(Me.btnPedidoMigrado)
         Me.Controls.Add(Me.tsMenu)
         Me.Controls.Add(Me.tabPrincipal)
         Me.Controls.Add(Me.Panel2)
@@ -1226,6 +1269,7 @@ Partial Class frmPedido
         Me.Controls.SetChildIndex(Me.Panel2, 0)
         Me.Controls.SetChildIndex(Me.tabPrincipal, 0)
         Me.Controls.SetChildIndex(Me.tsMenu, 0)
+        Me.Controls.SetChildIndex(Me.btnPedidoMigrado, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.tsMenu.ResumeLayout(False)
@@ -1246,6 +1290,7 @@ Partial Class frmPedido
         CType(Me.dgvMensagens, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
+        Me.mnuItens.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -1347,4 +1392,8 @@ Partial Class frmPedido
     Friend WithEvents miImportarPedido As ToolStripMenuItem
     Friend WithEvents miMigrarPara As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
+    Friend WithEvents mnuItens As ContextMenuStrip
+    Friend WithEvents miAbrirReserva As ToolStripMenuItem
+    Friend WithEvents miAbrirPedidoOrigem As ToolStripMenuItem
+    Friend WithEvents btnPedidoMigrado As Button
 End Class

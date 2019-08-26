@@ -5,9 +5,36 @@ Imports System.ComponentModel
 Public Class frmReserva
     Private _Reserva As clReserva
     Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
+    Private _formOrigem As Form
     Private bindReserva As New BindingSource
+    Private _RegistroBloqueado As Boolean = False
     '
 #Region "LOAD E PROPERTIES"
+    '
+    Sub New(objReserva As clReserva, Optional formOrigem As Form = Nothing)
+        '
+        ' This call is required by the designer.
+        InitializeComponent()
+        '
+        ' Add any initialization after the InitializeComponent() call.
+        _formOrigem = formOrigem
+        '
+        If IsNothing(objReserva) Then
+            MessageBox.Show("Esse formulário não pode ser aberto assim...", "Erro ao abrir")
+        End If
+        '
+        propReserva = objReserva
+        PreencheDataBindings()
+        '
+        Handler_MouseMove()
+        Handler_MouseUp()
+        Handler_MouseDown()
+        '
+        AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
+        '
+        AddHandler chkProdutoConhecido.CheckedChanged, AddressOf chkProdutoConhecido_CheckedChanged
+        '
+    End Sub
     '
     Private Property Sit As EnumFlagEstado
         Get
@@ -56,33 +83,36 @@ Public Class frmReserva
             End If
             '
             VerificaProdutoConhecido()
+            dtpReservaData.MaxDate = Today
+            '
+            If Not IsNothing(_Reserva.IDPedido) OrElse _Reserva.IDSituacaoReserva > 1 Then
+                RegistroBloqueado = True
+            Else
+                RegistroBloqueado = False
+            End If
+            '
+            If Not IsNothing(_formOrigem) AndAlso TypeOf _formOrigem IsNot frmReservaProcurar Then
+                btnProcurar.Enabled = False
+            End If
             '
         End Set
+        '
     End Property
     '
-    Sub New(objReserva As clReserva)
-        '
-        ' This call is required by the designer.
-        InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        If IsNothing(objReserva) Then
-            MessageBox.Show("Esse formulário não pode ser aberto assim...", "Erro ao abrir")
-        End If
-        '
-        propReserva = objReserva
-        PreencheDataBindings()
-        '
-        Handler_MouseMove()
-        Handler_MouseUp()
-        Handler_MouseDown()
-        '
-        AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
-        '
-        AddHandler chkProdutoConhecido.CheckedChanged, AddressOf chkProdutoConhecido_CheckedChanged
-        dtpReservaData.MaxDate = Today
-        '
-    End Sub
+    Private Property RegistroBloqueado As Boolean
+        Get
+            If _RegistroBloqueado Then
+                AbrirDialog("Esse registro está bloqueado para alterações..." +
+                            "Não é possível salvá-lo.",
+                            "Registro Bloqueado",
+                            frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+            End If
+            Return _RegistroBloqueado
+        End Get
+        Set(value As Boolean)
+            _RegistroBloqueado = value
+        End Set
+    End Property
     '
 #End Region
     '
@@ -116,17 +146,19 @@ Public Class frmReserva
         AddHandler txtRGProduto.DataBindings("Text").Format, AddressOf idFormatRG
         AddHandler txtPVenda.DataBindings("Text").Format, AddressOf FormatCUR
         '
-        'AddHandler bindReserva.CurrentChanged, AddressOf handler_CurrentChanged
-        '
         ' ADD HANDLER PARA DATABINGS
         AddHandler DirectCast(bindReserva.CurrencyManager.Current, clReserva).AoAlterar, AddressOf HandlerAoAlterar
         '
     End Sub
     '
     Private Sub HandlerAoAlterar()
+        '
+        If RegistroBloqueado Then Exit Sub
+        '
         If bindReserva.Current.RegistroAlterado = True And Sit = EnumFlagEstado.RegistroSalvo Then
             Sit = EnumFlagEstado.Alterado
         End If
+        '
     End Sub
     '
     ' FORMATA OS BINDINGS
@@ -151,6 +183,11 @@ Public Class frmReserva
             Cursor = Cursors.WaitCursor
             '
             Close()
+            '
+            If Not IsNothing(_formOrigem) AndAlso TypeOf _formOrigem Is frmReservaProcurar Then
+                _formOrigem.Visible = True
+                Return
+            End If
             '
             Dim fProc As New frmReservaProcurar
             fProc.Show()
@@ -196,12 +233,32 @@ Public Class frmReserva
                                MessageBoxDefaultButton.Button2) = DialogResult.No Then
                 txtFuncionario.Focus()
                 Exit Sub
+            Else
+                bindReserva.CancelEdit()
             End If
+        ElseIf _RegistroBloqueado Then
+            bindReserva.CancelEdit()
         End If
         '
+        RemoveHandler DirectCast(bindReserva.CurrencyManager.Current, clReserva).AoAlterar, AddressOf HandlerAoAlterar
         AutoValidate = AutoValidate.Disable
         Me.Close()
-        MostraMenuPrincipal()
+        'MostraMenuPrincipal()
+        '
+    End Sub
+    '
+    '--- FORM CLOSED - FIND OPENING RESERVA PROCURAR
+    '----------------------------------------------------------------------------------
+    Private Sub frmReserva_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
+        If e.CloseReason = CloseReason.FormOwnerClosing Or e.CloseReason = CloseReason.UserClosing Then
+            '
+            If Not IsNothing(_formOrigem) Then
+                _formOrigem.Visible = True
+            Else
+                MostraMenuPrincipal()
+            End If
+            '
+        End If
         '
     End Sub
     '
@@ -210,6 +267,8 @@ Public Class frmReserva
 #Region "BOTOES DE PROCURA"
     '
     Private Sub btnProcFuncionario_Click(sender As Object, e As EventArgs) Handles btnProcFuncionario.Click
+        '
+        If RegistroBloqueado Then Exit Sub
         '
         Dim frmF As New frmFuncionarioProcurar(False, Me)
         Dim oldID As Integer? = _Reserva.IDFuncionario
@@ -234,6 +293,8 @@ Public Class frmReserva
     End Sub
     '
     Private Sub btnProcProdutoTipo_Click(sender As Object, e As EventArgs) Handles btnProcProdutoTipo.Click
+        '
+        If RegistroBloqueado Then Exit Sub
         '
         If _Reserva.ProdutoConhecido Then Exit Sub
         '
@@ -261,6 +322,8 @@ Public Class frmReserva
     '
     Private Sub btnProcAutores_Click(sender As Object, e As EventArgs) Handles btnProcAutores.Click
         '
+        If RegistroBloqueado Then Exit Sub
+        '
         If _Reserva.ProdutoConhecido Then Exit Sub
         '
         Dim frmA As New frmAutoresProcurar(Me)
@@ -284,6 +347,8 @@ Public Class frmReserva
     End Sub
     '
     Private Sub btnProcFabricantes_Click(sender As Object, e As EventArgs) Handles btnProcFabricantes.Click
+        '
+        If RegistroBloqueado Then Exit Sub
         '
         If _Reserva.ProdutoConhecido Then Exit Sub
         '
@@ -310,6 +375,8 @@ Public Class frmReserva
     End Sub
     '
     Private Sub btnProcFornecedores_Click(sender As Object, e As EventArgs) Handles btnProcFornecedores.Click
+        '
+        If RegistroBloqueado Then Exit Sub
         '
         Dim frmF As New frmFornecedorProcurar(True, Me)
         Dim oldIDFornecedor As Integer? = _Reserva.IDFornecedor

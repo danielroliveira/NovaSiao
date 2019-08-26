@@ -190,7 +190,7 @@ Public Class frmPedido
         txtObservacao.ReadOnly = Not compondo
         txtEmailVendas.ReadOnly = Not compondo
         '
-        dgvItens.AllowUserToDeleteRows = compondo And Not destino
+        dgvItens.AllowUserToDeleteRows = IIf(_pedido.Situacao = 4, destino, compondo)
         dgvMensagens.AllowUserToDeleteRows = compondo
         btnProcFornecedores.Enabled = compondo
         btnProcTransportadora.Enabled = compondo
@@ -199,6 +199,8 @@ Public Class frmPedido
         btnVerificarAdicionar.Enabled = IIf(_pedido.Situacao = 4, destino, compondo)
         btnProdutosFornecedor.Enabled = IIf(_pedido.Situacao = 4, destino, compondo)
         btnImportarExportar.Enabled = compondo
+        '
+        btnPedidoMigrado.Visible = _pedido.Situacao = 4
         '
     End Sub
     '
@@ -1276,6 +1278,32 @@ Public Class frmPedido
         '
     End Sub
     '
+    '--- IR PARA PEDIDO MIGRADO
+    '----------------------------------------------------------------------------------------------------
+    Private Sub btnPedidoMigrado_Click(sender As Object, e As EventArgs) Handles btnPedidoMigrado.Click
+        '
+        If Not Sit = EnumFlagEstado.RegistroSalvo Then
+            AbrirDialog("É necessário salvar o Pedido antes de ir para Pedido Migrado...",
+                        "Ir Para Pedido Migrado",
+                        frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            propPedido = _pedBLL.GetPedidoPeloID(_pedido.IDMigracao)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir Pedido Migrado..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
 #End Region '/ MIGRACAO
     '
 #Region "ACAO BOTOES"
@@ -2599,6 +2627,111 @@ Public Class frmPedido
         Return True
         '
     End Function
+    '
+#End Region
+    '
+#Region "MENU CONTEXT ITENS"
+    '
+    ' CONTROLE DO MENU SUSPENSO
+    Private Sub dgvItens_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvItens.MouseDown
+        '
+        If e.Button = MouseButtons.Right Then
+            '
+            Dim c As Control = DirectCast(sender, Control)
+            Dim hit As DataGridView.HitTestInfo = dgvItens.HitTest(e.X, e.Y)
+            dgvItens.ClearSelection()
+            '
+            '---VERIFICAÇÕES NECESSÁRIAS
+            If Not hit.Type = DataGridViewHitTestType.Cell Then Exit Sub
+            '
+            ' seleciona o ROW
+            dgvItens.Rows(hit.RowIndex).Cells(1).Selected = True
+            dgvItens.Rows(hit.RowIndex).Selected = True
+            '
+            ' mostra o menu item
+            Dim item As clPedidoItem = dgvItens.Rows(hit.RowIndex).DataBoundItem
+            '
+            ' mostra o menu item
+            'WHEN 0 THEN Pedido Local'
+            'WHEN 1 THEN Reserva Local'
+            'WHEN 2 THEN Pedido Filial'
+            'WHEN 3 THEN Reserva Filial'
+            'WHEN 4 THEN Migracao Local'
+            miAbrirReserva.Enabled = item.Origem = 1 '--- ORIGEM = 1 => Origem Reserva
+            miAbrirPedidoOrigem.Enabled = item.Origem = 4 Or item.Origem = 2
+            '
+            ' revela menu
+            mnuItens.Show(c.PointToScreen(e.Location))
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- ABRIR PEDIDO ORIGEM
+    '----------------------------------------------------------------------------------
+    Private Sub miAbrirPedidoOrigem_Click(sender As Object, e As EventArgs) Handles miAbrirPedidoOrigem.Click
+        '
+        If Not Sit = EnumFlagEstado.RegistroSalvo Then
+            AbrirDialog("É necessário salvar o Pedido antes de ir para Pedido Origem...",
+                        "Ir Para Pedido Origem",
+                        frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Get IDPedido Origem
+            Dim item As clPedidoItem = dgvItens.CurrentRow.DataBoundItem
+
+            propPedido = _pedBLL.GetPedidoPeloID(item.IDPedido)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir Pedido Migrado..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    '--- ABRIR RESERVA
+    '----------------------------------------------------------------------------------
+    Private Sub miAbrirReserva_Click(sender As Object, e As EventArgs) Handles miAbrirReserva.Click
+        '
+        If Not Sit = EnumFlagEstado.RegistroSalvo Then
+            AbrirDialog("É necessário salvar o Pedido antes de abrir a Reserva...",
+                        "Abrir Reserva",
+                        frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            Exit Sub
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Get IDReserva Origem
+            Dim rBLL As New ReservaBLL
+            Dim item As clPedidoItem = dgvItens.CurrentRow.DataBoundItem
+            '
+            Dim reserva As clReserva = rBLL.GetReservaPeloID(item.IDOrigem)
+            '
+            Dim frm As New frmReserva(reserva, Me)
+            frm.MdiParent = My.Application.OpenForms().Item(0)
+            Me.Visible = False
+            frm.Show()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir a Reserva..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
     '
 #End Region
     '
