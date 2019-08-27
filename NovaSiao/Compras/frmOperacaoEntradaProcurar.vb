@@ -686,8 +686,4 @@ Public Class frmOperacaoEntradaProcurar
     End Sub
 #End Region
     '
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim frm As New frmCompraGetNFe
-        frm.ShowDialog()
-    End Sub
 End Class

@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmOperacaoEntradaProcurar
     Inherits NovaSiao.frmModNBorder
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         If disposing AndAlso components IsNot Nothing Then
             components.Dispose()
@@ -17,7 +17,7 @@ Partial Class frmOperacaoEntradaProcurar
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -49,7 +49,6 @@ Partial Class frmOperacaoEntradaProcurar
         Me.pnlMes = New System.Windows.Forms.Panel()
         Me.dtMes = New System.Windows.Forms.MonthCalendar()
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.dgvListagem, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -366,20 +365,10 @@ Partial Class frmOperacaoEntradaProcurar
         Me.btnClose.UseVisualStyleBackColor = False
         Me.btnClose.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICE2003SILVER
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(12, 557)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(114, 36)
-        Me.Button1.TabIndex = 11
-        Me.Button1.Text = "Teste"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'frmOperacaoEntradaProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(944, 601)
-        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.pnlMes)
         Me.Controls.Add(Me.pnlVenda)
         Me.Controls.Add(Me.btnEscolher)
@@ -403,7 +392,6 @@ Partial Class frmOperacaoEntradaProcurar
         Me.Controls.SetChildIndex(Me.pnlVenda, 0)
         Me.Controls.SetChildIndex(Me.pnlMes, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
-        Me.Controls.SetChildIndex(Me.Button1, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
@@ -443,5 +431,4 @@ Partial Class frmOperacaoEntradaProcurar
     Friend WithEvents VendaData As DataGridViewTextBoxColumn
     Friend WithEvents CadastroNome As DataGridViewTextBoxColumn
     Friend WithEvents TotalCompra As DataGridViewTextBoxColumn
-    Friend WithEvents Button1 As Button
 End Class

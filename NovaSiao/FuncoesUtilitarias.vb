@@ -214,4 +214,21 @@ Public Class Utilidades
         '
     End Function
     '
+    '----------------------------------------------------------------------------------
+    '--- CONVERT STRING IN FORMATED CNPJ OR CPF
+    '----------------------------------------------------------------------------------
+    Public Shared Function CNPConvert(CNP As String) As String
+        '
+        If CNP.Length = 11 Then
+            'txtCNPJ.Mask = "000,000,000-00"
+            Return CNP.Insert(3, ".").Insert(7, ".").Insert(11, "-")
+        ElseIf CNP.Length = 14 Then
+            'txtCNPJ.Mask = "00,000,000/0000-00"
+            Return CNP.Insert(2, ".").Insert(6, ".").Insert(10, "/").Insert(15, "-")
+        Else
+            Throw New CamadaDTO.AppException("Número de CNPJ ou CPF inválido...")
+        End If
+        '
+    End Function
+    '
 End Class

@@ -873,7 +873,7 @@ Public Class frmPrincipal
     '========================================================================================================
 #Region "ENTRADA DE PRODUTOS"
     '
-    Private Sub miNovaCompra_Click(sender As Object, e As EventArgs) Handles miNovaCompra.Click
+    Private Sub miNovaCompraNormal_Click(sender As Object, e As EventArgs) Handles miNovaCompraNormal.Click
         Dim c As New AcaoGlobal
         Dim obj As Object = c.Compra_Nova
         '
@@ -887,6 +887,21 @@ Public Class frmPrincipal
             f.Show()
         Catch ex As Exception
             MessageBox.Show("Um erro inesperado ocorreu ao abrir Nova Compra", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            MostraMenuPrincipal()
+        End Try
+        '
+    End Sub
+    '
+    Private Sub miNovaCompraNFeXML_Click(sender As Object, e As EventArgs) Handles miNovaCompraNFeXML.Click
+        '
+        Try
+            OcultaMenuPrincipal()
+            Dim f As New frmCompraGetNFe
+            f.MdiParent = Me
+            f.StartPosition = FormStartPosition.CenterScreen
+            f.Show()
+        Catch ex As Exception
+            MessageBox.Show("Um erro inesperado ocorreu ao abrir O Formulário de Criação de NFe", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error)
             MostraMenuPrincipal()
         End Try
         '

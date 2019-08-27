@@ -104,7 +104,7 @@ Public Class PessoaBLL
             'Adiciona os parametros
             db.LimparParametros()
             db.AdicionarParametros("@CNP", CNP)
-            db.AdicionarParametros("@ProcurarEm", ProcurarEm)
+            db.AdicionarParametros("@ProcurarEm", ProcurarEm.ToString)
             '
             'executa o procedure
             Dim dtPessoa As DataTable
@@ -2331,7 +2331,9 @@ Public Class PessoaBLL
             .TelefoneA = If(IsDBNull(r("TelefoneA")), String.Empty, r("TelefoneA"))
             .TelefoneB = If(IsDBNull(r("TelefoneB")), String.Empty, r("TelefoneB"))
             '
-            ' PESSOA TRANSPORTADORA
+            ' PESSOA FORNECEDOR
+            .Vendedor = If(IsDBNull(r("Vendedor")), Nothing, r("Vendedor"))
+            .EmailVendas = If(IsDBNull(r("EmailVendas")), String.Empty, r("EmailVendas"))
             .IDPessoa = If(IsDBNull(r("IDFornecedor")), Nothing, r("IDFornecedor"))
             .Ativo = If(IsDBNull(r("Ativo")), Nothing, r("Ativo"))
             .Observacao = If(IsDBNull(r("Observacao")), String.Empty, r("Observacao"))

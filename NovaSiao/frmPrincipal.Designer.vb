@@ -63,6 +63,8 @@ Partial Class frmPrincipal
         Me.miProcurarTroca = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsbCompras = New System.Windows.Forms.ToolStripSplitButton()
         Me.miNovaCompra = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miNovaCompraNormal = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miNovaCompraNFeXML = New System.Windows.Forms.ToolStripMenuItem()
         Me.miSimplesEntrada = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.miProcurarOperacaoEntrada = New System.Windows.Forms.ToolStripMenuItem()
@@ -100,6 +102,7 @@ Partial Class frmPrincipal
         Me.ToolStripSeparator14 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsbConfig = New System.Windows.Forms.ToolStripSplitButton()
         Me.miConfiguracaoDataPadrao = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         Me.miConfiguracaoSistema = New System.Windows.Forms.ToolStripMenuItem()
         Me.miCFOP = New System.Windows.Forms.ToolStripMenuItem()
         Me.miEmailServer = New System.Windows.Forms.ToolStripMenuItem()
@@ -123,7 +126,6 @@ Partial Class frmPrincipal
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblHora = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.ToolStripSeparator7 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsPrincipal.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.SContainerPrincipal, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -450,11 +452,28 @@ Partial Class frmPrincipal
         '
         'miNovaCompra
         '
+        Me.miNovaCompra.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miNovaCompraNormal, Me.miNovaCompraNFeXML})
         Me.miNovaCompra.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.miNovaCompra.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.miNovaCompra.Name = "miNovaCompra"
         Me.miNovaCompra.Size = New System.Drawing.Size(259, 30)
         Me.miNovaCompra.Text = "Nova Compra"
+        '
+        'miNovaCompraNormal
+        '
+        Me.miNovaCompraNormal.Image = Global.NovaSiao.My.Resources.Resources.editar
+        Me.miNovaCompraNormal.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miNovaCompraNormal.Name = "miNovaCompraNormal"
+        Me.miNovaCompraNormal.Size = New System.Drawing.Size(188, 30)
+        Me.miNovaCompraNormal.Text = "Normal"
+        '
+        'miNovaCompraNFeXML
+        '
+        Me.miNovaCompraNFeXML.Image = Global.NovaSiao.My.Resources.Resources.download
+        Me.miNovaCompraNFeXML.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miNovaCompraNFeXML.Name = "miNovaCompraNFeXML"
+        Me.miNovaCompraNFeXML.Size = New System.Drawing.Size(188, 30)
+        Me.miNovaCompraNFeXML.Text = "Por NFe XML"
         '
         'miSimplesEntrada
         '
@@ -741,6 +760,11 @@ Partial Class frmPrincipal
         Me.miConfiguracaoDataPadrao.Tag = "3"
         Me.miConfiguracaoDataPadrao.Text = "Conta | Data Padrão"
         '
+        'ToolStripSeparator7
+        '
+        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
+        Me.ToolStripSeparator7.Size = New System.Drawing.Size(243, 6)
+        '
         'miConfiguracaoSistema
         '
         Me.miConfiguracaoSistema.Image = Global.NovaSiao.My.Resources.Resources.Controles_24x24
@@ -990,11 +1014,6 @@ Partial Class frmPrincipal
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 600
         '
-        'ToolStripSeparator7
-        '
-        Me.ToolStripSeparator7.Name = "ToolStripSeparator7"
-        Me.ToolStripSeparator7.Size = New System.Drawing.Size(243, 6)
-        '
         'frmPrincipal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -1126,4 +1145,6 @@ Partial Class frmPrincipal
     Friend WithEvents miFretes As ToolStripMenuItem
     Friend WithEvents miEmailServer As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
+    Friend WithEvents miNovaCompraNormal As ToolStripMenuItem
+    Friend WithEvents miNovaCompraNFeXML As ToolStripMenuItem
 End Class

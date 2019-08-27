@@ -21,16 +21,7 @@ Public Class frmClienteNovo
     Private Sub txtCNPJ_Leave(sender As Object, e As EventArgs) Handles txtCNPJ.Leave
         '
         If IsNumeric(txtCNPJ.Text) Then
-            If txtCNPJ.TextLength = 11 Then
-                'txtCNPJ.Mask = "000,000,000-00"
-
-                txtCNPJ.Text = txtCNPJ.Text.Insert(3, ".").Insert(7, ".").Insert(11, "-")
-
-            ElseIf txtCNPJ.TextLength = 14 Then
-                'txtCNPJ.Mask = "00,000,000/0000-00"
-                txtCNPJ.Text = txtCNPJ.Text.Insert(2, ".").Insert(6, ".").Insert(10, "/").Insert(15, "-")
-
-            End If
+            txtCNPJ.Text = Utilidades.CNPConvert(txtCNPJ.Text)
         End If
         '
     End Sub

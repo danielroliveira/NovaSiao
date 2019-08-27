@@ -4,59 +4,21 @@ Imports CamadaBLL
 Public Class frmFornecedor
     Private _forn As clFornecedor
     Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
+    Private _formOrigem As Form = Nothing
     Private BindForn As New BindingSource
     Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
     '
 #Region "LOAD E PROPERTIES"
     '
-    Private Property Sit As EnumFlagEstado
-        Get
-            Return _Sit
-        End Get
-        Set(value As EnumFlagEstado)
-            _Sit = value
-            If _Sit = EnumFlagEstado.RegistroSalvo Then
-                btnSalvar.Enabled = False
-                btnNovo.Enabled = True
-                btnCancelar.Enabled = False
-                btnProcurar.Enabled = True
-                txtCNPJ.ReadOnly = True
-            ElseIf _Sit = enumFlagEstado.Alterado Then
-                btnSalvar.Enabled = True
-                btnNovo.Enabled = False
-                btnCancelar.Enabled = True
-                btnProcurar.Enabled = False
-                txtCNPJ.ReadOnly = True
-            ElseIf _Sit = enumFlagEstado.NovoRegistro Then
-                txtRazaoSocial.Select()
-                btnSalvar.Enabled = True
-                btnNovo.Enabled = False
-                btnCancelar.Enabled = True
-                btnProcurar.Enabled = False
-                txtCNPJ.ReadOnly = False
-                lblID.Text = "NOVO"
-            End If
-        End Set
-    End Property
-    '
-    Public Property propForn() As clFornecedor
-        Get
-            Return _forn
-        End Get
-        Set(ByVal value As clFornecedor)
-            _forn = value
-            BindForn.DataSource = _forn
-            AtivoButtonImage()
-        End Set
-    End Property
-    '
-    Sub New(objForn As clFornecedor)
+    Sub New(objForn As clFornecedor, Optional formOrigem As Form = Nothing)
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
+        _formOrigem = formOrigem
+        '
         If IsNothing(objForn) Then
             MessageBox.Show("Esse formulário não pode ser aberto assim...", "Erro ao abrir")
         End If
@@ -70,8 +32,8 @@ Public Class frmFornecedor
         Else
             Sit = EnumFlagEstado.NovoRegistro
             ' OBTER OS VALORES DEFAULT DOS CAMPOS
-            _forn.Cidade = ObterDefault("CidadePadrao")
-            _forn.UF = ObterDefault("UFPadrao")
+            If _forn.Cidade.Trim.Length = 0 Then _forn.Cidade = ObterDefault("CidadePadrao")
+            If _forn.UF.Trim.Length = 0 Then _forn.UF = ObterDefault("UFPadrao")
         End If
         '
     End Sub
@@ -79,6 +41,59 @@ Public Class frmFornecedor
     Private Sub frmFornecedor_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
     End Sub
+    '
+    Private Property Sit As EnumFlagEstado
+        '
+        Get
+            Return _Sit
+        End Get
+        '
+        Set(value As EnumFlagEstado)
+            _Sit = value
+            '
+            If _Sit = EnumFlagEstado.RegistroSalvo Then
+                btnSalvar.Enabled = False
+                btnNovo.Enabled = True
+                btnCancelar.Enabled = False
+                btnProcurar.Enabled = True
+                txtCNPJ.ReadOnly = True
+            ElseIf _Sit = EnumFlagEstado.Alterado Then
+                btnSalvar.Enabled = True
+                btnNovo.Enabled = False
+                btnCancelar.Enabled = True
+                btnProcurar.Enabled = False
+                txtCNPJ.ReadOnly = True
+            ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
+                txtRazaoSocial.Select()
+                btnSalvar.Enabled = True
+                btnNovo.Enabled = False
+                btnCancelar.Enabled = True
+                btnProcurar.Enabled = False
+                txtCNPJ.ReadOnly = False
+                lblID.Text = "NOVO"
+            End If
+            '
+            '--- check if FormOrigem is DEFINED
+            If Not IsNothing(_formOrigem) Then
+                btnProcurar.Enabled = False
+                btnProdutos.Enabled = False
+                btnNovo.Enabled = False
+            End If
+            '
+        End Set
+        '
+    End Property
+    '
+    Public Property propForn() As clFornecedor
+        Get
+            Return _forn
+        End Get
+        Set(ByVal value As clFornecedor)
+            _forn = value
+            BindForn.DataSource = _forn
+            AtivoButtonImage()
+        End Set
+    End Property
     '
 #End Region
     '
@@ -195,8 +210,14 @@ Public Class frmFornecedor
         '
         If Sit = EnumFlagEstado.NovoRegistro Then
             '
-            btnProcurar_Click(btnCancelar, New EventArgs)
-            Exit Sub
+            If IsNothing(_formOrigem) Then
+                btnProcurar_Click(btnCancelar, New EventArgs)
+                Exit Sub
+            Else
+                DialogResult = DialogResult.Cancel
+                _formOrigem.Visible = True
+                Me.Close()
+            End If
             '
         ElseIf Sit = EnumFlagEstado.Alterado Then
             '
@@ -255,9 +276,17 @@ Public Class frmFornecedor
     '
     '--- BTN FECHAR
     Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+        '
         AutoValidate = AutoValidate.Disable
-        Me.Close()
-        MostraMenuPrincipal()
+        '
+        If Not IsNothing(_formOrigem) Then
+            DialogResult = DialogResult.Cancel
+            _formOrigem.Visible = True
+        Else
+            Me.Close()
+            MostraMenuPrincipal()
+        End If
+        '
     End Sub
     '
 #End Region
@@ -312,6 +341,7 @@ Public Class frmFornecedor
         '
         '--- Verifica se houve Retorno da Função de Salvar
         If IsNumeric(NewFornID) AndAlso NewFornID <> 0 Then
+            '
             '--- Retorna o número de Registro do Novo Cliente Cadastrado
             If Sit = EnumFlagEstado.NovoRegistro Then
                 _forn.IDPessoa = NewFornID
@@ -325,6 +355,16 @@ Public Class frmFornecedor
             '
             '--- Mensagem de Sucesso:
             MsgBox("Registro Salvo com sucesso!", vbInformation, "Registro Salvo")
+            '
+            '--- check if exists formOrigem and close
+            If Not IsNothing(_formOrigem) Then
+                '
+                DialogResult = DialogResult.OK
+                Close()
+                _formOrigem.Visible = True
+                '
+            End If
+            '
         Else
             MsgBox("Registro NÃO pôde ser salvo!", vbInformation, "Erro ao Salvar")
         End If
@@ -410,19 +450,19 @@ Public Class frmFornecedor
         End If
         '
         'VERIFICAR SE O CNPJ JÁ ESTÁ CADASTRADO COMO PESSOA OU FORNECEDOR
-        Dim transp As Object = VerPessoaExistente()
+        Dim forn As Object = VerPessoaExistente()
         '
-        If IsNothing(transp) Then Exit Sub
+        If IsNothing(forn) Then Exit Sub
         '
-        Select Case transp.GetType()
+        Select Case forn.GetType()
             Case Is = GetType(clPessoaJuridica) ' É APENAS PessoaJuridica
                 If MessageBox.Show("Já Existe PESSOA JURÍDICA cadastrada com esse mesmo CNPJ:" & vbCrLf & vbCrLf &
-                                   DirectCast(transp, clPessoaJuridica).Cadastro.ToUpper & vbCrLf & vbCrLf &
+                                   DirectCast(forn, clPessoaJuridica).Cadastro.ToUpper & vbCrLf & vbCrLf &
                                    "Deseja preencher os dados automaticamente com as informações dessa pessoa?",
                                    "Copiar os Dados", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
                     '
                     Dim t As New clPessoaJuridica
-                    t = DirectCast(transp, clPessoaJuridica)
+                    t = DirectCast(forn, clPessoaJuridica)
                     '
                     '--- PREENCHE OS DADOS AUTOMATICAMENTE
                     txtRazaoSocial.Text = t.Cadastro
@@ -440,7 +480,7 @@ Public Class frmFornecedor
                     txtContatoNome.Text = t.ContatoNome
                     '
                 End If
-            Case Is = GetType(clFornecedor) ' JÁ é um FUNCIONARIO
+            Case Is = GetType(clFornecedor) ' JÁ é um FORNECEDOR
                 MessageBox.Show("Já existe um FORNECEDOR cadastrado com esse mesmo CNPJ..." & vbCrLf & vbNewLine &
                                 "Não é possível inserir um novo FORNECEDOR com o mesmo CNPJ",
                                 "CNPJ Já existe como FORNECEDOR", MessageBoxButtons.OK, MessageBoxIcon.Information)

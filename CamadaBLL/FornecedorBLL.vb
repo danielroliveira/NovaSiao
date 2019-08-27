@@ -6,7 +6,8 @@ Public Class FornecedorBLL
     '-----------------------------------------------------------------------------------------------------
     ' GET LISTA COMPLETA COM FILTRO OPCIONAL DE ATIVO
     '-----------------------------------------------------------------------------------------------------
-    Public Function GetFornecedores(Optional IDFornecedor As Integer? = Nothing, Optional Ativo As Boolean? = Nothing) As List(Of clFornecedor)
+    Public Function GetFornecedores(Optional IDFornecedor As Integer? = Nothing,
+                                    Optional Ativo As Boolean? = Nothing) As List(Of clFornecedor)
         Dim db As New AcessoDados
         '
         db.LimparParametros()
