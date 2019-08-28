@@ -803,9 +803,11 @@ Public Class clProdutoFornecedor
         '
         '--- Dados da tblProduto
         '========================================
+        Dim _IDProdutoFornecedor As Integer?
         Dim _IDProduto As Integer?
         'Dim RGProduto As Integer?
         'Dim Produto As String
+        'Dim CodBarrasA as String
         Dim _IDFornecedor As Integer?
         Dim _Cadastro As String
         Dim _FornecedorPadrao As Boolean
@@ -814,7 +816,6 @@ Public Class clProdutoFornecedor
         Dim _UltimaEntrada As Date?
         Dim _PCompra As Decimal?
         Dim _DescontoCompra As Decimal?
-        Dim _IDProdutoOrigem As String
         'Dim IDFilial As String
         'Dim ApelidoFilial As String
         '=========================================
@@ -831,6 +832,7 @@ Public Class clProdutoFornecedor
 #Region "IMPLEMENTS EVENTS"
     Public Sub New()
         PData = New ProdutoDados()
+        PData._IDProdutoFornecedor = Nothing
         PData._PCompra = 0
         PData._DescontoCompra = 0
         PData._FornecedorPadrao = False
@@ -873,6 +875,17 @@ Public Class clProdutoFornecedor
     '
 #Region "PROPRIEDADES"
     '
+    '--- Propriedade IDProdutoFornecedor
+    '------------------------------------------------------
+    Public Property IDProdutoFornecedor() As Integer
+        Get
+            Return PData._IDProdutoFornecedor
+        End Get
+        Set(ByVal value As Integer)
+            PData._IDProdutoFornecedor = value
+        End Set
+    End Property
+    '
     '--- Propriedade IDProduto
     '------------------------------------------------------
     Property IDProduto() As Integer?
@@ -891,6 +904,10 @@ Public Class clProdutoFornecedor
     '--- Propriedade Produto
     '------------------------------------------------------
     Property Produto() As String
+    '
+    '--- Propriedade Codigo de Barras
+    '------------------------------------------------------
+    Property CodBarrasA() As String
     '
     '--- Propriedade IDFornecedor
     '------------------------------------------------------
@@ -996,22 +1013,6 @@ Public Class clProdutoFornecedor
         End Set
     End Property
     '
-    '--- Propriedade IDProdutoOrigem
-    '------------------------------------------------------ 
-    Property IDProdutoOrigem() As String
-        Get
-            Return PData._IDProdutoOrigem
-        End Get
-        Set(value As String)
-            If Not IsNothing(PData._IDProdutoOrigem) Then
-                If value <> PData._IDProdutoOrigem Then
-                    RaiseEvent AoAlterar()
-                End If
-            End If
-            PData._IDProdutoOrigem = value
-        End Set
-    End Property
-    '
     '--- Propriedade IDFilial
     '------------------------------------------------------ 
     Property IDFilial() As Integer?
@@ -1029,5 +1030,14 @@ Public Class clProdutoFornecedor
     End Property
     '
 #End Region
+    '
+End Class
+'
+Public Class clProdutoFornecedorItem
+    Inherits clProdutoFornecedor
+    '
+    Property IDProdutoOrigem As String
+    Property DescricaoOrigem As String
+    Property CodBarrasOrigem As String
     '
 End Class

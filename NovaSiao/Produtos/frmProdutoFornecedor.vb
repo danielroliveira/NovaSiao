@@ -173,16 +173,6 @@ Public Class frmProdutoFornecedor
     '
     Private Sub FormataColunas_Itens()
         '
-        ' (0) COLUNA COD IDPRODUTOORIGEM
-        With clnIDProdutoFornecedor
-            .DataPropertyName = "IDProdutoOrigem"
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = False
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
         ' (1) COLUNA Data
         With clnData
             .DataPropertyName = "UltimaEntrada"
@@ -250,8 +240,8 @@ Public Class frmProdutoFornecedor
         End With
         '
         '--- adiciona as colunas editadas
-        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnIDProdutoFornecedor, clnData, clnApelidoFilial,
-                                  clnFornecedor, clnPreco, clnDesconto, clnFornecedorPadrao})
+        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnFornecedor, clnData, clnApelidoFilial,
+                                  clnPreco, clnDesconto, clnFornecedorPadrao})
         '
     End Sub
     '
@@ -424,21 +414,21 @@ Public Class frmProdutoFornecedor
         '--- verifica se a currenteCELL is Dirty
         If Not dgvItens.IsCurrentCellDirty Then Return
         '
-        If e.ColumnIndex = clnIDProdutoFornecedor.Index Then
-            '
-            '--- obtem o item do dgv
-            Dim item As clProdutoFornecedor = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clProdutoFornecedor)
-            '
-            '--- SAVE
-            Try
-                Altera_Item_IDProdutoOrigem(item.IDProduto, item.IDFornecedor, e.FormattedValue)
-                currentEditRow = Nothing
-                _rowSit = EnumFlagEstado.RegistroSalvo
-            Catch ex As Exception
-                e.Cancel = True
-            End Try
-            '
-        End If
+        'If e.ColumnIndex = clnIDProdutoFornecedor.Index Then
+        '    '
+        '    '--- obtem o item do dgv
+        '    Dim item As clProdutoFornecedor = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clProdutoFornecedor)
+        '    '
+        '    '--- SAVE
+        '    Try
+        '        Altera_Item_IDProdutoOrigem(item.IDProduto, item.IDFornecedor, e.FormattedValue)
+        '        currentEditRow = Nothing
+        '        _rowSit = EnumFlagEstado.RegistroSalvo
+        '    Catch ex As Exception
+        '        e.Cancel = True
+        '    End Try
+        '    '
+        'End If
         '
     End Sub
     '

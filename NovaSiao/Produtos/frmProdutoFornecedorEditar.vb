@@ -4,6 +4,7 @@ Imports CamadaBLL
 Public Class frmProdutoFornecedorEditar
     '
     Private _prodForn As clProdutoFornecedor
+    Private _itensList As New List(Of clProdutoFornecedorItem)
     Private bindProd As New BindingSource
     Private _Sit As EnumFlagEstado
     Private _formOrigem As Form = Nothing
@@ -133,6 +134,32 @@ Public Class frmProdutoFornecedorEditar
     End Sub
     '
 #End Region '/ BINDINGS
+    '
+#Region "GET DATAGRID ITEMS LIST"
+    '
+    Private Function GetListByID(IDProduto As Integer) As List(Of clProdutoFornecedor)
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim prodBLL As New ProdutoFornecedorBLL
+            Return prodBLL.GetListProdutoFornecedorByIDProduto(IDProduto)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Obter a lista de Fornecedores do Produto..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+        Return Nothing
+        '
+    End Function
+
+    '
+#End Region '/ GET DATAGRID ITEMS LIST
     '
 #Region "BUTTONS FUNCTION"
     '

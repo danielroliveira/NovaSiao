@@ -15,6 +15,8 @@ Public Class frmCompraGetNFe
         Property PCompra As Double
         Property PVenda As Double
         Property DescontoCompra As Double
+        Property CST As String
+        Property DescontoNFe As Double
         '
     End Class
     '
@@ -64,7 +66,7 @@ Public Class frmCompraGetNFe
     Private Sub FormataColunas()
         '
         ' (0) COLUNA IDProdutoOrigem
-        With clnIDProdutoOrigem
+        With clnIDProdutoNfe
             .DataPropertyName = "cProd"
             .Width = 60
             .Resizable = DataGridViewTriState.False
@@ -77,7 +79,7 @@ Public Class frmCompraGetNFe
         End With
         '
         ' (1) COLUNA PRODUTO
-        With clnProduto
+        With clnProdutoNfe
             .DataPropertyName = "xProd"
             .Width = 375
             .Resizable = DataGridViewTriState.False
@@ -88,7 +90,7 @@ Public Class frmCompraGetNFe
         End With
         '
         ' (2) COLUNA QUANTIDADE
-        With clnQuantidade
+        With clnQuantidadeNFe
             .DataPropertyName = "qCom"
             .Width = 60
             .Resizable = DataGridViewTriState.False
@@ -101,8 +103,8 @@ Public Class frmCompraGetNFe
         End With
         '
         ' (3) COLUNA PRECO
-        With clnPreco
-            .DataPropertyName = "vProd"
+        With clnPrecoNfe
+            .DataPropertyName = "vUnCom"
             .Width = 90
             .Resizable = DataGridViewTriState.False
             .Visible = True
@@ -114,8 +116,8 @@ Public Class frmCompraGetNFe
         End With
         '
         ' (4) COLUNA DESCONTO
-        With clnDesconto
-            .DataPropertyName = "DescontoCompra"
+        With clnDescontoNfe
+            .DataPropertyName = "DescontoNFe"
             .Width = 80
             .Resizable = DataGridViewTriState.False
             .Visible = True
@@ -127,8 +129,8 @@ Public Class frmCompraGetNFe
         End With
         '
         ' (5) COLUNA TOTAL
-        With clnTotal
-            .DataPropertyName = "vDesc"
+        With clnTotalNfe
+            .DataPropertyName = "vProd"
             .Width = 90
             .Resizable = DataGridViewTriState.False
             .Visible = True
@@ -151,8 +153,19 @@ Public Class frmCompraGetNFe
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
         End With
         '
-        dgvItens.Columns.AddRange({clnIDProdutoOrigem, clnProduto, clnQuantidade, clnPreco,
-                                   clnDesconto, clnTotal, clnRGProduto})
+        ' (1) COLUNA PRODUTO ENCONTRADO
+        With clnProduto
+            .DataPropertyName = "Produto"
+            .Width = 250
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = True
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        dgvItens.Columns.AddRange({clnIDProdutoNfe, clnProdutoNfe, clnQuantidadeNFe, clnPrecoNfe,
+                                   clnDescontoNfe, clnTotalNfe, clnRGProduto, clnProduto})
         '
     End Sub
     '
@@ -169,6 +182,8 @@ Public Class frmCompraGetNFe
             Cursor = Cursors.WaitCursor
             '
             If ObterXML() Then
+                dgvItens.DataSource = Nothing
+                dgvItens.Rows.Clear()
                 ImportItensNFe()
                 dgvItens.DataSource = ItensNFe
                 ImportFornecedorNFe()
@@ -241,29 +256,24 @@ Public Class frmCompraGetNFe
                 clp.cProd = p.prod.cProd
                 clp.xProd = p.prod.xProd
                 clp.qCom = CInt(p.prod.qCom.Replace(".", ","))
+                clp.vUnCom = Format(CDbl(p.prod.vUnCom.Replace(".", ",")), "#,##0.00")
                 clp.vProd = p.prod.vProd.Replace(".", ",")
+                clp.cEAN = p.prod.cEAN
+                clp.CFOP = p.prod.CFOP
+                clp.NCM = p.prod.NCM
 
-                If Not IsNothing(p.prod.vDesc) Then
-                    Dim pDesc As Double = p.prod.vDesc.Replace(".", ",")
-                    Dim desc As Double = 100 * (clp.vProd - pDesc) / clp.vProd
-                    clp.DescontoCompra = desc
+                If TypeOf p.imposto.Items(0).item Is TNFeInfNFeDetImpostoICMSICMSSN102 Then
+                    clp.CST = p.imposto.Items(0).item.CSOSN
+                ElseIf TypeOf p.imposto.Items(0).item Is TNFeInfNFeDetImpostoICMSICMS40 Then
+                    clp.CST = p.imposto.Items(0).item.CST
                 End If
 
-                '
-                'Dim clP As New NFeItem With {
-                '    .prod = p.prod
-                '}
-                '    .IDProduto = p.prod.cProd,
-                '    .Produto = p.prod.xProd,
-                '    .prod.vProd = p.prod.vProd.Replace(".", ","),
-                '.CodBarrasA = p.prod.cEAN,
-                '.Quantidade = p.prod.qCom.Replace(".", ",")
-                '
-                'If Not IsNothing(p.prod.vDesc) Then
-                '    Dim pDesc As Double = p.prod.vDesc.Replace(".", ",")
-                '    Dim desc As Double = 100 * (clP.Preco - pDesc) / clP.Preco
-                '    clP.DescontoCompra = desc
-                'End If
+                If Not IsNothing(p.prod.vDesc) Then
+                    clp.vDesc = p.prod.vDesc.Replace(".", ",")
+                    Dim pDesc As Double = p.prod.vDesc.Replace(".", ",")
+                    Dim desc As Double = 100 * (clp.vProd - pDesc) / clp.vProd
+                    clp.DescontoNFe = desc
+                End If
                 '
                 ItensNFe.Add(clP)
                 '
@@ -331,9 +341,16 @@ Public Class frmCompraGetNFe
     '
     Private Sub btnCorrelacao_Click(sender As Object, e As EventArgs) Handles btnCorrelacao.Click
         '
+        Dim acesso As AcessoControlBLL = Nothing
+        Dim dbTran As Object = Nothing
+        '
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
+            '
+            '--- GET TRANSACAO for don't open new instances of db
+            acesso = New AcessoControlBLL
+            dbTran = acesso.GetNewAcessoWithTransaction
             '
             '--- LOOKING FOR FORNECEDOR
             '-----------------------------------------------------------------------------
@@ -369,12 +386,15 @@ Public Class frmCompraGetNFe
                 '
                 dgvItens.Rows(ItensNFe.IndexOf(item)).Selected = True
                 dgvItens.Refresh()
-                Dim prodEncontrado As clProdutoFornecedor = ProdutoFind(item, FornecedorNFe.IDPessoa)
+                Dim prodEncontrado As clProdutoFornecedor = ProdutoFind(item, FornecedorNFe.IDPessoa, dbTran)
                 '
                 If Not IsNothing(prodEncontrado) Then
                     dgvItens.CurrentRow.DefaultCellStyle.BackColor = Color.MistyRose
                     dgvItens.CurrentRow.DefaultCellStyle.SelectionBackColor = Color.Firebrick
                     item.RGProduto = prodEncontrado.RGProduto
+                    item.Produto = prodEncontrado.Produto
+                    item.PCompra = prodEncontrado.PCompra
+                    item.DescontoCompra = prodEncontrado.DescontoCompra
                     lstProdutos.Add(prodEncontrado)
                 End If
                 '
@@ -383,14 +403,20 @@ Public Class frmCompraGetNFe
             MsgBox(lstProdutos.Count)
             '
         Catch ex As AppException
+            acesso.RollbackAcessoWithTransaction(dbTran)
             AbrirDialog("Uma exceção ocorreu ao Fazer correlação da NFe..." & vbNewLine &
                         ex.Message, "Exceção", frmDialog.DialogType.OK, frmDialog.DialogIcon.Warning)
         Catch ex As Exception
+            acesso.RollbackAcessoWithTransaction(dbTran)
             MessageBox.Show("Uma exceção ocorreu ao Fazer correlação da NFe..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
+            '
+            '-- CLOSE ACESSO
+            acesso.CommitAcessoWithTransaction(dbTran)
             '--- Ampulheta OFF
             Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -494,12 +520,12 @@ Public Class frmCompraGetNFe
     '
     '--- PROCURA PRODUTO
     '----------------------------------------------------------------------------------
-    Private Function ProdutoFind(item As NFeItem, IDFornecedor As Integer) As clProdutoFornecedor
+    Private Function ProdutoFind(item As NFeItem, IDFornecedor As Integer, dbTran As Object) As clProdutoFornecedor
         '
         Try
             '
             Dim pBLL As New ProdutoFornecedorBLL
-            Return pBLL.GetProdFornecedorByFornecedorAndIDOrigem(IDFornecedor, item.cProd)
+            Return pBLL.GetProdFornecedorByFornecedorAndIDOrigem(IDFornecedor, item.cProd, dbTran)
             '
         Catch ex As Exception
             Throw ex

@@ -30,13 +30,14 @@ Partial Class frmCompraGetNFe
         Me.Label2 = New System.Windows.Forms.Label()
         Me.dgvItens = New System.Windows.Forms.DataGridView()
         Me.btnCorrelacao = New System.Windows.Forms.Button()
-        Me.clnIDProdutoOrigem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnQuantidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnIDProdutoNfe = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnProdutoNfe = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnQuantidadeNFe = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnPrecoNfe = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnDescontoNfe = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnTotalNfe = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -150,7 +151,7 @@ Partial Class frmCompraGetNFe
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvItens.ColumnHeadersHeight = 25
-        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDProdutoOrigem, Me.clnProduto, Me.clnQuantidade, Me.clnPreco, Me.clnDesconto, Me.clnTotal, Me.clnRGProduto})
+        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDProdutoNfe, Me.clnProdutoNfe, Me.clnQuantidadeNFe, Me.clnPrecoNfe, Me.clnDescontoNfe, Me.clnTotalNfe, Me.clnRGProduto, Me.clnProduto})
         Me.dgvItens.EnableHeadersVisualStyles = False
         Me.dgvItens.GridColor = System.Drawing.SystemColors.ActiveCaption
         Me.dgvItens.Location = New System.Drawing.Point(12, 145)
@@ -171,57 +172,65 @@ Partial Class frmCompraGetNFe
         Me.btnCorrelacao.Text = "Fazer Correlação"
         Me.btnCorrelacao.UseVisualStyleBackColor = True
         '
-        'clnIDProdutoOrigem
+        'clnIDProdutoNfe
         '
-        Me.clnIDProdutoOrigem.Frozen = True
-        Me.clnIDProdutoOrigem.HeaderText = "Cod."
-        Me.clnIDProdutoOrigem.Name = "clnIDProdutoOrigem"
-        Me.clnIDProdutoOrigem.ReadOnly = True
-        Me.clnIDProdutoOrigem.Width = 60
+        Me.clnIDProdutoNfe.Frozen = True
+        Me.clnIDProdutoNfe.HeaderText = "Cod."
+        Me.clnIDProdutoNfe.Name = "clnIDProdutoNfe"
+        Me.clnIDProdutoNfe.ReadOnly = True
+        Me.clnIDProdutoNfe.Width = 60
         '
-        'clnProduto
+        'clnProdutoNfe
         '
-        Me.clnProduto.Frozen = True
-        Me.clnProduto.HeaderText = "Produto"
-        Me.clnProduto.Name = "clnProduto"
-        Me.clnProduto.ReadOnly = True
-        Me.clnProduto.Width = 375
+        Me.clnProdutoNfe.Frozen = True
+        Me.clnProdutoNfe.HeaderText = "Desc. Origem"
+        Me.clnProdutoNfe.Name = "clnProdutoNfe"
+        Me.clnProdutoNfe.ReadOnly = True
+        Me.clnProdutoNfe.Width = 375
         '
-        'clnQuantidade
+        'clnQuantidadeNFe
         '
-        Me.clnQuantidade.Frozen = True
-        Me.clnQuantidade.HeaderText = "Qtde"
-        Me.clnQuantidade.Name = "clnQuantidade"
-        Me.clnQuantidade.ReadOnly = True
-        Me.clnQuantidade.Width = 60
+        Me.clnQuantidadeNFe.Frozen = True
+        Me.clnQuantidadeNFe.HeaderText = "Qtde"
+        Me.clnQuantidadeNFe.Name = "clnQuantidadeNFe"
+        Me.clnQuantidadeNFe.ReadOnly = True
+        Me.clnQuantidadeNFe.Width = 60
         '
-        'clnPreco
+        'clnPrecoNfe
         '
-        Me.clnPreco.Frozen = True
-        Me.clnPreco.HeaderText = "Preço"
-        Me.clnPreco.Name = "clnPreco"
-        Me.clnPreco.ReadOnly = True
-        Me.clnPreco.Width = 90
+        Me.clnPrecoNfe.Frozen = True
+        Me.clnPrecoNfe.HeaderText = "Preço"
+        Me.clnPrecoNfe.Name = "clnPrecoNfe"
+        Me.clnPrecoNfe.ReadOnly = True
+        Me.clnPrecoNfe.Width = 90
         '
-        'clnDesconto
+        'clnDescontoNfe
         '
-        Me.clnDesconto.HeaderText = "Desc."
-        Me.clnDesconto.Name = "clnDesconto"
-        Me.clnDesconto.ReadOnly = True
-        Me.clnDesconto.Width = 80
+        Me.clnDescontoNfe.HeaderText = "Desc."
+        Me.clnDescontoNfe.Name = "clnDescontoNfe"
+        Me.clnDescontoNfe.ReadOnly = True
+        Me.clnDescontoNfe.Width = 80
         '
-        'clnTotal
+        'clnTotalNfe
         '
-        Me.clnTotal.HeaderText = "Total"
-        Me.clnTotal.Name = "clnTotal"
-        Me.clnTotal.ReadOnly = True
-        Me.clnTotal.Width = 90
+        Me.clnTotalNfe.HeaderText = "Total"
+        Me.clnTotalNfe.Name = "clnTotalNfe"
+        Me.clnTotalNfe.ReadOnly = True
+        Me.clnTotalNfe.Width = 90
         '
         'clnRGProduto
         '
         Me.clnRGProduto.HeaderText = "Reg."
         Me.clnRGProduto.Name = "clnRGProduto"
         Me.clnRGProduto.ReadOnly = True
+        Me.clnRGProduto.Width = 60
+        '
+        'clnProduto
+        '
+        Me.clnProduto.HeaderText = "Produto Encontrado"
+        Me.clnProduto.Name = "clnProduto"
+        Me.clnProduto.ReadOnly = True
+        Me.clnProduto.Width = 250
         '
         'frmCompraGetNFe
         '
@@ -266,11 +275,12 @@ Partial Class frmCompraGetNFe
     Friend WithEvents Label2 As Label
     Friend WithEvents dgvItens As DataGridView
     Friend WithEvents btnCorrelacao As Button
-    Friend WithEvents clnIDProdutoOrigem As DataGridViewTextBoxColumn
-    Friend WithEvents clnProduto As DataGridViewTextBoxColumn
-    Friend WithEvents clnQuantidade As DataGridViewTextBoxColumn
-    Friend WithEvents clnPreco As DataGridViewTextBoxColumn
-    Friend WithEvents clnDesconto As DataGridViewTextBoxColumn
-    Friend WithEvents clnTotal As DataGridViewTextBoxColumn
+    Friend WithEvents clnIDProdutoNfe As DataGridViewTextBoxColumn
+    Friend WithEvents clnProdutoNfe As DataGridViewTextBoxColumn
+    Friend WithEvents clnQuantidadeNFe As DataGridViewTextBoxColumn
+    Friend WithEvents clnPrecoNfe As DataGridViewTextBoxColumn
+    Friend WithEvents clnDescontoNfe As DataGridViewTextBoxColumn
+    Friend WithEvents clnTotalNfe As DataGridViewTextBoxColumn
     Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
+    Friend WithEvents clnProduto As DataGridViewTextBoxColumn
 End Class

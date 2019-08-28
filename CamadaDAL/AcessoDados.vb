@@ -640,7 +640,7 @@ Public Class AcessoDados
     Public Sub CommitTransaction()
         If Not isTran Then Return
         trans.Commit()
-        conn.Close()
+        CloseConn() 'conn.Close()
         trans = Nothing
         isTran = False
     End Sub
@@ -649,7 +649,7 @@ Public Class AcessoDados
     Public Sub RollBackTransaction()
         If Not isTran Then Return
         trans.Rollback()
-        conn.Close()
+        CloseConn() 'conn.Close()
         trans = Nothing
         isTran = False
     End Sub
