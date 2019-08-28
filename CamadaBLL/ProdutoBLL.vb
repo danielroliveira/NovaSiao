@@ -24,8 +24,21 @@ Public Class ProdutoBLL
         '
         Try
             '
+            Dim incluirEstoque = False
+            Dim lstProd As New List(Of clProduto)
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, strSql)
-            Return ConvertDT_To_clProduto(dt)
+            '
+            If dt.Columns.IndexOf("Estoque") <> -1 Then
+                incluirEstoque = True
+            End If
+            '
+            If dt.Rows.Count = 0 Then Return lstProd
+            '
+            For Each r As DataRow In dt.Rows
+                lstProd.Add(ConvertRow_To_clProduto(r, incluirEstoque))
+            Next
+            '
+            Return lstProd
             '
         Catch ex As Exception
             Throw ex
@@ -71,7 +84,18 @@ Public Class ProdutoBLL
                 Return Nothing
             End If
             '
-            Return ConvertDT_To_clProduto(dt)
+            Dim incluirEstoque As Boolean = False
+            Dim lstProd As New List(Of clProduto)
+            '
+            If dt.Columns.IndexOf("Estoque") <> -1 Then
+                incluirEstoque = True
+            End If
+            '
+            For Each r As DataRow In dt.Rows
+                lstProd.Add(ConvertRow_To_clProduto(r, incluirEstoque))
+            Next
+            '
+            Return lstProd
             '
         Catch ex As Exception
             Throw ex
@@ -110,58 +134,44 @@ Public Class ProdutoBLL
     '---------------------------------------------------------------------------------------------------------
     ' GET DATA TABLE E RETURN LIST OF CLPRODUTO
     '---------------------------------------------------------------------------------------------------------
-    Public Function ConvertDT_To_clProduto(dt As DataTable) As List(Of clProduto)
+    Public Function ConvertRow_To_clProduto(r As DataRow,
+                                            Optional incluirEstoque As Boolean = False) As clProduto
         '
-        Dim lstProd As New List(Of clProduto)
-        Dim incluirEstoque As Boolean = False
+        Dim prod As New clProduto With {
+            .IDProduto = IIf(IsDBNull(r("IDProduto")), 0, r("IDProduto")),
+            .RGProduto = IIf(IsDBNull(r("RGProduto")), Nothing, r("RGProduto")),
+            .Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto")),
+            .IDFabricante = IIf(IsDBNull(r("IDFabricante")), Nothing, r("IDFabricante")),
+            .Fabricante = IIf(IsDBNull(r("Fabricante")), String.Empty, r("Fabricante")),
+            .IDProdutoTipo = IIf(IsDBNull(r("IDProdutoTipo")), Nothing, r("IDProdutoTipo")),
+            .ProdutoTipo = IIf(IsDBNull(r("ProdutoTipo")), String.Empty, r("ProdutoTipo")),
+            .IDProdutoSubTipo = IIf(IsDBNull(r("IDProdutoSubTipo")), Nothing, r("IDProdutoSubTipo")),
+            .ProdutoSubTipo = IIf(IsDBNull(r("ProdutoSubTipo")), String.Empty, r("ProdutoSubTipo")),
+            .IDCategoria = IIf(IsDBNull(r("IDCategoria")), Nothing, r("IDCategoria")),
+            .ProdutoCategoria = IIf(IsDBNull(r("ProdutoCategoria")), String.Empty, r("ProdutoCategoria")),
+            .Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor")),
+            .Unidade = IIf(IsDBNull(r("Unidade")), 1, r("Unidade")),
+            .PCompra = IIf(IsDBNull(r("PCompra")), 0, r("PCompra")),
+            .DescontoCompra = IIf(IsDBNull(r("DescontoCompra")), Nothing, r("DescontoCompra")),
+            .PVenda = IIf(IsDBNull(r("PVenda")), 0, r("PVenda")),
+            .ProdutoAtivo = IIf(IsDBNull(r("ProdutoAtivo")), Nothing, r("ProdutoAtivo")),
+            .SitTributaria = IIf(IsDBNull(r("SitTributaria")), Nothing, r("SitTributaria")),
+            .SituacaoTributaria = IIf(IsDBNull(r("SituacaoTributaria")), String.Empty, r("SituacaoTributaria")),
+            .NCM = IIf(IsDBNull(r("NCM")), String.Empty, r("NCM")),
+            .UltAltera = IIf(IsDBNull(r("UltAltera")), Nothing, r("UltAltera")),
+            .EntradaData = IIf(IsDBNull(r("EntradaData")), Nothing, r("EntradaData")),
+            .CodBarrasA = IIf(IsDBNull(r("CodBarrasA")), String.Empty, r("CodBarrasA")),
+            .Movimento = IIf(IsDBNull(r("Movimento")), Nothing, r("Movimento")),
+            .MovimentoDescricao = IIf(IsDBNull(r("MovimentoDescricao")), String.Empty, r("MovimentoDescricao"))
+            }
         '
-        If dt.Columns.IndexOf("Estoque") <> -1 Then
-            incluirEstoque = True
+        If incluirEstoque Then
+            prod.Estoque = IIf(IsDBNull(r("Estoque")), 0, r("Estoque"))
+            prod.EstoqueNivel = IIf(IsDBNull(r("EstoqueNivel")), 0, r("EstoqueNivel"))
+            prod.EstoqueIdeal = IIf(IsDBNull(r("EstoqueIdeal")), 0, r("EstoqueIdeal"))
         End If
         '
-        If dt.Rows.Count = 0 Then Return lstProd
-        '
-        For Each r As DataRow In dt.Rows
-
-            Dim prod As New clProduto With {
-                .IDProduto = IIf(IsDBNull(r("IDProduto")), 0, r("IDProduto")),
-                .RGProduto = IIf(IsDBNull(r("RGProduto")), Nothing, r("RGProduto")),
-                .Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto")),
-                .IDFabricante = IIf(IsDBNull(r("IDFabricante")), Nothing, r("IDFabricante")),
-                .Fabricante = IIf(IsDBNull(r("Fabricante")), String.Empty, r("Fabricante")),
-                .IDProdutoTipo = IIf(IsDBNull(r("IDProdutoTipo")), Nothing, r("IDProdutoTipo")),
-                .ProdutoTipo = IIf(IsDBNull(r("ProdutoTipo")), String.Empty, r("ProdutoTipo")),
-                .IDProdutoSubTipo = IIf(IsDBNull(r("IDProdutoSubTipo")), Nothing, r("IDProdutoSubTipo")),
-                .ProdutoSubTipo = IIf(IsDBNull(r("ProdutoSubTipo")), String.Empty, r("ProdutoSubTipo")),
-                .IDCategoria = IIf(IsDBNull(r("IDCategoria")), Nothing, r("IDCategoria")),
-                .ProdutoCategoria = IIf(IsDBNull(r("ProdutoCategoria")), String.Empty, r("ProdutoCategoria")),
-                .Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor")),
-                .Unidade = IIf(IsDBNull(r("Unidade")), 1, r("Unidade")),
-                .PCompra = IIf(IsDBNull(r("PCompra")), 0, r("PCompra")),
-                .DescontoCompra = IIf(IsDBNull(r("DescontoCompra")), Nothing, r("DescontoCompra")),
-                .PVenda = IIf(IsDBNull(r("PVenda")), 0, r("PVenda")),
-                .ProdutoAtivo = IIf(IsDBNull(r("ProdutoAtivo")), Nothing, r("ProdutoAtivo")),
-                .SitTributaria = IIf(IsDBNull(r("SitTributaria")), Nothing, r("SitTributaria")),
-                .SituacaoTributaria = IIf(IsDBNull(r("SituacaoTributaria")), String.Empty, r("SituacaoTributaria")),
-                .NCM = IIf(IsDBNull(r("NCM")), String.Empty, r("NCM")),
-                .UltAltera = IIf(IsDBNull(r("UltAltera")), Nothing, r("UltAltera")),
-                .EntradaData = IIf(IsDBNull(r("EntradaData")), Nothing, r("EntradaData")),
-                .CodBarrasA = IIf(IsDBNull(r("CodBarrasA")), String.Empty, r("CodBarrasA")),
-                .Movimento = IIf(IsDBNull(r("Movimento")), Nothing, r("Movimento")),
-                .MovimentoDescricao = IIf(IsDBNull(r("MovimentoDescricao")), String.Empty, r("MovimentoDescricao"))
-            }
-            '
-            If incluirEstoque Then
-                prod.Estoque = IIf(IsDBNull(r("Estoque")), 0, r("Estoque"))
-                prod.EstoqueNivel = IIf(IsDBNull(r("EstoqueNivel")), 0, r("EstoqueNivel"))
-                prod.EstoqueIdeal = IIf(IsDBNull(r("EstoqueIdeal")), 0, r("EstoqueIdeal"))
-            End If
-            '
-            lstProd.Add(prod)
-            '
-        Next
-        '
-        Return lstProd
+        Return prod
         '
     End Function
     '
@@ -188,7 +198,7 @@ Public Class ProdutoBLL
             If dt.Rows.Count = 0 Then
                 Return New clProduto
             Else
-                Return ConvertDT_To_clProduto(dt)(0)
+                Return ConvertRow_To_clProduto(dt.Rows(0))
             End If
             '
         Catch ex As Exception
@@ -220,7 +230,7 @@ Public Class ProdutoBLL
             If dt.Rows.Count = 0 Then
                 Return Nothing
             Else
-                Return ConvertDT_To_clProduto(dt)(0)
+                Return ConvertRow_To_clProduto(dt.Rows(0))
             End If
             '
         Catch ex As Exception
@@ -786,6 +796,32 @@ Public Class ProdutoBLL
         '
     End Function
     '
+    '----------------------------------------------------------------------------------
+    '--- GET PRODUTO BY IDFORNECEDOR AND ID PRODUTO ORIGEM|FORNECEDOR
+    '----------------------------------------------------------------------------------
+    Public Function GetProdutoByFornecedorAndIDOrigem(IDFornecedor As Integer, IDProdutoOrigem As Integer) As clProduto
+        '
+        Try
+            Dim db As New AcessoDados
+            Dim query As String = "SELECT * FROM qryProdutos WHERE IDProduto = (" &
+                "SELECT TOP 1 IDProduto FROM qryProdutoFornecedor " &
+                "WHERE IDFornecedor = @IDFornecedor AND IDProdutoOrigem = @IDProdutoOrigem)"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
+            db.AdicionarParametros("@IDProdutoOrigem", IDProdutoOrigem)
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return Nothing
+            '
+            Return ConvertRow_To_clProduto(dt.Rows(0))
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
     '
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' To detect redundant calls
@@ -1670,6 +1706,32 @@ Public Class ProdutoFornecedorBLL
             '
             db.LimparParametros()
             db.AdicionarParametros("@IDProduto", IDProduto)
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return Nothing
+            '
+            Return ConvertRowInClass(dt.Rows(0))
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '----------------------------------------------------------------------------------
+    '--- GET PRODUTO BY IDFORNECEDOR AND ID PRODUTO ORIGEM|FORNECEDOR
+    '----------------------------------------------------------------------------------
+    Public Function GetProdFornecedorByFornecedorAndIDOrigem(IDFornecedor As Integer, IDProdutoOrigem As Integer) As clProdutoFornecedor
+        '
+        Try
+            Dim db As New AcessoDados
+            Dim query As String = "SELECT * FROM qryProdutoFornecedor " &
+                "WHERE IDFornecedor = @IDFornecedor AND IDProdutoOrigem = @IDProdutoOrigem"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
+            db.AdicionarParametros("@IDProdutoOrigem", IDProdutoOrigem)
             '
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             '

@@ -29,25 +29,25 @@ Partial Class frmCompraGetNFe
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.dgvItens = New System.Windows.Forms.DataGridView()
-        Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnCorrelacao = New System.Windows.Forms.Button()
+        Me.clnIDProdutoOrigem = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnQuantidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnSubTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.btnCorrelacao = New System.Windows.Forms.Button()
+        Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
         '
-        Me.Panel1.Size = New System.Drawing.Size(953, 50)
+        Me.Panel1.Size = New System.Drawing.Size(1191, 50)
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(705, 0)
+        Me.lblTitulo.Location = New System.Drawing.Point(943, 0)
         Me.lblTitulo.Size = New System.Drawing.Size(248, 50)
         Me.lblTitulo.Text = "Importar Entrada XML"
         Me.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -65,7 +65,7 @@ Partial Class frmCompraGetNFe
         'btnFechar
         '
         Me.btnFechar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnFechar.Location = New System.Drawing.Point(831, 601)
+        Me.btnFechar.Location = New System.Drawing.Point(1069, 601)
         Me.btnFechar.Name = "btnFechar"
         Me.btnFechar.Size = New System.Drawing.Size(104, 43)
         Me.btnFechar.TabIndex = 2
@@ -150,7 +150,7 @@ Partial Class frmCompraGetNFe
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
         Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvItens.ColumnHeadersHeight = 25
-        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnRGProduto, Me.clnProduto, Me.clnQuantidade, Me.clnPreco, Me.clnSubTotal, Me.clnDesconto, Me.clnTotal})
+        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDProdutoOrigem, Me.clnProduto, Me.clnQuantidade, Me.clnPreco, Me.clnDesconto, Me.clnTotal, Me.clnRGProduto})
         Me.dgvItens.EnableHeadersVisualStyles = False
         Me.dgvItens.GridColor = System.Drawing.SystemColors.ActiveCaption
         Me.dgvItens.Location = New System.Drawing.Point(12, 145)
@@ -158,16 +158,26 @@ Partial Class frmCompraGetNFe
         Me.dgvItens.ReadOnly = True
         Me.dgvItens.RowHeadersWidth = 30
         Me.dgvItens.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.dgvItens.Size = New System.Drawing.Size(921, 444)
+        Me.dgvItens.Size = New System.Drawing.Size(1161, 444)
         Me.dgvItens.TabIndex = 18
         '
-        'clnRGProduto
+        'btnCorrelacao
         '
-        Me.clnRGProduto.Frozen = True
-        Me.clnRGProduto.HeaderText = "Reg."
-        Me.clnRGProduto.Name = "clnRGProduto"
-        Me.clnRGProduto.ReadOnly = True
-        Me.clnRGProduto.Width = 60
+        Me.btnCorrelacao.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnCorrelacao.Location = New System.Drawing.Point(211, 601)
+        Me.btnCorrelacao.Name = "btnCorrelacao"
+        Me.btnCorrelacao.Size = New System.Drawing.Size(195, 43)
+        Me.btnCorrelacao.TabIndex = 2
+        Me.btnCorrelacao.Text = "Fazer Correlação"
+        Me.btnCorrelacao.UseVisualStyleBackColor = True
+        '
+        'clnIDProdutoOrigem
+        '
+        Me.clnIDProdutoOrigem.Frozen = True
+        Me.clnIDProdutoOrigem.HeaderText = "Cod."
+        Me.clnIDProdutoOrigem.Name = "clnIDProdutoOrigem"
+        Me.clnIDProdutoOrigem.ReadOnly = True
+        Me.clnIDProdutoOrigem.Width = 60
         '
         'clnProduto
         '
@@ -193,14 +203,6 @@ Partial Class frmCompraGetNFe
         Me.clnPreco.ReadOnly = True
         Me.clnPreco.Width = 90
         '
-        'clnSubTotal
-        '
-        Me.clnSubTotal.Frozen = True
-        Me.clnSubTotal.HeaderText = "SubTotal"
-        Me.clnSubTotal.Name = "clnSubTotal"
-        Me.clnSubTotal.ReadOnly = True
-        Me.clnSubTotal.Width = 90
-        '
         'clnDesconto
         '
         Me.clnDesconto.HeaderText = "Desc."
@@ -215,20 +217,16 @@ Partial Class frmCompraGetNFe
         Me.clnTotal.ReadOnly = True
         Me.clnTotal.Width = 90
         '
-        'btnCorrelacao
+        'clnRGProduto
         '
-        Me.btnCorrelacao.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnCorrelacao.Location = New System.Drawing.Point(211, 601)
-        Me.btnCorrelacao.Name = "btnCorrelacao"
-        Me.btnCorrelacao.Size = New System.Drawing.Size(195, 43)
-        Me.btnCorrelacao.TabIndex = 2
-        Me.btnCorrelacao.Text = "Fazer Correlação"
-        Me.btnCorrelacao.UseVisualStyleBackColor = True
+        Me.clnRGProduto.HeaderText = "Reg."
+        Me.clnRGProduto.Name = "clnRGProduto"
+        Me.clnRGProduto.ReadOnly = True
         '
         'frmCompraGetNFe
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(953, 656)
+        Me.ClientSize = New System.Drawing.Size(1191, 656)
         Me.Controls.Add(Me.dgvItens)
         Me.Controls.Add(Me.txtInscricao)
         Me.Controls.Add(Me.Label17)
@@ -267,12 +265,12 @@ Partial Class frmCompraGetNFe
     Friend WithEvents Label4 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents dgvItens As DataGridView
-    Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
+    Friend WithEvents btnCorrelacao As Button
+    Friend WithEvents clnIDProdutoOrigem As DataGridViewTextBoxColumn
     Friend WithEvents clnProduto As DataGridViewTextBoxColumn
     Friend WithEvents clnQuantidade As DataGridViewTextBoxColumn
     Friend WithEvents clnPreco As DataGridViewTextBoxColumn
-    Friend WithEvents clnSubTotal As DataGridViewTextBoxColumn
     Friend WithEvents clnDesconto As DataGridViewTextBoxColumn
     Friend WithEvents clnTotal As DataGridViewTextBoxColumn
-    Friend WithEvents btnCorrelacao As Button
+    Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
 End Class
