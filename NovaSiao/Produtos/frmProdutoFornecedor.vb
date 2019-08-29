@@ -408,52 +408,6 @@ Public Class frmProdutoFornecedor
         '
     End Sub
     '
-    '--- VALIDA O CELL RGPRODUTO E PROCURA O PRODUTO PELO RGPRODUTO
-    Private Sub dgvItens_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvItens.CellValidating
-        '
-        '--- verifica se a currenteCELL is Dirty
-        If Not dgvItens.IsCurrentCellDirty Then Return
-        '
-        'If e.ColumnIndex = clnIDProdutoFornecedor.Index Then
-        '    '
-        '    '--- obtem o item do dgv
-        '    Dim item As clProdutoFornecedor = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clProdutoFornecedor)
-        '    '
-        '    '--- SAVE
-        '    Try
-        '        Altera_Item_IDProdutoOrigem(item.IDProduto, item.IDFornecedor, e.FormattedValue)
-        '        currentEditRow = Nothing
-        '        _rowSit = EnumFlagEstado.RegistroSalvo
-        '    Catch ex As Exception
-        '        e.Cancel = True
-        '    End Try
-        '    '
-        'End If
-        '
-    End Sub
-    '
-    '--- ALTERA O CODIGO DO PRODUTO ORIGEM
-    '----------------------------------------------------------------------------------
-    Private Sub Altera_Item_IDProdutoOrigem(IDProduto As Integer,
-                                            IDFornecedor As Integer,
-                                            IDProdutoOrigem As String)
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            prodBLL.InsertUpdate_IDProdutoOrigem(IDProduto, IDFornecedor, IDProdutoOrigem)
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Salvar o ID do produto da Origem..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
-        '
-    End Sub
-    '
     '--- ON ENTER IN ROW VERIFY SITUATION OF THEN
     Private Sub dgvItens_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.RowEnter
         '
@@ -735,7 +689,7 @@ Public Class frmProdutoFornecedor
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            prodBLL.DefineFornecedorPadrao(prodForn.IDProduto, prodForn.IDFornecedor)
+            prodBLL.DefineFornecedorPadrao(prodForn)
             '
             For Each item As clProdutoFornecedor In bindList
                 If item.IDFornecedor = prodForn.IDFornecedor Then

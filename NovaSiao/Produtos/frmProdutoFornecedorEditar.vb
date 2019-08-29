@@ -6,11 +6,19 @@ Public Class frmProdutoFornecedorEditar
     Private _prodForn As clProdutoFornecedor
     Private _itensList As New List(Of clProdutoFornecedorItem)
     Private bindProd As New BindingSource
+    Private bindItem As New BindingSource
     Private _Sit As EnumFlagEstado
     Private _formOrigem As Form = Nothing
     Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
     Private _isProdutoFixed As Boolean
+    Private _ItemPanelVisible As EnumFlagAcao?
+    '
+    Private mnuItensAcao As New ContextMenuStrip
+    Private WithEvents mnuItemEditar As New ToolStripMenuItem
+    Private WithEvents mnuItemInserir As New ToolStripMenuItem
+    Private WithEvents mnuItemExcluir As New ToolStripMenuItem
+    Private ToolStripSeparator1 As New ToolStripSeparator
     '
 #Region "SUB NEW"
     '
@@ -23,8 +31,12 @@ Public Class frmProdutoFornecedorEditar
         _formOrigem = formOrigem
         _prodForn = prodForn
         _isProdutoFixed = isProdutoFixed
+        '
         bindProd.DataSource = _prodForn
         PreencheDataBindings()
+        '
+        bindItem.Datasource = GetListItems()
+        FormataDatagrid()
         '
         If IsNothing(_prodForn.IDFornecedor) Then '--> NEW | INSERT
             Sit = EnumFlagEstado.NovoRegistro
@@ -32,9 +44,19 @@ Public Class frmProdutoFornecedorEditar
             Sit = EnumFlagEstado.RegistroSalvo
         End If
         '
+        IsOrigemTransacao()
+        '
+        dtpUltimaEntrada.MaxDate = Today
+        AtivoButtonImage()
+        '
+    End Sub
+    '
+    '--- CHECK ORIGEM TRANSACAO
+    Private Sub IsOrigemTransacao()
+        '
         If IsNothing(_prodForn.IDTransacao) Then
             '
-            If isProdutoFixed Then
+            If _isProdutoFixed Then
                 btnFornecedor.Enabled = True
                 txtFornecedor.ReadOnly = False
                 txtRGProduto.ReadOnly = True
@@ -58,9 +80,6 @@ Public Class frmProdutoFornecedorEditar
             lblVinculado.Visible = True
         End If
         '
-        dtpUltimaEntrada.MaxDate = Today
-        AtivoButtonImage()
-        '
     End Sub
     '
     'PROPERTY SIT
@@ -81,6 +100,42 @@ Public Class frmProdutoFornecedorEditar
                 btnCancelar.Enabled = True
             End If
         End Set
+    End Property
+    '
+    Private Property propItemPanelVisible As EnumFlagAcao?
+        '
+        Get
+            Return _ItemPanelVisible
+        End Get
+        '
+        Set(value As EnumFlagAcao?)
+            _ItemPanelVisible = value
+            '
+            If Not IsNothing(_ItemPanelVisible) Then
+                pnlItem.Visible = True
+                '
+                '--- desabilita todos os controles
+                For Each c As Control In Me.Controls
+                    If c.Name <> "pnlItem" Then c.Enabled = False
+                Next
+                '
+                txtIDProdutoOrigem.Focus()
+                '
+            Else
+                '
+                pnlItem.Visible = False
+                '
+                '--- habilita todos os controles
+                For Each c As Control In Controls
+                    If c.Name <> "pnlItem" Then c.Enabled = True
+                Next
+                '
+                dgvItens.Focus()
+                '
+            End If
+            '
+        End Set
+        '
     End Property
     '
 #End Region '/ SUB NEW
@@ -137,17 +192,17 @@ Public Class frmProdutoFornecedorEditar
     '
 #Region "GET DATAGRID ITEMS LIST"
     '
-    Private Function GetListByID(IDProduto As Integer) As List(Of clProdutoFornecedor)
+    Private Function GetListItems() As List(Of clProdutoFornecedorItem)
         '
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
             Dim prodBLL As New ProdutoFornecedorBLL
-            Return prodBLL.GetListProdutoFornecedorByIDProduto(IDProduto)
+            Return prodBLL.GetListProdutoFornecedorItems(_prodForn.IDProdutoFornecedor)
             '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Obter a lista de Fornecedores do Produto..." & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao Obter a lista de Itens do Fornecedor..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '--- Ampulheta OFF
@@ -157,9 +212,199 @@ Public Class frmProdutoFornecedorEditar
         Return Nothing
         '
     End Function
-
+    '
+    Private Sub FormataDatagrid()
+        '
+        '--- limpa as colunas do datagrid
+        dgvItens.Columns.Clear()
+        dgvItens.AutoGenerateColumns = False
+        '
+        ' altera as propriedades importantes
+        dgvItens.MultiSelect = False
+        dgvItens.SelectionMode = DataGridViewSelectionMode.RowHeaderSelect
+        dgvItens.ColumnHeadersVisible = True
+        dgvItens.AllowUserToResizeRows = False
+        dgvItens.AllowUserToResizeColumns = False
+        dgvItens.RowHeadersVisible = True
+        dgvItens.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        dgvItens.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
+        dgvItens.StandardTab = True
+        '
+        dgvItens.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
+        dgvItens.RowHeadersWidth = 25
+        dgvItens.RowTemplate.Height = 25
+        dgvItens.RowTemplate.MinimumHeight = 25
+        '
+        '--- configura o DataSource
+        dgvItens.DataSource = bindItem
+        '
+        '--- formata as colunas do datagrid
+        FormataColunas()
+        '
+    End Sub
+    '
+    Private Sub FormataColunas()
+        '
+        ' (0) COLUNA IDProdutoOrigem
+        With clnIDProdutoOrigem
+            .DataPropertyName = "IDProdutoOrigem"
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = False
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+        End With
+        '
+        ' (1) COLUNA DescricaoOrigem
+        With clnDescricaoOrigem
+            .DataPropertyName = "DescricaoOrigem"
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = False
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        ' (2) COLUNA CodBarrasOrigem
+        With clnCodBarrasOrigem
+            .DataPropertyName = "CodBarrasOrigem"
+            .Resizable = DataGridViewTriState.False
+            .Visible = True
+            .ReadOnly = False
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+        End With
+        '
+        '--- adiciona as colunas editadas
+        dgvItens.Columns.AddRange(New DataGridViewColumn() {
+                                  clnIDProdutoOrigem,
+                                  clnDescricaoOrigem,
+                                  clnCodBarrasOrigem
+                                  })
+        '
+    End Sub
     '
 #End Region '/ GET DATAGRID ITEMS LIST
+    '
+#Region "MOVIMENTA ITENS CRUD PRODUTOS"
+    '
+    '--- INSERE UM NOVO ITEM NA LISTA DE PRODUTOS
+    '---------------------------------------------------------------------------------------------
+    Private Sub Inserir_Item()
+        '
+        bindItem.AddNew()
+        propItemPanelVisible = EnumFlagAcao.INSERIR
+        '
+    End Sub
+    '    
+    '--- EDITA UM ITEM NA LISTA DE PRODUTOS
+    '---------------------------------------------------------------------------------------------
+    Private Sub Editar_Item()
+        '
+        propItemPanelVisible = EnumFlagAcao.EDITAR
+        '
+    End Sub
+    '    
+    '--- EXCLUI UM ITEM NA LISTA DE PRODUTOS
+    '---------------------------------------------------------------------------------------------
+    Private Sub Excluir_Item()
+        '
+        If IsNothing(bindItem.Current) Then Exit Sub
+        '
+        '--- remove the item of listagem
+        bindItem.RemoveCurrent()
+        '
+    End Sub
+    '
+    '----------------------------------------------------------------------------------
+    '--- PRESS OK (EXECUTE INSERT OR EDIT OPERATIONS)
+    '----------------------------------------------------------------------------------
+    Private Sub btnPanelOK_Click(sender As Object, e As EventArgs) Handles btnPanelOK.Click
+        ''
+        ''--- Verifica se existe produto
+        ''----------------------------------------------------------------------------------
+        'If txtRGProduto.Text.Trim.Length = 0 OrElse lblProduto.Text.Length = 0 Then
+        '    MessageBox.Show("Favor definir o produto a ser ajustado.",
+        '                    "Escolha o Produto", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '    txtRGProduto.Focus()
+        '    txtRGProduto.SelectAll()
+        '    Return
+        'End If
+        ''
+        ''--- Verifica a quantidade Final inserida
+        ''----------------------------------------------------------------------------------
+        'If txtQuantidadeFinal.Text.Trim.Length = 0 Then
+        '    MessageBox.Show("Favor inserir a quantidade Real/Final do estoque do produto a ser ajustado.",
+        '                    "Quantidade Real", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '    txtQuantidadeFinal.Focus()
+        '    txtQuantidadeFinal.SelectAll()
+        '    Return
+        'End If
+        ''
+        'If CInt(txtQuantidadeFinal.Text) < 0 Then
+        '    MessageBox.Show("A quantidade REAL inserida não pode ser menor que Zero." &
+        '                    vbNewLine & "Favor inserir uma quantidade diferente ou cancele a operação.",
+        '                    "Sem alteração", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '    txtQuantidadeFinal.Focus()
+        '    txtQuantidadeFinal.SelectAll()
+        '    Return
+        'End If
+        ''
+        'If CInt(txtQuantidadeFinal.Text) = bindItem.Current.QuantidadeAnterior Then
+        '    MessageBox.Show("A quantidade REAL inserida não pode ser igual à quantidade ATUAL no Estoque do produto." &
+        '                    vbNewLine & "Favor inserir uma quantidade diferente ou cancele a operação.",
+        '                    "Sem alteração", MessageBoxButtons.OK, MessageBoxIcon.Information)
+        '    txtQuantidadeFinal.Focus()
+        '    txtQuantidadeFinal.SelectAll()
+        '    Return
+        'End If
+        ''
+        ''--- Resolve ValorMovimentado of Ajuste Atual
+        '_Ajuste.ValorMovimentado = _itensList.Sum(Function(y) y.Total)
+        ''
+        ''--- Atualiza Total
+        'AtualizaTotalGeral()
+        ''
+        ''--- Bind
+        'bindItem.EndEdit()
+        'bindItem.ResetBindings(False)
+        propItemPanelVisible = Nothing
+        '
+    End Sub
+    '
+    '----------------------------------------------------------------------------------
+    '--- PRESS CANCEL
+    '----------------------------------------------------------------------------------
+    Private Sub btnPanelCancel_Click(sender As Object, e As EventArgs) Handles btnPanelCancel.Click
+        '
+        bindItem.CancelEdit()
+        propItemPanelVisible = Nothing
+        '
+    End Sub
+    '
+    '---------------------------------------------------------------------------------------------------
+    ' CRIA TECLA DE ATALHO PARA INSERIR/EDITAR PRODUTO
+    '---------------------------------------------------------------------------------------------------
+    Private Sub dgvItens_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvItens.KeyDown
+        '
+        If e.KeyCode = Keys.Add Then
+            e.Handled = True
+            Inserir_Item()
+        ElseIf e.KeyCode = Keys.Enter Then
+            e.Handled = True
+            Editar_Item()
+        ElseIf e.KeyCode = Keys.Delete Then
+            e.Handled = True
+            Excluir_Item()
+        End If
+        '
+    End Sub
+    '
+    Private Sub dgvItens_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
+        Editar_Item()
+    End Sub
+    '
+#End Region
     '
 #Region "BUTTONS FUNCTION"
     '
@@ -574,4 +819,82 @@ Public Class frmProdutoFornecedorEditar
     '
 #End Region '/ CONTROLS
     '
+#Region "CONTROLE MENU CONTEXTO"
+    '
+    Private Sub InicializarMenuItem()
+        '
+        ' verifica se já esta inicialzado
+        If mnuItensAcao.Items.Count > 1 Then Exit Sub ' ja esta inicializado
+        '
+        'mnuItensAcao
+        '
+        mnuItensAcao.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuItemEditar, Me.mnuItemInserir, Me.ToolStripSeparator1, Me.mnuItemExcluir})
+        mnuItensAcao.Name = "mnuItensAcao"
+        mnuItensAcao.Size = New System.Drawing.Size(181, 98)
+        '
+        'mnuItemEditar
+        '
+        mnuItemEditar.Image = My.Resources.editar
+        mnuItemEditar.Name = "mnuItemEditar"
+        mnuItemEditar.Size = New System.Drawing.Size(180, 22)
+        mnuItemEditar.Text = "Editar Item"
+        '
+        'mnuItemInserir
+        '
+        mnuItemInserir.Image = My.Resources.add
+        mnuItemInserir.Name = "mnuItemInserir"
+        mnuItemInserir.Size = New System.Drawing.Size(180, 22)
+        mnuItemInserir.Text = "Inserir Produto"
+        '
+        'ToolStripSeparator1
+        '
+        ToolStripSeparator1.Name = "ToolStripSeparator1"
+        ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
+        '
+        'mnuItemExcluir
+        '
+        mnuItemExcluir.Image = My.Resources.delete
+        mnuItemExcluir.Name = "mnuItemExcluir"
+        mnuItemExcluir.Size = New System.Drawing.Size(180, 22)
+        mnuItemExcluir.Text = "Excluir Produto"
+    End Sub
+    '
+    '
+    Private Sub dgvItens_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvItens.MouseDown
+        '
+        If e.Button = MouseButtons.Right Then
+            'Dim c As Control = DirectCast(sender, Control)
+            Dim hit As DataGridView.HitTestInfo = dgvItens.HitTest(e.X, e.Y)
+            dgvItens.ClearSelection()
+            '
+            If Not hit.Type = DataGridViewHitTestType.Cell Then Exit Sub
+            '
+            '
+            ' seleciona o ROW
+            dgvItens.CurrentCell = dgvItens.Rows(hit.RowIndex).Cells(1)
+            dgvItens.Rows(hit.RowIndex).Selected = True
+            '
+            mnuItemEditar.Enabled = True
+            mnuItemExcluir.Enabled = True
+            '
+            'mnuItens.Show(dgvEntradaBloqens, c.PointToScreen(e.Location))
+            mnuItensAcao.Show(dgvItens, e.Location)
+            '
+        End If
+        '
+    End Sub
+    '
+    Private Sub MenuItemEditar_Click(sender As Object, e As EventArgs) Handles mnuItemEditar.Click
+        Editar_Item()
+    End Sub
+    '
+    Private Sub MenuItemInserir_Click(sender As Object, e As EventArgs) Handles mnuItemInserir.Click
+        Inserir_Item()
+    End Sub
+    '
+    Private Sub MenuItemExcluir_Click(sender As Object, e As EventArgs) Handles mnuItemExcluir.Click
+        Excluir_Item()
+    End Sub
+    '
+#End Region
 End Class

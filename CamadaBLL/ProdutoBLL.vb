@@ -1561,63 +1561,62 @@ Public Class ProdutoFornecedorBLL
         '
     End Function
     '
-    '--- INSERT OR UPDATE PRODUTO CODIGO/ID FORNECEDOR
+    '--- INSERT PRODUTO CODIGO/ID FORNECEDOR
     '----------------------------------------------------------------------------------
-    'Public Function InsertUpdate_IDProdutoOrigem(IDProduto As Integer,
-    '                                             IDFornecedor As Integer,
-    '                                             IDProdutoOrigem As String) As Boolean
-    '    '
-    '    Try
-    '        '
-    '        Dim db As New AcessoDados
-    '        Dim query As String = ""
-    '        '
-    '        db.LimparParametros()
-    '        db.AdicionarParametros("@IDProduto", IDProduto)
-    '        db.AdicionarParametros("@IDFornecedor", IDFornecedor)
-    '        '
-    '        query = "SELECT COUNT(*) FROM tblProdutoFornecedorID WHERE IDProduto = @IDProduto And IDFornecedor = @IDFornecedor"
-    '        '
-    '        Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
-    '        If dt.Rows.Count = 0 Then Throw New Exception("Consulta não retornou valor...")
-    '        '
-    '        If dt.Rows(0).Item(0) = 0 Then '--- INSERT
-    '            '
-    '            query = "INSERT INTO tblProdutoFornecedorID " +
-    '                    "(IDFornecedor, IDProduto, IDProdutoOrigem) " +
-    '                    "VALUES " +
-    '                    "(@IDFornecedor, @IDProduto, @IDProdutoOrigem)"
-    '            '
-    '            db.LimparParametros()
-    '            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
-    '            db.AdicionarParametros("@IDProduto", IDProduto)
-    '            db.AdicionarParametros("@IDProdutoOrigem", IDProdutoOrigem)
-    '            '
-    '            db.ExecutarManipulacao(CommandType.Text, query)
-    '            '
-    '        ElseIf dt.Rows(0).Item(0) = 1 Then '--- UPDATE
-    '            '
-    '            query = "UPDATE tblProdutoFornecedorID SET " +
-    '                    "IDProdutoOrigem = @IDProdutoOrigem " +
-    '                    "WHERE IDProduto = @IDProduto And IDFornecedor = @IDFornecedor"
-    '            '
-    '            db.LimparParametros()
-    '            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
-    '            db.AdicionarParametros("@IDProduto", IDProduto)
-    '            db.AdicionarParametros("@IDProdutoOrigem", IDProdutoOrigem)
-    '            '
-    '            db.ExecutarManipulacao(CommandType.Text, query)
-    '            '
-    '        Else
-    '            Throw New Exception("Consulta retornou MAIS do que um valor...")
-    '        End If
-    '        '
-    '        Return True
-    '    Catch ex As Exception
-    '        Throw ex
-    '    End Try
-    '    '
-    'End Function
+    Public Function Insert_IDProdutoOrigem(IDProdutoFornecedor As Integer,
+                                           IDProdutoOrigem As String) As Boolean
+        '
+        Try
+            '
+            Dim db As New AcessoDados
+            Dim query As String = ""
+            query = "INSERT INTO tblProdutoFornecedorItem " +
+                    "(IDProdutoFornecedor, IDProdutoOrigem) " +
+                    "VALUES " +
+                    "(@IDProdutoFornecedor, @IDProdutoOrigem)"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProdutoFornecedor", IDProdutoFornecedor)
+            db.AdicionarParametros("@IDProdutoOrigem", IDProdutoOrigem)
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            Return True
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '--- UPDATE PRODUTO CODIGO/ID FORNECEDOR
+    '----------------------------------------------------------------------------------
+    Public Function Update_IDProdutoOrigem(IDProdutoFornecedor As Integer,
+                                           IDProdutoOrigem As String) As Boolean
+        '
+        Try
+            '
+            Dim db As New AcessoDados
+            Dim query As String = ""
+            '
+
+            query = "UPDATE tblProdutoFornecedorItem SET " +
+                    "IDProdutoOrigem = @IDProdutoOrigem " +
+                    "WHERE IDProdutoFornecedor = @IDProdutoFornecedor"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProdutoFornecedor", IDProdutoFornecedor)
+            db.AdicionarParametros("@IDProdutoOrigem", IDProdutoOrigem)
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+
+
+            '
+            Return True
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
     '
     '--- DELETE PRODUTO FORNECEDOR ITEM
     '----------------------------------------------------------------------------------
@@ -1632,19 +1631,17 @@ Public Class ProdutoFornecedorBLL
             '
             '--- DELETE TBLPRODUTOFORNECEDOR
             db.LimparParametros()
-            db.AdicionarParametros("@IDProduto", prodForn.IDProduto)
-            db.AdicionarParametros("@IDFornecedor", prodForn.IDFornecedor)
+            db.AdicionarParametros("@IDProdutoFornecedor", prodForn.IDProdutoFornecedor)
             '
-            query = "DELETE tblProdutoFornecedor WHERE IDProduto = @IDProduto And IDFornecedor = @IDFornecedor"
+            query = "DELETE tblProdutoFornecedor WHERE IDProdutoFornecedor = @IDProdutoFornecedor"
             '
             db.ExecutarManipulacao(CommandType.Text, query)
             '
-            '--- DELETE CODIGO ORIGEM
+            '--- DELETE CODIGOS DE ORIGEM
             db.LimparParametros()
-            db.AdicionarParametros("@IDProduto", prodForn.IDProduto)
-            db.AdicionarParametros("@IDFornecedor", prodForn.IDFornecedor)
+            db.AdicionarParametros("@IDProdutoFornecedor", prodForn.IDProdutoFornecedor)
             '
-            query = "DELETE tblProdutoFornecedorID WHERE IDProduto = @IDProduto And IDFornecedor = @IDFornecedor"
+            query = "DELETE tblProdutoFornecedorItem WHERE IDProdutoFornecedor = @IDProdutoFornecedor"
             '
             db.ExecutarManipulacao(CommandType.Text, query)
             '
@@ -1660,7 +1657,7 @@ Public Class ProdutoFornecedorBLL
     '
     '--- DEFINE/SELECT FORNECEDOR PADRAO
     '----------------------------------------------------------------------------------
-    Public Function DefineFornecedorPadrao(IDProdutoFornecedor As Integer) As Boolean
+    Public Function DefineFornecedorPadrao(PF As clProdutoFornecedor) As Boolean
         '
         Dim db As New AcessoDados
         db.BeginTransaction()
@@ -1671,17 +1668,18 @@ Public Class ProdutoFornecedorBLL
             '
             '--- REMOVE ALL FORNECEDOR PADRAO
             db.LimparParametros()
-            db.AdicionarParametros("@IDProduto", IDProduto)
-            query = "UPDATE tblProdutoFornecedor SET FornecedorPadrao = 'FALSE' WHERE IDProduto = @IDProduto"
+            db.AdicionarParametros("@IDProduto", PF.IDProduto)
+            db.AdicionarParametros("@IDFornecedor", PF.IDFornecedor)
+            query = "UPDATE tblProdutoFornecedor SET FornecedorPadrao = 'FALSE' " &
+                "WHERE IDProduto = @IDProduto AND IDFornecedor = @IDFornecedor"
             '
             db.ExecutarManipulacao(CommandType.Text, query)
             '
             '--- DEFINE FORNECEDOR PADRAO
             db.LimparParametros()
-            db.AdicionarParametros("@IDProduto", IDProduto)
-            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
+            db.AdicionarParametros("@IDProdutoFornecedor", PF.IDProdutoFornecedor)
             '
-            query = "UPDATE tblProdutoFornecedor SET FornecedorPadrao = 'TRUE' WHERE IDProduto = @IDProduto And IDFornecedor = @IDFornecedor"
+            query = "UPDATE tblProdutoFornecedor SET FornecedorPadrao = 'TRUE' WHERE IDProdutoFornecedor = @IDProdutoFornecedor"
             '
             db.ExecutarManipulacao(CommandType.Text, query)
             '
@@ -1727,7 +1725,7 @@ Public Class ProdutoFornecedorBLL
         '
         Try
             Dim db As AcessoDados = If(dbTran, New AcessoDados)
-            Dim query As String = "SELECT * FROM qryProdutoFornecedor " &
+            Dim query As String = "SELECT * FROM qryProdutoFornecedorItem " &
                 "WHERE IDFornecedor = @IDFornecedor AND IDProdutoOrigem = @IDProdutoOrigem"
             '
             db.LimparParametros()
@@ -1770,24 +1768,42 @@ Public Class ProdutoFornecedorBLL
         '
     End Function
     '
+    '--- CONVERT ROW IN CLASS PRODUTO FORNECEDOR ITEM
+    '----------------------------------------------------------------------------------
+    Private Function ConvertRowInClassItem(r) As clProdutoFornecedorItem
+        '
+        Return New clProdutoFornecedorItem With {
+            .IDProdutoFornecedor = r("IDProdutoFornecedor"),
+            .IDProduto = r("IDProduto"),
+            .Produto = r("Produto"),
+            .RGProduto = r("RGProduto"),
+            .IDFornecedor = r("IDFornecedor"),
+            .Cadastro = r("Cadastro"),
+            .IDProdutoOrigem = IIf(IsDBNull(r("IDProdutoOrigem")), String.Empty, r("IDProdutoOrigem")),
+            .CodBarrasOrigem = IIf(IsDBNull(r("CodBarrasOrigem")), String.Empty, r("CodBarrasOrigem")),
+            .DescricaoOrigem = IIf(IsDBNull(r("DescricaoOrigem")), String.Empty, r("DescricaoOrigem"))
+        }
+        '
+    End Function
+    '
     '--- GET PRODUTO FORNECEDOR PELO IDPRODUTOFORNECEDOR
     '----------------------------------------------------------------------------------
     Public Function GetListProdutoFornecedorItems(IDProdutoFornecedor As Integer) As List(Of clProdutoFornecedorItem)
         '
         Try
-            Dim query As String = "SELECT * FROM qryProdutoFornecedor WHERE IDProduto = @IDProduto"
-            Dim list As New List(Of clProdutoFornecedor)
+            Dim list As New List(Of clProdutoFornecedorItem)
             Dim db As New AcessoDados
             '
             db.LimparParametros()
-            db.AdicionarParametros("@IDProduto", IDProduto)
+            db.AdicionarParametros("@IDProdutoFornecedor", IDProdutoFornecedor)
+            Dim query As String = "SELECT * FROM qryProdutoFornecedorItem WHERE IDProdutoFornecedor = @IDProdutoFornecedor"
             '
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             '
             If dt.Rows.Count = 0 Then Return list
             '
             For Each r In dt.Rows
-                list.Add(ConvertRowInClass(r))
+                list.Add(ConvertRowInClassItem(r))
             Next
             '
             Return list

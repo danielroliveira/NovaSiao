@@ -28,13 +28,6 @@ Partial Class frmFornecedorProdutos
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
         Me.btnFechar = New System.Windows.Forms.Button()
         Me.dgvItens = New Controles.ctrlDataGridView()
-        Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnIDProdutoFornecedor = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnData = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnApelidoFilial = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnFornecedorPadrao = New System.Windows.Forms.DataGridViewImageColumn()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lblFornecedor = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -48,6 +41,12 @@ Partial Class frmFornecedorProdutos
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.miConfereEstoque = New System.Windows.Forms.ToolStripMenuItem()
         Me.miAdicionarProdutoAoPedido = New System.Windows.Forms.ToolStripMenuItem()
+        Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnApelidoFilial = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnFornecedorPadrao = New System.Windows.Forms.DataGridViewImageColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.mnuItens.SuspendLayout()
@@ -125,7 +124,7 @@ Partial Class frmFornecedorProdutos
         Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvItens.ColumnHeadersHeight = 30
         Me.dgvItens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnProduto, Me.clnIDProdutoFornecedor, Me.clnPreco, Me.clnDesconto, Me.clnData, Me.clnApelidoFilial, Me.clnFornecedorPadrao})
+        Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnProduto, Me.clnPreco, Me.clnDesconto, Me.clnData, Me.clnApelidoFilial, Me.clnFornecedorPadrao})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -158,57 +157,6 @@ Partial Class frmFornecedorProdutos
         Me.dgvItens.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
         Me.dgvItens.Size = New System.Drawing.Size(886, 343)
         Me.dgvItens.TabIndex = 5
-        '
-        'clnProduto
-        '
-        Me.clnProduto.HeaderText = "Produto"
-        Me.clnProduto.MaxInputLength = 50
-        Me.clnProduto.Name = "clnProduto"
-        Me.clnProduto.Width = 300
-        '
-        'clnIDProdutoFornecedor
-        '
-        Me.clnIDProdutoFornecedor.HeaderText = "Cod. Fornecedor"
-        Me.clnIDProdutoFornecedor.Name = "clnIDProdutoFornecedor"
-        Me.clnIDProdutoFornecedor.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.clnIDProdutoFornecedor.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.clnIDProdutoFornecedor.Width = 120
-        '
-        'clnPreco
-        '
-        Me.clnPreco.HeaderText = "Preço"
-        Me.clnPreco.MaxInputLength = 20
-        Me.clnPreco.Name = "clnPreco"
-        Me.clnPreco.Width = 80
-        '
-        'clnDesconto
-        '
-        Me.clnDesconto.HeaderText = "Desc(%)"
-        Me.clnDesconto.MaxInputLength = 20
-        Me.clnDesconto.Name = "clnDesconto"
-        Me.clnDesconto.ReadOnly = True
-        Me.clnDesconto.Width = 70
-        '
-        'clnData
-        '
-        Me.clnData.HeaderText = "Data"
-        Me.clnData.MaxInputLength = 50
-        Me.clnData.Name = "clnData"
-        Me.clnData.Width = 80
-        '
-        'clnApelidoFilial
-        '
-        Me.clnApelidoFilial.HeaderText = "Filial"
-        Me.clnApelidoFilial.Name = "clnApelidoFilial"
-        Me.clnApelidoFilial.ReadOnly = True
-        Me.clnApelidoFilial.Width = 110
-        '
-        'clnFornecedorPadrao
-        '
-        Me.clnFornecedorPadrao.HeaderText = "FP"
-        Me.clnFornecedorPadrao.Name = "clnFornecedorPadrao"
-        Me.clnFornecedorPadrao.ReadOnly = True
-        Me.clnFornecedorPadrao.Width = 50
         '
         'Label1
         '
@@ -332,6 +280,49 @@ Partial Class frmFornecedorProdutos
         Me.miAdicionarProdutoAoPedido.Size = New System.Drawing.Size(269, 22)
         Me.miAdicionarProdutoAoPedido.Text = "Adicionar Produto ao Pedido"
         '
+        'clnProduto
+        '
+        Me.clnProduto.HeaderText = "Produto"
+        Me.clnProduto.MaxInputLength = 50
+        Me.clnProduto.Name = "clnProduto"
+        Me.clnProduto.Width = 300
+        '
+        'clnPreco
+        '
+        Me.clnPreco.HeaderText = "Preço"
+        Me.clnPreco.MaxInputLength = 20
+        Me.clnPreco.Name = "clnPreco"
+        Me.clnPreco.Width = 80
+        '
+        'clnDesconto
+        '
+        Me.clnDesconto.HeaderText = "Desc(%)"
+        Me.clnDesconto.MaxInputLength = 20
+        Me.clnDesconto.Name = "clnDesconto"
+        Me.clnDesconto.ReadOnly = True
+        Me.clnDesconto.Width = 70
+        '
+        'clnData
+        '
+        Me.clnData.HeaderText = "Data"
+        Me.clnData.MaxInputLength = 50
+        Me.clnData.Name = "clnData"
+        Me.clnData.Width = 80
+        '
+        'clnApelidoFilial
+        '
+        Me.clnApelidoFilial.HeaderText = "Filial"
+        Me.clnApelidoFilial.Name = "clnApelidoFilial"
+        Me.clnApelidoFilial.ReadOnly = True
+        Me.clnApelidoFilial.Width = 110
+        '
+        'clnFornecedorPadrao
+        '
+        Me.clnFornecedorPadrao.HeaderText = "FP"
+        Me.clnFornecedorPadrao.Name = "clnFornecedorPadrao"
+        Me.clnFornecedorPadrao.ReadOnly = True
+        Me.clnFornecedorPadrao.Width = 50
+        '
         'frmFornecedorProdutos
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
@@ -378,13 +369,12 @@ Partial Class frmFornecedorProdutos
     Friend WithEvents miUltimaCompra As ToolStripMenuItem
     Friend WithEvents miAdicionarProdutoAoPedido As ToolStripMenuItem
     Friend WithEvents miDefinirFonecedorComoPadrao As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents miConfereEstoque As ToolStripMenuItem
     Friend WithEvents clnProduto As DataGridViewTextBoxColumn
-    Friend WithEvents clnIDProdutoFornecedor As DataGridViewTextBoxColumn
     Friend WithEvents clnPreco As DataGridViewTextBoxColumn
     Friend WithEvents clnDesconto As DataGridViewTextBoxColumn
     Friend WithEvents clnData As DataGridViewTextBoxColumn
     Friend WithEvents clnApelidoFilial As DataGridViewTextBoxColumn
     Friend WithEvents clnFornecedorPadrao As DataGridViewImageColumn
-    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents miConfereEstoque As ToolStripMenuItem
 End Class

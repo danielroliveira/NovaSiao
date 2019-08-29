@@ -181,16 +181,6 @@ Public Class frmFornecedorProdutos
             .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
         End With
         '
-        ' (1) COLUNA COD IDPRODUTOORIGEM
-        With clnIDProdutoFornecedor
-            .DataPropertyName = "IDProdutoOrigem"
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = False
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
         ' (2) COLUNA PRECO
         With clnPreco
             .DataPropertyName = "PCompra"
@@ -248,7 +238,7 @@ Public Class frmFornecedorProdutos
         End With
         '
         '--- adiciona as colunas editadas
-        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnProduto, clnIDProdutoFornecedor, clnPreco,
+        dgvItens.Columns.AddRange(New DataGridViewColumn() {clnProduto, clnPreco,
                                   clnDesconto, clnData, clnApelidoFilial, clnFornecedorPadrao})
         '
     End Sub
@@ -413,52 +403,6 @@ Public Class frmFornecedorProdutos
             End If
             '
         End If
-        '
-    End Sub
-    '
-    '--- VALIDA O CELL
-    Private Sub dgvItens_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvItens.CellValidating
-        '
-        '--- verifica se a currenteCELL is Dirty
-        If Not dgvItens.IsCurrentCellDirty Then Return
-        '
-        If e.ColumnIndex = clnIDProdutoFornecedor.Index Then
-            '
-            '--- obtem o item do dgv
-            Dim item As clProdutoFornecedor = DirectCast(dgvItens.Rows(e.RowIndex).DataBoundItem, clProdutoFornecedor)
-            '
-            '--- SAVE
-            Try
-                Altera_Item_IDProdutoOrigem(item.IDProduto, item.IDFornecedor, e.FormattedValue)
-                currentEditRow = Nothing
-                _rowSit = EnumFlagEstado.RegistroSalvo
-            Catch ex As Exception
-                e.Cancel = True
-            End Try
-            '
-        End If
-        '
-    End Sub
-    '
-    '--- ALTERA O CODIGO DO PRODUTO ORIGEM
-    '----------------------------------------------------------------------------------
-    Private Sub Altera_Item_IDProdutoOrigem(IDProduto As Integer,
-                                            IDFornecedor As Integer,
-                                            IDProdutoOrigem As String)
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            prodBLL.InsertUpdate_IDProdutoOrigem(IDProduto, IDFornecedor, IDProdutoOrigem)
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Salvar o ID do produto da Origem..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
         '
     End Sub
     '
@@ -762,7 +706,7 @@ Public Class frmFornecedorProdutos
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            prodBLL.DefineFornecedorPadrao(prodForn.IDProduto, prodForn.IDFornecedor)
+            prodBLL.DefineFornecedorPadrao(prodForn)
             bindList.Current.FornecedorPadrao = True
             '
             Return True
