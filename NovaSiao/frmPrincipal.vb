@@ -592,9 +592,9 @@ Public Class frmPrincipal
             proc.ShowDialog()
             If proc.DialogResult = DialogResult.Cancel Then Exit Sub
             '
-            If Not IsNumeric(proc.RGEscolhido) Then Exit Sub
+            If Not IsNumeric(proc.ProdutoEscolhido.RGProduto) Then Exit Sub
             '
-            IDEscolhido = proc.IDEscolhido
+            IDEscolhido = proc.ProdutoEscolhido.IDProduto
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Abrir o formulário de Procura..." & vbNewLine &

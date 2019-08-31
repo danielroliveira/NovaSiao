@@ -16,7 +16,7 @@ Public Class frmProduto
     '
 #Region "EVENTO LOAD E PROPRIEDADE SIT"
     '
-    Public Property RGEscolhido As Integer? '--- Propriedade para escolha do produto
+    Public Property ProdutoEscolhido As clProduto '--- Propriedade para escolha do produto
     '
     'PROPERTY SIT
     Private Property Sit As EnumFlagEstado
@@ -304,12 +304,15 @@ Public Class frmProduto
             Else '--- nesse caso fecha o formulário depois de salvar e retorna o IDProduto
                 '
                 '--- retorna o valor do RGProduto
-                RGEscolhido = _produto.RGProduto
+                ProdutoEscolhido = _produto
+                '
                 '--- Mensagem
                 MessageBox.Show("Registro Salvo com sucesso!", "Registro Salvo",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information)
+                '
                 '--- fecha o formulario de cadastro
                 DialogResult = DialogResult.OK
+                Close()
                 _formOrigem.Show()
                 '
             End If
@@ -353,6 +356,22 @@ Public Class frmProduto
         End If
         '
         If Not f.VerificaDadosClasse(cmbMovimento, "Movimento do Estoque", _produto, EProvider) Then
+            Return False
+        End If
+        '
+        '--- verifica precos de venda e de compra
+        '---------------------------------------------------------------------------------------------
+        If _produto.PVenda <= 0 OrElse _produto.PCompra <= 0 Then
+            AbrirDialog("O Preço de Venda e/ou o Preço de Compra não podem ser igual ou menor que zero...",
+                        "Preço de Venda", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+            txtPCompra.Focus()
+            Return False
+        End If
+        '
+        If _produto.PVenda < _produto.PCompra Then
+            AbrirDialog("O Preço de Venda não pode ser menor que o preço de compra...",
+                        "Preço de Venda", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+            txtPVenda.Focus()
             Return False
         End If
         '
@@ -422,7 +441,7 @@ Public Class frmProduto
             If frmP.DialogResult = DialogResult.Cancel Then
                 MessageBox.Show("Procura Cancelada...", "Cancelado", MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else
-                Dim pReg As Integer = frmP.IDEscolhido
+                Dim pReg As Integer = frmP.ProdutoEscolhido.IDProduto
                 propProduto = prodBLL.GetProduto_PorID(pReg, Obter_FilialPadrao)
                 '
                 Sit = EnumFlagEstado.RegistroSalvo
@@ -510,7 +529,7 @@ Public Class frmProduto
         Else
             DialogResult = DialogResult.Cancel
             Close()
-            RGEscolhido = Nothing
+            ProdutoEscolhido = Nothing
             _formOrigem.Visible = True
         End If
         '
@@ -1587,7 +1606,8 @@ Public Class frmProduto
             Cursor = Cursors.WaitCursor
             '
             Dim form As New frmProdutoFornecedor(_produto, Me)
-            form.ShowDialog()
+            form.MdiParent = Me.MdiParent
+            form.Show()
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao abrir formulário de Fornecedores..." & vbNewLine &

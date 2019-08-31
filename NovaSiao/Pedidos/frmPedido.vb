@@ -823,10 +823,10 @@ Public Class frmPedido
             '
             '--- se retornou entao preenche o RGProduto
             Dim n As String
-            Dim strRG As String = p.RGEscolhido.ToString
+            Dim strRG As String = p.ProdutoEscolhido.RGProduto.ToString
 
             For i = 1 To Len(strRG)
-                n = Mid(p.RGEscolhido.ToString, i, 1)
+                n = Mid(p.ProdutoEscolhido.RGProduto.ToString, i, 1)
 
                 SendKeys.Send(n)
             Next
@@ -868,17 +868,21 @@ Public Class frmPedido
             e.SuppressKeyPress = True
             e.Handled = True
             '
-            If iColumn = dgvItens.ColumnCount - 1 Then
-                If (dgvItens.RowCount > (iRow + 1)) Then
+            Try
+                If iColumn = dgvItens.ColumnCount - 1 Then
+                    If (dgvItens.RowCount > (iRow + 1)) Then
 
-                    dgvItens.CurrentCell = dgvItens(1, iRow + 1)
+                        dgvItens.CurrentCell = dgvItens(1, iRow + 1)
 
+                    Else
+                        'focus next control
+                    End If
                 Else
-                    'focus next control
+                    dgvItens.CurrentCell = dgvItens(iColumn + 1, iRow)
                 End If
-            Else
-                dgvItens.CurrentCell = dgvItens(iColumn + 1, iRow)
-            End If
+            Catch ex As Exception
+
+            End Try
             '
         End If
         '

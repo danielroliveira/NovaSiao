@@ -1561,63 +1561,6 @@ Public Class ProdutoFornecedorBLL
         '
     End Function
     '
-    '--- INSERT PRODUTO CODIGO/ID FORNECEDOR
-    '----------------------------------------------------------------------------------
-    Public Function Insert_IDProdutoOrigem(IDProdutoFornecedor As Integer,
-                                           IDProdutoOrigem As String) As Boolean
-        '
-        Try
-            '
-            Dim db As New AcessoDados
-            Dim query As String = ""
-            query = "INSERT INTO tblProdutoFornecedorItem " +
-                    "(IDProdutoFornecedor, IDProdutoOrigem) " +
-                    "VALUES " +
-                    "(@IDProdutoFornecedor, @IDProdutoOrigem)"
-            '
-            db.LimparParametros()
-            db.AdicionarParametros("@IDProdutoFornecedor", IDProdutoFornecedor)
-            db.AdicionarParametros("@IDProdutoOrigem", IDProdutoOrigem)
-            '
-            db.ExecutarManipulacao(CommandType.Text, query)
-            '
-            Return True
-        Catch ex As Exception
-            Throw ex
-        End Try
-        '
-    End Function
-    '
-    '--- UPDATE PRODUTO CODIGO/ID FORNECEDOR
-    '----------------------------------------------------------------------------------
-    Public Function Update_IDProdutoOrigem(IDProdutoFornecedor As Integer,
-                                           IDProdutoOrigem As String) As Boolean
-        '
-        Try
-            '
-            Dim db As New AcessoDados
-            Dim query As String = ""
-            '
-
-            query = "UPDATE tblProdutoFornecedorItem SET " +
-                    "IDProdutoOrigem = @IDProdutoOrigem " +
-                    "WHERE IDProdutoFornecedor = @IDProdutoFornecedor"
-            '
-            db.LimparParametros()
-            db.AdicionarParametros("@IDProdutoFornecedor", IDProdutoFornecedor)
-            db.AdicionarParametros("@IDProdutoOrigem", IDProdutoOrigem)
-            '
-            db.ExecutarManipulacao(CommandType.Text, query)
-
-
-            '
-            Return True
-        Catch ex As Exception
-            Throw ex
-        End Try
-        '
-    End Function
-    '
     '--- DELETE PRODUTO FORNECEDOR ITEM
     '----------------------------------------------------------------------------------
     Public Function Delete_ProdutoFornecedor(prodForn As clProdutoFornecedor) As Boolean
@@ -1719,9 +1662,9 @@ Public Class ProdutoFornecedorBLL
     '----------------------------------------------------------------------------------
     '--- GET PRODUTO BY IDFORNECEDOR AND ID PRODUTO ORIGEM|FORNECEDOR
     '----------------------------------------------------------------------------------
-    Public Function GetProdFornecedorByFornecedorAndIDOrigem(IDFornecedor As Integer,
-                                                             IDProdutoOrigem As Integer,
-                                                             dbTran As Object) As clProdutoFornecedor
+    Public Function GetProdFornecedorItem(IDFornecedor As Integer,
+                                          IDProdutoOrigem As Integer,
+                                          dbTran As Object) As clProdutoFornecedorItem
         '
         Try
             Dim db As AcessoDados = If(dbTran, New AcessoDados)
@@ -1736,7 +1679,7 @@ Public Class ProdutoFornecedorBLL
             '
             If dt.Rows.Count = 0 Then Return Nothing
             '
-            Return ConvertRowInClass(dt.Rows(0))
+            Return ConvertRowInClassItem(dt.Rows(0))
             '
         Catch ex As Exception
             Throw ex
@@ -1768,11 +1711,14 @@ Public Class ProdutoFornecedorBLL
         '
     End Function
     '
+#Region "PRODUTO FORNECEDOR ITEMS"
+    '
     '--- CONVERT ROW IN CLASS PRODUTO FORNECEDOR ITEM
     '----------------------------------------------------------------------------------
     Private Function ConvertRowInClassItem(r) As clProdutoFornecedorItem
         '
         Return New clProdutoFornecedorItem With {
+            .IDProdutoFornecedorItem = r("IDProdutoFornecedorItem"),
             .IDProdutoFornecedor = r("IDProdutoFornecedor"),
             .IDProduto = r("IDProduto"),
             .Produto = r("Produto"),
@@ -1813,5 +1759,91 @@ Public Class ProdutoFornecedorBLL
         End Try
         '
     End Function
+    '
+    '--- INSERT PRODUTO CODIGO/ID FORNECEDOR
+    '----------------------------------------------------------------------------------
+    Public Function Insert_ProdutoFornecedorItem(PFitem As clProdutoFornecedorItem) As Integer
+        '
+        Try
+            '
+            Dim db As New AcessoDados
+            Dim query As String = ""
+            query = "INSERT INTO tblProdutoFornecedorItem " &
+                    "(IDProdutoOrigem, IDProdutoFornecedor, DescricaoOrigem, CodBarrasOrigem) " &
+                    "VALUES " &
+                    "(@IDProdutoOrigem, @IDProdutoFornecedor, @DescricaoOrigem, @CodBarrasOrigem)"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProdutoOrigem", PFitem.IDProdutoOrigem)
+            db.AdicionarParametros("@IDProdutoFornecedor", PFitem.IDProdutoFornecedor)
+            db.AdicionarParametros("@DescricaoOrigem", PFitem.DescricaoOrigem)
+            db.AdicionarParametros("@CodBarrasOrigem", If(PFitem.CodBarrasOrigem, DBNull.Value))
+            '
+            Dim NewID As Integer = db.ExecutarInsertGetID(query)
+            '
+            Return NewID
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '--- UPDATE PRODUTO FORENCEDOR ITEM
+    '----------------------------------------------------------------------------------
+    Public Function Update_ProdutoFornecedorItem(PFitem As clProdutoFornecedorItem) As Boolean
+        '
+        Try
+            '
+            Dim db As New AcessoDados
+            Dim query As String = ""
+            '
+
+            query = "UPDATE tblProdutoFornecedorItem SET " +
+                    "IDProdutoOrigem = @IDProdutoOrigem, " +
+                    "DescricaoOrigem = @DescricaoOrigem, " +
+                    "CodBarrasOrigem = @CodBarrasOrigem " +
+                    "WHERE IDProdutoFornecedorItem = @IDProdutoFornecedorItem"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProdutoFornecedorItem", PFitem.IDProdutoFornecedorItem)
+            db.AdicionarParametros("@IDProdutoOrigem", PFitem.IDProdutoOrigem)
+            db.AdicionarParametros("@DescricaoOrigem", PFitem.DescricaoOrigem)
+            db.AdicionarParametros("@CodBarrasOrigem", If(PFitem.CodBarrasOrigem, DBNull.Value))
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            Return True
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '--- DELETE PRODUTO FORENCEDOR ITEM
+    '----------------------------------------------------------------------------------
+    Public Function Delete_ProdutoFornecedorItem(IDProdutoFornecedorItem As Integer) As Boolean
+        '
+        Try
+            '
+            Dim db As New AcessoDados
+            Dim query As String = ""
+            '
+
+            query = "DELETE tblProdutoFornecedorItem " +
+                    "WHERE IDProdutoFornecedorItem = @IDProdutoFornecedorItem"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProdutoFornecedorItem", IDProdutoFornecedorItem)
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            Return True
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+#End Region '/ PRODUTO FORNECEDOR ITEMS
     '
 End Class

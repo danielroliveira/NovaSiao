@@ -763,7 +763,7 @@ Public Class frmEstoqueAjuste
                 p.ShowDialog()
                 '
                 If p.DialogResult = DialogResult.OK Then
-                    txtRGProduto.Text = p.RGEscolhido
+                    txtRGProduto.Text = p.ProdutoEscolhido.RGProduto
                     SendKeys.Send("{Tab}")
                 End If
             End If
@@ -777,7 +777,7 @@ Public Class frmEstoqueAjuste
             f.ShowDialog()
             '
             If f.DialogResult = DialogResult.OK Then
-                txtRGProduto.Text = f.RGEscolhido
+                txtRGProduto.Text = f.ProdutoEscolhido.RGProduto
                 SendKeys.Send("{Tab}")
             End If
             '

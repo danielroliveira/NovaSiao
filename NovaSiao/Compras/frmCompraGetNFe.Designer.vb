@@ -19,17 +19,14 @@ Partial Class frmCompraGetNFe
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.btnImportar = New System.Windows.Forms.Button()
         Me.btnFechar = New System.Windows.Forms.Button()
-        Me.txtInscricao = New System.Windows.Forms.TextBox()
         Me.Label17 = New System.Windows.Forms.Label()
-        Me.txtCNPJ = New System.Windows.Forms.MaskedTextBox()
-        Me.txtRazaoSocial = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.dgvItens = New System.Windows.Forms.DataGridView()
-        Me.btnCorrelacao = New System.Windows.Forms.Button()
         Me.clnIDProdutoNfe = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnProdutoNfe = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnQuantidadeNFe = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -38,8 +35,18 @@ Partial Class frmCompraGetNFe
         Me.clnTotalNfe = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.btnCorrelacao = New System.Windows.Forms.Button()
+        Me.lblRazaoSocial = New System.Windows.Forms.Label()
+        Me.lblCNPJ = New System.Windows.Forms.Label()
+        Me.lblInscricao = New System.Windows.Forms.Label()
+        Me.mnuItens = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.miAnexarProduto = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miNovoProduto = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.miAbrirProduto = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.mnuItens.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -56,68 +63,45 @@ Partial Class frmCompraGetNFe
         'btnImportar
         '
         Me.btnImportar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnImportar.Image = Global.NovaSiao.My.Resources.Resources.download
         Me.btnImportar.Location = New System.Drawing.Point(10, 601)
         Me.btnImportar.Name = "btnImportar"
         Me.btnImportar.Size = New System.Drawing.Size(195, 43)
         Me.btnImportar.TabIndex = 2
         Me.btnImportar.Text = "Importar XML"
+        Me.btnImportar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnImportar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnImportar.UseVisualStyleBackColor = True
         '
         'btnFechar
         '
         Me.btnFechar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnFechar.Location = New System.Drawing.Point(1069, 601)
+        Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar_24x24
+        Me.btnFechar.Location = New System.Drawing.Point(1007, 601)
         Me.btnFechar.Name = "btnFechar"
-        Me.btnFechar.Size = New System.Drawing.Size(104, 43)
+        Me.btnFechar.Size = New System.Drawing.Size(166, 43)
         Me.btnFechar.TabIndex = 2
         Me.btnFechar.Text = "Fechar"
+        Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnFechar.UseVisualStyleBackColor = True
-        '
-        'txtInscricao
-        '
-        Me.txtInscricao.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtInscricao.Location = New System.Drawing.Point(391, 101)
-        Me.txtInscricao.MaxLength = 20
-        Me.txtInscricao.Name = "txtInscricao"
-        Me.txtInscricao.Size = New System.Drawing.Size(190, 27)
-        Me.txtInscricao.TabIndex = 17
         '
         'Label17
         '
         Me.Label17.AutoSize = True
         Me.Label17.BackColor = System.Drawing.Color.Transparent
-        Me.Label17.Location = New System.Drawing.Point(286, 104)
+        Me.Label17.Location = New System.Drawing.Point(365, 103)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(99, 19)
         Me.Label17.TabIndex = 16
         Me.Label17.Text = "Insc. Estadual"
-        '
-        'txtCNPJ
-        '
-        Me.txtCNPJ.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtCNPJ.Location = New System.Drawing.Point(127, 101)
-        Me.txtCNPJ.Mask = "00,000,000/0000-00"
-        Me.txtCNPJ.Name = "txtCNPJ"
-        Me.txtCNPJ.Size = New System.Drawing.Size(152, 27)
-        Me.txtCNPJ.TabIndex = 15
-        Me.txtCNPJ.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.txtCNPJ.TextMaskFormat = System.Windows.Forms.MaskFormat.IncludePromptAndLiterals
-        '
-        'txtRazaoSocial
-        '
-        Me.txtRazaoSocial.BackColor = System.Drawing.Color.White
-        Me.txtRazaoSocial.Location = New System.Drawing.Point(127, 68)
-        Me.txtRazaoSocial.MaxLength = 50
-        Me.txtRazaoSocial.Name = "txtRazaoSocial"
-        Me.txtRazaoSocial.Size = New System.Drawing.Size(454, 27)
-        Me.txtRazaoSocial.TabIndex = 13
         '
         'Label4
         '
         Me.Label4.AutoSize = True
         Me.Label4.BackColor = System.Drawing.Color.Transparent
         Me.Label4.ForeColor = System.Drawing.Color.Black
-        Me.Label4.Location = New System.Drawing.Point(81, 104)
+        Me.Label4.Location = New System.Drawing.Point(81, 102)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(40, 19)
         Me.Label4.TabIndex = 14
@@ -128,7 +112,7 @@ Partial Class frmCompraGetNFe
         Me.Label2.AutoSize = True
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(31, 71)
+        Me.Label2.Location = New System.Drawing.Point(31, 69)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(90, 19)
         Me.Label2.TabIndex = 12
@@ -161,16 +145,6 @@ Partial Class frmCompraGetNFe
         Me.dgvItens.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.dgvItens.Size = New System.Drawing.Size(1161, 444)
         Me.dgvItens.TabIndex = 18
-        '
-        'btnCorrelacao
-        '
-        Me.btnCorrelacao.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnCorrelacao.Location = New System.Drawing.Point(211, 601)
-        Me.btnCorrelacao.Name = "btnCorrelacao"
-        Me.btnCorrelacao.Size = New System.Drawing.Size(195, 43)
-        Me.btnCorrelacao.TabIndex = 2
-        Me.btnCorrelacao.Text = "Fazer Correlação"
-        Me.btnCorrelacao.UseVisualStyleBackColor = True
         '
         'clnIDProdutoNfe
         '
@@ -232,16 +206,95 @@ Partial Class frmCompraGetNFe
         Me.clnProduto.ReadOnly = True
         Me.clnProduto.Width = 250
         '
+        'btnCorrelacao
+        '
+        Me.btnCorrelacao.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnCorrelacao.Image = Global.NovaSiao.My.Resources.Resources.refresh1
+        Me.btnCorrelacao.Location = New System.Drawing.Point(211, 601)
+        Me.btnCorrelacao.Name = "btnCorrelacao"
+        Me.btnCorrelacao.Size = New System.Drawing.Size(195, 43)
+        Me.btnCorrelacao.TabIndex = 2
+        Me.btnCorrelacao.Text = "Fazer Correlação"
+        Me.btnCorrelacao.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnCorrelacao.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnCorrelacao.UseVisualStyleBackColor = True
+        '
+        'lblRazaoSocial
+        '
+        Me.lblRazaoSocial.BackColor = System.Drawing.Color.White
+        Me.lblRazaoSocial.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblRazaoSocial.ForeColor = System.Drawing.Color.Black
+        Me.lblRazaoSocial.Location = New System.Drawing.Point(127, 67)
+        Me.lblRazaoSocial.Name = "lblRazaoSocial"
+        Me.lblRazaoSocial.Size = New System.Drawing.Size(575, 26)
+        Me.lblRazaoSocial.TabIndex = 12
+        '
+        'lblCNPJ
+        '
+        Me.lblCNPJ.BackColor = System.Drawing.Color.White
+        Me.lblCNPJ.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCNPJ.ForeColor = System.Drawing.Color.Black
+        Me.lblCNPJ.Location = New System.Drawing.Point(127, 101)
+        Me.lblCNPJ.Name = "lblCNPJ"
+        Me.lblCNPJ.Size = New System.Drawing.Size(232, 26)
+        Me.lblCNPJ.TabIndex = 12
+        '
+        'lblInscricao
+        '
+        Me.lblInscricao.BackColor = System.Drawing.Color.White
+        Me.lblInscricao.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblInscricao.ForeColor = System.Drawing.Color.Black
+        Me.lblInscricao.Location = New System.Drawing.Point(470, 101)
+        Me.lblInscricao.Name = "lblInscricao"
+        Me.lblInscricao.Size = New System.Drawing.Size(232, 26)
+        Me.lblInscricao.TabIndex = 12
+        '
+        'mnuItens
+        '
+        Me.mnuItens.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.mnuItens.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAnexarProduto, Me.miNovoProduto, Me.ToolStripSeparator1, Me.miAbrirProduto})
+        Me.mnuItens.Name = "mnuItens"
+        Me.mnuItens.Size = New System.Drawing.Size(214, 82)
+        '
+        'miAnexarProduto
+        '
+        Me.miAnexarProduto.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
+        Me.miAnexarProduto.Name = "miAnexarProduto"
+        Me.miAnexarProduto.Size = New System.Drawing.Size(213, 24)
+        Me.miAnexarProduto.Text = "Anexar a um Produto"
+        Me.miAnexarProduto.ToolTipText = "Correlacionar com um produto existente"
+        '
+        'miNovoProduto
+        '
+        Me.miNovoProduto.Image = Global.NovaSiao.My.Resources.Resources.add
+        Me.miNovoProduto.Name = "miNovoProduto"
+        Me.miNovoProduto.Size = New System.Drawing.Size(213, 24)
+        Me.miNovoProduto.Text = "Criar novo Produto"
+        Me.miNovoProduto.ToolTipText = "Um produto que nunca foi inserido"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(210, 6)
+        '
+        'miAbrirProduto
+        '
+        Me.miAbrirProduto.Image = Global.NovaSiao.My.Resources.Resources.Estoque_24px
+        Me.miAbrirProduto.Name = "miAbrirProduto"
+        Me.miAbrirProduto.Size = New System.Drawing.Size(213, 24)
+        Me.miAbrirProduto.Text = "Visualizar Produto"
+        Me.miAbrirProduto.ToolTipText = "Abrir o cadastro do produto"
+        '
         'frmCompraGetNFe
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1191, 656)
         Me.Controls.Add(Me.dgvItens)
-        Me.Controls.Add(Me.txtInscricao)
         Me.Controls.Add(Me.Label17)
-        Me.Controls.Add(Me.txtCNPJ)
-        Me.Controls.Add(Me.txtRazaoSocial)
         Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.lblInscricao)
+        Me.Controls.Add(Me.lblCNPJ)
+        Me.Controls.Add(Me.lblRazaoSocial)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.btnFechar)
         Me.Controls.Add(Me.btnCorrelacao)
@@ -252,14 +305,15 @@ Partial Class frmCompraGetNFe
         Me.Controls.SetChildIndex(Me.btnCorrelacao, 0)
         Me.Controls.SetChildIndex(Me.btnFechar, 0)
         Me.Controls.SetChildIndex(Me.Label2, 0)
+        Me.Controls.SetChildIndex(Me.lblRazaoSocial, 0)
+        Me.Controls.SetChildIndex(Me.lblCNPJ, 0)
+        Me.Controls.SetChildIndex(Me.lblInscricao, 0)
         Me.Controls.SetChildIndex(Me.Label4, 0)
-        Me.Controls.SetChildIndex(Me.txtRazaoSocial, 0)
-        Me.Controls.SetChildIndex(Me.txtCNPJ, 0)
         Me.Controls.SetChildIndex(Me.Label17, 0)
-        Me.Controls.SetChildIndex(Me.txtInscricao, 0)
         Me.Controls.SetChildIndex(Me.dgvItens, 0)
         Me.Panel1.ResumeLayout(False)
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.mnuItens.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -267,10 +321,7 @@ Partial Class frmCompraGetNFe
 
     Friend WithEvents btnImportar As Button
     Friend WithEvents btnFechar As Button
-    Friend WithEvents txtInscricao As TextBox
     Friend WithEvents Label17 As Label
-    Friend WithEvents txtCNPJ As MaskedTextBox
-    Friend WithEvents txtRazaoSocial As TextBox
     Friend WithEvents Label4 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents dgvItens As DataGridView
@@ -283,4 +334,12 @@ Partial Class frmCompraGetNFe
     Friend WithEvents clnTotalNfe As DataGridViewTextBoxColumn
     Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
     Friend WithEvents clnProduto As DataGridViewTextBoxColumn
+    Friend WithEvents lblRazaoSocial As Label
+    Friend WithEvents lblCNPJ As Label
+    Friend WithEvents lblInscricao As Label
+    Friend WithEvents mnuItens As ContextMenuStrip
+    Friend WithEvents miAnexarProduto As ToolStripMenuItem
+    Friend WithEvents miAbrirProduto As ToolStripMenuItem
+    Friend WithEvents miNovoProduto As ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
 End Class

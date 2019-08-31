@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmProdutoFornecedorEditar
     Inherits NovaSiao.frmModFinBorder
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         If disposing AndAlso components IsNot Nothing Then
             components.Dispose()
@@ -19,6 +19,7 @@ Partial Class frmProdutoFornecedorEditar
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
         Me.tsMenu = New System.Windows.Forms.ToolStrip()
@@ -29,7 +30,6 @@ Partial Class frmProdutoFornecedorEditar
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblProduto = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.btnFornecedor = New VIBlend.WinForms.Controls.vButton()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.lblApelidoFilial = New System.Windows.Forms.Label()
@@ -43,34 +43,19 @@ Partial Class frmProdutoFornecedorEditar
         Me.Label22 = New System.Windows.Forms.Label()
         Me.txtDescontoCompra = New System.Windows.Forms.TextBox()
         Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.txtRGProduto = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.txtFornecedor = New System.Windows.Forms.TextBox()
         Me.lblPrecoFinal = New System.Windows.Forms.Label()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.lblVinculado = New System.Windows.Forms.Label()
-        Me.dgvItens = New System.Windows.Forms.DataGridView()
+        Me.dgvItens = New Controles.ctrlDataGridView()
         Me.clnIDProdutoOrigem = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnDescricaoOrigem = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.clnCodBarrasOrigem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.pnlItem = New System.Windows.Forms.Panel()
-        Me.btnPanelCancel = New System.Windows.Forms.Button()
-        Me.btnPanelOK = New System.Windows.Forms.Button()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.txtCodBarrasOrigem = New System.Windows.Forms.TextBox()
-        Me.txtDescricaoOrigem = New System.Windows.Forms.TextBox()
-        Me.txtIDProdutoOrigem = New System.Windows.Forms.TextBox()
-        Me.Panel6 = New System.Windows.Forms.Panel()
-        Me.Label11 = New System.Windows.Forms.Label()
-        Me.mnuItens = New VIBlend.WinForms.Controls.vContextMenu()
-        Me.MenuItemEditar = New System.Windows.Forms.MenuItem()
-        Me.MenuItemInserir = New System.Windows.Forms.MenuItem()
-        Me.MenuItem3 = New System.Windows.Forms.MenuItem()
-        Me.MenuItemExcluir = New System.Windows.Forms.MenuItem()
+        Me.lblFornecedor = New System.Windows.Forms.Label()
+        Me.lblRGProduto = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -78,8 +63,6 @@ Partial Class frmProdutoFornecedorEditar
         Me.Panel4.SuspendLayout()
         Me.Panel5.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.pnlItem.SuspendLayout()
-        Me.Panel6.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -131,7 +114,7 @@ Partial Class frmProdutoFornecedorEditar
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
         Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional
-        Me.tsMenu.Size = New System.Drawing.Size(890, 48)
+        Me.tsMenu.Size = New System.Drawing.Size(618, 48)
         Me.tsMenu.TabIndex = 10
         Me.tsMenu.TabStop = True
         Me.tsMenu.Text = "Menu Cliente PF"
@@ -210,25 +193,6 @@ Partial Class frmProdutoFornecedorEditar
         Me.Label1.TabIndex = 2
         Me.Label1.Text = "Produto:"
         '
-        'btnFornecedor
-        '
-        Me.btnFornecedor.AllowAnimations = True
-        Me.btnFornecedor.Anchor = System.Windows.Forms.AnchorStyles.Right
-        Me.btnFornecedor.BackColor = System.Drawing.Color.Transparent
-        Me.btnFornecedor.FlatAppearance.BorderColor = System.Drawing.Color.Black
-        Me.btnFornecedor.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnFornecedor.Location = New System.Drawing.Point(542, 8)
-        Me.btnFornecedor.Name = "btnFornecedor"
-        Me.btnFornecedor.RoundedCornersMask = CType(15, Byte)
-        Me.btnFornecedor.RoundedCornersRadius = 0
-        Me.btnFornecedor.Size = New System.Drawing.Size(34, 27)
-        Me.btnFornecedor.TabIndex = 1
-        Me.btnFornecedor.TabStop = False
-        Me.btnFornecedor.Text = "..."
-        Me.btnFornecedor.UseCompatibleTextRendering = True
-        Me.btnFornecedor.UseVisualStyleBackColor = False
-        Me.btnFornecedor.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
-        '
         'Label3
         '
         Me.Label3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -236,7 +200,7 @@ Partial Class frmProdutoFornecedorEditar
         Me.Label3.Location = New System.Drawing.Point(17, 245)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(104, 20)
-        Me.Label3.TabIndex = 6
+        Me.Label3.TabIndex = 5
         Me.Label3.Text = "Fornecedor:"
         '
         'Label5
@@ -348,7 +312,7 @@ Partial Class frmProdutoFornecedorEditar
         'Panel3
         '
         Me.Panel3.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.Panel3.Controls.Add(Me.txtRGProduto)
+        Me.Panel3.Controls.Add(Me.lblRGProduto)
         Me.Panel3.Controls.Add(Me.lblProduto)
         Me.Panel3.Controls.Add(Me.Label1)
         Me.Panel3.Controls.Add(Me.Label2)
@@ -357,16 +321,6 @@ Partial Class frmProdutoFornecedorEditar
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(587, 58)
         Me.Panel3.TabIndex = 4
-        '
-        'txtRGProduto
-        '
-        Me.txtRGProduto.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.txtRGProduto.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtRGProduto.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRGProduto.Location = New System.Drawing.Point(12, 27)
-        Me.txtRGProduto.Name = "txtRGProduto"
-        Me.txtRGProduto.Size = New System.Drawing.Size(88, 24)
-        Me.txtRGProduto.TabIndex = 1
         '
         'Label4
         '
@@ -392,23 +346,11 @@ Partial Class frmProdutoFornecedorEditar
         'Panel4
         '
         Me.Panel4.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.Panel4.Controls.Add(Me.txtFornecedor)
-        Me.Panel4.Controls.Add(Me.btnFornecedor)
+        Me.Panel4.Controls.Add(Me.lblFornecedor)
         Me.Panel4.Location = New System.Drawing.Point(17, 267)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(587, 43)
-        Me.Panel4.TabIndex = 7
-        '
-        'txtFornecedor
-        '
-        Me.txtFornecedor.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
-        Me.txtFornecedor.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtFornecedor.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtFornecedor.Location = New System.Drawing.Point(12, 10)
-        Me.txtFornecedor.Margin = New System.Windows.Forms.Padding(0)
-        Me.txtFornecedor.Name = "txtFornecedor"
-        Me.txtFornecedor.Size = New System.Drawing.Size(524, 24)
-        Me.txtFornecedor.TabIndex = 0
+        Me.Panel4.TabIndex = 6
         '
         'lblPrecoFinal
         '
@@ -461,25 +403,36 @@ Partial Class frmProdutoFornecedorEditar
         Me.dgvItens.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
         Me.dgvItens.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
         Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvItens.ColumnHeadersHeight = 25
         Me.dgvItens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDProdutoOrigem, Me.clnDescricaoOrigem, Me.clnCodBarrasOrigem})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvItens.EnableHeadersVisualStyles = False
         Me.dgvItens.GridColor = System.Drawing.SystemColors.ActiveCaption
         Me.dgvItens.Location = New System.Drawing.Point(17, 325)
+        Me.dgvItens.MultiSelect = False
         Me.dgvItens.Name = "dgvItens"
         Me.dgvItens.RowHeadersWidth = 30
         Me.dgvItens.RowTemplate.Height = 30
+        Me.dgvItens.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.dgvItens.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvItens.Size = New System.Drawing.Size(587, 130)
-        Me.dgvItens.TabIndex = 5
+        Me.dgvItens.TabIndex = 7
         '
         'clnIDProdutoOrigem
         '
@@ -491,7 +444,7 @@ Partial Class frmProdutoFornecedorEditar
         '
         Me.clnDescricaoOrigem.HeaderText = "Descricao"
         Me.clnDescricaoOrigem.Name = "clnDescricaoOrigem"
-        Me.clnDescricaoOrigem.Width = 300
+        Me.clnDescricaoOrigem.Width = 320
         '
         'clnCodBarrasOrigem
         '
@@ -499,148 +452,28 @@ Partial Class frmProdutoFornecedorEditar
         Me.clnCodBarrasOrigem.Name = "clnCodBarrasOrigem"
         Me.clnCodBarrasOrigem.Width = 120
         '
-        'pnlItem
+        'lblFornecedor
         '
-        Me.pnlItem.Controls.Add(Me.btnPanelCancel)
-        Me.pnlItem.Controls.Add(Me.btnPanelOK)
-        Me.pnlItem.Controls.Add(Me.Label13)
-        Me.pnlItem.Controls.Add(Me.Label14)
-        Me.pnlItem.Controls.Add(Me.txtCodBarrasOrigem)
-        Me.pnlItem.Controls.Add(Me.txtDescricaoOrigem)
-        Me.pnlItem.Controls.Add(Me.txtIDProdutoOrigem)
-        Me.pnlItem.Controls.Add(Me.Panel6)
-        Me.pnlItem.Location = New System.Drawing.Point(0, 361)
-        Me.pnlItem.Name = "pnlItem"
-        Me.pnlItem.Size = New System.Drawing.Size(624, 71)
-        Me.pnlItem.TabIndex = 11
-        Me.pnlItem.Visible = False
+        Me.lblFornecedor.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblFornecedor.Location = New System.Drawing.Point(8, 8)
+        Me.lblFornecedor.Name = "lblFornecedor"
+        Me.lblFornecedor.Size = New System.Drawing.Size(572, 27)
+        Me.lblFornecedor.TabIndex = 0
+        Me.lblFornecedor.Text = "Fornecedor"
         '
-        'btnPanelCancel
+        'lblRGProduto
         '
-        Me.btnPanelCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPanelCancel.CausesValidation = False
-        Me.btnPanelCancel.Image = Global.NovaSiao.My.Resources.Resources.delete_24px
-        Me.btnPanelCancel.Location = New System.Drawing.Point(576, 32)
-        Me.btnPanelCancel.Name = "btnPanelCancel"
-        Me.btnPanelCancel.Size = New System.Drawing.Size(37, 31)
-        Me.btnPanelCancel.TabIndex = 11
-        Me.btnPanelCancel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnPanelCancel.UseVisualStyleBackColor = True
-        '
-        'btnPanelOK
-        '
-        Me.btnPanelOK.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnPanelOK.Image = Global.NovaSiao.My.Resources.Resources.accept
-        Me.btnPanelOK.Location = New System.Drawing.Point(533, 32)
-        Me.btnPanelOK.Name = "btnPanelOK"
-        Me.btnPanelOK.Size = New System.Drawing.Size(37, 31)
-        Me.btnPanelOK.TabIndex = 10
-        Me.btnPanelOK.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnPanelOK.UseVisualStyleBackColor = True
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.BackColor = System.Drawing.Color.LightSlateGray
-        Me.Label13.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.ForeColor = System.Drawing.Color.White
-        Me.Label13.Location = New System.Drawing.Point(111, 5)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(58, 15)
-        Me.Label13.TabIndex = 2
-        Me.Label13.Text = "Descricao"
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.BackColor = System.Drawing.Color.LightSlateGray
-        Me.Label14.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.ForeColor = System.Drawing.Color.White
-        Me.Label14.Location = New System.Drawing.Point(12, 5)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(31, 15)
-        Me.Label14.TabIndex = 0
-        Me.Label14.Text = "Cod."
-        '
-        'txtCodBarrasOrigem
-        '
-        Me.txtCodBarrasOrigem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtCodBarrasOrigem.Location = New System.Drawing.Point(417, 34)
-        Me.txtCodBarrasOrigem.Margin = New System.Windows.Forms.Padding(5)
-        Me.txtCodBarrasOrigem.Name = "txtCodBarrasOrigem"
-        Me.txtCodBarrasOrigem.Size = New System.Drawing.Size(108, 27)
-        Me.txtCodBarrasOrigem.TabIndex = 5
-        Me.txtCodBarrasOrigem.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'txtDescricaoOrigem
-        '
-        Me.txtDescricaoOrigem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtDescricaoOrigem.Location = New System.Drawing.Point(106, 33)
-        Me.txtDescricaoOrigem.Margin = New System.Windows.Forms.Padding(5)
-        Me.txtDescricaoOrigem.Name = "txtDescricaoOrigem"
-        Me.txtDescricaoOrigem.Size = New System.Drawing.Size(301, 27)
-        Me.txtDescricaoOrigem.TabIndex = 1
-        '
-        'txtIDProdutoOrigem
-        '
-        Me.txtIDProdutoOrigem.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtIDProdutoOrigem.Location = New System.Drawing.Point(10, 33)
-        Me.txtIDProdutoOrigem.Margin = New System.Windows.Forms.Padding(5)
-        Me.txtIDProdutoOrigem.Name = "txtIDProdutoOrigem"
-        Me.txtIDProdutoOrigem.Size = New System.Drawing.Size(86, 27)
-        Me.txtIDProdutoOrigem.TabIndex = 1
-        '
-        'Panel6
-        '
-        Me.Panel6.BackColor = System.Drawing.Color.LightSlateGray
-        Me.Panel6.Controls.Add(Me.Label11)
-        Me.Panel6.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel6.Location = New System.Drawing.Point(0, 0)
-        Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(624, 26)
-        Me.Panel6.TabIndex = 12
-        '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.BackColor = System.Drawing.Color.LightSlateGray
-        Me.Label11.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.ForeColor = System.Drawing.Color.White
-        Me.Label11.Location = New System.Drawing.Point(414, 5)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(65, 15)
-        Me.Label11.TabIndex = 4
-        Me.Label11.Text = "Cod.Barras"
-        '
-        'mnuItens
-        '
-        Me.mnuItens.MenuItems.AddRange(New System.Windows.Forms.MenuItem() {Me.MenuItemEditar, Me.MenuItemInserir, Me.MenuItem3, Me.MenuItemExcluir})
-        '
-        'MenuItemEditar
-        '
-        Me.MenuItemEditar.Index = 0
-        Me.MenuItemEditar.Text = "Editar Item"
-        '
-        'MenuItemInserir
-        '
-        Me.MenuItemInserir.Index = 1
-        Me.MenuItemInserir.Text = "Inserir Novo Item"
-        '
-        'MenuItem3
-        '
-        Me.MenuItem3.Index = 2
-        Me.MenuItem3.Text = "-"
-        '
-        'MenuItemExcluir
-        '
-        Me.MenuItemExcluir.Index = 3
-        Me.MenuItemExcluir.Text = "Excluir Item"
+        Me.lblRGProduto.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblRGProduto.Location = New System.Drawing.Point(7, 25)
+        Me.lblRGProduto.Name = "lblRGProduto"
+        Me.lblRGProduto.Size = New System.Drawing.Size(89, 27)
+        Me.lblRGProduto.TabIndex = 1
+        Me.lblRGProduto.Text = "0000"
         '
         'frmProdutoFornecedorEditar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(624, 589)
-        Me.Controls.Add(Me.pnlItem)
         Me.Controls.Add(Me.dgvItens)
         Me.Controls.Add(Me.Panel5)
         Me.Controls.Add(Me.Panel4)
@@ -664,7 +497,6 @@ Partial Class frmProdutoFornecedorEditar
         Me.Controls.SetChildIndex(Me.Panel5, 0)
         Me.Controls.SetChildIndex(Me.dgvItens, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
-        Me.Controls.SetChildIndex(Me.pnlItem, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.tsMenu.ResumeLayout(False)
@@ -674,14 +506,9 @@ Partial Class frmProdutoFornecedorEditar
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
         Me.Panel4.ResumeLayout(False)
-        Me.Panel4.PerformLayout()
         Me.Panel5.ResumeLayout(False)
         Me.Panel5.PerformLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.pnlItem.ResumeLayout(False)
-        Me.pnlItem.PerformLayout()
-        Me.Panel6.ResumeLayout(False)
-        Me.Panel6.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -694,7 +521,6 @@ Partial Class frmProdutoFornecedorEditar
     Friend WithEvents Label2 As Label
     Friend WithEvents lblProduto As Label
     Friend WithEvents Label1 As Label
-    Friend WithEvents btnFornecedor As VIBlend.WinForms.Controls.vButton
     Friend WithEvents Label3 As Label
     Friend WithEvents Label5 As Label
     Friend WithEvents lblApelidoFilial As Label
@@ -714,27 +540,12 @@ Partial Class frmProdutoFornecedorEditar
     Friend WithEvents lblPrecoFinal As Label
     Friend WithEvents Panel5 As Panel
     Friend WithEvents Label8 As Label
-    Friend WithEvents txtFornecedor As TextBox
     Friend WithEvents lblVinculado As Label
     Friend WithEvents btnAtivo As ToolStripButton
-    Friend WithEvents txtRGProduto As TextBox
-    Friend WithEvents dgvItens As DataGridView
+    Friend WithEvents dgvItens As Controles.ctrlDataGridView
     Friend WithEvents clnIDProdutoOrigem As DataGridViewTextBoxColumn
     Friend WithEvents clnDescricaoOrigem As DataGridViewTextBoxColumn
     Friend WithEvents clnCodBarrasOrigem As DataGridViewTextBoxColumn
-    Friend WithEvents pnlItem As Panel
-    Friend WithEvents btnPanelCancel As Button
-    Friend WithEvents btnPanelOK As Button
-    Friend WithEvents Label13 As Label
-    Friend WithEvents Label14 As Label
-    Friend WithEvents txtCodBarrasOrigem As TextBox
-    Friend WithEvents txtDescricaoOrigem As TextBox
-    Friend WithEvents txtIDProdutoOrigem As TextBox
-    Friend WithEvents Panel6 As Panel
-    Friend WithEvents Label11 As Label
-    Friend WithEvents mnuItens As VIBlend.WinForms.Controls.vContextMenu
-    Friend WithEvents MenuItemEditar As MenuItem
-    Friend WithEvents MenuItemInserir As MenuItem
-    Friend WithEvents MenuItem3 As MenuItem
-    Friend WithEvents MenuItemExcluir As MenuItem
+    Friend WithEvents lblRGProduto As Label
+    Friend WithEvents lblFornecedor As Label
 End Class

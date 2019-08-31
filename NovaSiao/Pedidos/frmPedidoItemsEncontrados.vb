@@ -305,10 +305,10 @@ Public Class frmPedidoItemsEncontrados
             '
             '--- se retornou entao preenche o RGProduto
             Dim n As String
-            Dim strRG As String = p.RGEscolhido.ToString
+            Dim strRG As String = p.ProdutoEscolhido.RGProduto.ToString
 
             For i = 1 To Len(strRG)
-                n = Mid(p.RGEscolhido.ToString, i, 1)
+                n = Mid(p.ProdutoEscolhido.RGProduto.ToString, i, 1)
 
                 SendKeys.Send(n)
             Next

@@ -1036,6 +1036,7 @@ End Class
 Public Class clProdutoFornecedorItem
     Inherits clProdutoFornecedor
     '
+    Property IDProdutoFornecedorItem As Integer?
     Property IDProdutoOrigem As String
     Property DescricaoOrigem As String
     Property CodBarrasOrigem As String

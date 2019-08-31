@@ -440,31 +440,40 @@ Public Class frmFornecedorProdutos
     '
     Private Sub btnInserir_Click(sender As Object, e As EventArgs) Handles btnInserir.Click
         '
-        Dim prodForn As New clProdutoFornecedor With {
-            .Cadastro = _Fornecedor.Cadastro,
-            .IDProduto = _Fornecedor.IDPessoa,
-            .UltimaEntrada = Today,
-            .ApelidoFilial = ObterConfigValorNode("FilialDescricao"),
-            .IDFilial = Obter_FilialPadrao()
-        }
-        '
-        Dim form As New frmProdutoFornecedorEditar(prodForn, False, Me)
-        form.ShowDialog()
-        '
-        If form.DialogResult <> DialogResult.OK Then
-            prodForn.CancelEdit()
-            bindList.ResetBindings(False)
+        '--- ASK USER
+        If AbrirDialog("Deseja inserir um novo produto para esse fornecedor?",
+                       "Inserir Produto",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question) = DialogResult.No Then
             Exit Sub
         End If
         '
+        '--- abre o form de Procura de Produto
+        Dim p As New frmProdutoProcurar(Me, True)
+        p.ShowDialog()
+        '
+        '--- verifica se retornou algum valor
+        If p.DialogResult = vbCancel Then Exit Sub
+        '
         '--- check if PRODUTO already inserted
-        If _list.Exists(Function(x) x.IDProduto = prodForn.IDProduto) Then
+        If _list.Exists(Function(x) x.IDProduto = p.ProdutoEscolhido.IDProduto) Then
             AbrirDialog("Já existe um registro inserido com o PRODUTO:" & vbCrLf &
-                        prodForn.Produto,
+                        p.ProdutoEscolhido.Produto,
                         "Produto Existente",
                         frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             Exit Sub
         End If
+        '
+        Dim prodForn As New clProdutoFornecedor With {
+        .Cadastro = _Fornecedor.Cadastro,
+        .IDFornecedor = _Fornecedor.IDPessoa,
+        .UltimaEntrada = Today,
+        .ApelidoFilial = ObterConfigValorNode("FilialDescricao"),
+        .IDFilial = Obter_FilialPadrao(),
+        .Produto = p.ProdutoEscolhido.Produto,
+        .IDProduto = p.ProdutoEscolhido.IDProduto,
+        .RGProduto = p.ProdutoEscolhido.RGProduto
+        }
         '
         Try
             '
@@ -477,9 +486,18 @@ Public Class frmFornecedorProdutos
                 Throw New Exception(obj.ToString)
             End If
             '
-            _list.Add(prodForn)
+            _list.Add(obj)
             bindList.ResetBindings(False)
             EnableButtons()
+            '
+            Dim form As New frmProdutoFornecedorEditar(obj, False, Me)
+            form.ShowDialog()
+            '
+            If form.DialogResult <> DialogResult.OK Then
+                obj.CancelEdit()
+                bindList.ResetBindings(False)
+                Exit Sub
+            End If
             '
         Catch ex As Exception
             '

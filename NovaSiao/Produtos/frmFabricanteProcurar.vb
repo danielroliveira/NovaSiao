@@ -7,14 +7,14 @@ Public Class frmFabricanteProcurar
     Private ItemAtivo As Image = My.Resources.accept
     Private ItemInativo As Image = My.Resources.block
     Private _formOrigem As Form = Nothing
-    Private indexTipoPadrao As Integer? = Nothing '--- index na listagem do IDpadrao informado
+    Private indexFabricantePadrao As Integer? = Nothing '--- index na listagem do IDpadrao informado
     '
     Property propIDFab_Escolha As Integer
     Property propFab_Escolha As String
     '
 #Region "SUB NEW | PROPERTYS"
     '
-    Sub New(formOrigem As Form, Optional idTipoPadrao As Integer? = Nothing)
+    Sub New(formOrigem As Form, Optional idFabricantePadrao As Integer? = Nothing)
         '
         ' This call is required by the designer.
         InitializeComponent()
@@ -25,12 +25,12 @@ Public Class frmFabricanteProcurar
         '
         _formOrigem = formOrigem
         '
-        If Not IsNothing(idTipoPadrao) Then
+        If Not IsNothing(idFabricantePadrao) Then
             '
             For Each i As BetterListViewItem In lstItens
-                If i.Text = idTipoPadrao Then
+                If i.Text = idFabricantePadrao Then
                     i.Selected = True
-                    indexTipoPadrao = i.Index
+                    indexFabricantePadrao = i.Index
                 Else
                     i.Selected = False
                 End If
@@ -48,8 +48,8 @@ Public Class frmFabricanteProcurar
         '
         '--- quando há IDPadrao informado pelo usuário
         '--- garante que o item selecionado esteja visível na listagem
-        If indexTipoPadrao IsNot Nothing Then
-            lstItens.EnsureVisible(indexTipoPadrao)
+        If indexFabricantePadrao IsNot Nothing Then
+            lstItens.EnsureVisible(indexFabricantePadrao)
         End If
         '
     End Sub

@@ -288,8 +288,6 @@ Public Class frmCompraItem
         End If
         '
     End Sub
-
-
     '
     '
     '--- PRESS ESC TO CLOSE | PRESS ADD TO OPEN FIND FORM | PRESS N TO NEW PRODUTO
@@ -310,7 +308,7 @@ Public Class frmCompraItem
                 p.ShowDialog()
                 '
                 If p.DialogResult = DialogResult.OK Then
-                    txtRGProduto.Text = p.RGEscolhido
+                    txtRGProduto.Text = p.ProdutoEscolhido.RGProduto
                     SendKeys.Send("{Tab}")
                 End If
                 '
@@ -359,7 +357,7 @@ Public Class frmCompraItem
             f.ShowDialog()
             '
             If f.DialogResult = DialogResult.OK Then
-                txtRGProduto.Text = f.RGEscolhido
+                txtRGProduto.Text = f.ProdutoEscolhido.RGProduto
                 SendKeys.Send("{Tab}")
             End If
             '

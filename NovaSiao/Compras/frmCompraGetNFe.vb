@@ -6,7 +6,7 @@ Imports System.Xml.Serialization
 
 Public Class frmCompraGetNFe
     '
-    Private Class NFeItem
+    Private Class clNFeItem
         Inherits TNFeInfNFeDetProd
         '
         Property IDProduto As Integer?
@@ -21,8 +21,12 @@ Public Class frmCompraGetNFe
     End Class
     '
     Private NotaNFe As TNfeProc
-    Private ItensNFe As New List(Of NFeItem)
+    Private ItensNFe As New List(Of clNFeItem)
+    Private bindItens As New BindingSource
     Private FornecedorNFe As New clFornecedor
+    Private IDTipoPadrao As Integer? = Nothing
+    Private IDSubTipoPadrao As Integer? = Nothing
+    Private IDFabricantePadrao As Integer? = Nothing
     '
 #Region "NEW | OPEN | PROPS"
     '
@@ -169,6 +173,26 @@ Public Class frmCompraGetNFe
         '
     End Sub
     '
+    Private Sub dgvItens_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvItens.CellFormatting
+        '
+        If e.ColumnIndex = 0 Then
+            '
+            Dim IDProduto As Integer? = If(IsNothing(dgvItens.Rows(e.RowIndex).DataBoundItem), Nothing, dgvItens.Rows(e.RowIndex).DataBoundItem.IDProduto)
+            '
+            If IsNothing(IDProduto) Then
+                dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.White
+                dgvItens.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = SystemColors.Highlight
+                e.CellStyle.ForeColor = Color.Black
+            Else
+                dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.MistyRose
+                dgvItens.Rows(e.RowIndex).DefaultCellStyle.SelectionBackColor = Color.Firebrick
+                e.CellStyle.ForeColor = Color.Red
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
 #End Region
     '
 #Region "IMPORT NFE XML"
@@ -185,7 +209,9 @@ Public Class frmCompraGetNFe
                 dgvItens.DataSource = Nothing
                 dgvItens.Rows.Clear()
                 ImportItensNFe()
-                dgvItens.DataSource = ItensNFe
+                bindItens.DataSource = ItensNFe
+                dgvItens.DataSource = bindItens
+                'bindItens.ResetBindings(False)
                 ImportFornecedorNFe()
             End If
             '
@@ -251,9 +277,15 @@ Public Class frmCompraGetNFe
             Dim ItensXML = NotaNFe.NFe.infNFe.det
             '
             For Each p In ItensXML
-                Dim clp As New NFeItem
-
-                clp.cProd = p.prod.cProd
+                Dim clp As New clNFeItem
+                '
+                '--- COD DO PRPODUTO
+                If IsNumeric(p.prod.cProd) Then
+                    clp.cProd = CLng(p.prod.cProd)
+                Else
+                    clp.cProd = p.prod.cProd
+                End If
+                '
                 clp.xProd = p.prod.xProd
                 clp.qCom = CInt(p.prod.qCom.Replace(".", ","))
                 clp.vUnCom = Format(CDbl(p.prod.vUnCom.Replace(".", ",")), "#,##0.00")
@@ -267,7 +299,8 @@ Public Class frmCompraGetNFe
                 ElseIf TypeOf p.imposto.Items(0).item Is TNFeInfNFeDetImpostoICMSICMS40 Then
                     clp.CST = p.imposto.Items(0).item.CST
                 End If
-
+                '
+                '--- DESCONTO DO PRODUTO
                 If Not IsNothing(p.prod.vDesc) Then
                     clp.vDesc = p.prod.vDesc.Replace(".", ",")
                     Dim pDesc As Double = p.prod.vDesc.Replace(".", ",")
@@ -275,9 +308,11 @@ Public Class frmCompraGetNFe
                     clp.DescontoNFe = desc
                 End If
                 '
-                ItensNFe.Add(clP)
+                ItensNFe.Add(clp)
                 '
             Next
+            '
+            'bindItens.ResetBindings(False)
             '
         Catch ex As Exception
             Throw ex
@@ -298,16 +333,22 @@ Public Class frmCompraGetNFe
             Dim emit As TNFeInfNFeEmit = NotaNFe.NFe.infNFe.emit
             '
             With FornecedorNFe
-                .Cadastro = emit.xNome
-                .NomeFantasia = emit.xFant
+                .Cadastro = Utilidades.PrimeiraLetraMaiuscula(emit.xNome)
+                .NomeFantasia = Utilidades.PrimeiraLetraMaiuscula(emit.xFant)
                 .CNPJ = Utilidades.CNPConvert(emit.Item)
                 .InscricaoEstadual = emit.IE
-                .Endereco = emit.enderEmit.xLgr & " " & emit.enderEmit.nro & " " & emit.enderEmit.xCpl
-                .Bairro = emit.enderEmit.xBairro
-                .Cidade = emit.enderEmit.xMun
-                .UF = emit.enderEmit.UF
+                .Endereco = Utilidades.PrimeiraLetraMaiuscula(emit.enderEmit.xLgr) & " " & emit.enderEmit.nro & " " & emit.enderEmit.xCpl
+                .Bairro = Utilidades.PrimeiraLetraMaiuscula(emit.enderEmit.xBairro)
+                .Cidade = Utilidades.PrimeiraLetraMaiuscula(emit.enderEmit.xMun)
+                Dim enumUF As TUf = emit.enderEmit.UF
+                .UF = enumUF.ToString
                 .CEP = emit.enderEmit.CEP
-                .TelefoneA = emit.enderEmit.fone
+                Dim telLen As Byte = emit.enderEmit.fone.Trim.Length
+                If telLen = 10 Then
+                    .TelefoneA = emit.enderEmit.fone.Insert(2, " ")
+                Else
+                    .TelefoneA = emit.enderEmit.fone
+                End If
             End With
             '
             PreencheLabelsFornecedor()
@@ -320,9 +361,9 @@ Public Class frmCompraGetNFe
     '
     Private Sub PreencheLabelsFornecedor()
         '
-        txtRazaoSocial.Text = NotaNFe.NFe.infNFe.emit.xNome
-        txtCNPJ.Text = NotaNFe.NFe.infNFe.emit.Item
-        txtInscricao.Text = NotaNFe.NFe.infNFe.emit.IE
+        lblRazaoSocial.Text = FornecedorNFe.Cadastro
+        lblCNPJ.Text = FornecedorNFe.CNPJ
+        lblInscricao.Text = FornecedorNFe.InscricaoEstadual
         '
     End Sub
     '
@@ -340,6 +381,12 @@ Public Class frmCompraGetNFe
 #Region "CORRELACAO FUNCTIONS"
     '
     Private Sub btnCorrelacao_Click(sender As Object, e As EventArgs) Handles btnCorrelacao.Click
+        '
+        If ItensNFe.Count = 0 Then
+            AbrirDialog("Não há items de produtos obtidos na NFe...",
+                        "Nenhum Item", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+            Exit Sub
+        End If
         '
         Dim acesso As AcessoControlBLL = Nothing
         Dim dbTran As Object = Nothing
@@ -376,31 +423,44 @@ Public Class frmCompraGetNFe
             '
             '--- LOOKING ITENS PRODUTOS
             '----------------------------------------------------------------------------------
-            If ItensNFe.Count = 0 Then
-                Throw New AppException("Não há items de produtos obtidos na NFe...")
-            End If
-            '
-            Dim lstProdutos As New List(Of clProdutoFornecedor)
+            Dim countEncontrados As Integer = 0
             '
             For Each item In ItensNFe
                 '
+                '--- PERCORRE E ATUALIZA A LISTAGEM
+                dgvItens.CurrentCell = dgvItens.Rows(ItensNFe.IndexOf(item)).Cells(0)
                 dgvItens.Rows(ItensNFe.IndexOf(item)).Selected = True
                 dgvItens.Refresh()
-                Dim prodEncontrado As clProdutoFornecedor = ProdutoFind(item, FornecedorNFe.IDPessoa, dbTran)
                 '
+                '--- PROCURA PRODUTO ITEM
+                Dim prodEncontrado As clProdutoFornecedorItem = ProdutoFind(item, FornecedorNFe.IDPessoa, dbTran)
+                '
+                '--- SE ENCOTNTROU UM PRODUTO - PREENCHE A LISTA
                 If Not IsNothing(prodEncontrado) Then
-                    dgvItens.CurrentRow.DefaultCellStyle.BackColor = Color.MistyRose
-                    dgvItens.CurrentRow.DefaultCellStyle.SelectionBackColor = Color.Firebrick
+                    'dgvItens.CurrentRow.DefaultCellStyle.BackColor = Color.MistyRose
+                    'dgvItens.CurrentRow.DefaultCellStyle.SelectionBackColor = Color.Firebrick
+                    item.IDProduto = prodEncontrado.IDProduto
                     item.RGProduto = prodEncontrado.RGProduto
                     item.Produto = prodEncontrado.Produto
                     item.PCompra = prodEncontrado.PCompra
                     item.DescontoCompra = prodEncontrado.DescontoCompra
-                    lstProdutos.Add(prodEncontrado)
+                    countEncontrados += 1
                 End If
                 '
             Next
             '
-            MsgBox(lstProdutos.Count)
+            '--- EMIT MENSAGE TO USER
+            Dim message As String = ""
+            '
+            If countEncontrados = 0 Then
+                message = "Não foram encontrados produtos que se relacionam com essa NFe."
+            ElseIf countEncontrados = 1 Then
+                message = "Foi encontrado 1(UM) produto relacionado com a NFe."
+            Else
+                message = "Foram encontrados " + countEncontrados + " produtos relacionados com a NFe."
+            End If
+            '
+            AbrirDialog(message, "Produtos Encontrados", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             '
         Catch ex As AppException
             acesso.RollbackAcessoWithTransaction(dbTran)
@@ -520,12 +580,12 @@ Public Class frmCompraGetNFe
     '
     '--- PROCURA PRODUTO
     '----------------------------------------------------------------------------------
-    Private Function ProdutoFind(item As NFeItem, IDFornecedor As Integer, dbTran As Object) As clProdutoFornecedor
+    Private Function ProdutoFind(item As clNFeItem, IDFornecedor As Integer, dbTran As Object) As clProdutoFornecedorItem
         '
         Try
             '
             Dim pBLL As New ProdutoFornecedorBLL
-            Return pBLL.GetProdFornecedorByFornecedorAndIDOrigem(IDFornecedor, item.cProd, dbTran)
+            Return pBLL.GetProdFornecedorItem(IDFornecedor, item.cProd, dbTran)
             '
         Catch ex As Exception
             Throw ex
@@ -534,5 +594,209 @@ Public Class frmCompraGetNFe
     End Function
     '
 #End Region '/ CORRELACAO FUNCTIONS
+    '
+#Region "MENU CONTEXT ITENS"
+    '
+    ' CONTROLE DO MENU SUSPENSO
+    Private Sub dgvItens_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvItens.MouseDown
+        '
+        If e.Button = MouseButtons.Right Then
+            '
+            Dim c As Control = DirectCast(sender, Control)
+            Dim hit As DataGridView.HitTestInfo = dgvItens.HitTest(e.X, e.Y)
+            dgvItens.ClearSelection()
+            '
+            '---VERIFICAÇÕES NECESSÁRIAS
+            If Not hit.Type = DataGridViewHitTestType.Cell Then Exit Sub
+            '
+            ' seleciona o ROW
+            dgvItens.Rows(hit.RowIndex).Cells(1).Selected = True
+            dgvItens.Rows(hit.RowIndex).Selected = True
+            '
+            ' mostra o menu item
+            Dim item As clNFeItem = dgvItens.Rows(hit.RowIndex).DataBoundItem
+            '
+            ' mostra o menu item
+            miAbrirProduto.Enabled = Not IsNothing(item.IDProduto)
+            miAnexarProduto.Enabled = IsNothing(item.IDProduto)
+            miNovoProduto.Enabled = IsNothing(item.IDProduto)
+            '
+            ' revela menu
+            mnuItens.Show(c.PointToScreen(e.Location))
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- MENU ITEM - ANEXAR PRODUTO
+    '----------------------------------------------------------------------------------
+    Private Sub miAnexarProduto_Click(sender As Object, e As EventArgs) Handles miAnexarProduto.Click
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Get PRODUTO
+            Dim f As New frmProdutoProcurar(Me, False)
+            f.ShowDialog()
+            '
+            If f.DialogResult <> DialogResult.OK Then Exit Sub
+            '
+            Dim prodEncontrado As clProduto = f.ProdutoEscolhido
+            Dim item As clNFeItem = dgvItens.CurrentRow.DataBoundItem
+            '
+            '--- AO ESCOLHER UM PRODUTO - PREENCHE A LISTA
+            item.IDProduto = prodEncontrado.IDProduto
+            item.RGProduto = prodEncontrado.RGProduto
+            item.Produto = prodEncontrado.Produto
+            item.PCompra = prodEncontrado.PCompra
+            item.DescontoCompra = prodEncontrado.DescontoCompra
+            '
+            '--- MESSAGE
+            AbrirDialog("Item relacionado com Produto com sucesso.",
+                        "Item Relacionado",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Information)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao relacionar o produto..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    '--- MENU ITEM - ABRIR PRODUTO
+    '----------------------------------------------------------------------------------
+    Private Sub miAbrirProduto_Click(sender As Object, e As EventArgs) Handles miAbrirProduto.Click
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Get IDProduto and clProduto
+            Dim item As clNFeItem = dgvItens.CurrentRow.DataBoundItem
+            Dim pBLL As New ProdutoBLL
+            Dim IDFilial As Integer = Obter_FilialPadrao()
+            '
+            Dim prod As clProduto = pBLL.GetProduto_PorID(item.IDProduto, IDFilial)
+            '
+            Dim frm As New frmProduto(EnumFlagAcao.EDITAR, prod, Me)
+            frm.MdiParent = My.Application.OpenForms().Item(0)
+            Me.Visible = False
+            frm.Show()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir o formuário de Produto..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    '--- MENU ITEM - CRIAR NOVO PRODUTO
+    '----------------------------------------------------------------------------------
+    Private Sub miNovoProduto_Click(sender As Object, e As EventArgs) Handles miNovoProduto.Click
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Get IDProduto and clProduto
+            '---------------------------------------------------------------------------------
+            Dim item As clNFeItem = dgvItens.CurrentRow.DataBoundItem
+            Dim pBLL As New ProdutoBLL
+            '
+            '--- CREATE NEW PRODUTO
+            '---------------------------------------------------------------------------------
+            Dim prod As New clProduto With {
+                .IDProduto = Nothing,
+                .Produto = item.xProd,
+                .CodBarrasA = item.cEAN,
+                .DescontoCompra = item.DescontoCompra,
+                .Movimento = 1,
+                .NCM = item.NCM,
+                .PCompra = item.vProd
+                }
+            '
+            '--- get TIPO
+            '---------------------------------------------------------------------------------
+            Using frmTipo As New frmProdutoProcurarTipo(Me, IDTipoPadrao)
+                '
+                frmTipo.ShowDialog()
+                If frmTipo.DialogResult <> DialogResult.OK Then Exit Sub
+                '
+                prod.IDProdutoTipo = frmTipo.propIdTipo_Escolha
+                prod.ProdutoTipo = frmTipo.propTipo_Escolha
+                IDTipoPadrao = frmTipo.propIdTipo_Escolha
+                '
+            End Using
+
+            '
+            '--- get SUB TIPO
+            '---------------------------------------------------------------------------------
+            Using frmSubTipo As New frmProdutoProcurarSubTipo(Me, IDSubTipoPadrao, IDTipoPadrao)
+                '
+                frmSubTipo.ShowDialog()
+                If frmSubTipo.DialogResult <> DialogResult.OK Then Exit Sub
+                '
+                prod.IDProdutoSubTipo = frmSubTipo.propIdSubTipo_Escolha
+                prod.ProdutoSubTipo = frmSubTipo.propSubTipo_Escolha
+                IDSubTipoPadrao = frmSubTipo.propIdSubTipo_Escolha
+                '
+            End Using
+
+            '
+            '--- get FABRICANTE
+            '---------------------------------------------------------------------------------
+            Using frmFabricante As New frmFabricanteProcurar(Me, IDFabricantePadrao)
+                '
+                frmFabricante.ShowDialog()
+                If frmFabricante.DialogResult <> DialogResult.OK Then Exit Sub
+                '
+                prod.IDFabricante = frmFabricante.propIDFab_Escolha
+                prod.Fabricante = frmFabricante.propFab_Escolha
+                IDFabricantePadrao = frmFabricante.propIDFab_Escolha
+                '
+            End Using
+            '
+            '--- get AUTOR
+            '---------------------------------------------------------------------------------
+            Using frmAutor As New frmAutoresProcurar(Me)
+                '
+                frmAutor.ShowDialog()
+                If frmAutor.DialogResult = DialogResult.OK Then
+                    prod.Autor = frmAutor.propAutorEscolhido
+                End If
+                '
+            End Using
+            '
+            '--- OPEN PRODUTO TO INSERT OTHER FIELDS
+            '---------------------------------------------------------------------------------
+            Using frm As New frmProduto(EnumFlagAcao.INSERIR, prod, Me)
+                Me.Visible = False
+                frm.ShowDialog()
+                '
+                If frm.DialogResult = DialogResult.OK Then
+                    prod = frm.ProdutoEscolhido
+                End If
+                '
+            End Using
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir o formuário de Produto..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+#End Region
     '
 End Class

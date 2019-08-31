@@ -17,8 +17,7 @@ Public Class frmProdutoProcurar
     Private _formOrigem As Form = Nothing
     Private _ObjetivoSaida As Boolean? = Nothing ' TRUE para Venda; FALSE para COMPRA; NOTHING para OUTRO
     '
-    Public Property RGEscolhido As Integer? '--- Propriedade para RGProduto escolhido
-    Public Property IDEscolhido As Integer? '--- Propriedade para IDProduto escolhido
+    Public Property ProdutoEscolhido As clProduto
     '
     Private WriteOnly Property propFormOrigem As Form
         Set(ByVal value As Form)
@@ -366,8 +365,7 @@ Public Class frmProdutoProcurar
             SetarDefault("ProdutoSubTipoPadrao", txtSubTipo.Text)
             '
             '--- define os valores das propriedades do produto escolhido
-            RGEscolhido = dgvProdutos.SelectedRows(0).Cells(0).Value
-            IDEscolhido = dgvProdutos.SelectedRows(0).Cells(6).Value
+            ProdutoEscolhido = dgvProdutos.SelectedRows(0).DataBoundItem
             Me.DialogResult = DialogResult.OK
         Else
             MessageBox.Show("Favor selecionar um produto antes de Escolher...", "Selecione um Produto",

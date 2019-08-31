@@ -796,7 +796,7 @@ Public Class frmReserva
             If p.DialogResult = vbCancel Then Exit Sub
             '
             '--- se retornou entao preenche o RGProduto
-            txtRGProduto.Text = p.RGEscolhido
+            txtRGProduto.Text = p.ProdutoEscolhido.RGProduto
             SendKeys.Send("{TAB}")
             '
         Else

@@ -262,7 +262,7 @@ Public Class frmProdutoEtiquetaControle
             f.ShowDialog()
             '
             If f.DialogResult = DialogResult.OK Then
-                atualCell.Text = f.RGEscolhido
+                atualCell.Text = f.ProdutoEscolhido.RGProduto
             End If
             '
         End If

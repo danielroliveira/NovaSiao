@@ -442,32 +442,44 @@ Public Class frmProdutoFornecedor
     '
     Private Sub btnInserir_Click(sender As Object, e As EventArgs) Handles btnInserir.Click
         '
-        Dim prodForn As New clProdutoFornecedor With {
-            .Produto = _Produto.Produto,
-            .RGProduto = _Produto.RGProduto,
-            .IDProduto = _Produto.IDProduto,
-            .UltimaEntrada = Today,
-            .ApelidoFilial = ObterConfigValorNode("FilialDescricao"),
-            .IDFilial = Obter_FilialPadrao()
-        }
-        '
-        Dim form As New frmProdutoFornecedorEditar(prodForn, True, Me)
-        form.ShowDialog()
-        '
-        If form.DialogResult <> DialogResult.OK Then
-            prodForn.CancelEdit()
-            bindList.ResetBindings(False)
+        '--- ASK USER
+        If AbrirDialog("Deseja inserir um novo fornecedor para esse produto?",
+                       "Inserir Fornecedor",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question) = DialogResult.No Then
             Exit Sub
         End If
         '
+        '--- GET FORNECEDOR ID
+        Dim frmF As frmFornecedorProcurar
+        frmF = New frmFornecedorProcurar(True, Me)
+        '
+        ' revela o formulario dependendo do controle acionado
+        frmF.ShowDialog()
+        '
+        ' ao fechar dialog verifica o resultado
+        If frmF.DialogResult <> DialogResult.OK Then Exit Sub
+        '
         '--- check if FORNECEDOR already inserted
-        If _list.Exists(Function(x) x.IDFornecedor = prodForn.IDFornecedor) Then
+        If _list.Exists(Function(x) x.IDFornecedor = frmF.propFornecedor_Escolha.IDPessoa) Then
             AbrirDialog("Já existe um registro inserido com o fornecedor:" & vbCrLf &
-                        prodForn.Cadastro,
+                        frmF.propFornecedor_Escolha.Cadastro,
                         "Fornecedor Existente",
                         frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
             Exit Sub
         End If
+        '
+        Dim prodForn As New clProdutoFornecedor With {
+        .Produto = _Produto.Produto,
+        .RGProduto = _Produto.RGProduto,
+        .IDProduto = _Produto.IDProduto,
+        .UltimaEntrada = Today,
+        .ApelidoFilial = ObterConfigValorNode("FilialDescricao"),
+        .IDFilial = Obter_FilialPadrao(),
+        .IDFornecedor = frmF.propFornecedor_Escolha.IDPessoa,
+        .Cadastro = frmF.propFornecedor_Escolha.Cadastro,
+        .CNPJ = frmF.propFornecedor_Escolha.CNPJ
+        }
         '
         Try
             '
@@ -480,9 +492,19 @@ Public Class frmProdutoFornecedor
                 Throw New Exception(obj.ToString)
             End If
             '
-            _list.Add(prodForn)
+            _list.Add(obj)
             bindList.ResetBindings(False)
             EnableButtons()
+            '
+            '--- OPEN FORM TO EDIT PRECO AND DESCONTO
+            Dim form As New frmProdutoFornecedorEditar(obj, True, Me)
+            form.ShowDialog()
+            '
+            If form.DialogResult <> DialogResult.OK Then
+                obj.CancelEdit()
+                bindList.ResetBindings(False)
+                Exit Sub
+            End If
             '
         Catch ex As Exception
             '
@@ -517,15 +539,15 @@ Public Class frmProdutoFornecedor
         End If
         '
         '--- check if FORNECEDOR already inserted
-        If _list.Exists(Function(x) x.IDFornecedor = prodForn.IDFornecedor) Then
-            AbrirDialog("Já existe um registro inserido com o fornecedor:" & vbCrLf &
-                        prodForn.Cadastro,
-                        "Fornecedor Existente",
-                        frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
-            prodForn.CancelEdit()
-            bindList.ResetBindings(False)
-            Exit Sub
-        End If
+        'If _list.Exists(Function(x) x.IDFornecedor = prodForn.IDFornecedor) Then
+        '    AbrirDialog("Já existe um registro inserido com o fornecedor:" & vbCrLf &
+        '                prodForn.Cadastro,
+        '                "Fornecedor Existente",
+        '                frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+        '    prodForn.CancelEdit()
+        '    bindList.ResetBindings(False)
+        '    Exit Sub
+        'End If
         '
         Try
             '

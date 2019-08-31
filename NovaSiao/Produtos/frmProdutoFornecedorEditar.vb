@@ -3,22 +3,21 @@ Imports CamadaBLL
 '
 Public Class frmProdutoFornecedorEditar
     '
+    Private prodBLL As New ProdutoFornecedorBLL
     Private _prodForn As clProdutoFornecedor
-    Private _itensList As New List(Of clProdutoFornecedorItem)
     Private bindProd As New BindingSource
-    Private bindItem As New BindingSource
     Private _Sit As EnumFlagEstado
+    Private _isProdutoFixed As Boolean
     Private _formOrigem As Form = Nothing
+    '
+    '--- ITENS LIST CONTROL
+    Private _itensList As New List(Of clProdutoFornecedorItem)
+    Private bindItens As New BindingSource
+    Private currentEditRow As Integer? = Nothing
+    Private _rowSit As EnumFlagEstado
+    '
     Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
-    Private _isProdutoFixed As Boolean
-    Private _ItemPanelVisible As EnumFlagAcao?
-    '
-    Private mnuItensAcao As New ContextMenuStrip
-    Private WithEvents mnuItemEditar As New ToolStripMenuItem
-    Private WithEvents mnuItemInserir As New ToolStripMenuItem
-    Private WithEvents mnuItemExcluir As New ToolStripMenuItem
-    Private ToolStripSeparator1 As New ToolStripSeparator
     '
 #Region "SUB NEW"
     '
@@ -35,13 +34,14 @@ Public Class frmProdutoFornecedorEditar
         bindProd.DataSource = _prodForn
         PreencheDataBindings()
         '
-        bindItem.Datasource = GetListItems()
-        FormataDatagrid()
         '
         If IsNothing(_prodForn.IDFornecedor) Then '--> NEW | INSERT
             Sit = EnumFlagEstado.NovoRegistro
         Else '--> SAVED | UPDATE
             Sit = EnumFlagEstado.RegistroSalvo
+            _itensList = GetListItems()
+            bindItens.DataSource = _itensList
+            FormataDatagrid()
         End If
         '
         IsOrigemTransacao()
@@ -55,25 +55,11 @@ Public Class frmProdutoFornecedorEditar
     Private Sub IsOrigemTransacao()
         '
         If IsNothing(_prodForn.IDTransacao) Then
-            '
-            If _isProdutoFixed Then
-                btnFornecedor.Enabled = True
-                txtFornecedor.ReadOnly = False
-                txtRGProduto.ReadOnly = True
-            Else
-                btnFornecedor.Enabled = False
-                txtFornecedor.ReadOnly = True
-                txtRGProduto.ReadOnly = False
-            End If
-            '
             dtpUltimaEntrada.Enabled = True
             txtDescontoCompra.ReadOnly = False
             txtPCompra.ReadOnly = False
             lblVinculado.Visible = False
         Else
-            btnFornecedor.Enabled = False
-            txtFornecedor.ReadOnly = True
-            txtRGProduto.ReadOnly = True
             dtpUltimaEntrada.Enabled = False
             txtDescontoCompra.ReadOnly = True
             txtPCompra.ReadOnly = True
@@ -92,50 +78,16 @@ Public Class frmProdutoFornecedorEditar
             If _Sit = EnumFlagEstado.RegistroSalvo Then
                 btnSalvar.Enabled = False
                 btnCancelar.Enabled = False
+                dgvItens.Enabled = True
             ElseIf _Sit = EnumFlagEstado.Alterado Then
                 btnSalvar.Enabled = True
                 btnCancelar.Enabled = True
             ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
                 btnSalvar.Enabled = True
                 btnCancelar.Enabled = True
+                dgvItens.Enabled = False
             End If
         End Set
-    End Property
-    '
-    Private Property propItemPanelVisible As EnumFlagAcao?
-        '
-        Get
-            Return _ItemPanelVisible
-        End Get
-        '
-        Set(value As EnumFlagAcao?)
-            _ItemPanelVisible = value
-            '
-            If Not IsNothing(_ItemPanelVisible) Then
-                pnlItem.Visible = True
-                '
-                '--- desabilita todos os controles
-                For Each c As Control In Me.Controls
-                    If c.Name <> "pnlItem" Then c.Enabled = False
-                Next
-                '
-                txtIDProdutoOrigem.Focus()
-                '
-            Else
-                '
-                pnlItem.Visible = False
-                '
-                '--- habilita todos os controles
-                For Each c As Control In Controls
-                    If c.Name <> "pnlItem" Then c.Enabled = True
-                Next
-                '
-                dgvItens.Focus()
-                '
-            End If
-            '
-        End Set
-        '
     End Property
     '
 #End Region '/ SUB NEW
@@ -150,9 +102,9 @@ Public Class frmProdutoFornecedorEditar
         lblApelidoFilial.DataBindings.Add("Text", bindProd, "ApelidoFilial")
         dtpUltimaEntrada.DataBindings.Add("Value", bindProd, "UltimaEntrada", True, DataSourceUpdateMode.OnPropertyChanged)
 
-        txtRGProduto.DataBindings.Add("Text", bindProd, "RGProduto", True, DataSourceUpdateMode.OnPropertyChanged)
+        lblRGProduto.DataBindings.Add("Text", bindProd, "RGProduto", True, DataSourceUpdateMode.OnPropertyChanged)
         lblProduto.DataBindings.Add("Text", bindProd, "Produto")
-        txtFornecedor.DataBindings.Add("Text", bindProd, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
+        lblFornecedor.DataBindings.Add("Text", bindProd, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
 
         txtPCompra.DataBindings.Add("Text", bindProd, "PCompra", True, DataSourceUpdateMode.OnPropertyChanged)
         txtDescontoCompra.DataBindings.Add("Text", bindProd, "DescontoCompra", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -161,7 +113,7 @@ Public Class frmProdutoFornecedorEditar
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler txtPCompra.DataBindings("Text").Format, AddressOf FormatCUR
         AddHandler txtDescontoCompra.DataBindings("text").Format, AddressOf FormatPercent
-        AddHandler txtRGProduto.DataBindings("Text").Format, AddressOf idFormatRG
+        AddHandler lblRGProduto.DataBindings("Text").Format, AddressOf idFormatRG
         AddHandler lblIDTransacao.DataBindings("Text").Format, AddressOf idFormatRG
         AddHandler lblPrecoFinal.DataBindings("Text").Format, AddressOf FormatCUR
         '
@@ -198,7 +150,6 @@ Public Class frmProdutoFornecedorEditar
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Dim prodBLL As New ProdutoFornecedorBLL
             Return prodBLL.GetListProdutoFornecedorItems(_prodForn.IDProdutoFornecedor)
             '
         Catch ex As Exception
@@ -220,6 +171,7 @@ Public Class frmProdutoFornecedorEditar
         dgvItens.AutoGenerateColumns = False
         '
         ' altera as propriedades importantes
+        dgvItens.AllowUserToAddRows = True
         dgvItens.MultiSelect = False
         dgvItens.SelectionMode = DataGridViewSelectionMode.RowHeaderSelect
         dgvItens.ColumnHeadersVisible = True
@@ -228,7 +180,7 @@ Public Class frmProdutoFornecedorEditar
         dgvItens.RowHeadersVisible = True
         dgvItens.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
         dgvItens.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-        dgvItens.StandardTab = True
+        dgvItens.StandardTab = False
         '
         dgvItens.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
         dgvItens.RowHeadersWidth = 25
@@ -236,7 +188,7 @@ Public Class frmProdutoFornecedorEditar
         dgvItens.RowTemplate.MinimumHeight = 25
         '
         '--- configura o DataSource
-        dgvItens.DataSource = bindItem
+        dgvItens.DataSource = bindItens
         '
         '--- formata as colunas do datagrid
         FormataColunas()
@@ -286,122 +238,367 @@ Public Class frmProdutoFornecedorEditar
     '
 #End Region '/ GET DATAGRID ITEMS LIST
     '
-#Region "MOVIMENTA ITENS CRUD PRODUTOS"
+#Region "EDICAO DATAGRID ITENS"
     '
-    '--- INSERE UM NOVO ITEM NA LISTA DE PRODUTOS
-    '---------------------------------------------------------------------------------------------
-    Private Sub Inserir_Item()
+    '--- ON ENTER IN ROW VERIFY SITUATION OF THEN
+    Private Sub dgvItens_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.RowEnter
         '
-        bindItem.AddNew()
-        propItemPanelVisible = EnumFlagAcao.INSERIR
+        If dgvItens.Rows.Count - 1 > e.RowIndex Then Exit Sub
+        Dim item As clProdutoFornecedorItem = dgvItens.Rows(e.RowIndex).DataBoundItem
         '
-    End Sub
-    '    
-    '--- EDITA UM ITEM NA LISTA DE PRODUTOS
-    '---------------------------------------------------------------------------------------------
-    Private Sub Editar_Item()
-        '
-        propItemPanelVisible = EnumFlagAcao.EDITAR
-        '
-    End Sub
-    '    
-    '--- EXCLUI UM ITEM NA LISTA DE PRODUTOS
-    '---------------------------------------------------------------------------------------------
-    Private Sub Excluir_Item()
-        '
-        If IsNothing(bindItem.Current) Then Exit Sub
-        '
-        '--- remove the item of listagem
-        bindItem.RemoveCurrent()
-        '
-    End Sub
-    '
-    '----------------------------------------------------------------------------------
-    '--- PRESS OK (EXECUTE INSERT OR EDIT OPERATIONS)
-    '----------------------------------------------------------------------------------
-    Private Sub btnPanelOK_Click(sender As Object, e As EventArgs) Handles btnPanelOK.Click
-        ''
-        ''--- Verifica se existe produto
-        ''----------------------------------------------------------------------------------
-        'If txtRGProduto.Text.Trim.Length = 0 OrElse lblProduto.Text.Length = 0 Then
-        '    MessageBox.Show("Favor definir o produto a ser ajustado.",
-        '                    "Escolha o Produto", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        '    txtRGProduto.Focus()
-        '    txtRGProduto.SelectAll()
-        '    Return
-        'End If
-        ''
-        ''--- Verifica a quantidade Final inserida
-        ''----------------------------------------------------------------------------------
-        'If txtQuantidadeFinal.Text.Trim.Length = 0 Then
-        '    MessageBox.Show("Favor inserir a quantidade Real/Final do estoque do produto a ser ajustado.",
-        '                    "Quantidade Real", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        '    txtQuantidadeFinal.Focus()
-        '    txtQuantidadeFinal.SelectAll()
-        '    Return
-        'End If
-        ''
-        'If CInt(txtQuantidadeFinal.Text) < 0 Then
-        '    MessageBox.Show("A quantidade REAL inserida não pode ser menor que Zero." &
-        '                    vbNewLine & "Favor inserir uma quantidade diferente ou cancele a operação.",
-        '                    "Sem alteração", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        '    txtQuantidadeFinal.Focus()
-        '    txtQuantidadeFinal.SelectAll()
-        '    Return
-        'End If
-        ''
-        'If CInt(txtQuantidadeFinal.Text) = bindItem.Current.QuantidadeAnterior Then
-        '    MessageBox.Show("A quantidade REAL inserida não pode ser igual à quantidade ATUAL no Estoque do produto." &
-        '                    vbNewLine & "Favor inserir uma quantidade diferente ou cancele a operação.",
-        '                    "Sem alteração", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        '    txtQuantidadeFinal.Focus()
-        '    txtQuantidadeFinal.SelectAll()
-        '    Return
-        'End If
-        ''
-        ''--- Resolve ValorMovimentado of Ajuste Atual
-        '_Ajuste.ValorMovimentado = _itensList.Sum(Function(y) y.Total)
-        ''
-        ''--- Atualiza Total
-        'AtualizaTotalGeral()
-        ''
-        ''--- Bind
-        'bindItem.EndEdit()
-        'bindItem.ResetBindings(False)
-        propItemPanelVisible = Nothing
-        '
-    End Sub
-    '
-    '----------------------------------------------------------------------------------
-    '--- PRESS CANCEL
-    '----------------------------------------------------------------------------------
-    Private Sub btnPanelCancel_Click(sender As Object, e As EventArgs) Handles btnPanelCancel.Click
-        '
-        bindItem.CancelEdit()
-        propItemPanelVisible = Nothing
-        '
-    End Sub
-    '
-    '---------------------------------------------------------------------------------------------------
-    ' CRIA TECLA DE ATALHO PARA INSERIR/EDITAR PRODUTO
-    '---------------------------------------------------------------------------------------------------
-    Private Sub dgvItens_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvItens.KeyDown
-        '
-        If e.KeyCode = Keys.Add Then
-            e.Handled = True
-            Inserir_Item()
-        ElseIf e.KeyCode = Keys.Enter Then
-            e.Handled = True
-            Editar_Item()
-        ElseIf e.KeyCode = Keys.Delete Then
-            e.Handled = True
-            Excluir_Item()
+        If Not IsNothing(item) AndAlso Not IsNothing(item.IDProdutoFornecedorItem) Then
+            currentEditRow = Nothing
+            _rowSit = EnumFlagEstado.RegistroSalvo
+        Else
+            _rowSit = EnumFlagEstado.NovoRegistro
         End If
         '
     End Sub
     '
-    Private Sub dgvItens_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
-        Editar_Item()
+    '--- CONTROLA O ROW QUE ESTA SENDO EDITADO
+    Private Sub dgvItens_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvItens.CellBeginEdit
+        '
+        currentEditRow = e.RowIndex
+        '
+        If _rowSit = EnumFlagEstado.RegistroSalvo Then
+
+            If e.ColumnIndex = clnIDProdutoOrigem.Index Then
+                e.Cancel = True
+                AbrirDialog("O Código de Fornecedor desse item não pode ser alterado " +
+                            "se desejar faça a exclusão e a inserção de um novo código...",
+                            "Código do Fornecedor", frmDialog.DialogType.OK,
+                            frmDialog.DialogIcon.Information)
+                Return
+            End If
+            '
+            _rowSit = EnumFlagEstado.Alterado
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- VALIDA O CELL RGPRODUTO E PROCURA O PRODUTO PELO RGPRODUTO
+    Private Sub dgvItens_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvItens.CellValidating
+        '
+        '--- verifica se a currenteCELL is Dirty
+        If Not dgvItens.IsCurrentCellDirty Then Return
+        '
+        If e.ColumnIndex = 0 Then
+            '
+            If String.IsNullOrEmpty(e.FormattedValue.ToString) Then
+                e.Cancel = False
+                Return
+            End If
+            '
+        End If
+        '
+    End Sub
+    '
+    '--- VALIDA O ROW E INSERE/ALTERA O ITEM DO PEDIDO
+    Private Sub dgvItens_RowValidating(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvItens.RowValidating
+        '
+        '--- verifica se é um ROW editado ou novo
+        If Not (_rowSit = EnumFlagEstado.NovoRegistro OrElse _rowSit = EnumFlagEstado.Alterado) Then Return
+        '
+        '--- se nao ha row sendo editada exit
+        If IsNothing(currentEditRow) Then Return
+        '
+        '--- Verifica os valores inseridos
+        If VerificaItem(e.RowIndex) = False Then
+            e.Cancel = True
+            Return
+        End If
+        '
+        Try
+            SaveItem()
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao Salvar o item..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        '
+    End Sub
+    '
+    '--- SAVE NEW ITEM
+    Private Sub SaveItem()
+        '
+        If IsNothing(currentEditRow) Then Exit Sub
+        Dim myItem As clProdutoFornecedorItem = dgvItens.Rows(currentEditRow).DataBoundItem
+        '
+        Try
+            If _rowSit = EnumFlagEstado.NovoRegistro Then
+                '
+                Try
+                    '
+                    '--- Ampulheta ON
+                    Cursor = Cursors.WaitCursor
+                    '
+                    myItem.IDProdutoFornecedor = _prodForn.IDProdutoFornecedor
+                    '
+                    ItemInserir(dgvItens.CurrentRow.DataBoundItem)
+                    bindItens.EndEdit()
+                    currentEditRow = Nothing
+                    _rowSit = EnumFlagEstado.RegistroSalvo
+                    '
+                    '--- EMIT SUCCESS MESSAGE
+                    AbrirDialog("Novo item salvo com sucesso!",
+                                "Item Salvo", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                    '
+                Catch ex As Exception
+                    bindItens.CancelEdit()
+                    Throw ex
+                Finally
+                    '
+                    '--- Ampulheta OFF
+                    Cursor = Cursors.Default
+                    '
+                End Try
+                '
+            ElseIf _rowSit = EnumFlagEstado.Alterado Then
+                '
+                Try
+                    '
+                    '--- Ampulheta ON
+                    Cursor = Cursors.WaitCursor
+                    '
+                    ItemAlterar(dgvItens.CurrentRow.DataBoundItem)
+                    bindItens.EndEdit()
+                    currentEditRow = Nothing
+                    _rowSit = EnumFlagEstado.RegistroSalvo
+                    '
+                    '--- EMIT SUCCESS MESSAGE
+                    AbrirDialog("Item atualizado com sucesso!",
+                                "Item Salvo", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                    '
+                Catch ex As Exception
+                    bindItens.CancelEdit()
+                    Throw ex
+                Finally
+                    '
+                    '--- Ampulheta OFF
+                    Cursor = Cursors.Default
+                    '
+                End Try
+                '
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+    '--- INSERE NOVO ITEM NO PEDIDO
+    Public Sub ItemInserir(myItem As clProdutoFornecedorItem)
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim myI As Object = prodBLL.Insert_ProdutoFornecedorItem(myItem)
+            '
+            If IsNumeric(myI) Then
+                myItem.IDProdutoFornecedorItem = myI
+            Else
+                Throw New AppException(myI.ToString)
+            End If
+            '
+        Catch ex As Exception
+            Throw New AppException("Ocorreu uma exceção ao inserir novo Item do Fornecedor" & vbNewLine &
+                                   ex.Message)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
+    '
+    '--- ALTERA ITEM NO PEDIDO
+    Private Sub ItemAlterar(myItem As clProdutoFornecedorItem)
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim myI As Object = prodBLL.Update_ProdutoFornecedorItem(myItem)
+            '
+            If myI = False Then
+                Throw New AppException("Não foi possível salvar o registro...")
+            End If
+            '
+        Catch ex As Exception
+            Throw New AppException("Ocorreu uma exceção ao ALTERAR Item do Fornecedor" & vbNewLine &
+                                   ex.Message)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
+    '
+    '--- VERIFICACAO SE O ITEM ESTA PRONTO PARA SER INSERIDO OU ALTERADO
+    Private Function VerificaItem(rowIndex As Integer) As Boolean
+        '
+        Dim myItem As clProdutoFornecedorItem
+        '
+        Try
+            myItem = dgvItens.Rows(rowIndex).DataBoundItem
+        Catch ex As Exception
+            myItem = Nothing
+        End Try
+        '
+        If myItem Is Nothing Then Return False
+        '
+        '--- VERIFICA SE FOI INSERIDO O COD PRODUTO ORIGEM
+        If String.IsNullOrEmpty(myItem.IDProdutoOrigem) Then
+            dgvItens.CurrentCell = dgvItens.Rows(currentEditRow).Cells(0)
+            MessageBox.Show("O código de origem do Produto não pode ficar vazio...", "Campo Vazio",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+            Return False
+        End If
+        '
+        '--- VERIFICA SE O MESMO CODIGO JÁ FOI INSERIDO: IS DUPLICATED
+        If _itensList.Where(Function(x) x.IDProdutoOrigem = myItem.IDProdutoOrigem And
+                If(x.IDProdutoFornecedorItem, 0) <> If(myItem.IDProdutoFornecedorItem, 0)).Count > 0 Then
+            AbrirDialog("Esse código já está presente na listagem... Favor inserir um código de produto diferente.",
+                        "Código Repetido", frmDialog.DialogType.OK, frmDialog.DialogIcon.Warning)
+            myItem.IDProdutoOrigem = String.Empty
+            dgvItens.CurrentCell = dgvItens(0, rowIndex)
+            Return False
+        End If
+        '
+        If String.IsNullOrEmpty(myItem.DescricaoOrigem) Then
+            Return False
+        Else
+            myItem.DescricaoOrigem = myItem.DescricaoOrigem.ToUpper
+        End If
+        '
+        Return True
+        '
+    End Function
+    '
+    '--- CONTROLA HANDLER KEYPRESS DO DATAGRIDVIEW
+    Private Sub dgvItens_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvItens.EditingControlShowing
+        '
+        Dim colName As String = dgvItens.Columns(dgvItens.CurrentCell.ColumnIndex).Name
+        '
+        Select Case colName
+            Case "clnCodBarrasOrigem"
+                AddHandler e.Control.Leave, AddressOf txtCell_RemoveHandler
+                AddHandler e.Control.KeyPress, AddressOf txtcell_onlyNumber_keypress
+        End Select
+        '
+    End Sub
+    '
+    '--- REMOVE HANDLER DAS CELLS
+    Private Sub txtCell_RemoveHandler(sender As Object, e As EventArgs)
+        '
+        RemoveHandler DirectCast(sender, DataGridViewTextBoxEditingControl).KeyPress, AddressOf txtcell_onlyNumber_keypress
+        RemoveHandler DirectCast(sender, DataGridViewTextBoxEditingControl).Leave, AddressOf txtCell_RemoveHandler
+        '
+    End Sub
+    '
+    '--- PERMITE SOMENTE NUMEROS
+    Private Sub txtcell_onlyNumber_keypress(ByVal sender As Object, ByVal e As KeyPressEventArgs)
+        '
+        '--- verifica se foi tecla numerica
+        If Not Char.IsNumber(e.KeyChar) AndAlso Not e.KeyChar = vbBack AndAlso Not e.KeyChar = ChrW(Keys.Delete) Then
+            e.Handled = True
+        End If
+        '
+    End Sub
+    '
+    '--- AO PRESSIONAR A TECLA (ENTER) ENVIAR (TAB) NO DATAGRID
+    Private Sub dgvItens_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvItens.KeyDown
+        '
+        If e.KeyCode = Keys.Enter Then
+            '
+            e.SuppressKeyPress = True
+            e.Handled = True
+            Try
+                MoveToNextCell()
+            Catch ex As Exception
+
+            End Try
+            '
+        ElseIf e.KeyCode = Keys.Escape Then
+            currentEditRow = Nothing
+        End If
+        '
+    End Sub
+    '
+    '--- MOVE PARA A PROXIMA CELL NO DATAGRID
+    Private Sub MoveToNextCell()
+        '
+        Dim iColumn As Integer = dgvItens.CurrentCell.ColumnIndex
+        Dim iRow As Integer = dgvItens.CurrentCell.RowIndex
+        '
+        If iColumn = dgvItens.ColumnCount - 1 Then
+            If (dgvItens.RowCount > (iRow + 1)) Then
+                dgvItens.CurrentCell = dgvItens(0, iRow + 1)
+            Else
+                dgvItens.CurrentCell = dgvItens(0, iRow)
+            End If
+        Else
+            dgvItens.CurrentCell = dgvItens(iColumn + 1, iRow)
+        End If
+        '
+    End Sub
+    '
+    '--- AO EXCLUIR O ITEM DO PEDIDO
+    Private Sub dgvItens_UserDeletingRow(sender As Object, e As DataGridViewRowCancelEventArgs) Handles dgvItens.UserDeletingRow
+        '
+        Dim delItem As clProdutoFornecedorItem = e.Row.DataBoundItem
+        '
+        '--- verifica se existe numero de IDPedidoItem
+        If IsNothing(delItem.IDProdutoFornecedorItem) Then
+            e.Cancel = True
+            Return
+        End If
+        '
+        '--- pergunta ao usuario
+        If MessageBox.Show("Você realmente deseja excluir o item de produto do fornecedor:" & vbNewLine & delItem.IDProdutoOrigem & "?",
+                           "Excluir Item", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                           MessageBoxDefaultButton.Button2) = DialogResult.No Then
+            e.Cancel = True
+            Return
+        End If
+        '
+        '--- exclui o registro no BD
+        Try
+            '
+            prodBLL.Delete_ProdutoFornecedorItem(delItem.IDProdutoFornecedorItem)
+            currentEditRow = Nothing
+            e.Cancel = False
+            '
+        Catch ex As Exception
+            MessageBox.Show("Houve uma exceção ao excluir o item do produto:" & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            e.Cancel = True
+        End Try
+        '
+    End Sub
+    '
+    '--- AO ENTRAR NA CELL
+    Private Sub dgvItens_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellEnter
+        '
+        If IsNothing(currentEditRow) Then Exit Sub
+        '
+        If e.ColumnIndex = 1 And _rowSit = EnumFlagEstado.NovoRegistro Then
+            '
+            '--- adiciona uma descricao automatica ao produto
+            If IsNothing(dgvItens.Rows(e.RowIndex).Cells(1).Value) Then
+                dgvItens.Rows(e.RowIndex).Cells(1).Value = _prodForn.Produto
+            End If
+            '
+        End If
+        '
     End Sub
     '
 #End Region
@@ -411,38 +608,6 @@ Public Class frmProdutoFornecedorEditar
     '--- CLOSE FORM
     Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click, btnClose.Click
         DialogResult = DialogResult.Cancel
-    End Sub
-    '
-    '--- BTN ESCOLHER FORNECEDOR
-    Private Sub btnFornecedor_Click(sender As Object, e As EventArgs) Handles btnFornecedor.Click
-        '
-        If Not IsNothing(_prodForn.IDTransacao) Then Exit Sub
-        '
-        Dim frmF As frmFornecedorProcurar
-        Dim oldID As Integer?
-        '
-        oldID = _prodForn.IDFornecedor
-        frmF = New frmFornecedorProcurar(True, Me)
-        '
-        ' revela o formulario dependendo do controle acionado
-        frmF.ShowDialog()
-        '
-        ' ao fechar dialog verifica o resultado
-        If frmF.DialogResult <> DialogResult.OK Then Exit Sub
-        '
-        txtFornecedor.Text = frmF.propFornecedor_Escolha.Cadastro
-        _prodForn.Cadastro = frmF.propFornecedor_Escolha.Cadastro
-        _prodForn.IDFornecedor = frmF.propFornecedor_Escolha.IDPessoa
-        txtFornecedor.Focus()
-        '
-        ' altera o EnumFlagEstado para ALTERADO
-        If IIf(IsNothing(oldID), 0, oldID) <> IIf(IsNothing(_prodForn.IDFornecedor), 0, _prodForn.IDFornecedor) Then
-            '
-            ' altera o EnumFlagEstado
-            If Sit = EnumFlagEstado.RegistroSalvo Then Sit = EnumFlagEstado.Alterado
-            '
-        End If
-        '
     End Sub
     '
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
@@ -502,7 +667,7 @@ Public Class frmProdutoFornecedorEditar
         ElseIf _prodForn.FornecedorPadrao = False Then ' Fornecedor Auxiliar
             '
             If AbrirDialog("Você deseja realmente definir o Fornecedor padrão do Produto para:" & vbNewLine &
-                           txtFornecedor.Text.ToUpper,
+                           lblFornecedor.Text.ToUpper,
                            "Definir Fornecedor Padrão",
                            frmDialog.DialogType.SIM_NAO,
                            frmDialog.DialogIcon.Question,
@@ -560,26 +725,6 @@ Public Class frmProdutoFornecedorEditar
             Return False
         End If
         '
-        If Not f.VerificaDadosClasse(txtFornecedor, "Fornecedor", _prodForn, EP) Then
-            btnFornecedor.Focus()
-            Return False
-        End If
-        '
-        If IsNothing(_prodForn.IDFornecedor) Then
-            '
-            '--- MENSAGEM E ERROR PROVIDER
-            MessageBox.Show("O campo Fornecedor não pode ficar vazio;" & vbCrLf &
-                            "Preencha esse campo antes de Salvar o registro por favor...",
-                            "Campo Vazio", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            '
-            '--- CONTROLA O ERROR PROVIDER
-            EP.SetError(txtFornecedor, "Preencha o valor desse campo!")
-            txtFornecedor.Focus()
-            '
-            Return False
-            '
-        End If
-        '
         If Not f.VerificaDadosClasse(txtPCompra, "Preço de Compra", _prodForn, EP) Then
             Return False
         End If
@@ -626,7 +771,7 @@ Public Class frmProdutoFornecedorEditar
     '--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
     '---------------------------------------------------------------------------------------
     Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) _
-    Handles dtpUltimaEntrada.KeyDown, txtPCompra.KeyDown, txtDescontoCompra.KeyDown, txtRGProduto.KeyDown
+    Handles dtpUltimaEntrada.KeyDown, txtPCompra.KeyDown, txtDescontoCompra.KeyDown
         '
         If e.KeyCode = Keys.Enter Then
             e.SuppressKeyPress = True
@@ -639,6 +784,9 @@ Public Class frmProdutoFornecedorEditar
     ' FAZ A TECLA ESC FECHAR O FORM
     '------------------------------------------------------------------------------------------
     Private Sub Me_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        '
+        If ActiveControl.Name = "dgvItens" Then Exit Sub
+        '
         If e.KeyCode = Keys.Escape Then
             e.Handled = True
             '
@@ -694,87 +842,6 @@ Public Class frmProdutoFornecedorEditar
         '
     End Sub
     '
-    Private Sub txtFornecedor_KeyDown(sender As Object, e As KeyEventArgs) Handles txtFornecedor.KeyDown
-
-        If e.KeyCode = Keys.Add Then
-            e.Handled = True
-            '
-            If Not _isProdutoFixed Then
-                MessageBox.Show("Não é possível alterar o fornecedor...",
-                                "Fornecedor", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                Exit Sub
-            End If
-            '
-            btnFornecedor_Click(New Object, New EventArgs)
-            '
-        ElseIf e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-            SendKeys.Send("{Tab}")
-        Else
-            e.Handled = True
-            e.SuppressKeyPress = True
-        End If
-        '
-    End Sub
-    '
-    Private Sub txtFornecedor_Enter(sender As Object, e As EventArgs) Handles txtFornecedor.Enter, txtRGProduto.Enter
-        DirectCast(sender, Control).BackColor = Color.White
-    End Sub
-
-    Private Sub txtFornecedor_Leave(sender As Object, e As EventArgs) Handles txtFornecedor.Leave, txtRGProduto.Leave
-        DirectCast(sender, Control).BackColor = Color.FromArgb(219, 228, 240)
-    End Sub
-    '
-    ' CONTROLA O KEYPRESS DO RGPRODUTO (PERMITE SOMENTE NUMERO)
-    Private Sub txtRGProduto_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtRGProduto.KeyPress
-        '
-        'MsgBox(e.KeyChar.ToString)
-        '
-        If _isProdutoFixed And e.KeyChar <> vbCr Then
-            MessageBox.Show("Não é possível alterar o produto...",
-                            "Produto", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Exit Sub
-        End If
-        '
-        If Char.IsNumber(e.KeyChar) Then
-            e.Handled = False
-        ElseIf e.KeyChar = vbBack Then
-            e.Handled = False
-        ElseIf e.KeyChar = "+" Then
-            e.Handled = True
-            '
-            '--- abre o form de Procura de Produto
-            Dim p As New frmProdutoProcurar(Me, True)
-            p.ShowDialog()
-            '
-            '--- verifica se retornou algum valor
-            If p.DialogResult = vbCancel Then Exit Sub
-            '
-            '--- se retornou entao preenche o RGProduto
-            txtRGProduto.Text = p.RGEscolhido
-            SendKeys.Send("{TAB}")
-            '
-        ElseIf e.KeyChar = vbCr Then '--- pressiona ENTER
-            e.Handled = False
-        Else
-            e.Handled = True
-        End If
-        '
-    End Sub
-    '
-    '--- VALIDA O RGPRODUTO PARA OBTER OS DADOS DO PRODUTO
-    Private Sub txtRGProduto_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles txtRGProduto.Validating
-        '
-        If _isProdutoFixed Then Exit Sub
-        '
-        If String.IsNullOrEmpty(txtRGProduto.Text) OrElse Sit = EnumFlagEstado.RegistroSalvo Then Exit Sub
-        '
-        If Produto_ObterDados(txtRGProduto.Text) = False Then
-            e.Cancel = True
-        End If
-        '
-    End Sub
-    '
     '--- FUNCAO PARA OBTER OS DADOS DO PRODUTO INSERIDO PELO RGPRODUTO
     Private Function Produto_ObterDados(RGProduto As Integer) As Boolean
         Dim pBLL As New ProdutoBLL
@@ -819,82 +886,4 @@ Public Class frmProdutoFornecedorEditar
     '
 #End Region '/ CONTROLS
     '
-#Region "CONTROLE MENU CONTEXTO"
-    '
-    Private Sub InicializarMenuItem()
-        '
-        ' verifica se já esta inicialzado
-        If mnuItensAcao.Items.Count > 1 Then Exit Sub ' ja esta inicializado
-        '
-        'mnuItensAcao
-        '
-        mnuItensAcao.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mnuItemEditar, Me.mnuItemInserir, Me.ToolStripSeparator1, Me.mnuItemExcluir})
-        mnuItensAcao.Name = "mnuItensAcao"
-        mnuItensAcao.Size = New System.Drawing.Size(181, 98)
-        '
-        'mnuItemEditar
-        '
-        mnuItemEditar.Image = My.Resources.editar
-        mnuItemEditar.Name = "mnuItemEditar"
-        mnuItemEditar.Size = New System.Drawing.Size(180, 22)
-        mnuItemEditar.Text = "Editar Item"
-        '
-        'mnuItemInserir
-        '
-        mnuItemInserir.Image = My.Resources.add
-        mnuItemInserir.Name = "mnuItemInserir"
-        mnuItemInserir.Size = New System.Drawing.Size(180, 22)
-        mnuItemInserir.Text = "Inserir Produto"
-        '
-        'ToolStripSeparator1
-        '
-        ToolStripSeparator1.Name = "ToolStripSeparator1"
-        ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
-        '
-        'mnuItemExcluir
-        '
-        mnuItemExcluir.Image = My.Resources.delete
-        mnuItemExcluir.Name = "mnuItemExcluir"
-        mnuItemExcluir.Size = New System.Drawing.Size(180, 22)
-        mnuItemExcluir.Text = "Excluir Produto"
-    End Sub
-    '
-    '
-    Private Sub dgvItens_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvItens.MouseDown
-        '
-        If e.Button = MouseButtons.Right Then
-            'Dim c As Control = DirectCast(sender, Control)
-            Dim hit As DataGridView.HitTestInfo = dgvItens.HitTest(e.X, e.Y)
-            dgvItens.ClearSelection()
-            '
-            If Not hit.Type = DataGridViewHitTestType.Cell Then Exit Sub
-            '
-            '
-            ' seleciona o ROW
-            dgvItens.CurrentCell = dgvItens.Rows(hit.RowIndex).Cells(1)
-            dgvItens.Rows(hit.RowIndex).Selected = True
-            '
-            mnuItemEditar.Enabled = True
-            mnuItemExcluir.Enabled = True
-            '
-            'mnuItens.Show(dgvEntradaBloqens, c.PointToScreen(e.Location))
-            mnuItensAcao.Show(dgvItens, e.Location)
-            '
-        End If
-        '
-    End Sub
-    '
-    Private Sub MenuItemEditar_Click(sender As Object, e As EventArgs) Handles mnuItemEditar.Click
-        Editar_Item()
-    End Sub
-    '
-    Private Sub MenuItemInserir_Click(sender As Object, e As EventArgs) Handles mnuItemInserir.Click
-        Inserir_Item()
-    End Sub
-    '
-    Private Sub MenuItemExcluir_Click(sender As Object, e As EventArgs) Handles mnuItemExcluir.Click
-        Excluir_Item()
-    End Sub
-    '
-#End Region
 End Class
