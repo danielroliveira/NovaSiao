@@ -44,6 +44,7 @@ Partial Class frmCompraGetNFe
         Me.miNovoProduto = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.miAbrirProduto = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miObterProdutoDBAnterior = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.mnuItens.SuspendLayout()
@@ -252,15 +253,15 @@ Partial Class frmCompraGetNFe
         'mnuItens
         '
         Me.mnuItens.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.mnuItens.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAnexarProduto, Me.miNovoProduto, Me.ToolStripSeparator1, Me.miAbrirProduto})
+        Me.mnuItens.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAnexarProduto, Me.miNovoProduto, Me.miObterProdutoDBAnterior, Me.ToolStripSeparator1, Me.miAbrirProduto})
         Me.mnuItens.Name = "mnuItens"
-        Me.mnuItens.Size = New System.Drawing.Size(214, 82)
+        Me.mnuItens.Size = New System.Drawing.Size(249, 128)
         '
         'miAnexarProduto
         '
         Me.miAnexarProduto.Image = Global.NovaSiao.My.Resources.Resources.search_peq1
         Me.miAnexarProduto.Name = "miAnexarProduto"
-        Me.miAnexarProduto.Size = New System.Drawing.Size(213, 24)
+        Me.miAnexarProduto.Size = New System.Drawing.Size(248, 24)
         Me.miAnexarProduto.Text = "Anexar a um Produto"
         Me.miAnexarProduto.ToolTipText = "Correlacionar com um produto existente"
         '
@@ -268,22 +269,29 @@ Partial Class frmCompraGetNFe
         '
         Me.miNovoProduto.Image = Global.NovaSiao.My.Resources.Resources.add
         Me.miNovoProduto.Name = "miNovoProduto"
-        Me.miNovoProduto.Size = New System.Drawing.Size(213, 24)
+        Me.miNovoProduto.Size = New System.Drawing.Size(248, 24)
         Me.miNovoProduto.Text = "Criar novo Produto"
         Me.miNovoProduto.ToolTipText = "Um produto que nunca foi inserido"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(210, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(245, 6)
         '
         'miAbrirProduto
         '
         Me.miAbrirProduto.Image = Global.NovaSiao.My.Resources.Resources.Estoque_24px
         Me.miAbrirProduto.Name = "miAbrirProduto"
-        Me.miAbrirProduto.Size = New System.Drawing.Size(213, 24)
+        Me.miAbrirProduto.Size = New System.Drawing.Size(248, 24)
         Me.miAbrirProduto.Text = "Visualizar Produto"
         Me.miAbrirProduto.ToolTipText = "Abrir o cadastro do produto"
+        '
+        'miObterProdutoDBAnterior
+        '
+        Me.miObterProdutoDBAnterior.Image = Global.NovaSiao.My.Resources.Resources.download
+        Me.miObterProdutoDBAnterior.Name = "miObterProdutoDBAnterior"
+        Me.miObterProdutoDBAnterior.Size = New System.Drawing.Size(248, 24)
+        Me.miObterProdutoDBAnterior.Text = "Obter Produto DB Anterior"
         '
         'frmCompraGetNFe
         '
@@ -342,4 +350,5 @@ Partial Class frmCompraGetNFe
     Friend WithEvents miAbrirProduto As ToolStripMenuItem
     Friend WithEvents miNovoProduto As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents miObterProdutoDBAnterior As ToolStripMenuItem
 End Class

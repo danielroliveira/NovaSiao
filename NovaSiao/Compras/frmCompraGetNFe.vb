@@ -455,9 +455,9 @@ Public Class frmCompraGetNFe
             If countEncontrados = 0 Then
                 message = "Não foram encontrados produtos que se relacionam com essa NFe."
             ElseIf countEncontrados = 1 Then
-                message = "Foi encontrado 1(UM) produto relacionado com a NFe."
+                message = "Foi encontrado 1 (UM) produto relacionado com a NFe."
             Else
-                message = "Foram encontrados " + countEncontrados + " produtos relacionados com a NFe."
+                message = "Foram encontrados " & countEncontrados & " produtos relacionados com a NFe."
             End If
             '
             AbrirDialog(message, "Produtos Encontrados", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
@@ -645,6 +645,18 @@ Public Class frmCompraGetNFe
             Dim prodEncontrado As clProduto = f.ProdutoEscolhido
             Dim item As clNFeItem = dgvItens.CurrentRow.DataBoundItem
             '
+            '--- ASK USER
+            If AbrirDialog("Você deseja realmente relacionar o PRODUTO:" & vbCrLf &
+                           item.xProd & vbCrLf &
+                           "com o ITEM:" & vbCrLf &
+                           prodEncontrado.Produto & " ?",
+                           "Relacionar Item/Produto",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question,
+                           frmDialog.DialogDefaultButton.First) = DialogResult.No Then
+                Exit Sub
+            End If
+            '
             '--- AO ESCOLHER UM PRODUTO - PREENCHE A LISTA
             item.IDProduto = prodEncontrado.IDProduto
             item.RGProduto = prodEncontrado.RGProduto
@@ -653,10 +665,14 @@ Public Class frmCompraGetNFe
             item.DescontoCompra = prodEncontrado.DescontoCompra
             '
             '--- MESSAGE
-            AbrirDialog("Item relacionado com Produto com sucesso.",
-                        "Item Relacionado",
-                        frmDialog.DialogType.OK,
-                        frmDialog.DialogIcon.Information)
+            If AbrirDialog("Item relacionado com Produto com sucesso!" & vbCrLf & vbCrLf &
+                           "Você deseja GUARDAR/SALVAR essa relação do Fornecedor com o Produto?",
+                           "Item Relacionado",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question,
+                           frmDialog.DialogDefaultButton.First) = DialogResult.Yes Then
+                SalvarRelacao(item)
+            End If
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao relacionar o produto..." & vbNewLine &
@@ -797,6 +813,90 @@ Public Class frmCompraGetNFe
         '
     End Sub
     '
+    '--- MENU ITEM - OBTER PRODUTO PELO DB ANTERIOR
+    '----------------------------------------------------------------------------------
+    Private Sub miObterProdutoDBAnterior_Click(sender As Object, e As EventArgs) Handles miObterProdutoDBAnterior.Click
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- get produto texto
+            Dim item As clNFeItem = dgvItens.CurrentRow.DataBoundItem
+            '
+            '--- Open frmProcura
+            Dim frm As New frmProdutosAntigosProcurar(item.xProd, Nothing, Me)
+            Me.Visible = False
+            frm.ShowDialog()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir o formuário de Produto..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
 #End Region
+    '
+#Region "CORRELACIONAR PRODUTO"
+    '
+    Private Function SalvarRelacao(item As clNFeItem) As Boolean
+        '
+        '--- CHECK IF FORNECEDOR IS DEFINED
+        If IsNothing(FornecedorNFe.IDPessoa) OrElse FornecedorNFe.IDPessoa = 0 Then
+            AbrirDialog("O Fornecedor ainda não foi correlacionado com a NFe." + vbCrLf +
+                        "Favor fazer a correlação antes.",
+                        "Fornecedor Desconhecido", frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Exclamation)
+            Return False
+        End If
+        '
+        Dim prodFornItem As New clProdutoFornecedorItem With {
+            .Cadastro = FornecedorNFe.Cadastro,
+            .IDFornecedor = FornecedorNFe.IDPessoa,
+            .UltimaEntrada = Today,
+            .ApelidoFilial = ObterConfigValorNode("FilialDescricao"),
+            .IDFilial = Obter_FilialPadrao(),
+            .Produto = item.Produto,
+            .IDProduto = item.IDProduto,
+            .RGProduto = item.RGProduto,
+            .PCompra = Format(CDbl(item.vUnCom.Replace(".", ",")), "#,##0.00"),
+            .DescontoCompra = item.DescontoNFe,
+            .IDProdutoOrigem = item.cProd,
+            .DescricaoOrigem = item.xProd,
+            .CodBarrasOrigem = item.cEAN
+            }
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim prodBLL As New ProdutoFornecedorBLL
+            Dim obj As Object = prodBLL.Insert_ProdutoFornecedorItem(prodFornItem)
+            '
+            If Not obj.GetType Is GetType(Integer) Then
+                Throw New Exception(obj.ToString)
+            End If
+            '
+            prodFornItem.IDProdutoFornecedorItem = obj
+            Return True
+            '
+        Catch ex As Exception
+            Throw New AppException("Uma exceção ocorreu ao Salvar Registro de Relacionamento..." & vbNewLine &
+                                    ex.Message)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Function
+    '
+#End Region '/ CORRELACIONAR PRODUTO
     '
 End Class

@@ -318,4 +318,77 @@ Public Class ProdutoAntigoBLL
         '
     End Function
     '
+    '==========================================================================================
+    ' GET PRODUTO TIPO LIST as DATATABLE
+    '==========================================================================================
+    Public Function ProdutoTipoList() As DataTable
+        '
+        Try
+            '
+            If String.IsNullOrEmpty(_dbPath) Then
+                Throw New Exception("Não há string de conexão válida...")
+            End If
+            '
+            Dim db As New AcessoOLEDB(_dbPath)
+            '
+            Dim query As String = "SELECT RGProdutoTipo, ProdutoTipo FROM tblProdutosTipos"
+            '
+            Return db.ExecutarConsulta(CommandType.Text, query)
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '==========================================================================================
+    ' GET PRODUTO LIST by TIPO AS LIST CLPRODUTO
+    '==========================================================================================
+    Public Function ProdutoListByTipo(RGProdutoTipo As Integer) As List(Of clProduto)
+        '
+        Try
+            '
+            If String.IsNullOrEmpty(_dbPath) Then
+                Throw New Exception("Não há string de conexão válida...")
+            End If
+            '
+            Dim db As New AcessoOLEDB(_dbPath)
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@RGProdutoTipo", RGProdutoTipo)
+            '
+            Dim query As String = "SELECT * FROM qryProdutos WHERE RGProdutoTipo = @RGProdutoTipo"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            Dim list As New List(Of clProduto)
+            '
+            If dt.Rows.Count = 0 Then Return list
+
+            For Each r In dt.Rows
+                '
+                Dim myProd As New clProduto
+                '
+                '--- OBTER DADOS DA TABELA
+                myProd.RGProduto = IIf(IsDBNull(r("RGProduto")), Nothing, r("RGProduto"))
+                myProd.Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto"))
+                myProd.Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor"))
+                myProd.PVenda = IIf(IsDBNull(r("Venda")), Nothing, r("Venda"))
+                myProd.PCompra = IIf(IsDBNull(r("Compra")), Nothing, r("Compra"))
+                myProd.ProdutoTipo = IIf(IsDBNull(r("ProdutoTipo")), String.Empty, r("ProdutoTipo"))
+                myProd.ProdutoSubTipo = IIf(IsDBNull(r("SubTipo")), String.Empty, r("SubTipo"))
+                myProd.ProdutoCategoria = IIf(IsDBNull(r("Categoria")), String.Empty, r("Categoria"))
+                myProd.Fabricante = IIf(IsDBNull(r("Fabricante")), String.Empty, r("Fabricante"))
+                '
+                list.Add(myProd)
+                '
+            Next
+            '
+            Return list
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
 End Class

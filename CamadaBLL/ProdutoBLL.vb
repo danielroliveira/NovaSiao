@@ -1497,11 +1497,12 @@ Public Class ProdutoFornecedorBLL
     '
     '--- INSERT OR UPDATE PRODUTO FORNECEDOR
     '----------------------------------------------------------------------------------
-    Public Function InsertUpdate_ProdutoFornecedor(prodForn As clProdutoFornecedor) As clProdutoFornecedor
+    Public Function InsertUpdate_ProdutoFornecedor(prodForn As clProdutoFornecedor,
+                                                   Optional dbTran As Object = Nothing) As clProdutoFornecedor
         '
         Try
+            Dim db As AcessoDados = If(dbTran, New AcessoDados)
             '
-            Dim db As New AcessoDados
             Dim query As String = ""
             '
             db.LimparParametros()
@@ -1764,25 +1765,36 @@ Public Class ProdutoFornecedorBLL
     '----------------------------------------------------------------------------------
     Public Function Insert_ProdutoFornecedorItem(PFitem As clProdutoFornecedorItem) As Integer
         '
+        Dim dbTran As AcessoDados = Nothing
+        '
         Try
+            dbTran = New AcessoDados
+            dbTran.BeginTransaction()
             '
-            Dim db As New AcessoDados
+            '--- INSERT UPDATE PRODUTO FORNECEDOR
+            Dim PF As clProdutoFornecedor = InsertUpdate_ProdutoFornecedor(PFitem, dbTran)
+            PFitem.IDProdutoFornecedor = PF.IDProdutoFornecedor
+            '
             Dim query As String = ""
             query = "INSERT INTO tblProdutoFornecedorItem " &
                     "(IDProdutoOrigem, IDProdutoFornecedor, DescricaoOrigem, CodBarrasOrigem) " &
                     "VALUES " &
                     "(@IDProdutoOrigem, @IDProdutoFornecedor, @DescricaoOrigem, @CodBarrasOrigem)"
             '
-            db.LimparParametros()
-            db.AdicionarParametros("@IDProdutoOrigem", PFitem.IDProdutoOrigem)
-            db.AdicionarParametros("@IDProdutoFornecedor", PFitem.IDProdutoFornecedor)
-            db.AdicionarParametros("@DescricaoOrigem", PFitem.DescricaoOrigem)
-            db.AdicionarParametros("@CodBarrasOrigem", If(PFitem.CodBarrasOrigem, DBNull.Value))
+            dbTran.LimparParametros()
+            dbTran.AdicionarParametros("@IDProdutoOrigem", PFitem.IDProdutoOrigem)
+            dbTran.AdicionarParametros("@IDProdutoFornecedor", PFitem.IDProdutoFornecedor)
+            dbTran.AdicionarParametros("@DescricaoOrigem", PFitem.DescricaoOrigem)
+            dbTran.AdicionarParametros("@CodBarrasOrigem", If(PFitem.CodBarrasOrigem, DBNull.Value))
             '
-            Dim NewID As Integer = db.ExecutarInsertGetID(query)
+            Dim NewID As Integer = dbTran.ExecutarInsertGetID(query)
             '
+            '--- return
+            dbTran.CommitTransaction()
             Return NewID
+            '
         Catch ex As Exception
+            dbTran.RollBackTransaction()
             Throw ex
         End Try
         '
@@ -1797,7 +1809,6 @@ Public Class ProdutoFornecedorBLL
             Dim db As New AcessoDados
             Dim query As String = ""
             '
-
             query = "UPDATE tblProdutoFornecedorItem SET " +
                     "IDProdutoOrigem = @IDProdutoOrigem, " +
                     "DescricaoOrigem = @DescricaoOrigem, " +
