@@ -107,7 +107,6 @@ Public Class ProdutoAntigoBLL
                 myProd.PCompra = IIf(IsDBNull(r("Compra")), Nothing, r("Compra"))
                 myProd.EstoqueNivel = IIf(IsDBNull(r("EstoqueNivel")), Nothing, r("EstoqueNivel"))
                 myProd.EstoqueIdeal = IIf(IsDBNull(r("EstoqueIdeal")), Nothing, r("EstoqueIdeal"))
-                myProd.DescontoCompra = 0
                 '
                 '--- DADOS INCOMPATIVEIS
                 MakeReferencia(myProd, r, EnumReferencia.Tipo)
@@ -374,6 +373,7 @@ Public Class ProdutoAntigoBLL
                 myProd.Autor = IIf(IsDBNull(r("Autor")), String.Empty, r("Autor"))
                 myProd.PVenda = IIf(IsDBNull(r("Venda")), Nothing, r("Venda"))
                 myProd.PCompra = IIf(IsDBNull(r("Compra")), Nothing, r("Compra"))
+                myProd.IDProdutoTipo = IIf(IsDBNull(r("RGProdutoTipo")), String.Empty, r("RGProdutoTipo"))
                 myProd.ProdutoTipo = IIf(IsDBNull(r("ProdutoTipo")), String.Empty, r("ProdutoTipo"))
                 myProd.ProdutoSubTipo = IIf(IsDBNull(r("SubTipo")), String.Empty, r("SubTipo"))
                 myProd.ProdutoCategoria = IIf(IsDBNull(r("Categoria")), String.Empty, r("Categoria"))

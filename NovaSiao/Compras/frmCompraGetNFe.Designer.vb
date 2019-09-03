@@ -42,9 +42,10 @@ Partial Class frmCompraGetNFe
         Me.mnuItens = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.miAnexarProduto = New System.Windows.Forms.ToolStripMenuItem()
         Me.miNovoProduto = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miObterProdutoDBAnterior = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.miAbrirProduto = New System.Windows.Forms.ToolStripMenuItem()
-        Me.miObterProdutoDBAnterior = New System.Windows.Forms.ToolStripMenuItem()
+        Me.btnSalvarCompra = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.mnuItens.SuspendLayout()
@@ -150,15 +151,15 @@ Partial Class frmCompraGetNFe
         'clnIDProdutoNfe
         '
         Me.clnIDProdutoNfe.Frozen = True
-        Me.clnIDProdutoNfe.HeaderText = "Cod."
+        Me.clnIDProdutoNfe.HeaderText = "Cod. NFe"
         Me.clnIDProdutoNfe.Name = "clnIDProdutoNfe"
         Me.clnIDProdutoNfe.ReadOnly = True
-        Me.clnIDProdutoNfe.Width = 60
+        Me.clnIDProdutoNfe.Width = 80
         '
         'clnProdutoNfe
         '
         Me.clnProdutoNfe.Frozen = True
-        Me.clnProdutoNfe.HeaderText = "Desc. Origem"
+        Me.clnProdutoNfe.HeaderText = "Desc. Origem NFe"
         Me.clnProdutoNfe.Name = "clnProdutoNfe"
         Me.clnProdutoNfe.ReadOnly = True
         Me.clnProdutoNfe.Width = 375
@@ -181,7 +182,7 @@ Partial Class frmCompraGetNFe
         '
         'clnDescontoNfe
         '
-        Me.clnDescontoNfe.HeaderText = "Desc."
+        Me.clnDescontoNfe.HeaderText = "Desc. (%)"
         Me.clnDescontoNfe.Name = "clnDescontoNfe"
         Me.clnDescontoNfe.ReadOnly = True
         Me.clnDescontoNfe.Width = 80
@@ -210,6 +211,7 @@ Partial Class frmCompraGetNFe
         'btnCorrelacao
         '
         Me.btnCorrelacao.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnCorrelacao.Enabled = False
         Me.btnCorrelacao.Image = Global.NovaSiao.My.Resources.Resources.refresh1
         Me.btnCorrelacao.Location = New System.Drawing.Point(211, 601)
         Me.btnCorrelacao.Name = "btnCorrelacao"
@@ -253,7 +255,7 @@ Partial Class frmCompraGetNFe
         'mnuItens
         '
         Me.mnuItens.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.mnuItens.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAnexarProduto, Me.miNovoProduto, Me.miObterProdutoDBAnterior, Me.ToolStripSeparator1, Me.miAbrirProduto})
+        Me.mnuItens.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAnexarProduto, Me.miObterProdutoDBAnterior, Me.miNovoProduto, Me.ToolStripSeparator1, Me.miAbrirProduto})
         Me.mnuItens.Name = "mnuItens"
         Me.mnuItens.Size = New System.Drawing.Size(249, 128)
         '
@@ -273,6 +275,13 @@ Partial Class frmCompraGetNFe
         Me.miNovoProduto.Text = "Criar novo Produto"
         Me.miNovoProduto.ToolTipText = "Um produto que nunca foi inserido"
         '
+        'miObterProdutoDBAnterior
+        '
+        Me.miObterProdutoDBAnterior.Image = Global.NovaSiao.My.Resources.Resources.download
+        Me.miObterProdutoDBAnterior.Name = "miObterProdutoDBAnterior"
+        Me.miObterProdutoDBAnterior.Size = New System.Drawing.Size(248, 24)
+        Me.miObterProdutoDBAnterior.Text = "Obter Produto DB Anterior"
+        '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
@@ -286,12 +295,19 @@ Partial Class frmCompraGetNFe
         Me.miAbrirProduto.Text = "Visualizar Produto"
         Me.miAbrirProduto.ToolTipText = "Abrir o cadastro do produto"
         '
-        'miObterProdutoDBAnterior
+        'btnSalvarCompra
         '
-        Me.miObterProdutoDBAnterior.Image = Global.NovaSiao.My.Resources.Resources.download
-        Me.miObterProdutoDBAnterior.Name = "miObterProdutoDBAnterior"
-        Me.miObterProdutoDBAnterior.Size = New System.Drawing.Size(248, 24)
-        Me.miObterProdutoDBAnterior.Text = "Obter Produto DB Anterior"
+        Me.btnSalvarCompra.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnSalvarCompra.Enabled = False
+        Me.btnSalvarCompra.Image = Global.NovaSiao.My.Resources.Resources.save
+        Me.btnSalvarCompra.Location = New System.Drawing.Point(412, 601)
+        Me.btnSalvarCompra.Name = "btnSalvarCompra"
+        Me.btnSalvarCompra.Size = New System.Drawing.Size(195, 43)
+        Me.btnSalvarCompra.TabIndex = 2
+        Me.btnSalvarCompra.Text = "Salvar Compra"
+        Me.btnSalvarCompra.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnSalvarCompra.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnSalvarCompra.UseVisualStyleBackColor = True
         '
         'frmCompraGetNFe
         '
@@ -305,12 +321,14 @@ Partial Class frmCompraGetNFe
         Me.Controls.Add(Me.lblRazaoSocial)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.btnFechar)
+        Me.Controls.Add(Me.btnSalvarCompra)
         Me.Controls.Add(Me.btnCorrelacao)
         Me.Controls.Add(Me.btnImportar)
         Me.Name = "frmCompraGetNFe"
         Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.btnImportar, 0)
         Me.Controls.SetChildIndex(Me.btnCorrelacao, 0)
+        Me.Controls.SetChildIndex(Me.btnSalvarCompra, 0)
         Me.Controls.SetChildIndex(Me.btnFechar, 0)
         Me.Controls.SetChildIndex(Me.Label2, 0)
         Me.Controls.SetChildIndex(Me.lblRazaoSocial, 0)
@@ -334,14 +352,6 @@ Partial Class frmCompraGetNFe
     Friend WithEvents Label2 As Label
     Friend WithEvents dgvItens As DataGridView
     Friend WithEvents btnCorrelacao As Button
-    Friend WithEvents clnIDProdutoNfe As DataGridViewTextBoxColumn
-    Friend WithEvents clnProdutoNfe As DataGridViewTextBoxColumn
-    Friend WithEvents clnQuantidadeNFe As DataGridViewTextBoxColumn
-    Friend WithEvents clnPrecoNfe As DataGridViewTextBoxColumn
-    Friend WithEvents clnDescontoNfe As DataGridViewTextBoxColumn
-    Friend WithEvents clnTotalNfe As DataGridViewTextBoxColumn
-    Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
-    Friend WithEvents clnProduto As DataGridViewTextBoxColumn
     Friend WithEvents lblRazaoSocial As Label
     Friend WithEvents lblCNPJ As Label
     Friend WithEvents lblInscricao As Label
@@ -351,4 +361,13 @@ Partial Class frmCompraGetNFe
     Friend WithEvents miNovoProduto As ToolStripMenuItem
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents miObterProdutoDBAnterior As ToolStripMenuItem
+    Friend WithEvents btnSalvarCompra As Button
+    Friend WithEvents clnIDProdutoNfe As DataGridViewTextBoxColumn
+    Friend WithEvents clnProdutoNfe As DataGridViewTextBoxColumn
+    Friend WithEvents clnQuantidadeNFe As DataGridViewTextBoxColumn
+    Friend WithEvents clnPrecoNfe As DataGridViewTextBoxColumn
+    Friend WithEvents clnDescontoNfe As DataGridViewTextBoxColumn
+    Friend WithEvents clnTotalNfe As DataGridViewTextBoxColumn
+    Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
+    Friend WithEvents clnProduto As DataGridViewTextBoxColumn
 End Class

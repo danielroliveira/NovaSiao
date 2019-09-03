@@ -20,7 +20,7 @@ Partial Class frmProdutosAntigosProcurar
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.btnEscolher = New System.Windows.Forms.Button()
         Me.btnCancelar = New System.Windows.Forms.Button()
         Me.dgvItens = New System.Windows.Forms.DataGridView()
@@ -40,6 +40,7 @@ Partial Class frmProdutosAntigosProcurar
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.btnPesquisar = New System.Windows.Forms.Button()
+        Me.lblResultado = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.mnuItens.SuspendLayout()
@@ -93,14 +94,14 @@ Partial Class frmProdutosAntigosProcurar
         Me.dgvItens.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvItens.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
         Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvItens.ColumnHeadersHeight = 25
         Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnRGProduto, Me.clnProduto, Me.clnAutor, Me.clnTipo, Me.clnPrecoCompra, Me.clnPrecoVenda})
         Me.dgvItens.EnableHeadersVisualStyles = False
@@ -232,7 +233,7 @@ Partial Class frmProdutosAntigosProcurar
         'btnPesquisar
         '
         Me.btnPesquisar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.btnPesquisar.BackColor = System.Drawing.Color.LightGoldenrodYellow
+        Me.btnPesquisar.BackColor = System.Drawing.Color.AliceBlue
         Me.btnPesquisar.Enabled = False
         Me.btnPesquisar.FlatAppearance.BorderColor = System.Drawing.Color.SlateGray
         Me.btnPesquisar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
@@ -248,10 +249,21 @@ Partial Class frmProdutosAntigosProcurar
         Me.btnPesquisar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnPesquisar.UseVisualStyleBackColor = False
         '
+        'lblResultado
+        '
+        Me.lblResultado.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblResultado.Location = New System.Drawing.Point(620, 89)
+        Me.lblResultado.Name = "lblResultado"
+        Me.lblResultado.Size = New System.Drawing.Size(411, 29)
+        Me.lblResultado.TabIndex = 23
+        Me.lblResultado.Text = "Nenhum produto encontrado"
+        Me.lblResultado.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        '
         'frmProdutosAntigosProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1115, 656)
+        Me.Controls.Add(Me.lblResultado)
         Me.Controls.Add(Me.btnPesquisar)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
@@ -270,6 +282,7 @@ Partial Class frmProdutosAntigosProcurar
         Me.Controls.SetChildIndex(Me.Label1, 0)
         Me.Controls.SetChildIndex(Me.Label2, 0)
         Me.Controls.SetChildIndex(Me.btnPesquisar, 0)
+        Me.Controls.SetChildIndex(Me.lblResultado, 0)
         Me.Panel1.ResumeLayout(False)
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mnuItens.ResumeLayout(False)
@@ -297,4 +310,5 @@ Partial Class frmProdutosAntigosProcurar
     Friend WithEvents clnPrecoCompra As DataGridViewTextBoxColumn
     Friend WithEvents clnPrecoVenda As DataGridViewTextBoxColumn
     Friend WithEvents btnPesquisar As Button
+    Friend WithEvents lblResultado As Label
 End Class

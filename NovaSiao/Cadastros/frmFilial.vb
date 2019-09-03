@@ -2,7 +2,7 @@
 Imports CamadaDTO
 
 Public Class frmFilial
-    Private _filial As clFilial
+    Private _filial As clFilialDados
     Private _formOrigem As Form
     Private BindFil As New BindingSource
     Dim _Sit As Byte
@@ -10,6 +10,24 @@ Public Class frmFilial
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
     '
 #Region "LOAD | NEW"
+    '
+    '--- SUB NEW
+    Sub New(filial As clFilialDados, Optional formOrigem As Form = Nothing)
+        '
+        ' This call is required by the designer.
+        InitializeComponent()
+        '
+        ' Add any initialization after the InitializeComponent() call.
+        propFilial = filial
+        BindFil.DataSource = _filial
+        PreencheDataBindings()
+        _formOrigem = formOrigem
+        '
+        If Not IsNothing(_filial.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
+        '
+        HandlerKeyDownControl()
+        '
+    End Sub
     '
     ' PROPRIEDADE SIT
     Private Property Sit As EnumFlagEstado
@@ -34,12 +52,12 @@ Public Class frmFilial
         End Set
     End Property
     '
-    Public Property propFilial() As clFilial
+    Public Property propFilial() As clFilialDados
         '
         Get
             Return _filial
         End Get
-        Set(ByVal value As clFilial)
+        Set(ByVal value As clFilialDados)
             '
             If IsNothing(value.IDPessoa) Then
                 Sit = EnumFlagEstado.NovoRegistro
@@ -52,21 +70,6 @@ Public Class frmFilial
         '
     End Property
     '
-    Sub New(filial As clFilial, Optional formOrigem As Form = Nothing)
-        '
-        ' This call is required by the designer.
-        InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        propFilial = filial
-        BindFil.DataSource = _filial
-        PreencheDataBindings()
-        _formOrigem = formOrigem
-        '
-        If Not IsNothing(_filial.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
-        '
-    End Sub
-    '
 #End Region
     '
 #Region "DATABINDINGS"
@@ -76,8 +79,24 @@ Public Class frmFilial
         ' OS COMBOS JA SÃO ADICIONADOS DATABINDINGS QUANDO CARREGA
         '
         lblID.DataBindings.Add("Tag", BindFil, "IDPessoa")
+        txtRazaoSocial.DataBindings.Add("Text", BindFil, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtNomeFantasia.DataBindings.Add("Text", BindFil, "NomeFantasia", True, DataSourceUpdateMode.OnPropertyChanged)
         txtApelidoFilial.DataBindings.Add("Text", BindFil, "ApelidoFilial", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtCNPJ.DataBindings.Add("Text", BindFil, "CNPJ", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtIncricao.DataBindings.Add("Text", BindFil, "InscricaoEstadual", True, DataSourceUpdateMode.OnPropertyChanged)
         txtAliquotaICMS.DataBindings.Add("Text", BindFil, "AliquotaICMS", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtEndereco.DataBindings.Add("Text", BindFil, "Endereco", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtBairro.DataBindings.Add("Text", BindFil, "Bairro", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtCidade.DataBindings.Add("Text", BindFil, "Cidade", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtCEP.DataBindings.Add("Text", BindFil, "CEP", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtUF.DataBindings.Add("Text", BindFil, "UF", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtTelefonePrincipal.DataBindings.Add("Text", BindFil, "TelefonePrincipal", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtTelefoneGerencia.DataBindings.Add("Text", BindFil, "TelefoneGerencia", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtTelefoneFinanceiro.DataBindings.Add("Text", BindFil, "TelefoneFinanceiro", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtContatoGerencia.DataBindings.Add("Text", BindFil, "ContatoGerencia", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtContatoFinanceiro.DataBindings.Add("Text", BindFil, "ContatoFinanceiro", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtNumeroWhatsapp.DataBindings.Add("Text", BindFil, "NumeroWhatsapp", True, DataSourceUpdateMode.OnPropertyChanged)
+        txtEmail.DataBindings.Add("Text", BindFil, "Email", True, DataSourceUpdateMode.OnPropertyChanged)
         '
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler lblID.DataBindings("Tag").Format, AddressOf idFormatRG
@@ -85,16 +104,16 @@ Public Class frmFilial
         AddHandler BindFil.CurrentChanged, AddressOf handler_CurrentChanged
         '
         ' ADD HANDLER PARA DATABINGS
-        AddHandler DirectCast(BindFil.CurrencyManager.Current, clFilial).AoAlterar, AddressOf HandlerAoAlterar
+        AddHandler DirectCast(BindFil.CurrencyManager.Current, clFilialDados).AoAlterar, AddressOf HandlerAoAlterar
         '
     End Sub
     '
     Private Sub handler_CurrentChanged()
         ' ADD HANDLER PARA DATABINGS
-        AddHandler DirectCast(BindFil.CurrencyManager.Current, clFilial).AoAlterar, AddressOf HandlerAoAlterar
+        AddHandler DirectCast(BindFil.CurrencyManager.Current, clFilialDados).AoAlterar, AddressOf HandlerAoAlterar
         '
         '--- Nesse caso é um novo registro
-        If IsNothing(DirectCast(BindFil.Current, clFilial).IDPessoa) Then
+        If IsNothing(DirectCast(BindFil.Current, clFilialDados).IDPessoa) Then
             Exit Sub
         Else
             ' LER O ID
@@ -144,7 +163,7 @@ Public Class frmFilial
             Exit Sub
         End If
         '
-        Dim filial As clFilial = BindFil.Current
+        Dim filial As clFilialDados = BindFil.Current
         '
         If filial.Ativo = True Then ' Filial Ativo
             '
@@ -190,10 +209,31 @@ Public Class frmFilial
 #Region "CONTROLES"
     '
     '---------------------------------------------------------------------------------------
+    ' ADD HANDLER EVENTO KEYDOWN DOS CONTROLES COM VTAB
+    '---------------------------------------------------------------------------------------
+    Private Sub HandlerKeyDownControl()
+        '
+        '--- Tipos de Controles
+        Dim myTypes As Type() = {GetType(TextBox),
+                                 GetType(ComboBox),
+                                 GetType(MaskedTextBox),
+                                 GetType(Controles.Text_Monetario)}
+        '
+        '--- para cada TabPage no tabPrincipal
+        For Each c As Control In Me.Controls
+            '
+            If myTypes.Contains(c.GetType) Then
+                AddHandler c.KeyDown, AddressOf txtControl_KeyDown
+            End If
+            '
+        Next
+        '
+    End Sub
+    '
+    '---------------------------------------------------------------------------------------
     '--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
     '---------------------------------------------------------------------------------------
-    Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) _
-    Handles txtAliquotaICMS.KeyDown, txtApelidoFilial.KeyDown
+    Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs)
         '
         If e.KeyCode = Keys.Enter Then
             e.SuppressKeyPress = True

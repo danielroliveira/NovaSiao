@@ -6,6 +6,17 @@ Imports System.Xml.Serialization
 
 Public Class frmCompraGetNFe
     '
+    Private NotaNFe As TNfeProc
+    Private ItensNFe As New List(Of clNFeItem)
+    Private bindItens As New BindingSource
+    Private FornecedorNFe As New clFornecedor
+    Private IDTipoPadrao As Integer? = Nothing
+    Private IDSubTipoPadrao As Integer? = Nothing
+    Private IDFabricantePadrao As Integer? = Nothing
+    Private RGTipoAnterior As Integer? = Nothing
+    Private _propEstagio As Byte
+    Private ProdFornBLL As New ProdutoFornecedorBLL
+    '
     Private Class clNFeItem
         Inherits TNFeInfNFeDetProd
         '
@@ -20,14 +31,6 @@ Public Class frmCompraGetNFe
         '
     End Class
     '
-    Private NotaNFe As TNfeProc
-    Private ItensNFe As New List(Of clNFeItem)
-    Private bindItens As New BindingSource
-    Private FornecedorNFe As New clFornecedor
-    Private IDTipoPadrao As Integer? = Nothing
-    Private IDSubTipoPadrao As Integer? = Nothing
-    Private IDFabricantePadrao As Integer? = Nothing
-    '
 #Region "NEW | OPEN | PROPS"
     '
     Sub New()
@@ -36,9 +39,35 @@ Public Class frmCompraGetNFe
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        propEstagio = 1
         FormataDataGrid()
         '
     End Sub
+    '
+    Private Property propEstagio As Byte
+        Get
+            Return _propEstagio
+        End Get
+        Set(value As Byte)
+            _propEstagio = value
+            '
+            Select Case value
+                Case = 1 '--- ESTAGIO INICIAL
+                    btnCorrelacao.Enabled = False
+                    btnSalvarCompra.Enabled = False
+                Case = 2 '--- XML OBTIDA
+                    btnCorrelacao.Enabled = True
+                    btnSalvarCompra.Enabled = False
+                Case = 3 '--- CORRELACAO PESQUISADA
+                    btnCorrelacao.Enabled = False
+                    btnSalvarCompra.Enabled = False
+                Case = 4 '--- PRONTO PARA INSERIR
+                    btnCorrelacao.Enabled = False
+                    btnSalvarCompra.Enabled = True
+            End Select
+            '
+        End Set
+    End Property
     '
 #End Region '/ NEW | OPEN | PROPS
     '
@@ -211,13 +240,14 @@ Public Class frmCompraGetNFe
                 ImportItensNFe()
                 bindItens.DataSource = ItensNFe
                 dgvItens.DataSource = bindItens
-                'bindItens.ResetBindings(False)
                 ImportFornecedorNFe()
+                propEstagio = 2
             End If
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Obter os Dados do aquivo NFe XML..." & vbNewLine &
-            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            propEstagio = 1
         Finally
             '--- Ampulheta OFF
             Cursor = Cursors.Default
@@ -245,6 +275,9 @@ Public Class frmCompraGetNFe
                 .ShowDialog()
             End With
             '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             If String.IsNullOrEmpty(arquivoXML.FileName) Then Return False
             '
             Dim ser As New XmlSerializer(GetType(TNfeProc))
@@ -259,6 +292,11 @@ Public Class frmCompraGetNFe
             '
         Catch ex As Exception
             Throw ex
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Function
@@ -268,6 +306,9 @@ Public Class frmCompraGetNFe
     Private Sub ImportItensNFe()
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
             '
             If IsNothing(NotaNFe) Then
                 Throw New AppException("Ainda não há NFe, ou é nula...")
@@ -316,6 +357,11 @@ Public Class frmCompraGetNFe
             '
         Catch ex As Exception
             Throw ex
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -437,14 +483,17 @@ Public Class frmCompraGetNFe
                 '
                 '--- SE ENCOTNTROU UM PRODUTO - PREENCHE A LISTA
                 If Not IsNothing(prodEncontrado) Then
-                    'dgvItens.CurrentRow.DefaultCellStyle.BackColor = Color.MistyRose
-                    'dgvItens.CurrentRow.DefaultCellStyle.SelectionBackColor = Color.Firebrick
                     item.IDProduto = prodEncontrado.IDProduto
                     item.RGProduto = prodEncontrado.RGProduto
                     item.Produto = prodEncontrado.Produto
                     item.PCompra = prodEncontrado.PCompra
                     item.DescontoCompra = prodEncontrado.DescontoCompra
                     countEncontrados += 1
+                    '
+                    '--- CHECK PRECO COMPRA
+                    '----------------------------------------------------------------------------------------------------
+                    CheckPrecoDivergente(item, prodEncontrado.PCompra, prodEncontrado.IDProduto)
+                    '
                 End If
                 '
             Next
@@ -461,6 +510,10 @@ Public Class frmCompraGetNFe
             End If
             '
             AbrirDialog(message, "Produtos Encontrados", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            '
+            '--- ALTERA O ESTAGIO
+            propEstagio = 3
+            TryEnableEstagioCompra()
             '
         Catch ex As AppException
             acesso.RollbackAcessoWithTransaction(dbTran)
@@ -584,8 +637,7 @@ Public Class frmCompraGetNFe
         '
         Try
             '
-            Dim pBLL As New ProdutoFornecedorBLL
-            Return pBLL.GetProdFornecedorItem(IDFornecedor, item.cProd, dbTran)
+            Return ProdFornBLL.GetProdFornecedorItem(IDFornecedor, item.cProd, dbTran)
             '
         Catch ex As Exception
             Throw ex
@@ -593,6 +645,123 @@ Public Class frmCompraGetNFe
         '
     End Function
     '
+    '--- SALVA A RELACAO ENTRE ITEM E PRODUTO
+    '----------------------------------------------------------------------------------
+    Private Function SalvarRelacao(item As clNFeItem) As Boolean
+        '
+        '--- CHECK IF FORNECEDOR IS DEFINED
+        If IsNothing(FornecedorNFe.IDPessoa) OrElse FornecedorNFe.IDPessoa = 0 Then
+            AbrirDialog("O Fornecedor ainda não foi correlacionado com a NFe." + vbCrLf +
+                        "Favor fazer a correlação antes.",
+                        "Fornecedor Desconhecido", frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Exclamation)
+            Return False
+        End If
+        '
+        Dim prodFornItem As New clProdutoFornecedorItem With {
+            .Cadastro = FornecedorNFe.Cadastro,
+            .IDFornecedor = FornecedorNFe.IDPessoa,
+            .UltimaEntrada = Today,
+            .ApelidoFilial = ObterConfigValorNode("FilialDescricao"),
+            .IDFilial = Obter_FilialPadrao(),
+            .Produto = item.Produto,
+            .IDProduto = item.IDProduto,
+            .RGProduto = item.RGProduto,
+            .PCompra = Format(CDbl(item.vUnCom.Replace(".", ",")), "#,##0.00"),
+            .DescontoCompra = item.DescontoNFe,
+            .IDProdutoOrigem = item.cProd,
+            .DescricaoOrigem = item.xProd,
+            .CodBarrasOrigem = item.cEAN
+            }
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim obj As Object = ProdFornBLL.Insert_ProdutoFornecedorItem(prodFornItem)
+            '
+            If Not obj.GetType Is GetType(Integer) Then
+                Throw New Exception(obj.ToString)
+            End If
+            '
+            prodFornItem.IDProdutoFornecedorItem = obj
+            Return True
+            '
+        Catch ex As Exception
+            Throw New AppException("Uma exceção ocorreu ao Salvar Registro de Relacionamento..." & vbNewLine &
+                                    ex.Message)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Function
+    '
+    '--- INSERT NEW PRODUTO INTO LIST
+    '----------------------------------------------------------------------------------
+    Private Sub InsertNewProdutoIntoList(item As clNFeItem, produto As clProduto)
+        '
+        '--- AO ESCOLHER UM PRODUTO - PREENCHE A LISTA
+        item.IDProduto = produto.IDProduto
+        item.RGProduto = produto.RGProduto
+        item.Produto = produto.Produto
+        item.PCompra = produto.PCompra
+        item.DescontoCompra = produto.DescontoCompra
+        '
+        '--- MESSAGE
+        If AbrirDialog("Item relacionado com Produto com sucesso!" & vbCrLf & vbCrLf &
+                       "Você deseja GUARDAR/SALVAR essa relação do Fornecedor com o Produto?",
+                       "Item Relacionado",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question,
+                       frmDialog.DialogDefaultButton.First) = DialogResult.Yes Then
+            SalvarRelacao(item)
+        End If
+        '
+        TryEnableEstagioCompra()
+        '
+    End Sub
+    '
+    Private Sub CheckPrecoDivergente(item As clNFeItem, PrecoCompra As Double, IDProduto As Integer)
+        '
+        '--- CHECK PRECO DE COMPRA
+        '
+        Dim ItemPrecoCompra As Double = Format(CDbl(item.vUnCom.Replace(".", ",")), "#,##0.00")
+        '
+        If PrecoCompra <> Format(CDbl(item.vUnCom.Replace(".", ",")), "#,##0.00") Then
+            '
+            If AbrirDialog("Novo Preço de Compra na NFe é diferente do atual..." & vbCrLf &
+                           "ITEM: " & item.xProd & vbCrLf &
+                           "NOVO PREÇO: " & Format(ItemPrecoCompra, "C") & vbCrLf &
+                           "Você deseja alterar o Preço de Compra atual para o novo preço?",
+                           "Preço Divergente",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question,
+                           frmDialog.DialogDefaultButton.First) = DialogResult.Yes Then
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
+                Try
+                    Using pBLL As New ProdutoBLL
+                        pBLL.ProdutoAlterarPrecoDescontoCompra(IDProduto, ItemPrecoCompra)
+                    End Using
+                    '
+                    ProdFornBLL.Update_ProdutoFornecedor_PrecoCompra(IDProduto, FornecedorNFe.IDPessoa, ItemPrecoCompra)
+                    '
+                Catch ex As Exception
+                    Throw ex
+                End Try
+                '
+            End If
+            '
+        End If
+        '
+    End Sub
+
 #End Region '/ CORRELACAO FUNCTIONS
     '
 #Region "MENU CONTEXT ITENS"
@@ -618,8 +787,9 @@ Public Class frmCompraGetNFe
             '
             ' mostra o menu item
             miAbrirProduto.Enabled = Not IsNothing(item.IDProduto)
-            miAnexarProduto.Enabled = IsNothing(item.IDProduto)
-            miNovoProduto.Enabled = IsNothing(item.IDProduto)
+            miAnexarProduto.Enabled = IsNothing(item.IDProduto) AndAlso propEstagio > 2
+            miNovoProduto.Enabled = IsNothing(item.IDProduto) AndAlso propEstagio > 2
+            miObterProdutoDBAnterior.Enabled = IsNothing(item.IDProduto) AndAlso propEstagio > 2
             '
             ' revela menu
             mnuItens.Show(c.PointToScreen(e.Location))
@@ -637,7 +807,7 @@ Public Class frmCompraGetNFe
             Cursor = Cursors.WaitCursor
             '
             '--- Get PRODUTO
-            Dim f As New frmProdutoProcurar(Me, False)
+            Dim f As New frmProdutoProcurar(Me)
             f.ShowDialog()
             '
             If f.DialogResult <> DialogResult.OK Then Exit Sub
@@ -657,22 +827,11 @@ Public Class frmCompraGetNFe
                 Exit Sub
             End If
             '
-            '--- AO ESCOLHER UM PRODUTO - PREENCHE A LISTA
-            item.IDProduto = prodEncontrado.IDProduto
-            item.RGProduto = prodEncontrado.RGProduto
-            item.Produto = prodEncontrado.Produto
-            item.PCompra = prodEncontrado.PCompra
-            item.DescontoCompra = prodEncontrado.DescontoCompra
+            '--- CHECK PRECO DE COMPRA DIVERGENTE
+            CheckPrecoDivergente(item, prodEncontrado.PCompra, prodEncontrado.IDProduto)
             '
-            '--- MESSAGE
-            If AbrirDialog("Item relacionado com Produto com sucesso!" & vbCrLf & vbCrLf &
-                           "Você deseja GUARDAR/SALVAR essa relação do Fornecedor com o Produto?",
-                           "Item Relacionado",
-                           frmDialog.DialogType.SIM_NAO,
-                           frmDialog.DialogIcon.Question,
-                           frmDialog.DialogDefaultButton.First) = DialogResult.Yes Then
-                SalvarRelacao(item)
-            End If
+            '--- AO ESCOLHER UM PRODUTO - PREENCHE A LISTA
+            InsertNewProdutoIntoList(item, prodEncontrado)
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao relacionar o produto..." & vbNewLine &
@@ -798,10 +957,16 @@ Public Class frmCompraGetNFe
                 frm.ShowDialog()
                 '
                 If frm.DialogResult = DialogResult.OK Then
-                    prod = frm.ProdutoEscolhido
+                    prod = frm.propProduto
                 End If
                 '
             End Using
+            '
+            '--- CHECK IF NEW PRODUTO WAS INSERTED
+            '----------------------------------------------------------------------------------
+            If Not IsNothing(prod.IDProduto) Then
+                InsertNewProdutoIntoList(item, prod)
+            End If
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao abrir o formuário de Produto..." & vbNewLine &
@@ -823,11 +988,52 @@ Public Class frmCompraGetNFe
             '
             '--- get produto texto
             Dim item As clNFeItem = dgvItens.CurrentRow.DataBoundItem
+            Dim RGProdAnteriorEscolhido As Integer
             '
-            '--- Open frmProcura
-            Dim frm As New frmProdutosAntigosProcurar(item.xProd, Nothing, Me)
-            Me.Visible = False
-            frm.ShowDialog()
+            '--- Open frmProcura ProdutoAntigo
+            Using frm As New frmProdutosAntigosProcurar(item.xProd, RGTipoAnterior, Me)
+                '
+                Visible = False
+                frm.ShowDialog()
+                '
+                If frm.DialogResult <> DialogResult.OK Then Exit Sub
+                '
+                '--- save TipoAnterior for next find
+                RGTipoAnterior = frm.ProdutoEscolhido.IDProdutoTipo
+                RGProdAnteriorEscolhido = frm.ProdutoEscolhido.RGProduto
+                '
+            End Using
+            '
+            '--- CREATE NEW PRODUTO
+            '---------------------------------------------------------------------------------
+            Dim prod As New clProduto With {
+                .IDProduto = Nothing,
+                .RGProduto = RGProdAnteriorEscolhido,
+                .Produto = item.xProd,
+                .CodBarrasA = item.cEAN,
+                .DescontoCompra = item.DescontoNFe,
+                .Movimento = 1,
+                .NCM = item.NCM,
+                .PCompra = item.vProd
+                }
+            '
+            '---TRY OPEN PRODUTO FORM
+            Using frmProd As New frmProduto(EnumFlagAcao.INSERIR, prod, Me, RGProdAnteriorEscolhido)
+                '
+                Me.Visible = False
+                frmProd.ShowDialog()
+                '
+                If frmProd.DialogResult <> DialogResult.OK Then Exit Sub
+                '
+                prod = frmProd.propProduto
+                '
+            End Using
+            '
+            '--- CHECK IF NEW PRODUTO WAS INSERTED
+            '----------------------------------------------------------------------------------
+            If Not IsNothing(prod.IDProduto) Then
+                InsertNewProdutoIntoList(item, prod)
+            End If
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao abrir o formuário de Produto..." & vbNewLine &
@@ -841,62 +1047,146 @@ Public Class frmCompraGetNFe
     '
 #End Region
     '
-#Region "CORRELACIONAR PRODUTO"
+#Region "OTHER FUNCTIONS"
     '
-    Private Function SalvarRelacao(item As clNFeItem) As Boolean
+    Private Sub TryEnableEstagioCompra()
         '
-        '--- CHECK IF FORNECEDOR IS DEFINED
-        If IsNothing(FornecedorNFe.IDPessoa) OrElse FornecedorNFe.IDPessoa = 0 Then
-            AbrirDialog("O Fornecedor ainda não foi correlacionado com a NFe." + vbCrLf +
-                        "Favor fazer a correlação antes.",
-                        "Fornecedor Desconhecido", frmDialog.DialogType.OK,
-                        frmDialog.DialogIcon.Exclamation)
-            Return False
+        If ItensNFe.Count = 0 Then propEstagio = 1
+        '
+        If ItensNFe.Where(Function(x) IsNothing(x.IDProduto)).Count = 0 Then
+            propEstagio = 4
+            AbrirDialog("Todos items estão relacionados... " & vbNewLine &
+                        "Pronto para inserir uma nova Compra",
+                        "Items Relacionados",
+                        frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
         End If
         '
-        Dim prodFornItem As New clProdutoFornecedorItem With {
-            .Cadastro = FornecedorNFe.Cadastro,
-            .IDFornecedor = FornecedorNFe.IDPessoa,
-            .UltimaEntrada = Today,
-            .ApelidoFilial = ObterConfigValorNode("FilialDescricao"),
-            .IDFilial = Obter_FilialPadrao(),
-            .Produto = item.Produto,
-            .IDProduto = item.IDProduto,
-            .RGProduto = item.RGProduto,
-            .PCompra = Format(CDbl(item.vUnCom.Replace(".", ",")), "#,##0.00"),
-            .DescontoCompra = item.DescontoNFe,
-            .IDProdutoOrigem = item.cProd,
-            .DescricaoOrigem = item.xProd,
-            .CodBarrasOrigem = item.cEAN
-            }
+    End Sub
+    '
+    Private Sub btnSalvarCompra_Click(sender As Object, e As EventArgs) Handles btnSalvarCompra.Click
+        '
+        '--- Verifica o FORNECEDOR
+        Dim IDFornecedor As Integer = FornecedorNFe.IDPessoa
+        Dim FornecedorUF As String = FornecedorNFe.UF
+        '
+        '--- Pergunta ao Usuário se Deseja inserir nova COMPRA
+        If AbrirDialog("Você deseja realmente inserir uma NOVA COMPRA?",
+                       "Inserir Nova Compra",
+                       frmDialog.DialogType.OK,
+                       frmDialog.DialogIcon.Information) <> DialogResult.OK Then
+            Exit Sub
+        End If
+        '
+        '--- Insere um novo Registro de COMPRA
+        '---------------------------------------------------------------------------------------
+        Dim cmpBLL As New CompraBLL
+        Dim newCompra As New clCompra
+        Dim tranBLL As New TransacaoBLL
+        '
+        '--- DEFINE DBTRAN
+        '---------------------------------------------------------------------------------------
+        Dim acesso As New AcessoControlBLL
+        Dim dbTran As Object = acesso.GetNewAcessoWithTransaction
         '
         Try
-            '
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Dim prodBLL As New ProdutoFornecedorBLL
-            Dim obj As Object = prodBLL.Insert_ProdutoFornecedorItem(prodFornItem)
+            '--- Define os valores iniciais
+            With newCompra
+                .IDPessoaDestino = Obter_FilialPadrao()
+                .IDPessoaOrigem = IDFornecedor
+                .IDOperacao = 2
+                .IDSituacao = TransacaoBLL.EnumTransacaoSituacao.INICIADA
+                .IDUser = UsuarioAtual.IdUser
+                If FornecedorUF = ObterDefault("UF") Then
+                    .CFOP = tranBLL.ObterCFOP(TransacaoBLL.EnumOperacao.Compra, TransacaoBLL.EnumCFOPUFDestino.DentroDaUF)
+                Else
+                    .CFOP = tranBLL.ObterCFOP(TransacaoBLL.EnumOperacao.Compra, TransacaoBLL.EnumCFOPUFDestino.ForaDaUF)
+                End If
+                .TransacaoData = ObterDefault("DataPadrao")
+                .CobrancaTipo = 0 '--- sem Cobrança
+                .FreteTipo = 0 '--- sem frete
+                .FreteCobrado = 0
+                .ICMSValor = 0
+                .Despesas = 0
+                .Descontos = 0
+                .TotalCompra = 0
+                .Observacao = ""
+            End With
             '
-            If Not obj.GetType Is GetType(Integer) Then
-                Throw New Exception(obj.ToString)
+            newCompra = cmpBLL.SalvaNovaCompra_Procedure_Compra(newCompra, dbTran)
+            '
+            If IsNothing(newCompra) Then
+                Throw New Exception("Um erro ocorreu ao salvar ao Inserir Nova Compra")
             End If
             '
-            prodFornItem.IDProdutoFornecedorItem = obj
-            Return True
+            '--- INSERT ITEMS
+            InsertCompraItens(newCompra, dbTran)
+            '
+            '--- COMMIT
+            'acesso.CommitAcessoWithTransaction(dbTran)
             '
         Catch ex As Exception
-            Throw New AppException("Uma exceção ocorreu ao Salvar Registro de Relacionamento..." & vbNewLine &
-                                    ex.Message)
-        Finally
             '
+            '--- ROOLBACK
+            acesso.RollbackAcessoWithTransaction(dbTran)
+            '
+            '--- MESSAGE
+            MessageBox.Show("Uma exceção ocorreu ao Salvar nova Compra..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '
+        Finally
             '--- Ampulheta OFF
             Cursor = Cursors.Default
-            '
         End Try
         '
-    End Function
+    End Sub
     '
-#End Region '/ CORRELACIONAR PRODUTO
+    '--- INSERT ALL COMPRA ITEMS IN NEW COMPRA
+    '----------------------------------------------------------------------------------
+    Private Sub InsertCompraItens(Compra As clCompra, dbTran As Object)
+        '
+        Dim ItemBLL As New TransacaoItemBLL
+        '
+        '--- Insere o novo ITEM no BD
+        Try
+            '
+            For Each item In ItensNFe
+                '
+                Dim newItem As New clTransacaoItem With {
+                .IDProduto = item.IDProduto,
+                .RGProduto = item.RGProduto,
+                .Produto = item.Produto,
+                .TransacaoData = Compra.TransacaoData,
+                .IDTransacao = Compra.IDCompra,
+                .Quantidade = item.qCom,
+                .Desconto = item.DescontoNFe,
+                .IDFilial = Compra.IDPessoaDestino,
+                .Substituicao = 0,
+                .IPI = 0,
+                .ICMS = 0,
+                .MVA = 0
+                }
+                '
+                '--- INSERT ITEM IN DB
+                Dim myID As Long? = Nothing
+                myID = ItemBLL.InserirNovoItem(newItem,
+                                               TransacaoItemBLL.EnumMovimento.ENTRADA,
+                                               Compra.TransacaoData,
+                                               True,
+                                               dbTran)
+                '
+                newItem.IDTransacaoItem = myID
+                '
+            Next
+            '
+        Catch ex As Exception
+            Throw New AppException("Houve um exceção ao INSERIR o item no BD..." & vbNewLine & ex.Message)
+        End Try
+        '
+    End Sub
+    '
+#End Region '/ OTHER FUNCTIONS
     '
 End Class

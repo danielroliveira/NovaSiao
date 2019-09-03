@@ -1562,6 +1562,42 @@ Public Class ProdutoFornecedorBLL
         '
     End Function
     '
+    '--- UPDATE PRODUTO FORNECEDOR PRECO DE COMPRA E DESCONTO COMPRA
+    '----------------------------------------------------------------------------------
+    Public Function Update_ProdutoFornecedor_PrecoCompra(IDProduto As Integer,
+                                                         IDFornecedor As Integer,
+                                                         NovoPCompra As Double,
+                                                         Optional NovoDescontoCompra As Double? = Nothing,
+                                                         Optional dbTran As Object = Nothing) As Boolean
+        '
+        Try
+            Dim db As AcessoDados = If(dbTran, New AcessoDados)
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDFornecedor", IDFornecedor)
+            db.AdicionarParametros("@IDProduto", IDProduto)
+            db.AdicionarParametros("@PCompra", NovoPCompra)
+            '
+            Dim query As String = "UPDATE tblProdutoFornecedor SET " +
+                                  "PCompra = @PCompra "
+            '
+            If Not IsNothing(NovoDescontoCompra) Then
+                db.AdicionarParametros("@DescontoCompra", NovoDescontoCompra)
+                query += ", DescontoCompra = @DescontoCompra "
+            End If
+            '
+            query += "WHERE IDProduto = @IDProduto And IDFornecedor = @IDFornecedor"
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            Return True
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
     '--- DELETE PRODUTO FORNECEDOR ITEM
     '----------------------------------------------------------------------------------
     Public Function Delete_ProdutoFornecedor(prodForn As clProdutoFornecedor) As Boolean
@@ -1726,6 +1762,8 @@ Public Class ProdutoFornecedorBLL
             .RGProduto = r("RGProduto"),
             .IDFornecedor = r("IDFornecedor"),
             .Cadastro = r("Cadastro"),
+            .PCompra = IIf(IsDBNull(r("PCompra")), 0, r("PCompra")),
+            .DescontoCompra = IIf(IsDBNull(r("DescontoCompra")), 0, r("DescontoCompra")),
             .IDProdutoOrigem = IIf(IsDBNull(r("IDProdutoOrigem")), String.Empty, r("IDProdutoOrigem")),
             .CodBarrasOrigem = IIf(IsDBNull(r("CodBarrasOrigem")), String.Empty, r("CodBarrasOrigem")),
             .DescricaoOrigem = IIf(IsDBNull(r("DescricaoOrigem")), String.Empty, r("DescricaoOrigem"))

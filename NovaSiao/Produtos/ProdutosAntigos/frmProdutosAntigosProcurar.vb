@@ -52,6 +52,7 @@ Public Class frmProdutosAntigosProcurar
         FormataDataGrid()
         GetDadosProdutos()
         FiltrarListagem()
+        btnPesquisar.Enabled = False
         '
     End Sub
     '
@@ -79,6 +80,36 @@ Public Class frmProdutosAntigosProcurar
         End Try
         '
         '
+    End Sub
+    '
+    Private Sub PreencheComboTipo()
+        '
+        Dim dtTipo As DataTable
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            dtTipo = prodBLL.ProdutoTipoList
+            '
+            With cmbTipo
+                .DataSource = dtTipo
+                .ValueMember = "RGProdutoTipo"
+                .DisplayMember = "ProdutoTipo"
+            End With
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao obter a lista de Tipos de Produtos..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub cmbTipo_SelectedIndexChanged(sender As Object, e As EventArgs)
+        btnPesquisar.Enabled = True
     End Sub
     '
 #End Region '/ NEW | OPEN | PROPS
@@ -182,34 +213,8 @@ Public Class frmProdutosAntigosProcurar
         '
     End Sub
     '
-    Private Sub PreencheComboTipo()
-        '
-        Dim dtTipo As DataTable
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            dtTipo = prodBLL.ProdutoTipoList
-            '
-            With cmbTipo
-                .DataSource = dtTipo
-                .ValueMember = "RGProdutoTipo"
-                .DisplayMember = "ProdutoTipo"
-            End With
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao obter a lista de Tipos de Produtos..." & vbNewLine &
-            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
-        '
-    End Sub
-    '
-    Private Sub cmbTipo_SelectedIndexChanged(sender As Object, e As EventArgs)
-        btnPesquisar.Enabled = True
+    Private Sub dgvItens_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
+        btnEscolher_Click(New Object, New EventArgs)
     End Sub
     '
 #End Region
@@ -230,6 +235,7 @@ Public Class frmProdutosAntigosProcurar
         '
         ProdutoEscolhido = dgvItens.CurrentRow.DataBoundItem
         DialogResult = DialogResult.OK
+        '
     End Sub
     '
 #End Region '/ BUTTONS FUNCTION
@@ -241,7 +247,7 @@ Public Class frmProdutosAntigosProcurar
         If cmbTipo.SelectedValue <> TipoAtual Then
             GetDadosProdutos()
         End If
-
+        '
         FiltrarListagem()
         txtProduto.Focus()
         btnPesquisar.Enabled = False
@@ -252,7 +258,7 @@ Public Class frmProdutosAntigosProcurar
     Private Sub btnPesquisar_EnabledChanged(sender As Object, e As EventArgs) Handles btnPesquisar.EnabledChanged
         '
         If btnPesquisar.Enabled = True Then
-            btnPesquisar.BackColor = Color.LightGoldenrodYellow
+            btnPesquisar.BackColor = Color.AliceBlue
             showToolTip()
         Else
             btnPesquisar.BackColor = Color.Gainsboro
@@ -277,6 +283,19 @@ Public Class frmProdutosAntigosProcurar
             dgvItens.DataSource = list
         Else
             dgvItens.DataSource = list.FindAll(AddressOf FindProduto)
+        End If
+        '
+        '--- CHANGE LABEL RESULTADO
+        Dim cEncontrados = dgvItens.Rows.Count
+        If cEncontrados = 0 Then
+            lblResultado.Text = "Nenhum produto encontrado..."
+            lblResultado.ForeColor = Color.DarkRed
+        ElseIf cEncontrados = 1 Then
+            lblResultado.Text = "Um produto encontrado..."
+            lblResultado.ForeColor = Color.DarkBlue
+        ElseIf cEncontrados > 1 Then
+            lblResultado.Text = Format(cEncontrados, "00") & " produtos encontrados..."
+            lblResultado.ForeColor = Color.DarkBlue
         End If
         '
         '--- Ampulheta OFF

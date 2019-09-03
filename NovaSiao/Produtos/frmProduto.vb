@@ -5,24 +5,47 @@ Imports System.Math
 Imports System.IO
 
 Public Class frmProduto
+    '
     Private prodBLL As New ProdutoBLL
     Private _produto As clProduto
     Private WithEvents bindP As New BindingSource
+    '
     Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
+    Private _acao As EnumFlagAcao
     Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
-    Private _acao As EnumFlagAcao
+    '
     Private _formOrigem As Form
     '
 #Region "EVENTO LOAD E PROPRIEDADE SIT"
     '
-    Public Property ProdutoEscolhido As clProduto '--- Propriedade para escolha do produto
+    Public Sub New(myAcao As EnumFlagAcao, myProduto As clProduto,
+                   Optional formOrigem As Form = Nothing,
+                   Optional RGAntigo As Integer? = Nothing)
+        '
+        ' This call is required by the designer.
+        InitializeComponent()
+        '
+        ' Add any initialization after the InitializeComponent() call.
+        _formOrigem = formOrigem
+        propProduto = myProduto
+        propAcao = myAcao
+        '
+        If Not IsNothing(RGAntigo) Then
+            _produto.RGProduto = RGAntigo
+            txtRGProduto.DataBindings.Item("text").ReadValue()
+            FindProdutoAntigoAndAddNew(RGAntigo)
+        End If
+        '
+    End Sub
     '
     'PROPERTY SIT
     Private Property Sit As EnumFlagEstado
+        '
         Get
             Return _Sit
         End Get
+        '
         Set(value As EnumFlagEstado)
             _Sit = value
             If _Sit = EnumFlagEstado.RegistroSalvo Then
@@ -61,23 +84,13 @@ Public Class frmProduto
         End Set
     End Property
     '
-    Public Sub New(myAcao As EnumFlagAcao, myProduto As clProduto, Optional formOrigem As Form = Nothing)
-        '
-        ' This call is required by the designer.
-        InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        _formOrigem = formOrigem
-        propProduto = myProduto
-        propAcao = myAcao
-        '
-    End Sub
-    '
     '--- Propriedade propClientePF
     Public Property propProduto() As clProduto
+        '
         Get
             Return _produto
         End Get
+        '
         Set(ByVal value As clProduto)
 
             _produto = value
@@ -303,9 +316,6 @@ Public Class frmProduto
                                 MessageBoxButtons.OK, MessageBoxIcon.Information)
             Else '--- nesse caso fecha o formulário depois de salvar e retorna o IDProduto
                 '
-                '--- retorna o valor do RGProduto
-                ProdutoEscolhido = _produto
-                '
                 '--- Mensagem
                 MessageBox.Show("Registro Salvo com sucesso!", "Registro Salvo",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -529,7 +539,6 @@ Public Class frmProduto
         Else
             DialogResult = DialogResult.Cancel
             Close()
-            ProdutoEscolhido = Nothing
             _formOrigem.Visible = True
         End If
         '
@@ -791,28 +800,32 @@ Public Class frmProduto
             '
         End If
         '
-        '--- try obtain BDAnterior
-        Dim pathBD As String = ObterConfigValorNode("BDAnterior")
-        '
-        If String.IsNullOrEmpty(pathBD.Length) OrElse Not File.Exists(pathBD) Then
-            '
-            AbrirDialog("O BD Anterior ainda não foi configurado no CONFIG ou não existe...",
-                        "BD Anterior",
-                        frmDialog.DialogType.OK,
-                        frmDialog.DialogIcon.Information)
-            Return
-            '
-        End If
-        '
         '--- procura no cadastro antigo o registro do produto pelo RG
+        FindProdutoAntigoAndAddNew(txtRGProduto.Text)
+        '
+    End Sub
+    '
+    '--- PROCURA NO CADASTRO ANTIGO E FAZ RELACAO
+    '----------------------------------------------------------------------------------
+    Public Function FindProdutoAntigoAndAddNew(RGProdutoAntigo As Integer) As Boolean
+        '
         Try
+            '--- try obtain BDANTERIOR
+            Dim pathBD As String = ObterConfigValorNode("BDAnterior")
+            '
+            If String.IsNullOrEmpty(pathBD.Length) OrElse Not File.Exists(pathBD) Then
+                '
+                Throw New AppException("O BD Anterior ainda não foi configurado no CONFIG ou não existe...")
+                '
+            End If
+            '
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
             Dim oldProdutoBLL As New ProdutoAntigoBLL(pathBD)
-            Dim clP As clProduto = oldProdutoBLL.ProcuraProduto_CadastroAntigo(txtRGProduto.Text)
+            Dim clP As clProduto = oldProdutoBLL.ProcuraProduto_CadastroAntigo(RGProdutoAntigo)
             '
-            If IsNothing(clP) Then Return
+            If IsNothing(clP) Then Return False
             '
             Dim msn As String = String.Format("Deseja preencher automaticamente com os dados anteriores? {4}{4} " +
                                               "PRODUTO: {0}{4} AUTOR: {1}{4} PREÇO DE VENDA: {2}{4} PREÇO DE COMPRA: {3}",
@@ -820,18 +833,39 @@ Public Class frmProduto
             '
             If AbrirDialog(msn, "Obter Dados Anteriores",
                            frmDialog.DialogType.SIM_NAO, frmDialog.DialogIcon.Question,
-                           frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Return
+                           frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Return False
+            '
+            '--- CHECK PRECO DE COMPRA
+            '----------------------------------------------------------------------------------------------------
+            If _produto.PCompra > 0 AndAlso _produto.PCompra <> clP.PCompra Then
+                '
+                If AbrirDialog("Novo Preço de Compra da NFe é diferente do Preço Anterior..." & vbCrLf &
+                               "Você deseja alterar o Preço de compra Atual para o novo preço da NFe?",
+                               "Preço Divergente",
+                               frmDialog.DialogType.SIM_NAO,
+                               frmDialog.DialogIcon.Question,
+                               frmDialog.DialogDefaultButton.First) = DialogResult.No Then
+                    '
+                    _produto.PCompra = clP.PCompra
+                    '
+                End If
+            Else
+                '
+                _produto.PCompra = clP.PCompra
+                '
+            End If
             '
             '--- ITEMS WITH SAME OLD VALUE
+            '----------------------------------------------------------------------------------------------------
             _produto.Produto = clP.Produto
             _produto.Autor = clP.Autor
             _produto.PVenda = clP.PVenda
             _produto.PCompra = clP.PCompra
             _produto.EstoqueNivel = clP.EstoqueNivel
             _produto.EstoqueIdeal = clP.EstoqueIdeal
-            _produto.DescontoCompra = clP.DescontoCompra
             '
             '--- CORRELACIONADOS (TIPO | SUBTIPO | CATEGORIA | SIT.TRIBUTARIA)
+            '----------------------------------------------------------------------------------------------------
             _produto.ProdutoTipo = clP.ProdutoTipo
             _produto.IDProdutoTipo = clP.IDProdutoTipo
             _produto.ProdutoSubTipo = clP.ProdutoSubTipo
@@ -849,15 +883,17 @@ Public Class frmProduto
             '--- RECALC MARGEM DESCONTO/LUCRO
             CalcMargemDescontoLabel()
             '
+            Return True
+            '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao verificar cadastro de produto antigo..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Throw New AppException("Uma exceção ocorreu ao verificar cadastro de produto antigo..." & vbNewLine &
+                                   ex.Message)
         Finally
             '--- Ampulheta OFF
             Cursor = Cursors.Default
         End Try
         '
-    End Sub
+    End Function
     '
     '--- CHECK CORRELACAO ITENS
     '----------------------------------------------------------------------------------

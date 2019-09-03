@@ -550,7 +550,7 @@ Public Class PessoaBLL
                                                              EnumPessoaTipo.FILIAL,
                                                              db) '--> INSERT FILIAL
                     '
-                    InsertFilial(DirectCast(newPessoa, clFilial), db)
+                    InsertFilial(DirectCast(newPessoa, clFilialDados), db)
                     '
                 Case 4 '---> CREDOR SIMPLES
                     '
@@ -1179,32 +1179,58 @@ Public Class PessoaBLL
     '
     '--- FILIAL
     '----------------------------------------------------------------------------------
-    Private Sub InsertFilial(Filial As clFilial, dbTran As AcessoDados)
+    Private Sub InsertFilial(Filial As clFilialDados, dbTran As AcessoDados)
         '
         Dim myQuery As String = ""
         Dim dt As DataTable = Nothing
         '
-        '--- 1) INSERT TBLPESSOAFILIAL
-        '----------------------------------------------------------------------------------
-        '// PARAMNS
-        dbTran.LimparParametros()
-        dbTran.AdicionarParametros("@IDPessoa", Filial.IDPessoa)
-        dbTran.AdicionarParametros("@ApelidoFilial", Filial.ApelidoFilial)
-        dbTran.AdicionarParametros("@AliquotaICMS", Filial.AliquotaICMS)
-        '
-        myQuery = "INSERT INTO tblPessoaFilial (IDFilial, ApelidoFilial, AliquotaICMS, Ativo) " &
-                  "VALUES (@IDPessoa, @ApelidoFilial, @AliquotaICMS ,'True')"
-        '
         Try
+            '--- 1) INSERT TBLPESSOAFILIAL
+            '----------------------------------------------------------------------------------
+            '// PARAMNS
+            dbTran.LimparParametros()
+            dbTran.AdicionarParametros("@IDPessoa", Filial.IDPessoa)
+            dbTran.AdicionarParametros("@ApelidoFilial", Filial.ApelidoFilial)
+            dbTran.AdicionarParametros("@AliquotaICMS", Filial.AliquotaICMS)
+            dbTran.AdicionarParametros("@CNPJ", Filial.CNPJ)
+            '
+            myQuery = "INSERT INTO tblPessoaFilial (IDFilial, ApelidoFilial, CNPJ, AliquotaICMS, Ativo) " &
+                      "VALUES (@IDPessoa, @ApelidoFilial, @CNPJ, @AliquotaICMS ,'True')"
+            '
             dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
+            '
+            '--- 2) INSERT TBLPESSOAFILIALDADOS
+            '----------------------------------------------------------------------------------
+            '// PARAMNS
+            dbTran.LimparParametros()
+            dbTran.AdicionarParametros("@IDFilial", Filial.IDPessoa)
+            dbTran.AdicionarParametros("@InscricaoEstadual", If(Filial.InscricaoEstadual, DBNull.Value))
+            dbTran.AdicionarParametros("@NomeFantasia", If(Filial.NomeFantasia, DBNull.Value))
+            dbTran.AdicionarParametros("@Endereco", If(Filial.Endereco, DBNull.Value))
+            dbTran.AdicionarParametros("@Bairro", If(Filial.Bairro, DBNull.Value))
+            dbTran.AdicionarParametros("@Cidade", If(Filial.Cidade, DBNull.Value))
+            dbTran.AdicionarParametros("@UF", If(Filial.UF, DBNull.Value))
+            dbTran.AdicionarParametros("@CEP", If(Filial.CEP, DBNull.Value))
+            dbTran.AdicionarParametros("@TelefonePrincipal", If(Filial.TelefonePrincipal, DBNull.Value))
+            dbTran.AdicionarParametros("@TelefoneGerencia", If(Filial.TelefoneGerencia, DBNull.Value))
+            dbTran.AdicionarParametros("@TelefoneFinanceiro", If(Filial.TelefoneFinanceiro, DBNull.Value))
+            dbTran.AdicionarParametros("@ContatoGerencia", If(Filial.ContatoGerencia, DBNull.Value))
+            dbTran.AdicionarParametros("@ContatoFinanceiro", If(Filial.ContatoFinanceiro, DBNull.Value))
+            dbTran.AdicionarParametros("@NumeroWhatsapp", If(Filial.NumeroWhatsapp, DBNull.Value))
+            '
+            myQuery = "INSERT INTO tblPessoaFilialDados " +
+                      "(IDFilial, InscricaoEstadual, NomeFantasia, Endereco, Bairro, Cidade, UF, CEP, TelefonePrincipal, TelefoneGerencia, TelefoneFinanceiro, ContatoGerencia, ContatoFinanceiro, NumeroWhatsapp) " +
+                      "VALUES " +
+                      "(@IDFilial, @InscricaoEstadual, @NomeFantasia, @Endereco, @Bairro, @Cidade, @UF, @CEP, @TelefonePrincipal, @TelefoneGerencia, @TelefoneFinanceiro, @ContatoGerencia, @ContatoFinanceiro, @NumeroWhatsapp)"
+            '
+            dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
+            '
         Catch ex As Exception
             Throw ex
         End Try
         '
     End Sub
     '
-
-
 #End Region '/ INSERTS GROUP
     '
 #Region "UPDATES GROUP"
@@ -1321,6 +1347,14 @@ Public Class PessoaBLL
                     '
                     Dim PJ As clPessoaJuridica = DetachPessoaJuridica(myPessoa)
                     UpdatePessoaJuridica(PJ, db) '--> UPDATE
+                    '
+                Case 3 '---> FILIAL
+                    '
+                    '--- UPDATE FILIAL
+                    UpdateFilial(DirectCast(myPessoa, clFilialDados), db)
+                    '
+                    '--- UPDATE PESSOA SIMPLES
+                    UpdatePessoaSimples(myPessoa.IDPessoa, myPessoa.Cadastro, myPessoa.PessoaTipo, db)
                     '
                 Case 4 '---> CREDOR SIMPLES
                     '
@@ -2081,7 +2115,61 @@ Public Class PessoaBLL
         End Try
         '
     End Sub
-
+    '
+    '--- PESSOA FILIAL
+    '------------------------------------------------------------------------------------------
+    Private Function UpdateFilial(PJ As clFilialDados,
+                                  dbTran As AcessoDados) As Integer?
+        '
+        '
+        '--- ACESSO DB AND TRANSACTION
+        '----------------------------------------------------------------------------------
+        Dim myQuery As String = ""
+        Dim dt As DataTable = Nothing
+        '
+        '--- 1) INSERT TBLPESSOAFILIAL
+        '----------------------------------------------------------------------------------
+        '// PARAMNS
+        dbTran.LimparParametros()
+        dbTran.AdicionarParametros("@IDPessoa", Filial.IDPessoa)
+        dbTran.AdicionarParametros("@ApelidoFilial", Filial.ApelidoFilial)
+        dbTran.AdicionarParametros("@AliquotaICMS", Filial.AliquotaICMS)
+        dbTran.AdicionarParametros("@CNPJ", Filial.CNPJ)
+        '
+        myQuery = "INSERT INTO tblPessoaFilial (IDFilial, ApelidoFilial, CNPJ, AliquotaICMS, Ativo) " &
+                  "VALUES (@IDPessoa, @ApelidoFilial, @CNPJ, @AliquotaICMS ,'True')"
+        '
+        dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
+        '
+        '--- 2) INSERT TBLPESSOAFILIALDADOS
+        '----------------------------------------------------------------------------------
+        '// PARAMNS
+        dbTran.LimparParametros()
+        dbTran.AdicionarParametros("@IDFilial", Filial.IDPessoa)
+        dbTran.AdicionarParametros("@InscricaoEstadual", If(Filial.InscricaoEstadual, DBNull.Value))
+        dbTran.AdicionarParametros("@NomeFantasia", If(Filial.NomeFantasia, DBNull.Value))
+        dbTran.AdicionarParametros("@Endereco", If(Filial.Endereco, DBNull.Value))
+        dbTran.AdicionarParametros("@Bairro", If(Filial.Bairro, DBNull.Value))
+        dbTran.AdicionarParametros("@Cidade", If(Filial.Cidade, DBNull.Value))
+        dbTran.AdicionarParametros("@UF", If(Filial.UF, DBNull.Value))
+        dbTran.AdicionarParametros("@CEP", If(Filial.CEP, DBNull.Value))
+        dbTran.AdicionarParametros("@TelefonePrincipal", If(Filial.TelefonePrincipal, DBNull.Value))
+        dbTran.AdicionarParametros("@TelefoneGerencia", If(Filial.TelefoneGerencia, DBNull.Value))
+        dbTran.AdicionarParametros("@TelefoneFinanceiro", If(Filial.TelefoneFinanceiro, DBNull.Value))
+        dbTran.AdicionarParametros("@ContatoGerencia", If(Filial.ContatoGerencia, DBNull.Value))
+        dbTran.AdicionarParametros("@ContatoFinanceiro", If(Filial.ContatoFinanceiro, DBNull.Value))
+        dbTran.AdicionarParametros("@NumeroWhatsapp", If(Filial.NumeroWhatsapp, DBNull.Value))
+        '
+        myQuery = "INSERT INTO tblPessoaFilialDados " +
+                  "(IDFilial, InscricaoEstadual, NomeFantasia, Endereco, Bairro, Cidade, UF, CEP, TelefonePrincipal, TelefoneGerencia, TelefoneFinanceiro, ContatoGerencia, ContatoFinanceiro, NumeroWhatsapp) " +
+                  "VALUES " +
+                  "(@IDFilial, @InscricaoEstadual, @NomeFantasia, @Endereco, @Bairro, @Cidade, @UF, @CEP, @TelefonePrincipal, @TelefoneGerencia, @TelefoneFinanceiro, @ContatoGerencia, @ContatoFinanceiro, @NumeroWhatsapp)"
+        '
+        dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
+        '
+        '
+    End Function
+    '
 #End Region '/ UPDATES GROUP
     '
 #Region "CONVERT ROW IN PESSOA OF"

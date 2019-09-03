@@ -24,9 +24,9 @@ Public Class AcaoGlobal
         Dim UFCli As String = fCli.propClienteEscolhido.UF
         '
         '--- Pergunta ao Usuário se Deseja inserir nova venda
-        If MessageBox.Show("Você deseja realmente inserir uma nova Venda à Prazo?",
-                           "Inserir Nova Venda", MessageBoxButtons.OKCancel,
-                           MessageBoxIcon.Question) = DialogResult.Cancel Then
+        If AbrirDialog("Você deseja realmente inserir uma nova Venda à Prazo?",
+                       "Inserir Nova Venda", frmDialog.DialogType.OK,
+                       frmDialog.DialogIcon.Question) <> DialogResult.OK Then
             Return Nothing
         End If
         '
@@ -99,12 +99,12 @@ Public Class AcaoGlobal
         Dim FilialPadrao As String = ObterDefault("FilialDescricao")
         '
         '--- Pergunta ao Usuário se Deseja inserir nova venda
-        If MessageBox.Show("Você deseja realmente inserir uma NOVA VENDA À VISTA?" &
-                           vbNewLine & vbNewLine &
-                           "Data da Venda: " & VendaData & vbNewLine &
-                           "Filial: " & FilialPadrao.ToUpper,
-                           "Inserir Nova Venda", MessageBoxButtons.OKCancel,
-                           MessageBoxIcon.Question) = DialogResult.Cancel Then Return Nothing
+        If AbrirDialog("Você deseja realmente inserir uma NOVA VENDA À VISTA?" &
+                       vbNewLine & vbNewLine &
+                       "Data da Venda: " & VendaData & vbNewLine &
+                       "Filial: " & FilialPadrao.ToUpper,
+                       "Inserir Nova Venda", frmDialog.DialogType.OK,
+                       frmDialog.DialogIcon.Question) <> DialogResult.OK Then Return Nothing
         '
         '--- Insere um novo Registro de Venda
         '---------------------------------------------------------------------------------------
@@ -168,9 +168,10 @@ Public Class AcaoGlobal
         Dim FornecedorUF As String = fForn.propFornecedor_Escolha.UF
         '
         '--- Pergunta ao Usuário se Deseja inserir nova COMPRA
-        If MessageBox.Show("Você deseja realmente inserir uma NOVA COMPRA?",
-                           "Inserir Nova Venda", MessageBoxButtons.OKCancel,
-                           MessageBoxIcon.Question) = DialogResult.Cancel Then
+        If AbrirDialog("Você deseja realmente inserir uma NOVA COMPRA?",
+                       "Inserir Nova Compra",
+                       frmDialog.DialogType.OK,
+                       frmDialog.DialogIcon.Information) <> DialogResult.OK Then
             Return Nothing
         End If
         '
@@ -250,10 +251,10 @@ Public Class AcaoGlobal
         End If
         '
         '--- Pergunta ao Usuário se Deseja inserir nova simples Saída
-        If MessageBox.Show("Você deseja realmente inserir uma nova Simples Saída para a Filial" &
-                           vbNewLine & vbNewLine & Filial.ToUpper,
-                           "Inserir Nova Simples Saída", MessageBoxButtons.OKCancel,
-                           MessageBoxIcon.Question) = DialogResult.Cancel Then
+        If AbrirDialog("Você deseja realmente inserir uma nova Simples Saída para a Filial" &
+                       vbNewLine & vbNewLine & Filial.ToUpper,
+                       "Inserir Nova Simples Saída", frmDialog.DialogType.OK,
+                       frmDialog.DialogIcon.Question) <> DialogResult.OK Then
             Return Nothing
         End If
         '
@@ -304,9 +305,9 @@ Public Class AcaoGlobal
         Dim FornecedorUF As String = fForn.propFornecedor_Escolha.UF
         '
         '--- Pergunta ao Usuário se Deseja inserir nova DEVOLUCAO
-        If MessageBox.Show("Você deseja realmente criar uma NOVA DEVOLUÇÃO?",
-                           "Inserir Nova Devolução", MessageBoxButtons.OKCancel,
-                           MessageBoxIcon.Question) = DialogResult.Cancel Then
+        If AbrirDialog("Você deseja realmente criar uma NOVA DEVOLUÇÃO?",
+                       "Inserir Nova Devolução", frmDialog.DialogType.OK,
+                       frmDialog.DialogIcon.Question) <> DialogResult.OK Then
             Return Nothing
         End If
         '

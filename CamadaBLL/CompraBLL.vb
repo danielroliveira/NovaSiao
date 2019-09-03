@@ -150,11 +150,15 @@ Public Class CompraBLL
     '--------------------------------------------------------------------------------------------
     ' INSERT NOVA COMPRA E RETORNA UMA CLCOMPRA
     '--------------------------------------------------------------------------------------------
-    Public Function SalvaNovaCompra_Procedure_Compra(ByVal _compra As clCompra) As clCompra
+    Public Function SalvaNovaCompra_Procedure_Compra(ByVal _compra As clCompra,
+                                                     Optional dbTran As Object = Nothing) As clCompra
+        '
         Try
+            '
             Dim dtCompra As DataTable
             '
-            dtCompra = SalvaNovaCompra_Procedure_DT(_compra)
+            dtCompra = SalvaNovaCompra_Procedure_DT(_compra, dbTran)
+            '
             If dtCompra.Rows.Count > 0 Then
                 Dim r As DataRow = dtCompra(0)
                 '
@@ -162,62 +166,96 @@ Public Class CompraBLL
             Else
                 Return Nothing
             End If
+            '
         Catch ex As Exception
             Throw ex
         End Try
+        '
     End Function
     '
     '--------------------------------------------------------------------------------------------
     ' INSERT NOVA COMPRA E RETORNA UM DATATABLE
     '--------------------------------------------------------------------------------------------
-    Public Function SalvaNovaCompra_Procedure_DT(ByVal _compra As clCompra) As DataTable
-        Dim objDB As New AcessoDados
-        Dim Conn As New SqlCommand
+    Public Function SalvaNovaCompra_Procedure_DT(ByVal _compra As clCompra,
+                                                 Optional dbTran As AcessoDados = Nothing) As DataTable
         '
-        'Adiciona os Parâmetros
-        objDB.LimparParametros()
+        Dim db As AcessoDados
         '
-        '-- PARAMETROS DA TBLTRANSACAO
-        objDB.AdicionarParametros("@IDPessoaDestino", _compra.IDPessoaDestino)
-        objDB.AdicionarParametros("@IDPessoaOrigem", _compra.IDPessoaOrigem)
-        objDB.AdicionarParametros("@IDOperacao", _compra.IDOperacao)
-        objDB.AdicionarParametros("@IDSituacao", _compra.IDSituacao)
-        objDB.AdicionarParametros("@IDUser", _compra.IDUser)
-        objDB.AdicionarParametros("@CFOP", _compra.CFOP)
-        objDB.AdicionarParametros("@TransacaoData", _compra.TransacaoData)
-        '
-        '-- PARAMETROS DA TBLCompra
-        'objDB.AdicionarParametros("@FreteTipo", _compra.FreteTipo) '-- 0|SEM FRETE ; 1|EMITENTE; 2|DESTINATARIO; 3|REEMBOLSO ; 4|A COBRAR 
-        'objDB.AdicionarParametros("@FreteCobrado", _compra.FreteCobrado)
-        'objDB.AdicionarParametros("@ICMSValor", _compra.ICMSValor)
-        'objDB.AdicionarParametros("@Despesas", _compra.Despesas)
-        'objDB.AdicionarParametros("@Descontos", _compra.Descontos)
-        'objDB.AdicionarParametros("@CobrancaTipo", _compra.CobrancaTipo)
-        'objDB.AdicionarParametros("@TotalCompra", _compra.TotalCompra)
-        '
-        '-- PARAMETROS DA TBLOBSERVACAO
-        'objDB.AdicionarParametros("@Observacao", _compra.Observacao)
-        '
-        '-- PARAMETROS DA TBLcompraFRETE
-        'objDB.AdicionarParametros("@IDTransportadora", _compra.IDTransportadora)
-        'objDB.AdicionarParametros("@FreteValor", _compra.FreteValor)
-        'objDB.AdicionarParametros("@Volumes", _compra.Volumes)
-        'objDB.AdicionarParametros("@IDAPagar", _compra.IDFreteDespesa)
+        If IsNothing(dbTran) Then
+            db = New AcessoDados
+            db.BeginTransaction()
+        Else
+            db = dbTran
+        End If
         '
         Try
-            Dim dtV As DataTable = objDB.ExecutarConsulta(CommandType.StoredProcedure, "uspCompra_Inserir")
-            If dtV.Rows.Count = 0 Then
-                Throw New Exception("Um erro inesperado ocorreu na uspCompra_Inserir")
+            'Adiciona os Parâmetros
+            db.LimparParametros()
+            '
+            '-- PARAMETROS DA TBLTRANSACAO
+            db.AdicionarParametros("@IDPessoaDestino", _compra.IDPessoaDestino)
+            db.AdicionarParametros("@IDPessoaOrigem", _compra.IDPessoaOrigem)
+            db.AdicionarParametros("@IDOperacao", _compra.IDOperacao)
+            db.AdicionarParametros("@IDSituacao", _compra.IDSituacao)
+            db.AdicionarParametros("@IDUser", _compra.IDUser)
+            db.AdicionarParametros("@CFOP", _compra.CFOP)
+            db.AdicionarParametros("@TransacaoData", _compra.TransacaoData)
+            '
+            '-- INSERIR NA TBLTRANSACAO
+            '-- ===================================================
+            Dim query As String = "INSERT INTO tblTransacao " &
+                                  "(IDPessoaDestino, IDPessoaOrigem, IDOperacao, IDSituacao, IDUser, CFOP, TransacaoData) " &
+                                  "VALUES " &
+                                  "(@IDPessoaDestino, @IDPessoaOrigem, @IDOperacao, @IDSituacao, @IDUser, @CFOP, @TransacaoData)"
+            '
+            'Dim dt As Object = db.ExecutarConsulta(CommandType.StoredProcedure, "uspCompra_Inserir")
+            Dim newID As Object = db.ExecutarInsertGetID(query)
+            '
+            If Not IsNumeric(newID) Then
+                Throw New Exception("Um erro inesperado ocorreu no salvar entrada..." & vbNewLine & newID.ToString)
             End If
             '
-            If IsNumeric(dtV.Rows(0).Item(0)) Then
-                Return dtV
+            '-- INSERIR NA TBLCOMPRA
+            '-- ===================================================
+            db.LimparParametros()
+            db.AdicionarParametros("@IDTransacao", newID)
+            '
+            query = "INSERT INTO tblCompra " &
+                    "(IDCompra, FreteCobrado, ICMSValor, Despesas, Descontos, TotalCompra, CobrancaTipo) " &
+                    "VALUES " &
+                    "(@IDTransacao, 0, 0, 0, 0, 0, 0)"
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            If IsNothing(dbTran) Then '--- TRANSACTION LOCAL
+                db.CommitTransaction()
+            End If
+            '
+            '-- RETURN
+            '-- ===================================================
+            db.LimparParametros()
+            db.AdicionarParametros("@IDCompra", newID)
+            '
+            query = "SELECT * FROM qryCompra WHERE IDCompra = @IDCompra "
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Throw New Exception("Não houve retorno da Entrada, ou não foi inserida a entrada...")
+            '
+            If IsNumeric(dt.Rows(0).Item(0)) Then
+                Return dt
             Else
-                Throw New Exception(dtV.Rows(0).Item(0))
+                Throw New Exception("Uma exceção ocorreu ao inserir nova entrada." & vbNewLine & dt.Rows(0).Item(0))
             End If
             '
         Catch ex As Exception
+            '
+            If IsNothing(dbTran) Then '--- TRANSACTION LOCAL
+                db.RollBackTransaction()
+            End If
+            '
             Throw ex
+            '
         End Try
         '
     End Function
