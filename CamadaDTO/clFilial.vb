@@ -38,9 +38,6 @@ Public Class clFilial
     '------------------------------------------------------
     Public Property ApelidoFilial() As String
         Get
-            If If(PData._Cadastro, "") <> If(FilialData._ApelidoFilial, "") Then
-                PData._Cadastro = FilialData._ApelidoFilial
-            End If
             '
             Return FilialData._ApelidoFilial
             '
@@ -49,8 +46,9 @@ Public Class clFilial
             If value <> FilialData._ApelidoFilial Then
                 RaiseAoAlterar()
             End If
-            PData._Cadastro = value
+            '
             FilialData._ApelidoFilial = value
+            '
         End Set
     End Property
     '

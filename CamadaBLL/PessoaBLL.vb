@@ -1217,11 +1217,12 @@ Public Class PessoaBLL
             dbTran.AdicionarParametros("@ContatoGerencia", If(Filial.ContatoGerencia, DBNull.Value))
             dbTran.AdicionarParametros("@ContatoFinanceiro", If(Filial.ContatoFinanceiro, DBNull.Value))
             dbTran.AdicionarParametros("@NumeroWhatsapp", If(Filial.NumeroWhatsapp, DBNull.Value))
+            dbTran.AdicionarParametros("@Email", If(Filial.Email, DBNull.Value))
             '
             myQuery = "INSERT INTO tblPessoaFilialDados " +
-                      "(IDFilial, InscricaoEstadual, NomeFantasia, Endereco, Bairro, Cidade, UF, CEP, TelefonePrincipal, TelefoneGerencia, TelefoneFinanceiro, ContatoGerencia, ContatoFinanceiro, NumeroWhatsapp) " +
+                      "(IDFilial, InscricaoEstadual, NomeFantasia, Endereco, Bairro, Cidade, UF, CEP, TelefonePrincipal, TelefoneGerencia, TelefoneFinanceiro, ContatoGerencia, ContatoFinanceiro, NumeroWhatsapp, Email) " +
                       "VALUES " +
-                      "(@IDFilial, @InscricaoEstadual, @NomeFantasia, @Endereco, @Bairro, @Cidade, @UF, @CEP, @TelefonePrincipal, @TelefoneGerencia, @TelefoneFinanceiro, @ContatoGerencia, @ContatoFinanceiro, @NumeroWhatsapp)"
+                      "(@IDFilial, @InscricaoEstadual, @NomeFantasia, @Endereco, @Bairro, @Cidade, @UF, @CEP, @TelefonePrincipal, @TelefoneGerencia, @TelefoneFinanceiro, @ContatoGerencia, @ContatoFinanceiro, @NumeroWhatsapp, @Email)"
             '
             dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
             '
@@ -1391,7 +1392,6 @@ Public Class PessoaBLL
         '--- ACCESS DATABASE AND TRANSACTION
         '----------------------------------------------------------------------------------
         '
-        Dim dt As DataTable = Nothing
         Dim myQuery As String = ""
         '
         '--- 1) UPDATE TBLPESSOA
@@ -1425,7 +1425,6 @@ Public Class PessoaBLL
         '----------------------------------------------------------------------------------
         Dim db = If(dbTran, New AcessoDados)
         '
-        Dim dt As DataTable = Nothing
         Dim myQuery As String = ""
         '
         '--- 1) UPDATE IN TBLPESSOA
@@ -1586,7 +1585,6 @@ Public Class PessoaBLL
         '----------------------------------------------------------------------------------
         Dim db = If(dbTran, New AcessoDados)
         '
-        Dim dt As DataTable = Nothing
         Dim myQuery As String = ""
         '
 
@@ -1865,7 +1863,6 @@ Public Class PessoaBLL
         '--- ACESSO DB AND TRANSACTION
         '----------------------------------------------------------------------------------
         Dim myQuery As String = ""
-        Dim dt As DataTable = Nothing
         '
         '--- 1) UPDATE tblPessoaCliente
         '----------------------------------------------------------------------------------
@@ -1955,7 +1952,6 @@ Public Class PessoaBLL
         '--- ACESSO DB AND TRANSACTION
         '----------------------------------------------------------------------------------
         Dim myQuery As String = ""
-        Dim dt As DataTable = Nothing
         '
         '--- 1) UPDATE tblPessoaCliente
         '----------------------------------------------------------------------------------
@@ -2003,7 +1999,6 @@ Public Class PessoaBLL
         '--- ACESSO DB AND TRANSACTION
         '----------------------------------------------------------------------------------
         Dim myQuery As String = ""
-        Dim dt As DataTable = Nothing
         '
         '--- 1) UPDATE tblPessoaFornecedor
         '----------------------------------------------------------------------------------
@@ -2045,7 +2040,6 @@ Public Class PessoaBLL
         '--- ACESSO DB AND TRANSACTION
         '----------------------------------------------------------------------------------
         Dim myQuery As String = ""
-        Dim dt As DataTable = Nothing
         '
         '--- 1) UPDATE tblPessoaTransportadora
         '----------------------------------------------------------------------------------
@@ -2083,9 +2077,8 @@ Public Class PessoaBLL
         '--- ACESSO DB AND TRANSACTION
         '----------------------------------------------------------------------------------
         Dim myQuery As String = ""
-        Dim dt As DataTable = Nothing
         '
-        '--- 1) UPDATE tblPessoaTransportadora
+        '--- 1) UPDATE tblPessoaCredor
         '----------------------------------------------------------------------------------
         ' PARAMNS
         dbTran.LimparParametros()
@@ -2118,16 +2111,12 @@ Public Class PessoaBLL
     '
     '--- PESSOA FILIAL
     '------------------------------------------------------------------------------------------
-    Private Function UpdateFilial(PJ As clFilialDados,
-                                  dbTran As AcessoDados) As Integer?
+    Private Sub UpdateFilial(Filial As clFilialDados,
+                             dbTran As AcessoDados)
         '
-        '
-        '--- ACESSO DB AND TRANSACTION
-        '----------------------------------------------------------------------------------
         Dim myQuery As String = ""
-        Dim dt As DataTable = Nothing
         '
-        '--- 1) INSERT TBLPESSOAFILIAL
+        '--- 1) UPDATE TBLPESSOAFILIAL
         '----------------------------------------------------------------------------------
         '// PARAMNS
         dbTran.LimparParametros()
@@ -2135,13 +2124,33 @@ Public Class PessoaBLL
         dbTran.AdicionarParametros("@ApelidoFilial", Filial.ApelidoFilial)
         dbTran.AdicionarParametros("@AliquotaICMS", Filial.AliquotaICMS)
         dbTran.AdicionarParametros("@CNPJ", Filial.CNPJ)
+        dbTran.AdicionarParametros("@Ativo", Filial.Ativo)
         '
-        myQuery = "INSERT INTO tblPessoaFilial (IDFilial, ApelidoFilial, CNPJ, AliquotaICMS, Ativo) " &
-                  "VALUES (@IDPessoa, @ApelidoFilial, @CNPJ, @AliquotaICMS ,'True')"
+        myQuery = "UPDATE tblPessoaFilial SET " +
+                  "ApelidoFilial = @ApelidoFilial, CNPJ = @CNPJ, AliquotaICMS = @AliquotaICMS, Ativo = @Ativo " &
+                  "WHERE IDFilial = @IDPessoa"
         '
-        dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
+        Try
+            dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
+        Catch ex As Exception
+            Throw ex
+        End Try
         '
-        '--- 2) INSERT TBLPESSOAFILIALDADOS
+        '--- 2) DELETE TBLPESSOAFILIALDADOS
+        '----------------------------------------------------------------------------------
+        '// PARAMNS
+        dbTran.LimparParametros()
+        dbTran.AdicionarParametros("@IDFilial", Filial.IDPessoa)
+        '
+        myQuery = "DELETE tblPessoaFilialDados WHERE IDFilial = @IDFilial"
+        '
+        Try
+            dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+        '--- 3) INSERT TBLPESSOAFILIALDADOS
         '----------------------------------------------------------------------------------
         '// PARAMNS
         dbTran.LimparParametros()
@@ -2159,16 +2168,20 @@ Public Class PessoaBLL
         dbTran.AdicionarParametros("@ContatoGerencia", If(Filial.ContatoGerencia, DBNull.Value))
         dbTran.AdicionarParametros("@ContatoFinanceiro", If(Filial.ContatoFinanceiro, DBNull.Value))
         dbTran.AdicionarParametros("@NumeroWhatsapp", If(Filial.NumeroWhatsapp, DBNull.Value))
+        dbTran.AdicionarParametros("@Email", If(Filial.Email, DBNull.Value))
         '
         myQuery = "INSERT INTO tblPessoaFilialDados " +
-                  "(IDFilial, InscricaoEstadual, NomeFantasia, Endereco, Bairro, Cidade, UF, CEP, TelefonePrincipal, TelefoneGerencia, TelefoneFinanceiro, ContatoGerencia, ContatoFinanceiro, NumeroWhatsapp) " +
+                  "(IDFilial, InscricaoEstadual, NomeFantasia, Endereco, Bairro, Cidade, UF, CEP, TelefonePrincipal, TelefoneGerencia, TelefoneFinanceiro, ContatoGerencia, ContatoFinanceiro, NumeroWhatsapp, Email) " +
                   "VALUES " +
-                  "(@IDFilial, @InscricaoEstadual, @NomeFantasia, @Endereco, @Bairro, @Cidade, @UF, @CEP, @TelefonePrincipal, @TelefoneGerencia, @TelefoneFinanceiro, @ContatoGerencia, @ContatoFinanceiro, @NumeroWhatsapp)"
+                  "(@IDFilial, @InscricaoEstadual, @NomeFantasia, @Endereco, @Bairro, @Cidade, @UF, @CEP, @TelefonePrincipal, @TelefoneGerencia, @TelefoneFinanceiro, @ContatoGerencia, @ContatoFinanceiro, @NumeroWhatsapp, @Email)"
         '
-        dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
+        Try
+            dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
+        Catch ex As Exception
+            Throw ex
+        End Try
         '
-        '
-    End Function
+    End Sub
     '
 #End Region '/ UPDATES GROUP
     '

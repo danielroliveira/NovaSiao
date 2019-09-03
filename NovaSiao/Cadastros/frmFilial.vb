@@ -2,6 +2,7 @@
 Imports CamadaDTO
 
 Public Class frmFilial
+    '
     Private _filial As clFilialDados
     Private _formOrigem As Form
     Private BindFil As New BindingSource
@@ -18,12 +19,38 @@ Public Class frmFilial
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
+        _formOrigem = formOrigem
         propFilial = filial
-        BindFil.DataSource = _filial
-        PreencheDataBindings()
+        NewCommon()
+        '
+    End Sub
+    '
+    '--- SUB NEW
+    Sub New(filial As clFilial, Optional formOrigem As Form = Nothing)
+        '
+        ' This call is required by the designer.
+        InitializeComponent()
+        '
+        ' Add any initialization after the InitializeComponent() call.
         _formOrigem = formOrigem
         '
-        If Not IsNothing(_filial.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
+        '--- convert clFilial in clFilialDados
+        Dim FilialDados As New clFilialDados
+        '
+        If Not IsNothing(filial.IDPessoa) Then
+            FilialDados = If(GetFilialDados(filial.IDPessoa), New clFilialDados)
+        End If
+        '
+        propFilial = FilialDados
+        NewCommon()
+        '
+    End Sub
+    '
+    '--- SUB NEW COMMOM
+    Private Sub NewCommon()
+        '
+        BindFil.DataSource = _filial
+        PreencheDataBindings()
         '
         HandlerKeyDownControl()
         '
@@ -57,18 +84,44 @@ Public Class frmFilial
         Get
             Return _filial
         End Get
+        '
         Set(ByVal value As clFilialDados)
+            '
+            _filial = value
             '
             If IsNothing(value.IDPessoa) Then
                 Sit = EnumFlagEstado.NovoRegistro
+            Else
+                Sit = EnumFlagEstado.RegistroSalvo
             End If
             '
-            _filial = value
             BindFil.DataSource = _filial
             AtivoButtonImage()
+            '
         End Set
         '
     End Property
+    '
+    Private Function GetFilialDados(IDFilial As Integer) As clFilialDados
+        '
+        Dim fBLL As New FilialBLL
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Return fBLL.GetFilialDados(IDFilial)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Obter os Dados da Filial..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return Nothing
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Function
     '
 #End Region
     '
@@ -145,6 +198,12 @@ Public Class frmFilial
 #End Region
     '
 #Region "ACAO BOTOES"
+    '
+    '--- FECHAR
+    Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+        AutoValidate = AutoValidate.Disable
+        Close()
+    End Sub
     '
     '--- BTN CANCELAR
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
@@ -320,9 +379,30 @@ Public Class frmFilial
         '
         '--- Tamanho Mínimo
         If txtApelidoFilial.Text.Length < 5 Then
-            MessageBox.Show("O Apelido da Filial deve ter no mínimo de 5 caracteres...")
+            MessageBox.Show("O Apelido da Filial deve ter no mínimo de 5 caracteres...",
+                            "Preecha os Campos", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             txtApelidoFilial.Focus()
             Return False
+        End If
+        '
+        '---Check CNPJ
+        Dim checkCNPJ As String = txtCNPJ.Text.Replace(".", "").Replace("/", "").Replace("-", "")
+        '
+        If checkCNPJ.Length = 0 OrElse Not IsNumeric(checkCNPJ) OrElse checkCNPJ.Length <> 14 Then
+            MessageBox.Show("O CNPJ deve conter um valor válido",
+                            "Preecha os Campos", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            txtCNPJ.Focus()
+            txtCNPJ.SelectAll()
+            Return False
+        Else
+            If ValidaCNP() = False Then
+                MessageBox.Show("O CNPJ deve conter um valor válido",
+                "Preecha os Campos", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                txtCNPJ.Focus()
+                txtCNPJ.SelectAll()
+                Return False
+            End If
+
         End If
         '
         '--- Transforma primeira em Maiuscula
@@ -368,6 +448,31 @@ Public Class frmFilial
         End If
         '
         Return True
+        '
+    End Function
+    '
+    ' VALIDAR O NÚMERO DO CNPJ OU CPF
+    Private Function ValidaCNP() As Boolean
+        '
+        Dim obj As New Valida_CPF_CNPJ
+        '
+        Try
+            '
+            obj.cnpj = txtCNPJ.Text
+            '
+            If obj.isCnpjValido = False Then
+                MessageBox.Show("O CNPJ digitado é inválido!", "CNPJ inválido", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Return False
+            Else
+                Return True
+            End If
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show(ex.Message, "Erro inesperado!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            Return False
+            '
+        End Try
         '
     End Function
     '

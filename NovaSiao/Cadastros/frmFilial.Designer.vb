@@ -66,6 +66,7 @@ Partial Class frmFilial
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtRazaoSocial = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
+        Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.Panel1.SuspendLayout()
         Me.MenuFil.SuspendLayout()
         Me.tsMenu.SuspendLayout()
@@ -186,7 +187,7 @@ Partial Class frmFilial
         Me.tsMenu.Dock = System.Windows.Forms.DockStyle.None
         Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
-        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSalvar, Me.btnCancelar, Me.ToolStripSeparator1, Me.btnAtivo})
+        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnSalvar, Me.btnCancelar, Me.ToolStripSeparator1, Me.btnAtivo, Me.btnFechar})
         Me.tsMenu.Location = New System.Drawing.Point(4, 600)
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
@@ -574,6 +575,16 @@ Partial Class frmFilial
         Me.Label12.TabIndex = 1
         Me.Label12.Text = "Razão Social:"
         '
+        'btnFechar
+        '
+        Me.btnFechar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar_24x24
+        Me.btnFechar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFechar.Margin = New System.Windows.Forms.Padding(0, 1, 5, 2)
+        Me.btnFechar.Name = "btnFechar"
+        Me.btnFechar.Size = New System.Drawing.Size(86, 45)
+        Me.btnFechar.Text = "&Fechar"
+        '
         'frmFilial
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
@@ -710,4 +721,5 @@ Partial Class frmFilial
     Friend WithEvents Label3 As Label
     Friend WithEvents txtRazaoSocial As TextBox
     Friend WithEvents Label12 As Label
+    Friend WithEvents btnFechar As ToolStripButton
 End Class
