@@ -717,8 +717,8 @@ Public Class frmProdutoTipo
         '
         If verDup Then
             MessageBox.Show("Já existe um Registro de " & strTab & " com a mesma descrição:" & vbNewLine &
-                    e.FormattedValue.ToString.ToUpper,
-                    "Valor Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                            e.FormattedValue.ToString.ToUpper,
+                            "Valor Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             myList.Rows(e.RowIndex).ErrorText = "A DESCRIÇÃO de " & strTab & " precisa ser EXCLUSIVA..."
             e.Cancel = True
             Exit Sub

@@ -3,19 +3,21 @@ Imports CamadaBLL
 Imports System.IO
 Imports System.Xml
 Imports System.Xml.Serialization
+Imports System.Text.RegularExpressions
 
 Public Class frmCompraGetNFe
     '
     Private NotaNFe As TNfeProc
     Private ItensNFe As New List(Of clNFeItem)
     Private bindItens As New BindingSource
-    Private FornecedorNFe As New clFornecedor
+    Private FornecedorNFe As clFornecedor = Nothing
     Private IDTipoPadrao As Integer? = Nothing
     Private IDSubTipoPadrao As Integer? = Nothing
     Private IDFabricantePadrao As Integer? = Nothing
     Private RGTipoAnterior As Integer? = Nothing
     Private _propEstagio As Byte
     Private ProdFornBLL As New ProdutoFornecedorBLL
+    Private CNPJFilial As String
     '
     Private Class clNFeItem
         Inherits TNFeInfNFeDetProd
@@ -42,6 +44,15 @@ Public Class frmCompraGetNFe
         propEstagio = 1
         FormataDataGrid()
         '
+        GetCNPJFilial()
+        '
+    End Sub
+    '
+    Private Sub frmCompraGetNFe_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        If String.IsNullOrEmpty(CNPJFilial) Then
+            Close()
+            MostraMenuPrincipal()
+        End If
     End Sub
     '
     Private Property propEstagio As Byte
@@ -68,6 +79,27 @@ Public Class frmCompraGetNFe
             '
         End Set
     End Property
+    '
+    Private Function GetCNPJFilial() As String
+        '
+        Dim frmP As frmPrincipal = My.Application.OpenForms().OfType(Of frmPrincipal).First()
+        '
+        If Not IsNothing(frmP.propContaPadrao) Then
+            '
+            CNPJFilial = frmP.propContaPadrao.CNPJFilial
+            '
+            If CNPJFilial.Length > 0 Then
+                Return CNPJFilial
+            End If
+            '
+        End If
+        '
+        AbrirDialog("Não foi possível obter o CNPJ da Filial padrão..." &
+                    "Favor definir o CNPJ nas configurações.",
+                    "CNPJ Indefinido", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+        Return String.Empty
+        '
+    End Function
     '
 #End Region '/ NEW | OPEN | PROPS
     '
@@ -235,13 +267,24 @@ Public Class frmCompraGetNFe
             Cursor = Cursors.WaitCursor
             '
             If ObterXML() Then
+                '
+                '--- verifica CNPJ compativel com NFe obtida
+                FornecedorNFe = New clFornecedor
+                PreencheLabelsFornecedor()
                 dgvItens.DataSource = Nothing
                 dgvItens.Rows.Clear()
+                '
+                If CheckCNPJNFe() = False Then
+                    'propEstagio = 1
+                    'Exit Sub
+                End If
+                '
                 ImportItensNFe()
                 bindItens.DataSource = ItensNFe
                 dgvItens.DataSource = bindItens
                 ImportFornecedorNFe()
                 propEstagio = 2
+                '
             End If
             '
         Catch ex As Exception
@@ -407,11 +450,34 @@ Public Class frmCompraGetNFe
     '
     Private Sub PreencheLabelsFornecedor()
         '
-        lblRazaoSocial.Text = FornecedorNFe.Cadastro
-        lblCNPJ.Text = FornecedorNFe.CNPJ
-        lblInscricao.Text = FornecedorNFe.InscricaoEstadual
+        If Not IsNothing(FornecedorNFe) Then
+            lblRazaoSocial.Text = FornecedorNFe.Cadastro
+            lblCNPJ.Text = FornecedorNFe.CNPJ
+            lblInscricao.Text = FornecedorNFe.InscricaoEstadual
+        Else
+            lblRazaoSocial.Text = ""
+            lblCNPJ.Text = ""
+            lblInscricao.Text = ""
+        End If
         '
     End Sub
+    '
+    Private Function CheckCNPJNFe() As Boolean
+        '
+        Dim CNPJ_NFe As String = NotaNFe.NFe.infNFe.dest.Item
+        Dim CNPJ_Filial As String = CNPJFilial.Replace(".", "").Replace("/", "").Replace("-", "")
+        '
+        If NotaNFe.NFe.infNFe.dest.Item <> CNPJ_Filial Then
+            AbrirDialog("O CNPJ da NFe escolhida é Diferente do CNPJ da Filial Padrão Atual...",
+                        "CNPJ Divergente",
+                        frmDialog.DialogType.OK,
+                        frmDialog.DialogIcon.Warning)
+            Return False
+        End If
+        '
+        Return True
+        '
+    End Function
     '
 #End Region '/ IMPORT NFE XML
     '
@@ -1047,7 +1113,7 @@ Public Class frmCompraGetNFe
     '
 #End Region
     '
-#Region "OTHER FUNCTIONS"
+#Region "INSERT COMPRA FUNCTIONS"
     '
     Private Sub TryEnableEstagioCompra()
         '
@@ -1072,8 +1138,8 @@ Public Class frmCompraGetNFe
         '--- Pergunta ao Usuário se Deseja inserir nova COMPRA
         If AbrirDialog("Você deseja realmente inserir uma NOVA COMPRA?",
                        "Inserir Nova Compra",
-                       frmDialog.DialogType.OK,
-                       frmDialog.DialogIcon.Information) <> DialogResult.OK Then
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question) <> DialogResult.Yes Then
             Exit Sub
         End If
         '
@@ -1125,7 +1191,15 @@ Public Class frmCompraGetNFe
             InsertCompraItens(newCompra, dbTran)
             '
             '--- COMMIT
-            'acesso.CommitAcessoWithTransaction(dbTran)
+            acesso.CommitAcessoWithTransaction(dbTran)
+            '
+            '--- OPEN NEW COMPRA
+            Dim frm As New frmCompra(newCompra) With {
+                .MdiParent = frmPrincipal,
+                .StartPosition = FormStartPosition.CenterScreen
+            }
+            Close()
+            frm.Show()
             '
         Catch ex As Exception
             '
@@ -1153,6 +1227,7 @@ Public Class frmCompraGetNFe
         Try
             '
             For Each item In ItensNFe
+                'Format(CDbl(item.vUnCom.Replace(".", ",")), "#,##0.00")
                 '
                 Dim newItem As New clTransacaoItem With {
                 .IDProduto = item.IDProduto,
@@ -1160,6 +1235,7 @@ Public Class frmCompraGetNFe
                 .Produto = item.Produto,
                 .TransacaoData = Compra.TransacaoData,
                 .IDTransacao = Compra.IDCompra,
+                .Preco = CDbl(item.vUnCom),
                 .Quantidade = item.qCom,
                 .Desconto = item.DescontoNFe,
                 .IDFilial = Compra.IDPessoaDestino,
@@ -1187,6 +1263,68 @@ Public Class frmCompraGetNFe
         '
     End Sub
     '
-#End Region '/ OTHER FUNCTIONS
+    '--- INSERT COMPRA NFE IN NEW COMPRA
+    '----------------------------------------------------------------------------------
+    Private Sub InsertCompraNota(Compra As clCompra, dbTran As Object)
+        '
+        Dim notaBLL As New TransacaoBLL
+        '
+        '--- Remove all letters of Chave
+        Dim chave As String = NotaNFe.NFe.infNFe.Id
+        chave = Regex.Replace(chave, "[^0-9.]", "")
+        '
+        '--- Insere o novo ITEM no BD
+        Try
+            '
+            Dim Nota As New clNotaFiscal With {
+                .ChaveAcesso = chave,
+                .EmissaoData = "",
+                .IDTransacao = Compra.IDCompra,
+                .NotaNumero = 0,
+                .NotaSerie = 1,
+                .NotaTipo = 1,
+                .NotaValor = 0
+                }
+            '
+
+            '
+            For Each item In ItensNFe
+                'Format(CDbl(item.vUnCom.Replace(".", ",")), "#,##0.00")
+                '
+                Dim newItem As New clTransacaoItem With {
+                .IDProduto = item.IDProduto,
+                .RGProduto = item.RGProduto,
+                .Produto = item.Produto,
+                .TransacaoData = Compra.TransacaoData,
+                .IDTransacao = Compra.IDCompra,
+                .Preco = CDbl(item.vUnCom),
+                .Quantidade = item.qCom,
+                .Desconto = item.DescontoNFe,
+                .IDFilial = Compra.IDPessoaDestino,
+                .Substituicao = 0,
+                .IPI = 0,
+                .ICMS = 0,
+                .MVA = 0
+                }
+            Next
+            '
+            '--- INSERT ITEM IN DB
+            Dim myID As Long? = Nothing
+            myID = ItemBLL.InserirNovoItem(newItem,
+            TransacaoItemBLL.EnumMovimento.ENTRADA,
+            Compra.TransacaoData,
+                                               True,
+            dbTran)
+            '
+            newItem.IDTransacaoItem = myID
+            '
+            '
+        Catch ex As Exception
+            Throw New AppException("Houve um exceção ao INSERIR o item no BD..." & vbNewLine & ex.Message)
+        End Try
+        '
+    End Sub
+    '
+#End Region '/ INSERT COMPRA FUNCTIONS
     '
 End Class

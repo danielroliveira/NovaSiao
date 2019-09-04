@@ -521,6 +521,7 @@ Public Class MovimentacaoBLL
             clC.Conta = IIf(IsDBNull(r("Conta")), String.Empty, r("Conta"))
             clC.IDFilial = IIf(IsDBNull(r("IDFilial")), Nothing, r("IDFilial"))
             clC.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
+            clC.CNPJFilial = IIf(IsDBNull(r("CNPJFilial")), String.Empty, r("CNPJFilial"))
             clC.ContaTipo = IIf(IsDBNull(r("ContaTipo")), Nothing, r("ContaTipo"))
             clC.BloqueioData = IIf(IsDBNull(r("BloqueioData")), Nothing, r("BloqueioData"))
             clC.Ativo = IIf(IsDBNull(r("Ativo")), Nothing, r("Ativo"))

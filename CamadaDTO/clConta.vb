@@ -118,6 +118,10 @@ Public Class clConta : Implements IEditableObject
     '------------------------------------------------------
     Public Property ApelidoFilial() As String
     '
+    '--- Propriedade CNPJFilial
+    '------------------------------------------------------
+    Public Property CNPJFilial() As String
+    '
     '--- Propriedade ContaTipo
     '------------------------------------------------------
     Public Property ContaTipo() As Byte

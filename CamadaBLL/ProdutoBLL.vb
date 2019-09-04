@@ -1386,6 +1386,9 @@ Public Class TipoSubTipoCategoriaBLL
             strSQL = strSQL & " WHERE IDProdutoTipo = " & IDTipo
         End If
         '
+        '--- order By
+        strSQL += " ORDER BY ProdutoCategoria"
+        '
         '--- executa o comando
         Try
             SQL.ExecQuery(strSQL)
