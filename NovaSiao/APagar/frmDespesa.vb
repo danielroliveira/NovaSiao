@@ -664,7 +664,7 @@ Public Class frmDespesa
         '--- Verifica o preenchimento dos controles
         If VerificaControles() = False Then Exit Sub
         '
-        Dim frmP As New frmDespesaParcelamento(Me)
+        Dim frmP As New frmDespesaParcelamento(Me, True)
         frmP.ShowDialog()
         If frmP.DialogResult = DialogResult.Cancel Then Exit Sub
         '

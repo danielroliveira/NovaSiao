@@ -20,7 +20,7 @@ Partial Class frmCompraGetNFe
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.btnImportar = New System.Windows.Forms.Button()
         Me.btnFechar = New System.Windows.Forms.Button()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -46,6 +46,12 @@ Partial Class frmCompraGetNFe
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.miAbrirProduto = New System.Windows.Forms.ToolStripMenuItem()
         Me.btnSalvarCompra = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lblTransportadora = New System.Windows.Forms.Label()
+        Me.lblTranspCNPJ = New System.Windows.Forms.Label()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.btnTransp = New System.Windows.Forms.Button()
+        Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.mnuItens.SuspendLayout()
@@ -53,13 +59,17 @@ Partial Class frmCompraGetNFe
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.btnClose)
         Me.Panel1.Size = New System.Drawing.Size(1191, 50)
+        Me.Panel1.TabIndex = 0
+        Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
+        Me.Panel1.Controls.SetChildIndex(Me.btnClose, 0)
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(943, 0)
-        Me.lblTitulo.Size = New System.Drawing.Size(248, 50)
-        Me.lblTitulo.Text = "Importar Entrada XML"
+        Me.lblTitulo.Location = New System.Drawing.Point(872, 0)
+        Me.lblTitulo.Size = New System.Drawing.Size(319, 50)
+        Me.lblTitulo.Text = "Importar Entrada NFe XML"
         Me.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'btnImportar
@@ -69,7 +79,7 @@ Partial Class frmCompraGetNFe
         Me.btnImportar.Location = New System.Drawing.Point(10, 601)
         Me.btnImportar.Name = "btnImportar"
         Me.btnImportar.Size = New System.Drawing.Size(195, 43)
-        Me.btnImportar.TabIndex = 2
+        Me.btnImportar.TabIndex = 13
         Me.btnImportar.Text = "Importar XML"
         Me.btnImportar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnImportar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -82,7 +92,7 @@ Partial Class frmCompraGetNFe
         Me.btnFechar.Location = New System.Drawing.Point(1007, 601)
         Me.btnFechar.Name = "btnFechar"
         Me.btnFechar.Size = New System.Drawing.Size(166, 43)
-        Me.btnFechar.TabIndex = 2
+        Me.btnFechar.TabIndex = 16
         Me.btnFechar.Text = "Fechar"
         Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -92,10 +102,10 @@ Partial Class frmCompraGetNFe
         '
         Me.Label17.AutoSize = True
         Me.Label17.BackColor = System.Drawing.Color.Transparent
-        Me.Label17.Location = New System.Drawing.Point(365, 103)
+        Me.Label17.Location = New System.Drawing.Point(352, 103)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(99, 19)
-        Me.Label17.TabIndex = 16
+        Me.Label17.TabIndex = 5
         Me.Label17.Text = "Insc. Estadual"
         '
         'Label4
@@ -106,7 +116,7 @@ Partial Class frmCompraGetNFe
         Me.Label4.Location = New System.Drawing.Point(81, 102)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(40, 19)
-        Me.Label4.TabIndex = 14
+        Me.Label4.TabIndex = 3
         Me.Label4.Text = "CNPJ"
         '
         'Label2
@@ -114,11 +124,11 @@ Partial Class frmCompraGetNFe
         Me.Label2.AutoSize = True
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(31, 69)
+        Me.Label2.Location = New System.Drawing.Point(40, 69)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(90, 19)
-        Me.Label2.TabIndex = 12
-        Me.Label2.Text = "Razao Social"
+        Me.Label2.Size = New System.Drawing.Size(81, 19)
+        Me.Label2.TabIndex = 1
+        Me.Label2.Text = "Fornecedor"
         '
         'dgvItens
         '
@@ -128,14 +138,14 @@ Partial Class frmCompraGetNFe
         Me.dgvItens.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvItens.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
         Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
         Me.dgvItens.ColumnHeadersHeight = 25
         Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDProdutoNfe, Me.clnProdutoNfe, Me.clnQuantidadeNFe, Me.clnPrecoNfe, Me.clnDescontoNfe, Me.clnTotalNfe, Me.clnRGProduto, Me.clnProduto})
         Me.dgvItens.EnableHeadersVisualStyles = False
@@ -146,7 +156,7 @@ Partial Class frmCompraGetNFe
         Me.dgvItens.RowHeadersWidth = 30
         Me.dgvItens.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.dgvItens.Size = New System.Drawing.Size(1161, 444)
-        Me.dgvItens.TabIndex = 18
+        Me.dgvItens.TabIndex = 12
         '
         'clnIDProdutoNfe
         '
@@ -216,7 +226,7 @@ Partial Class frmCompraGetNFe
         Me.btnCorrelacao.Location = New System.Drawing.Point(211, 601)
         Me.btnCorrelacao.Name = "btnCorrelacao"
         Me.btnCorrelacao.Size = New System.Drawing.Size(195, 43)
-        Me.btnCorrelacao.TabIndex = 2
+        Me.btnCorrelacao.TabIndex = 14
         Me.btnCorrelacao.Text = "Fazer Correlação"
         Me.btnCorrelacao.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnCorrelacao.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -229,8 +239,8 @@ Partial Class frmCompraGetNFe
         Me.lblRazaoSocial.ForeColor = System.Drawing.Color.Black
         Me.lblRazaoSocial.Location = New System.Drawing.Point(127, 67)
         Me.lblRazaoSocial.Name = "lblRazaoSocial"
-        Me.lblRazaoSocial.Size = New System.Drawing.Size(575, 26)
-        Me.lblRazaoSocial.TabIndex = 12
+        Me.lblRazaoSocial.Size = New System.Drawing.Size(540, 26)
+        Me.lblRazaoSocial.TabIndex = 2
         '
         'lblCNPJ
         '
@@ -239,18 +249,18 @@ Partial Class frmCompraGetNFe
         Me.lblCNPJ.ForeColor = System.Drawing.Color.Black
         Me.lblCNPJ.Location = New System.Drawing.Point(127, 101)
         Me.lblCNPJ.Name = "lblCNPJ"
-        Me.lblCNPJ.Size = New System.Drawing.Size(232, 26)
-        Me.lblCNPJ.TabIndex = 12
+        Me.lblCNPJ.Size = New System.Drawing.Size(209, 26)
+        Me.lblCNPJ.TabIndex = 4
         '
         'lblInscricao
         '
         Me.lblInscricao.BackColor = System.Drawing.Color.White
         Me.lblInscricao.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lblInscricao.ForeColor = System.Drawing.Color.Black
-        Me.lblInscricao.Location = New System.Drawing.Point(470, 101)
+        Me.lblInscricao.Location = New System.Drawing.Point(457, 101)
         Me.lblInscricao.Name = "lblInscricao"
-        Me.lblInscricao.Size = New System.Drawing.Size(232, 26)
-        Me.lblInscricao.TabIndex = 12
+        Me.lblInscricao.Size = New System.Drawing.Size(210, 26)
+        Me.lblInscricao.TabIndex = 6
         '
         'mnuItens
         '
@@ -303,21 +313,98 @@ Partial Class frmCompraGetNFe
         Me.btnSalvarCompra.Location = New System.Drawing.Point(412, 601)
         Me.btnSalvarCompra.Name = "btnSalvarCompra"
         Me.btnSalvarCompra.Size = New System.Drawing.Size(195, 43)
-        Me.btnSalvarCompra.TabIndex = 2
+        Me.btnSalvarCompra.TabIndex = 15
         Me.btnSalvarCompra.Text = "Salvar Compra"
         Me.btnSalvarCompra.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSalvarCompra.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnSalvarCompra.UseVisualStyleBackColor = True
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.BackColor = System.Drawing.Color.Transparent
+        Me.Label1.ForeColor = System.Drawing.Color.Black
+        Me.Label1.Location = New System.Drawing.Point(706, 69)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(107, 19)
+        Me.Label1.TabIndex = 7
+        Me.Label1.Text = "Transportadora"
+        '
+        'lblTransportadora
+        '
+        Me.lblTransportadora.BackColor = System.Drawing.Color.White
+        Me.lblTransportadora.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTransportadora.ForeColor = System.Drawing.Color.Black
+        Me.lblTransportadora.Location = New System.Drawing.Point(819, 66)
+        Me.lblTransportadora.Name = "lblTransportadora"
+        Me.lblTransportadora.Size = New System.Drawing.Size(354, 26)
+        Me.lblTransportadora.TabIndex = 8
+        '
+        'lblTranspCNPJ
+        '
+        Me.lblTranspCNPJ.BackColor = System.Drawing.Color.White
+        Me.lblTranspCNPJ.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblTranspCNPJ.ForeColor = System.Drawing.Color.Black
+        Me.lblTranspCNPJ.Location = New System.Drawing.Point(819, 100)
+        Me.lblTranspCNPJ.Name = "lblTranspCNPJ"
+        Me.lblTranspCNPJ.Size = New System.Drawing.Size(185, 26)
+        Me.lblTranspCNPJ.TabIndex = 10
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.BackColor = System.Drawing.Color.Transparent
+        Me.Label6.ForeColor = System.Drawing.Color.Black
+        Me.Label6.Location = New System.Drawing.Point(773, 104)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(40, 19)
+        Me.Label6.TabIndex = 9
+        Me.Label6.Text = "CNPJ"
+        '
+        'btnTransp
+        '
+        Me.btnTransp.BackColor = System.Drawing.Color.PeachPuff
+        Me.btnTransp.FlatAppearance.BorderSize = 0
+        Me.btnTransp.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnTransp.Location = New System.Drawing.Point(1012, 100)
+        Me.btnTransp.Name = "btnTransp"
+        Me.btnTransp.Size = New System.Drawing.Size(161, 27)
+        Me.btnTransp.TabIndex = 11
+        Me.btnTransp.Text = "Não Encontrada"
+        Me.btnTransp.UseVisualStyleBackColor = False
+        Me.btnTransp.Visible = False
+        '
+        'btnClose
+        '
+        Me.btnClose.AllowAnimations = True
+        Me.btnClose.BackColor = System.Drawing.Color.Transparent
+        Me.btnClose.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.CloseButton
+        Me.btnClose.ForeColor = System.Drawing.Color.Firebrick
+        Me.btnClose.Location = New System.Drawing.Point(1159, 12)
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.RibbonStyle = False
+        Me.btnClose.RoundedCornersMask = CType(15, Byte)
+        Me.btnClose.ShowFocusRectangle = False
+        Me.btnClose.Size = New System.Drawing.Size(20, 20)
+        Me.btnClose.TabIndex = 0
+        Me.btnClose.TabStop = False
+        Me.btnClose.UseVisualStyleBackColor = False
+        Me.btnClose.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICE2003SILVER
+        '
         'frmCompraGetNFe
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1191, 656)
+        Me.Controls.Add(Me.btnTransp)
         Me.Controls.Add(Me.dgvItens)
         Me.Controls.Add(Me.Label17)
+        Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.lblInscricao)
+        Me.Controls.Add(Me.lblTranspCNPJ)
         Me.Controls.Add(Me.lblCNPJ)
+        Me.Controls.Add(Me.lblTransportadora)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.lblRazaoSocial)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.btnFechar)
@@ -332,11 +419,16 @@ Partial Class frmCompraGetNFe
         Me.Controls.SetChildIndex(Me.btnFechar, 0)
         Me.Controls.SetChildIndex(Me.Label2, 0)
         Me.Controls.SetChildIndex(Me.lblRazaoSocial, 0)
+        Me.Controls.SetChildIndex(Me.Label1, 0)
+        Me.Controls.SetChildIndex(Me.lblTransportadora, 0)
         Me.Controls.SetChildIndex(Me.lblCNPJ, 0)
+        Me.Controls.SetChildIndex(Me.lblTranspCNPJ, 0)
         Me.Controls.SetChildIndex(Me.lblInscricao, 0)
         Me.Controls.SetChildIndex(Me.Label4, 0)
+        Me.Controls.SetChildIndex(Me.Label6, 0)
         Me.Controls.SetChildIndex(Me.Label17, 0)
         Me.Controls.SetChildIndex(Me.dgvItens, 0)
+        Me.Controls.SetChildIndex(Me.btnTransp, 0)
         Me.Panel1.ResumeLayout(False)
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mnuItens.ResumeLayout(False)
@@ -370,4 +462,10 @@ Partial Class frmCompraGetNFe
     Friend WithEvents clnTotalNfe As DataGridViewTextBoxColumn
     Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
     Friend WithEvents clnProduto As DataGridViewTextBoxColumn
+    Friend WithEvents Label1 As Label
+    Friend WithEvents lblTransportadora As Label
+    Friend WithEvents lblTranspCNPJ As Label
+    Friend WithEvents Label6 As Label
+    Friend WithEvents btnTransp As Button
+    Friend WithEvents btnClose As VIBlend.WinForms.Controls.vFormButton
 End Class

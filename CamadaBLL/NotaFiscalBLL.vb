@@ -49,8 +49,10 @@ Public Class NotaFiscalBLL
     '===================================================================================================
     ' SALVAR NOTA FISCAL DA TRANSACAO
     '===================================================================================================
-    Public Function InserirNova_Nota(_Nota As clNotaFiscal) As Integer
-        Dim db As New AcessoDados
+    Public Function InserirNova_Nota(_Nota As clNotaFiscal,
+                                     Optional dbTran As Object = Nothing) As Integer
+        '
+        Dim db As AcessoDados = If(dbTran, New AcessoDados)
         Dim obj As Object = Nothing
         '
         Try
@@ -66,7 +68,12 @@ Public Class NotaFiscalBLL
                 db.AdicionarParametros("@ChaveAcesso", .ChaveAcesso)
             End With
             '
-            obj = db.ExecutarManipulacao(CommandType.StoredProcedure, "uspTransacaoNota_Inserir")
+            Dim query As String = "INSERT INTO tblTransacaoNotaFiscal " &
+                  "(IDTransacao, NotaTipo, NotaSerie, NotaNumero, NotaValor, EmissaoData, ChaveAcesso) " &
+                  "VALUES " &
+                  "(@IDTransacao, @NotaTipo, @NotaSerie, @NotaNumero, @NotaValor, @EmissaoData, @ChaveAcesso)"
+            '
+            obj = db.ExecutarInsertGetID(query)
             '
             If IsNumeric(obj) Then
                 Return obj

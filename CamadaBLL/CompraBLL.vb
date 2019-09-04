@@ -157,7 +157,7 @@ Public Class CompraBLL
             '
             Dim dtCompra As DataTable
             '
-            dtCompra = SalvaNovaCompra_Procedure_DT(_compra, dbTran)
+            dtCompra = SalvaNovaCompra_DT(_compra, dbTran)
             '
             If dtCompra.Rows.Count > 0 Then
                 Dim r As DataRow = dtCompra(0)
@@ -176,8 +176,8 @@ Public Class CompraBLL
     '--------------------------------------------------------------------------------------------
     ' INSERT NOVA COMPRA E RETORNA UM DATATABLE
     '--------------------------------------------------------------------------------------------
-    Public Function SalvaNovaCompra_Procedure_DT(ByVal _compra As clCompra,
-                                                 Optional dbTran As AcessoDados = Nothing) As DataTable
+    Public Function SalvaNovaCompra_DT(ByVal _compra As clCompra,
+                                       Optional dbTran As AcessoDados = Nothing) As DataTable
         '
         Dim db As AcessoDados
         '
@@ -227,6 +227,28 @@ Public Class CompraBLL
             '
             db.ExecutarManipulacao(CommandType.Text, query)
             '
+            '-- INSERIR NA tblFrete (caso necessidade)
+            '--======================================================================
+            If Not IsNothing(_compra.IDTransportadora) AndAlso _compra.IDTransportadora > 0 Then
+                '
+                db.LimparParametros()
+                db.AdicionarParametros("@IDTransacao", newID)
+                db.AdicionarParametros("@IDTransportadora", _compra.IDTransportadora)
+                db.AdicionarParametros("@FreteTipo", _compra.FreteTipo)
+                db.AdicionarParametros("@Volumes", _compra.Volumes)
+                db.AdicionarParametros("@FreteValor", If(_compra.FreteValor, 0))
+                '
+                query = "INSERT INTO tblFrete " &
+                        "(IDTransacao, IDTransportadora, FreteTipo, Volumes, FreteValor) " &
+                        "VALUES " &
+                        "(@IDTransacao, @IDTransportadora, @FreteTipo, @Volumes, @FreteValor)"
+                '
+                db.ExecutarManipulacao(CommandType.Text, query)
+                '
+            End If
+            '
+            '-- COMMIT
+            '-- ===================================================
             If IsNothing(dbTran) Then '--- TRANSACTION LOCAL
                 db.CommitTransaction()
             End If

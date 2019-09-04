@@ -25,7 +25,7 @@ Partial Class frmDespesaParcelamento
         Me.Label5 = New System.Windows.Forms.Label()
         Me.btnCancelar = New System.Windows.Forms.Button()
         Me.btnOK = New System.Windows.Forms.Button()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lblParcelas = New System.Windows.Forms.Label()
         Me.chkEntrada = New System.Windows.Forms.CheckBox()
         Me.txtParcelas = New Controles.Text_SoNumeros()
         Me.Panel1.SuspendLayout()
@@ -110,14 +110,15 @@ Partial Class frmDespesaParcelamento
         Me.btnOK.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.btnOK.UseVisualStyleBackColor = True
         '
-        'Label1
+        'lblParcelas
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(25, 167)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(85, 19)
-        Me.Label1.TabIndex = 5
-        Me.Label1.Text = "Nº Parcelas"
+        Me.lblParcelas.AutoSize = True
+        Me.lblParcelas.ForeColor = System.Drawing.Color.Black
+        Me.lblParcelas.Location = New System.Drawing.Point(25, 167)
+        Me.lblParcelas.Name = "lblParcelas"
+        Me.lblParcelas.Size = New System.Drawing.Size(85, 19)
+        Me.lblParcelas.TabIndex = 5
+        Me.lblParcelas.Text = "Nº Parcelas"
         '
         'chkEntrada
         '
@@ -147,7 +148,7 @@ Partial Class frmDespesaParcelamento
         Me.Controls.Add(Me.btnCancelar)
         Me.Controls.Add(Me.btnOK)
         Me.Controls.Add(Me.cmbIDBanco)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.lblParcelas)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.cmbCobrancaForma)
         Me.Controls.Add(Me.Label3)
@@ -157,7 +158,7 @@ Partial Class frmDespesaParcelamento
         Me.Controls.SetChildIndex(Me.Label3, 0)
         Me.Controls.SetChildIndex(Me.cmbCobrancaForma, 0)
         Me.Controls.SetChildIndex(Me.Label5, 0)
-        Me.Controls.SetChildIndex(Me.Label1, 0)
+        Me.Controls.SetChildIndex(Me.lblParcelas, 0)
         Me.Controls.SetChildIndex(Me.cmbIDBanco, 0)
         Me.Controls.SetChildIndex(Me.btnOK, 0)
         Me.Controls.SetChildIndex(Me.btnCancelar, 0)
@@ -175,7 +176,7 @@ Partial Class frmDespesaParcelamento
     Friend WithEvents Label5 As Label
     Friend WithEvents btnCancelar As Button
     Friend WithEvents btnOK As Button
-    Friend WithEvents Label1 As Label
+    Friend WithEvents lblParcelas As Label
     Friend WithEvents chkEntrada As CheckBox
     Friend WithEvents txtParcelas As Controles.Text_SoNumeros
 End Class

@@ -97,8 +97,11 @@ Public Class PessoaBLL
     ' SE JÁ For CLIENTE RETORNA clClientePF ou clClientePJ
     ' SE JÁ FOR FORNECEDOR RETORNA clFornecedor;
     '------------------------------------------------------------------------------------------------------------------------------------------------
-    Public Function ProcurarCNP_Pessoa(CNP As String, ProcurarEm As EnumPessoaGrupo) As Object
-        Dim db As New AcessoDados
+    Public Function ProcurarCNP_Pessoa(CNP As String,
+                                       ProcurarEm As EnumPessoaGrupo,
+                                       Optional dbTran As Object = Nothing) As Object
+        '
+        Dim db As AcessoDados = If(dbTran, New AcessoDados)
         '
         Try
             'Adiciona os parametros

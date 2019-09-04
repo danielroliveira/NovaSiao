@@ -180,6 +180,7 @@ Public Class frmCompraItem
                 .Reservado = ItemProduto.Reservado
                 .IDFilial = ItemProduto.IDFilial
                 .RGProduto = ItemProduto.RGProduto
+                .DescontoCompra = ItemProduto.DescontoCompra
                 '
                 '--- define o preco de VENDA OU DE COMPRA
                 If _precoOrigem = EnumPrecoOrigem.PRECO_VENDA Then

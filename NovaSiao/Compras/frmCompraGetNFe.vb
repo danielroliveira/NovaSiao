@@ -11,6 +11,7 @@ Public Class frmCompraGetNFe
     Private ItensNFe As New List(Of clNFeItem)
     Private bindItens As New BindingSource
     Private FornecedorNFe As clFornecedor = Nothing
+    Private TranspNFe As clTransportadora = Nothing
     Private IDTipoPadrao As Integer? = Nothing
     Private IDSubTipoPadrao As Integer? = Nothing
     Private IDFabricantePadrao As Integer? = Nothing
@@ -18,6 +19,7 @@ Public Class frmCompraGetNFe
     Private _propEstagio As Byte
     Private ProdFornBLL As New ProdutoFornecedorBLL
     Private CNPJFilial As String
+    Private _APagarList As New List(Of clAPagar)
     '
     Private Class clNFeItem
         Inherits TNFeInfNFeDetProd
@@ -263,26 +265,36 @@ Public Class frmCompraGetNFe
     Private Sub btnImportar_Click(sender As Object, e As EventArgs) Handles btnImportar.Click
         '
         Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
             '
             If ObterXML() Then
                 '
-                '--- verifica CNPJ compativel com NFe obtida
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
+                '--- Clear old values
                 FornecedorNFe = New clFornecedor
                 PreencheLabelsFornecedor()
+                TranspNFe = New clTransportadora
+                PreencheLabelsTransp()
+                btnTransp.Visible = False
+                '
                 dgvItens.DataSource = Nothing
                 dgvItens.Rows.Clear()
+                _APagarList.Clear()
                 '
+                '--- verifica CNPJ compativel com NFe obtida
                 If CheckCNPJNFe() = False Then
-                    'propEstagio = 1
-                    'Exit Sub
+                    propEstagio = 1
+                    Exit Sub
                 End If
                 '
+                '--- Import new values
                 ImportItensNFe()
                 bindItens.DataSource = ItensNFe
                 dgvItens.DataSource = bindItens
                 ImportFornecedorNFe()
+                ImportaAPagarNFe()
+                ImportTranspNFe()
                 propEstagio = 2
                 '
             End If
@@ -335,11 +347,6 @@ Public Class frmCompraGetNFe
             '
         Catch ex As Exception
             Throw ex
-        Finally
-            '
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-            '
         End Try
         '
     End Function
@@ -395,8 +402,6 @@ Public Class frmCompraGetNFe
                 ItensNFe.Add(clp)
                 '
             Next
-            '
-            'bindItens.ResetBindings(False)
             '
         Catch ex As Exception
             Throw ex
@@ -462,6 +467,95 @@ Public Class frmCompraGetNFe
         '
     End Sub
     '
+    '--- IMPORTAR OS A PAGAR DA NFE
+    '----------------------------------------------------------------------------------
+    Private Sub ImportaAPagarNFe()
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            If IsNothing(NotaNFe) Then
+                Throw New AppException("Ainda não há NFe, ou é nula...")
+            End If
+            '
+            _APagarList.Clear()
+            Dim dupsXML = NotaNFe.NFe.infNFe.cobr.dup
+            '
+            For Each d In dupsXML
+                Dim clp As New clAPagar
+                '
+                clp.APagarValor = d.vDup.Replace(".", ",")
+                clp.Vencimento = Date.SpecifyKind(d.dVenc, DateTimeKind.Utc)
+                clp.IDCobrancaForma = 1
+                clp.Origem = 1
+                clp.Situacao = 0
+                clp.Identificador = d.nDup
+                '
+                '--- DEVE SER INCLUIDO AFTER COMPRA INSERTED
+                'clp.IDCobrancaForma = 5 '--- 5 is CobrancaBancaria
+                'clp.IDOrigem = _Compra.IDCompra
+                'clPag.IDPessoa = _Compra.IDPessoaOrigem
+                'clPag.IDFilial = _Compra.IDPessoaDestino
+                '
+                _APagarList.Add(clp)
+                '
+            Next
+            '
+        Catch ex As Exception
+            Throw ex
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
+    '
+    '--- IMPORTAR A TRANSPORTADORA DA NFE XML
+    '----------------------------------------------------------------------------------
+    Private Sub ImportTranspNFe()
+        '
+        Try
+            '
+            If IsNothing(NotaNFe) Then
+                Throw New AppException("Ainda não há NFe, ou é nula...")
+            End If
+            '
+            Dim transp As TNFeInfNFeTransp = NotaNFe.NFe.infNFe.transp
+            '
+            With TranspNFe
+                .Cadastro = Utilidades.PrimeiraLetraMaiuscula(transp.transporta.xNome)
+                .CNPJ = Utilidades.CNPConvert(transp.transporta.Item)
+                .InscricaoEstadual = transp.transporta.IE
+                .Endereco = Utilidades.PrimeiraLetraMaiuscula(transp.transporta.xEnder)
+                .Cidade = Utilidades.PrimeiraLetraMaiuscula(transp.transporta.xMun)
+                Dim enumUF As TUf = transp.transporta.UF
+                .UF = enumUF.ToString
+            End With
+            '
+            PreencheLabelsTransp()
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+    Private Sub PreencheLabelsTransp()
+        '
+        If Not IsNothing(TranspNFe) Then
+            lblTransportadora.Text = TranspNFe.Cadastro
+            lblTranspCNPJ.Text = TranspNFe.CNPJ
+        Else
+            lblTransportadora.Text = ""
+            lblTranspCNPJ.Text = ""
+        End If
+        '
+    End Sub
+    '
     Private Function CheckCNPJNFe() As Boolean
         '
         Dim CNPJ_NFe As String = NotaNFe.NFe.infNFe.dest.Item
@@ -483,9 +577,30 @@ Public Class frmCompraGetNFe
     '
 #Region "BUTTONS FUNCTION"
     '
-    Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+    Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click, btnClose.Click
         Close()
         MostraMenuPrincipal()
+    End Sub
+    '
+    '--- INSERT NEW TRANSPORTADORA
+    '----------------------------------------------------------------------------------------------
+    Private Sub btnTransp_Click(sender As Object, e As EventArgs) Handles btnTransp.Click
+        '
+        Dim fTransp As New frmTransportadora(TranspNFe, Me)
+        '
+        Visible = False
+        fTransp.ShowDialog()
+        Visible = True
+        '
+        If fTransp.DialogResult = DialogResult.OK Then
+            '
+            '--- get new transportadora
+            TranspNFe = fTransp.propTransp
+            PreencheLabelsTransp()
+            btnTransp.Visible = False
+            '
+        End If
+        '
     End Sub
     '
 #End Region '/ BUTTONS FUNCTION
@@ -513,12 +628,12 @@ Public Class frmCompraGetNFe
             '
             '--- LOOKING FOR FORNECEDOR
             '-----------------------------------------------------------------------------
-            Dim procForn As clFornecedor = FornecedorFind()
+            Dim procForn As clFornecedor = FornecedorFind(dbTran)
             '
             If Not IsNothing(procForn) AndAlso Not IsNothing(procForn.IDPessoa) Then
                 '
                 FornecedorNFe.IDPessoa = procForn.IDPessoa
-                AbrirDialog("Forncedor encontrado:" & vbCrLf & procForn.Cadastro,
+                AbrirDialog("Forncedor encontrado:" & vbCrLf & vbCrLf & procForn.Cadastro,
                             "Fornecedor", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
                 '
             Else
@@ -528,6 +643,26 @@ Public Class frmCompraGetNFe
                             "Fornecedor", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
                 Exit Sub
                 '
+            End If
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- LOOKING FOR TRANSPORTADORA
+            '-----------------------------------------------------------------------------
+            Dim procTransp As clTransportadora = TransportadoraFind(dbTran)
+            '
+            If IsNothing(procTransp) OrElse IsNothing(procTransp.IDPessoa) Then
+                '
+                AbrirDialog("Uma TRANSPORTADORA correspondente à NFe não pode ser encontrada." & vbCrLf &
+                            "É possível inserir a transportadora...",
+                            "Transportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                '
+                btnTransp.Visible = True
+                '
+            Else
+                TranspNFe = procTransp
+                btnTransp.Visible = False
             End If
             '
             '--- Ampulheta ON
@@ -564,6 +699,11 @@ Public Class frmCompraGetNFe
                 '
             Next
             '
+            '--- MOVE TO FIRST ITEM DATAGRID
+            dgvItens.CurrentCell = dgvItens.Rows(0).Cells(0)
+            dgvItens.Rows(0).Selected = True
+            dgvItens.Refresh()
+            '
             '--- EMIT MENSAGE TO USER
             Dim message As String = ""
             '
@@ -593,6 +733,7 @@ Public Class frmCompraGetNFe
             '
             '-- CLOSE ACESSO
             acesso.CommitAcessoWithTransaction(dbTran)
+            '
             '--- Ampulheta OFF
             Cursor = Cursors.Default
             '
@@ -602,12 +743,12 @@ Public Class frmCompraGetNFe
     '
     '--- PROCURA FORNECEDOR
     '----------------------------------------------------------------------------------
-    Private Function FornecedorFind() As clFornecedor
+    Private Function FornecedorFind(dbTran As Object) As clFornecedor
         '
         Try
             '
             Dim pBLL As New PessoaBLL
-            Dim pessoa As Object = pBLL.ProcurarCNP_Pessoa(FornecedorNFe.CNPJ, PessoaBLL.EnumPessoaGrupo.FORNECEDOR)
+            Dim pessoa As Object = pBLL.ProcurarCNP_Pessoa(FornecedorNFe.CNPJ, PessoaBLL.EnumPessoaGrupo.FORNECEDOR, dbTran)
             '
             If TypeOf pessoa Is clFornecedor Then
                 '
@@ -696,6 +837,45 @@ Public Class frmCompraGetNFe
         End Try
         '
     End Sub
+    '
+    '--- PROCURA TRANSPORTADORA
+    '----------------------------------------------------------------------------------
+    Private Function TransportadoraFind(dbTran As Object) As clTransportadora
+        '
+        Try
+            '
+            Dim tBLL As New TransportadoraBLL
+            Dim transp As List(Of clTransportadora) = tBLL.GetTransportadoraByCNPJ(TranspNFe.CNPJ.Substring(0, 10), dbTran)
+            '
+            If IsNothing(transp) OrElse transp.Count = 0 Then
+                Return Nothing
+            End If
+            '
+            Dim returnIndex As Integer = 0
+            '
+            If transp.Count > 1 Then
+                '
+                '--- procura entre as transportadoras encontradas a com CNPJ identico
+                returnIndex = transp.FindIndex(Function(x) x.CNPJ = TranspNFe.CNPJ)
+                '
+                '--- qdo nao encontra
+                If returnIndex = -1 Then
+                    AbrirDialog("Foram encontradas mais de uma transportadora com o CNPJ Filial parecidos." & vbNewLine &
+                                "Favor verificar a transportadora após a compra ser inserida.",
+                                "Transportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                    returnIndex = 0
+                End If
+                '
+            End If
+            '
+            TranspNFe.IDPessoa = transp.Item(returnIndex).IDPessoa
+            Return transp.Item(returnIndex)
+            '
+        Catch ex As Exception
+            Throw New AppException("Uma exceção ocorreu ao procurar a TRANSPORTADORA..." & vbNewLine & ex.Message)
+        End Try
+        '
+    End Function
     '
     '--- PROCURA PRODUTO
     '----------------------------------------------------------------------------------
@@ -1143,16 +1323,16 @@ Public Class frmCompraGetNFe
             Exit Sub
         End If
         '
+        '--- DEFINE DBTRAN
+        '---------------------------------------------------------------------------------------
+        Dim acesso As New AcessoControlBLL
+        Dim dbTran As Object = acesso.GetNewAcessoWithTransaction
+        '
         '--- Insere um novo Registro de COMPRA
         '---------------------------------------------------------------------------------------
         Dim cmpBLL As New CompraBLL
         Dim newCompra As New clCompra
         Dim tranBLL As New TransacaoBLL
-        '
-        '--- DEFINE DBTRAN
-        '---------------------------------------------------------------------------------------
-        Dim acesso As New AcessoControlBLL
-        Dim dbTran As Object = acesso.GetNewAcessoWithTransaction
         '
         Try
             '--- Ampulheta ON
@@ -1172,13 +1352,29 @@ Public Class frmCompraGetNFe
                 End If
                 .TransacaoData = ObterDefault("DataPadrao")
                 .CobrancaTipo = 0 '--- sem Cobrança
-                .FreteTipo = 0 '--- sem frete
                 .FreteCobrado = 0
                 .ICMSValor = 0
                 .Despesas = 0
                 .Descontos = 0
                 .TotalCompra = 0
                 .Observacao = ""
+                '
+                '--- TRANPORTADORA e FRETE
+                If Not IsNothing(TranspNFe) Then
+                    '
+                    .IDTransportadora = TranspNFe.IDPessoa
+                    .FreteTipo = CByte(NotaNFe.NFe.infNFe.transp.modFrete) + 1
+                    '
+                    If NotaNFe.NFe.infNFe.transp.vol.Count > 0 Then
+                        .Volumes = NotaNFe.NFe.infNFe.transp.vol(0).qVol
+                    Else
+                        .Volumes = 0
+                    End If
+
+                Else
+                    .FreteTipo = 0 '--- sem frete
+                End If
+                '
             End With
             '
             newCompra = cmpBLL.SalvaNovaCompra_Procedure_Compra(newCompra, dbTran)
@@ -1187,8 +1383,25 @@ Public Class frmCompraGetNFe
                 Throw New Exception("Um erro ocorreu ao salvar ao Inserir Nova Compra")
             End If
             '
+            '--- INSERT APAGAR DUPS
+            If _APagarList.Count > 0 Then
+                '
+                If Not InsertAPagarDups(newCompra, dbTran) Then
+                    '--- roolback
+                    acesso.RollbackAcessoWithTransaction(dbTran)
+                    Exit Sub
+                End If
+                '
+            End If
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             '--- INSERT ITEMS
             InsertCompraItens(newCompra, dbTran)
+            '
+            '--- INSERT NOTA
+            InsertCompraNota(newCompra, dbTran)
             '
             '--- COMMIT
             acesso.CommitAcessoWithTransaction(dbTran)
@@ -1267,63 +1480,101 @@ Public Class frmCompraGetNFe
     '----------------------------------------------------------------------------------
     Private Sub InsertCompraNota(Compra As clCompra, dbTran As Object)
         '
-        Dim notaBLL As New TransacaoBLL
+        Dim Nota As clNotaFiscal = Nothing
         '
-        '--- Remove all letters of Chave
-        Dim chave As String = NotaNFe.NFe.infNFe.Id
-        chave = Regex.Replace(chave, "[^0-9.]", "")
-        '
-        '--- Insere o novo ITEM no BD
         Try
+            '--- Remove all letters of Chave
+            Dim chave As String = NotaNFe.NFe.infNFe.Id
+            chave = Regex.Replace(chave, "[^0-9.]", "")
             '
-            Dim Nota As New clNotaFiscal With {
+            '--- Get Emissao Data Nfe
+            Dim emissao As String = NotaNFe.NFe.infNFe.ide.dhEmi '+ "2019-08-08T10:40:00-03:00"
+            Dim EmissaoData As Date = Date.SpecifyKind(emissao, DateTimeKind.Utc)
+            '
+            '--- Insere o novo ITEM no BD
+            Nota = New clNotaFiscal With {
                 .ChaveAcesso = chave,
-                .EmissaoData = "",
+                .EmissaoData = EmissaoData,
                 .IDTransacao = Compra.IDCompra,
-                .NotaNumero = 0,
-                .NotaSerie = 1,
+                .NotaNumero = NotaNFe.NFe.infNFe.ide.nNF,
+                .NotaSerie = NotaNFe.NFe.infNFe.ide.serie,
                 .NotaTipo = 1,
-                .NotaValor = 0
+                .NotaValor = NotaNFe.NFe.infNFe.total.ICMSTot.vNF.Replace(".", ",")
                 }
-            '
-
-            '
-            For Each item In ItensNFe
-                'Format(CDbl(item.vUnCom.Replace(".", ",")), "#,##0.00")
-                '
-                Dim newItem As New clTransacaoItem With {
-                .IDProduto = item.IDProduto,
-                .RGProduto = item.RGProduto,
-                .Produto = item.Produto,
-                .TransacaoData = Compra.TransacaoData,
-                .IDTransacao = Compra.IDCompra,
-                .Preco = CDbl(item.vUnCom),
-                .Quantidade = item.qCom,
-                .Desconto = item.DescontoNFe,
-                .IDFilial = Compra.IDPessoaDestino,
-                .Substituicao = 0,
-                .IPI = 0,
-                .ICMS = 0,
-                .MVA = 0
-                }
-            Next
-            '
-            '--- INSERT ITEM IN DB
-            Dim myID As Long? = Nothing
-            myID = ItemBLL.InserirNovoItem(newItem,
-            TransacaoItemBLL.EnumMovimento.ENTRADA,
-            Compra.TransacaoData,
-                                               True,
-            dbTran)
-            '
-            newItem.IDTransacaoItem = myID
-            '
             '
         Catch ex As Exception
-            Throw New AppException("Houve um exceção ao INSERIR o item no BD..." & vbNewLine & ex.Message)
+            Throw New AppException("Houve um exceção ao OBTER os dados da NOTA no BD..." & vbNewLine & ex.Message)
+            Exit Sub
+        End Try
+        '
+        '--- INSERT NEW NOTA IN BD
+        Try
+            Dim notaBLL As New NotaFiscalBLL
+            '
+            '--- INSERT NOTA IN DB
+            notaBLL.InserirNova_Nota(Nota, dbTran)
+            '
+        Catch ex As Exception
+            Throw ex
         End Try
         '
     End Sub
+    '
+    '--- INSERT ALL COMPRA DUPS A PAGAR IN NEW COMPRA
+    '----------------------------------------------------------------------------------
+    Private Function InsertAPagarDups(Compra As clCompra, dbTran As Object) As Boolean
+        '
+        Dim pagBLL As New APagarBLL
+        Dim RGBanco As Short? = Nothing
+        Dim IDCobrancaForma As Integer? = Nothing
+        '
+        '--- GET COBRANÇA FORMA
+        Try
+            Using fDup As New frmDespesaParcelamento(Me, False)
+                '
+                fDup.ShowDialog()
+                '
+                If fDup.DialogResult <> DialogResult.OK Then Return False
+                '
+                IDCobrancaForma = fDup.propIDCobrancaForma
+                RGBanco = fDup.propRGBanco
+                '
+            End Using
+            '
+            If IDCobrancaForma = 0 Then
+                Throw New AppException("Forma de cobrança inválida...")
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+        '--- Insere o novo APAGAR no BD
+        Try
+            '
+            For Each pag In _APagarList
+                '
+                pag.IDCobrancaForma = IDCobrancaForma '--- 5 is CobrancaBancaria
+                pag.IDOrigem = Compra.IDCompra
+                pag.IDPessoa = Compra.IDPessoaOrigem
+                pag.IDFilial = Compra.IDPessoaDestino
+                '
+                If Not IsNothing(RGBanco) Then
+                    pag.RGBanco = RGBanco
+                End If
+                '
+                '--- INSERT APAGAR IN DB
+                pagBLL.InserirNovo_APagar(pag, dbTran)
+                '
+            Next
+            '
+            Return True
+            '
+        Catch ex As Exception
+            Throw New AppException("Houve um exceção ao INSERIR o a PAGAR no BD..." & vbNewLine & ex.Message)
+        End Try
+        '
+    End Function
     '
 #End Region '/ INSERT COMPRA FUNCTIONS
     '

@@ -1374,19 +1374,31 @@ Public Class frmCompra
         End If
         '
         '--- Verifica se houve dupla cobrança de FRETE na compra
-        If _Compra.FreteTipo = 2 And _Compra.FreteCobrado > 0 Then
-            MessageBox.Show("Quando o TIPO de FRETE é DESTINÁRIO, o valor do FRETE deve ser inserido no campo: VALOR DO FRETE..." & vbNewLine &
-                            "Favor retirar o valor do FRETE COBRADO ou alterar o tipo de frete...", "Frete Cobrado",
-                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            tabPrincipal.SelectedTab = vtab2
-            txtFreteCobrado.Focus()
-            Return False
+        If _Compra.FreteTipo = 2 Then
+            If _Compra.FreteCobrado > 0 Then
+                MessageBox.Show("Quando o TIPO de FRETE é DESTINÁRIO, o valor do FRETE deve ser inserido no campo: VALOR DO FRETE..." & vbNewLine &
+                                "Favor retirar o valor do FRETE COBRADO ou alterar o tipo de frete...", "Frete Cobrado",
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                tabPrincipal.SelectedTab = vtab2
+                txtFreteCobrado.Focus()
+                Return False
+            End If
+            '
+            '--- Verifica se o valor do Frete foi inserido
+            If If(_Compra.FreteValor, 0) = 0 Then
+                MessageBox.Show("O VALOR DO FRETE precisa ser maior do que Zero" & vbNewLine &
+                                "Favor inserir o Valor do Frete", "Frete Valor",
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                tabPrincipal.SelectedTab = vtab2
+                txtFreteValor.Focus()
+                Return False
+            End If
+            '
         End If
         '
         If IsNothing(_Compra.ICMSValor) OrElse _Compra.ICMSValor < 0 Then _Compra.ICMSValor = 0
         If IsNothing(_Compra.Despesas) OrElse _Compra.Despesas < 0 Then _Compra.Despesas = 0
         If IsNothing(_Compra.Descontos) OrElse _Compra.Descontos < 0 Then _Compra.Descontos = 0
-        '
         '
         Return True
         '
@@ -2004,11 +2016,20 @@ Public Class frmCompra
         Dim NotaBLL As New NotaFiscalBLL
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             newNota.IDNota = NotaBLL.InserirNova_Nota(newNota)
         Catch ex As Exception
             MessageBox.Show("Uma exceção inesperada ocorreu na tentativa de inserir Nova Nota Fiscal no BD..." & vbCrLf &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Exit Sub
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
         '--- Insere a NOTA na lista

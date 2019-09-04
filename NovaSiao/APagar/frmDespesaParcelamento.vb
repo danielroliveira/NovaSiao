@@ -7,15 +7,27 @@ Public Class frmDespesaParcelamento
     Property propParcelas As Integer
     Property propComEntrada As Boolean
     Private _formOrigem As Form = Nothing
+    Private _IsToInsertDespesa As Boolean
     '
 #Region "LOAD/OPEN"
-    Sub New(formOrigem As Form)
+    Sub New(formOrigem As Form, IsToInsertDespesa As Boolean)
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
         _formOrigem = formOrigem
+        _IsToInsertDespesa = IsToInsertDespesa
+        '
+        If IsToInsertDespesa Then
+            lblParcelas.ForeColor = Color.Black
+            txtParcelas.Enabled = True
+            chkEntrada.Enabled = True
+        Else
+            lblParcelas.ForeColor = Color.DarkGray
+            txtParcelas.Enabled = False
+            chkEntrada.Enabled = False
+        End If
         '
         CarregaCmbCobrancaForma()
         CarregaCmbBancos()
@@ -72,7 +84,7 @@ Public Class frmDespesaParcelamento
     Private Sub btnOK_Click(sender As Object, e As EventArgs) Handles btnOK.Click
         '
         '--- Verifica os dados
-        If txtParcelas.Text.Trim.Length = 0 Then
+        If _IsToInsertDespesa AndAlso txtParcelas.Text.Trim.Length = 0 Then
             MessageBox.Show("O número de parcelas não pode ficar vazio e não pode ser menor ou igual a zero.",
                             "Número de Parcelas", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             txtParcelas.Focus()
@@ -89,7 +101,7 @@ Public Class frmDespesaParcelamento
         propIDCobrancaForma = cmbCobrancaForma.SelectedValue
         propCobrancaFormaTexto = cmbCobrancaForma.Text
         propRGBanco = cmbIDBanco.SelectedValue
-        propParcelas = txtParcelas.Text
+        propParcelas = IIf(txtParcelas.Text = "", 0, txtParcelas.Text)
         propComEntrada = chkEntrada.Checked
         '
         DialogResult = DialogResult.OK
