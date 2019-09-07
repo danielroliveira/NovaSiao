@@ -2662,7 +2662,7 @@ Partial Public Class TEnderEmi
             Return Me.xPaisField
         End Get
         Set
-            Me.xPaisField = value
+            Me.xPaisField = Value
         End Set
     End Property
 

@@ -396,8 +396,8 @@ Public Class frmFornecedor
         If Not f.VerificaControlesForm(txtVendedor, "Nome do Vendedor", EProvider) Then Return False
         '
         '--- Verifica se existe pelo menos um telefone Inserido na Fornecedor
-        Dim telA As Boolean = IsNothing(_forn.TelefoneA) Or _forn.TelefoneA.Length = 0
-        Dim telB As Boolean = IsNothing(_forn.TelefoneB) Or _forn.TelefoneB.Length = 0
+        Dim telA As Boolean = IsNothing(_forn.TelefoneA) OrElse _forn.TelefoneA.Length = 0
+        Dim telB As Boolean = IsNothing(_forn.TelefoneB) OrElse _forn.TelefoneB.Length = 0
         '
         If telA And telB Then
             AbrirDialog("Deve haver pelo menos um telefone cadastrado nos dados da Reserva...",

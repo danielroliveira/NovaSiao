@@ -7,34 +7,26 @@ Public Class NotaFiscalBLL
     ' OBTER LISTA DE NOTAS POR IDCOMPRA OU IDTRANSACAO
     '===================================================================================================
     Public Function NotaFiscal_GET_PorIDCompra(IDCompra As Integer) As List(Of clNotaFiscal)
+        '
         Dim db As New AcessoDados
         Dim dt As New DataTable
         Dim NotaList As New List(Of clNotaFiscal)
+        Dim query As String = "SELECT IDNota, IDTransacao, EmissaoData, " &
+                              "NotaTipo, NotaSerie, NotaNumero, NotaValor, ChaveAcesso " &
+                              "FROM tblTransacaoNotaFiscal " &
+                              "WHERE IDTransacao = @IDTransacao"
         '
         Try
             db.LimparParametros()
             db.AdicionarParametros("@IDTransacao", IDCompra)
             '
-            dt = db.ExecutarConsulta(CommandType.StoredProcedure, "uspTransacaoNota_GET_PorIDTransacao")
+            dt = db.ExecutarConsulta(CommandType.Text, query)
             '
             If dt.Rows.Count = 0 Then Return NotaList
             '
             For Each r As DataRow In dt.Rows
-                Dim clNota As New clNotaFiscal
                 '
-                With clNota
-                    '--- tblTransacaoNotaFiscal
-                    .IDNota = IIf(IsDBNull(r("IDNota")), Nothing, r("IDNota"))
-                    .IDTransacao = IDCompra
-                    .EmissaoData = IIf(IsDBNull(r("EmissaoData")), Nothing, r("EmissaoData"))
-                    .NotaTipo = IIf(IsDBNull(r("NotaTipo")), Nothing, r("NotaTipo"))
-                    .NotaSerie = IIf(IsDBNull(r("NotaSerie")), Nothing, r("NotaSerie"))
-                    .NotaNumero = IIf(IsDBNull(r("NotaNumero")), Nothing, r("NotaNumero"))
-                    .NotaValor = IIf(IsDBNull(r("NotaValor")), 0, r("NotaValor"))
-                    .ChaveAcesso = IIf(IsDBNull(r("ChaveAcesso")), "", r("ChaveAcesso"))
-                End With
-                '
-                NotaList.Add(clNota)
+                NotaList.Add(ConvertRowInClass(r))
                 '
             Next
             '
@@ -108,7 +100,17 @@ Public Class NotaFiscalBLL
                 db.AdicionarParametros("@ChaveAcesso", .ChaveAcesso)
             End With
             '
-            obj = db.ExecutarManipulacao(CommandType.StoredProcedure, "uspTransacaoNota_Alterar")
+            Dim query As String = "UPDATE tblTransacaoNotaFiscal SET " &
+                                  "IDTransacao = @IDTransacao, " &
+                                  "NotaSerie = @NotaSerie, " &
+                                  "NotaTipo = @NotaTipo, " &
+                                  "NotaNumero = @NotaNumero, " &
+                                  "NotaValor = @NotaValor, " &
+                                  "EmissaoData = @EmissaoData, " &
+                                  "ChaveAcesso = @ChaveAcesso, " &
+                                  "WHERE IDNota = @IDNota"
+            '
+            obj = db.ExecutarManipulacao(CommandType.Text, query)
             '
             If IsNumeric(obj) Then
                 Return obj
@@ -149,6 +151,59 @@ Public Class NotaFiscalBLL
         Catch ex As Exception
             Throw ex
         End Try
+        '
+    End Function
+    '
+    '===================================================================================================
+    ' OBTER NOTA PELA CHAVE
+    '===================================================================================================
+    Public Function NotaFiscal_GET_PorChave(Chave As String) As clNotaFiscal
+        '
+        Dim db As New AcessoDados
+        Dim dt As New DataTable
+        '
+        Try
+            db.LimparParametros()
+            db.AdicionarParametros("@Chave", Chave)
+            '
+            Dim query As String = "SELECT * FROM tblTransacaoNotaFiscal WHERE ChaveAcesso = @Chave"
+            '
+            dt = db.ExecutarConsulta(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return Nothing
+            '
+            If IsNumeric(dt.Rows(0).Item(0)) Then
+                Return ConvertRowInClass(dt.Rows(0))
+            Else
+                Throw New Exception(dt.Rows(0).Item(0))
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '===================================================================================================
+    ' CONVERT ROW TO CLASS
+    '===================================================================================================
+    Private Function ConvertRowInClass(r As DataRow) As clNotaFiscal
+        '
+        Dim clNota As New clNotaFiscal
+        '
+        With clNota
+            '--- tblTransacaoNotaFiscal
+            .IDNota = IIf(IsDBNull(r("IDNota")), Nothing, r("IDNota"))
+            .IDTransacao = IIf(IsDBNull(r("IDTransacao")), Nothing, r("IDTransacao"))
+            .EmissaoData = IIf(IsDBNull(r("EmissaoData")), Nothing, r("EmissaoData"))
+            .NotaTipo = IIf(IsDBNull(r("NotaTipo")), Nothing, r("NotaTipo"))
+            .NotaSerie = IIf(IsDBNull(r("NotaSerie")), Nothing, r("NotaSerie"))
+            .NotaNumero = IIf(IsDBNull(r("NotaNumero")), Nothing, r("NotaNumero"))
+            .NotaValor = IIf(IsDBNull(r("NotaValor")), 0, r("NotaValor"))
+            .ChaveAcesso = IIf(IsDBNull(r("ChaveAcesso")), "", r("ChaveAcesso"))
+        End With
+        '
+        Return clNota
         '
     End Function
     '

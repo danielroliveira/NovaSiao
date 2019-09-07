@@ -1703,7 +1703,7 @@ Public Class ProdutoFornecedorBLL
     '--- GET PRODUTO BY IDFORNECEDOR AND ID PRODUTO ORIGEM|FORNECEDOR
     '----------------------------------------------------------------------------------
     Public Function GetProdFornecedorItem(IDFornecedor As Integer,
-                                          IDProdutoOrigem As Integer,
+                                          IDProdutoOrigem As String,
                                           dbTran As Object) As clProdutoFornecedorItem
         '
         Try

@@ -330,20 +330,72 @@ Public Class frmCompraGetNFe
                 .ShowDialog()
             End With
             '
+            If String.IsNullOrEmpty(arquivoXML.FileName) Then Return False
+            '
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            If String.IsNullOrEmpty(arquivoXML.FileName) Then Return False
+            '--- Check XML to find xPais BUG
+            Dim xmlTempPath As String = CreateXMLTemp(arquivoXML.FileName)
             '
+            ' ler o arquivo config xml
             Dim ser As New XmlSerializer(GetType(TNfeProc))
-            Dim textReader As TextReader = New StreamReader(arquivoXML.FileName)
+            Dim textReader As TextReader = New StreamReader(xmlTempPath)
+            '
             Dim reader As New XmlTextReader(textReader)
             '
             reader.Read()
+            '
             NotaNFe = ser.Deserialize(reader)
+            textReader.Close()
+            File.Delete(xmlTempPath)
             '
             '--- RETURN
             Return True
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    '--- CRIA UMA COPIA DO XML TO Looking For and FIX xPais BUG IN NEW XML
+    '----------------------------------------------------------------------------------
+    Private Function CreateXMLTemp(XmlPath As String) As String
+        '
+        Try
+            '
+            Dim PathFolder As String = Path.GetTempPath()
+            '
+            '--- CREATE TEMP FOLDER
+            Dim TempFolder As String = PathFolder & "ProgramaLoja"
+            If Not Directory.Exists(TempFolder) Then
+                Directory.CreateDirectory(TempFolder)
+            End If
+
+            Dim FileName As String = XmlPath.Split("\").Last().Replace(".XML", "")
+            '
+            Dim NewXMLFile As String = TempFolder + "\" + FileName + "_TEMP.XML"
+            If File.Exists(NewXMLFile) Then File.Delete(NewXMLFile)
+            '
+            '--- COPY THE ORIGINAL FILE TO NEW FOLDER
+            File.Copy(XmlPath, NewXMLFile)
+            '
+            Dim myXML As New XmlDocument
+            myXML.Load(NewXMLFile)
+            '
+            Dim MyXMLNode As XmlNode = myXML.GetElementsByTagName("xPais")(0)
+            '
+            '--- CHECK IF xPais IS BRASIL or Brasil
+            Dim Pais As String = MyXMLNode.InnerText
+            '
+            If Pais <> "BRASIL" Then
+                MyXMLNode.InnerText = "BRASIL"
+                myXML.Save(NewXMLFile)
+            End If
+            '
+            '--- RETURN
+            Return NewXMLFile
             '
         Catch ex As Exception
             Throw ex
@@ -395,7 +447,8 @@ Public Class frmCompraGetNFe
                 If Not IsNothing(p.prod.vDesc) Then
                     clp.vDesc = p.prod.vDesc.Replace(".", ",")
                     Dim pDesc As Double = p.prod.vDesc.Replace(".", ",")
-                    Dim desc As Double = 100 * (clp.vProd - pDesc) / clp.vProd
+                    'Dim desc As Double = 100 * (clp.vProd - pDesc) / clp.vProd
+                    Dim desc As Double = pDesc * 100 / clp.vProd
                     clp.DescontoNFe = desc
                 End If
                 '
@@ -483,21 +536,22 @@ Public Class frmCompraGetNFe
             _APagarList.Clear()
             Dim dupsXML = NotaNFe.NFe.infNFe.cobr.dup
             '
+            '--- CHECK IF EXIST DUPS
+            If IsNothing(dupsXML) Then
+                AbrirDialog("Não há informação de Duplicatas a Pagar nessa NFe...",
+                            "Sem A Pagar", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Exit Sub
+            End If
+            '
             For Each d In dupsXML
                 Dim clp As New clAPagar
                 '
                 clp.APagarValor = d.vDup.Replace(".", ",")
                 clp.Vencimento = Date.SpecifyKind(d.dVenc, DateTimeKind.Utc)
+                clp.Identificador = d.nDup
                 clp.IDCobrancaForma = 1
                 clp.Origem = 1
                 clp.Situacao = 0
-                clp.Identificador = d.nDup
-                '
-                '--- DEVE SER INCLUIDO AFTER COMPRA INSERTED
-                'clp.IDCobrancaForma = 5 '--- 5 is CobrancaBancaria
-                'clp.IDOrigem = _Compra.IDCompra
-                'clPag.IDPessoa = _Compra.IDPessoaOrigem
-                'clPag.IDFilial = _Compra.IDPessoaDestino
                 '
                 _APagarList.Add(clp)
                 '
@@ -525,6 +579,12 @@ Public Class frmCompraGetNFe
             End If
             '
             Dim transp As TNFeInfNFeTransp = NotaNFe.NFe.infNFe.transp
+            '
+            If IsNothing(transp.transporta) Then
+                AbrirDialog("Não há informação de Transportadora nessa NFe.",
+                            "Sem Transportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Exit Sub
+            End If
             '
             With TranspNFe
                 .Cadastro = Utilidades.PrimeiraLetraMaiuscula(transp.transporta.xNome)
@@ -623,8 +683,18 @@ Public Class frmCompraGetNFe
             Cursor = Cursors.WaitCursor
             '
             '--- GET TRANSACAO for don't open new instances of db
+            '-----------------------------------------------------------------------------
             acesso = New AcessoControlBLL
             dbTran = acesso.GetNewAcessoWithTransaction
+            '
+            '--- CHECK IF THE NOTA IS NEW
+            '-----------------------------------------------------------------------------
+            If CheckNotDuplicateNFe() = False Then
+                AbrirDialog("Essa NFe já foi inserida nas compras..." & vbCrLf &
+                            "Não é possível inserir essa NFe novamente.",
+                            "Compra Inserida", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                Exit Sub
+            End If
             '
             '--- LOOKING FOR FORNECEDOR
             '-----------------------------------------------------------------------------
@@ -725,10 +795,12 @@ Public Class frmCompraGetNFe
             acesso.RollbackAcessoWithTransaction(dbTran)
             AbrirDialog("Uma exceção ocorreu ao Fazer correlação da NFe..." & vbNewLine &
                         ex.Message, "Exceção", frmDialog.DialogType.OK, frmDialog.DialogIcon.Warning)
+            Me.Visible = True
         Catch ex As Exception
             acesso.RollbackAcessoWithTransaction(dbTran)
             MessageBox.Show("Uma exceção ocorreu ao Fazer correlação da NFe..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Me.Visible = True
         Finally
             '
             '-- CLOSE ACESSO
@@ -740,6 +812,33 @@ Public Class frmCompraGetNFe
         End Try
         '
     End Sub
+    '
+    '--- CHECK DUPLICATED NOTA
+    '----------------------------------------------------------------------------------
+    Private Function CheckNotDuplicateNFe() As Boolean
+        '
+        '--- Remove all letters of Chave
+        Dim chave As String = NotaNFe.NFe.infNFe.Id
+        chave = Regex.Replace(chave, "[^0-9.]", "")
+        '
+        '--- CHECK DUPLICATE NOTA IN BD BY CHAVE
+        Try
+            Dim notaBLL As New NotaFiscalBLL
+            '
+            '--- CHECK NOTA IN DB
+            Dim nota As clNotaFiscal = notaBLL.NotaFiscal_GET_PorChave(chave)
+            '
+            If IsNothing(nota) Then
+                Return True
+            Else
+                Return False
+            End If
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
     '
     '--- PROCURA FORNECEDOR
     '----------------------------------------------------------------------------------
@@ -1260,7 +1359,7 @@ Public Class frmCompraGetNFe
                 .DescontoCompra = item.DescontoNFe,
                 .Movimento = 1,
                 .NCM = item.NCM,
-                .PCompra = item.vProd
+                .PCompra = item.vUnCom.Replace(".", ",")
                 }
             '
             '---TRY OPEN PRODUTO FORM
@@ -1295,6 +1394,8 @@ Public Class frmCompraGetNFe
     '
 #Region "INSERT COMPRA FUNCTIONS"
     '
+    '--- CHECK IF IS POSSIBLE CHANGE STATUS
+    '----------------------------------------------------------------------------------
     Private Sub TryEnableEstagioCompra()
         '
         If ItensNFe.Count = 0 Then propEstagio = 1
@@ -1309,6 +1410,8 @@ Public Class frmCompraGetNFe
         '
     End Sub
     '
+    '--- SAVE / INSERT COMPRA
+    '----------------------------------------------------------------------------------
     Private Sub btnSalvarCompra_Click(sender As Object, e As EventArgs) Handles btnSalvarCompra.Click
         '
         '--- Verifica o FORNECEDOR

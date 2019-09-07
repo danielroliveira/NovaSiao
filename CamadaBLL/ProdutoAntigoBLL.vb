@@ -151,9 +151,10 @@ Public Class ProdutoAntigoBLL
                 produto.IDProdutoTipo = ref.IDInterno
                 produto.ProdutoTipo = ref.DescricaoInterna
                 '
-            Case EnumReferencia.SubTipo
+            Case EnumReferencia.Subtipo
                 '
-                Dim IDExterno As Integer? = If(IsDBNull(dadoAnterior("RGSubTipo")), Nothing, CInt(dadoAnterior("RGSubTipo")))
+                Dim IDExterno As Integer? = Nothing
+                If Not IsDBNull(dadoAnterior("RGSubTipo")) Then IDExterno = CInt(dadoAnterior("RGSubTipo"))
                 If IsNothing(IDExterno) Then Return
                 '
                 Dim ref As New clRef(referenciaTipo, IDExterno)
@@ -180,7 +181,8 @@ Public Class ProdutoAntigoBLL
                 '
             Case EnumReferencia.Categoria
                 '
-                Dim IDExterno As Integer? = If(IsDBNull(dadoAnterior("RGCat")), Nothing, CInt(dadoAnterior("RGCat")))
+                Dim IDExterno As Integer? = Nothing
+                If Not IsDBNull(dadoAnterior("RGCat")) Then IDExterno = CInt(dadoAnterior("RGCat"))
                 If IsNothing(IDExterno) Then Return
                 '
                 Dim ref As New clRef(referenciaTipo, IDExterno)

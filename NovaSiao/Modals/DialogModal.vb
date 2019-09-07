@@ -1,5 +1,5 @@
 ﻿Module DialogModal
-
+    '
     Function AbrirDialog(message As String,
                          title As String,
                          type As frmDialog.DialogType,
@@ -13,5 +13,5 @@
         Return f.DialogResult
 
     End Function
-
+    '    
 End Module
