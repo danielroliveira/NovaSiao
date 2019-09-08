@@ -285,10 +285,13 @@ Public Class CompraBLL
     '--------------------------------------------------------------------------------------------
     ' DELETE COMPRA POR IDCOMPRA
     '--------------------------------------------------------------------------------------------
-    Public Function DeletaCompraPorID(IDCompra As Integer, IDFilial As Integer) As Boolean
+    Public Function DeletaCompraPorID(IDCompra As Integer, IDFilial As Integer, Info As Object) As Boolean
         '
         Dim clCmp As clCompra = Nothing
         Dim myQuery As String = ""
+        '
+        '--- INFO
+        Info.InfoShow("Obtendo os dados da Compra")
         '
         '--- OBTEM O CLCOMPRA
         '------------------------------------------------------------------
@@ -309,6 +312,9 @@ Public Class CompraBLL
         '
         '--- GET ITEMS COMPRA
         '==================================================================
+        '
+        '--- INFO
+        Info.InfoShow("Obtendo os items da Compra")
         '
         '--- get produtos | itens da COMPRA
         Dim ItemBLL As New TransacaoItemBLL
@@ -333,6 +339,9 @@ Public Class CompraBLL
         '--- DELETE ALL ITENS OF COMPRA AND RESOLVE ESTOQUE
         '==================================================================
         '
+        '--- INFO
+        Info.InfoShow("Excluíndo os items da Compra")
+        '
         '--- delete all itens of COMPRA
         Try
             '
@@ -350,6 +359,9 @@ Public Class CompraBLL
         '
         '--- DELETE ALL APAGAR | MOVIMENTACOES OF COMPRA
         '==================================================================
+        '
+        '--- INFO
+        Info.InfoShow("Excluíndo o A Pagar da Compra")
         '
         '--- GET IDAPagar vinculado a Compra
         Try
@@ -387,6 +399,10 @@ Public Class CompraBLL
         End If
         '
         '--- DELETE FRETE
+        '
+        '--- INFO
+        Info.InfoShow("Excluíndo os fretes da Compra")
+        '
         Try
             '
             ObjDB.LimparParametros()
@@ -406,6 +422,10 @@ Public Class CompraBLL
         '
         '--- DELETE NOTAS IF NECESSITY
         '==================================================================
+        '
+        '--- INFO
+        Info.InfoShow("Excluíndo as NFe da Compra")
+        '
         Try
             '
             ObjDB.LimparParametros()
@@ -424,6 +444,10 @@ Public Class CompraBLL
         '
         '--- REMOVE ALL REFERENCES OF COMPRA IN TBLPRODUTOFORNECEDOR
         '==================================================================
+        '
+        '--- INFO
+        Info.InfoShow("Excluíndo as referências ao Fornecedor da Compra")
+        '
         Try
             '
             ObjDB.LimparParametros()
@@ -442,6 +466,10 @@ Public Class CompraBLL
         '
         '--- DELETE COMPRA
         '==================================================================
+        '
+        '--- INFO
+        Info.InfoShow("Excluíndo a Transação de Compra")
+        '
         Try
             '
             ObjDB.LimparParametros()

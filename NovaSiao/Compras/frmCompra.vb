@@ -2197,7 +2197,7 @@ Public Class frmCompra
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            If cBLL.DeletaCompraPorID(_Compra.IDCompra, _IDFilial) Then
+            If cBLL.DeletaCompraPorID(_Compra.IDCompra, _IDFilial, New Info) Then
                 '
                 '--- fecha
                 Close()
@@ -2209,8 +2209,13 @@ Public Class frmCompra
             MessageBox.Show("Uma exceção ocorreu ao Excluir a Compra..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
+            '
+            '--- Info OFF
+            Info.InfoHide()
+            '
             '--- Ampulheta OFF
             Cursor = Cursors.Default
+            '
         End Try
         '
 

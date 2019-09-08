@@ -681,6 +681,7 @@ Public Class frmCompraGetNFe
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
+            Info.InfoShow("Verificando se a NFe já foi inserida...")
             '
             '--- GET TRANSACAO for don't open new instances of db
             '-----------------------------------------------------------------------------
@@ -698,6 +699,7 @@ Public Class frmCompraGetNFe
             '
             '--- LOOKING FOR FORNECEDOR
             '-----------------------------------------------------------------------------
+            Info.InfoShow("Verificando o fornecedor da NFe...")
             Dim procForn As clFornecedor = FornecedorFind(dbTran)
             '
             If Not IsNothing(procForn) AndAlso Not IsNothing(procForn.IDPessoa) Then
@@ -720,6 +722,7 @@ Public Class frmCompraGetNFe
             '
             '--- LOOKING FOR TRANSPORTADORA
             '-----------------------------------------------------------------------------
+            Info.InfoShow("Verificando a Transportadora...")
             Dim procTransp As clTransportadora = TransportadoraFind(dbTran)
             '
             If IsNothing(procTransp) OrElse IsNothing(procTransp.IDPessoa) Then
@@ -740,6 +743,7 @@ Public Class frmCompraGetNFe
             '
             '--- LOOKING ITENS PRODUTOS
             '----------------------------------------------------------------------------------
+            Info.InfoShow("Verificando os Itens da NFe...")
             Dim countEncontrados As Integer = 0
             '
             For Each item In ItensNFe
@@ -802,6 +806,7 @@ Public Class frmCompraGetNFe
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Me.Visible = True
         Finally
+            Info.InfoHide()
             '
             '-- CLOSE ACESSO
             acesso.CommitAcessoWithTransaction(dbTran)
@@ -1426,6 +1431,10 @@ Public Class frmCompraGetNFe
             Exit Sub
         End If
         '
+        '--- INFO
+        '----------------------------------------------------------------------------------
+        Info.InfoShow("Inserindo uma nova Compra...")
+        '
         '--- DEFINE DBTRAN
         '---------------------------------------------------------------------------------------
         Dim acesso As New AcessoControlBLL
@@ -1486,6 +1495,10 @@ Public Class frmCompraGetNFe
                 Throw New Exception("Um erro ocorreu ao salvar ao Inserir Nova Compra")
             End If
             '
+            '--- INFO
+            '----------------------------------------------------------------------------------
+            Info.InfoShow("Inserindo Duplicatas A Pagar")
+            '
             '--- INSERT APAGAR DUPS
             If _APagarList.Count > 0 Then
                 '
@@ -1500,14 +1513,26 @@ Public Class frmCompraGetNFe
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
+            '--- INFO
+            '----------------------------------------------------------------------------------
+            Info.InfoShow("Inserindo Items da Compra...")
+            '
             '--- INSERT ITEMS
             InsertCompraItens(newCompra, dbTran)
+            '
+            '--- INFO
+            '----------------------------------------------------------------------------------
+            Info.InfoShow("Inserindo o registro da NFe na Compra...")
             '
             '--- INSERT NOTA
             InsertCompraNota(newCompra, dbTran)
             '
             '--- COMMIT
             acesso.CommitAcessoWithTransaction(dbTran)
+            '
+            '--- INFO
+            '----------------------------------------------------------------------------------
+            Info.InfoShow("Abrindo a nova Compra...")
             '
             '--- OPEN NEW COMPRA
             Dim frm As New frmCompra(newCompra) With {
@@ -1527,8 +1552,13 @@ Public Class frmCompraGetNFe
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             '
         Finally
+            '--- INFO HIDE
+            '----------------------------------------------------------------------------------
+            Info.InfoHide()
+            '
             '--- Ampulheta OFF
             Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub

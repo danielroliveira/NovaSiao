@@ -111,6 +111,7 @@ Partial Class frmPrincipal
         Me.ToolStripSeparator15 = New System.Windows.Forms.ToolStripSeparator()
         Me.miFazerBackup = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.lblInfoMessage = New System.Windows.Forms.Label()
         Me.btnMinimizer = New System.Windows.Forms.Button()
         Me.lblTituloGeral = New System.Windows.Forms.Label()
         Me.SContainerPrincipal = New System.Windows.Forms.SplitContainer()
@@ -464,7 +465,7 @@ Partial Class frmPrincipal
         Me.miNovaCompraNormal.Image = Global.NovaSiao.My.Resources.Resources.editar
         Me.miNovaCompraNormal.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.miNovaCompraNormal.Name = "miNovaCompraNormal"
-        Me.miNovaCompraNormal.Size = New System.Drawing.Size(188, 30)
+        Me.miNovaCompraNormal.Size = New System.Drawing.Size(168, 30)
         Me.miNovaCompraNormal.Text = "Normal"
         '
         'miNovaCompraNFeXML
@@ -472,7 +473,7 @@ Partial Class frmPrincipal
         Me.miNovaCompraNFeXML.Image = Global.NovaSiao.My.Resources.Resources.download
         Me.miNovaCompraNFeXML.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.miNovaCompraNFeXML.Name = "miNovaCompraNFeXML"
-        Me.miNovaCompraNFeXML.Size = New System.Drawing.Size(188, 30)
+        Me.miNovaCompraNFeXML.Size = New System.Drawing.Size(168, 30)
         Me.miNovaCompraNFeXML.Text = "Por NFe XML"
         '
         'miSimplesEntrada
@@ -820,6 +821,7 @@ Partial Class frmPrincipal
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.Color.SlateGray
+        Me.Panel1.Controls.Add(Me.lblInfoMessage)
         Me.Panel1.Controls.Add(Me.btnMinimizer)
         Me.Panel1.Controls.Add(Me.lblTituloGeral)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
@@ -827,6 +829,18 @@ Partial Class frmPrincipal
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(1204, 38)
         Me.Panel1.TabIndex = 0
+        '
+        'lblInfoMessage
+        '
+        Me.lblInfoMessage.AutoSize = True
+        Me.lblInfoMessage.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold)
+        Me.lblInfoMessage.ForeColor = System.Drawing.Color.LightYellow
+        Me.lblInfoMessage.Location = New System.Drawing.Point(12, 7)
+        Me.lblInfoMessage.Name = "lblInfoMessage"
+        Me.lblInfoMessage.Size = New System.Drawing.Size(126, 26)
+        Me.lblInfoMessage.TabIndex = 11
+        Me.lblInfoMessage.Text = "Mensagem..."
+        Me.lblInfoMessage.Visible = False
         '
         'btnMinimizer
         '
@@ -1035,6 +1049,7 @@ Partial Class frmPrincipal
         Me.tsPrincipal.ResumeLayout(False)
         Me.tsPrincipal.PerformLayout()
         Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.SContainerPrincipal.Panel1.ResumeLayout(False)
         Me.SContainerPrincipal.Panel2.ResumeLayout(False)
         CType(Me.SContainerPrincipal, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1147,4 +1162,5 @@ Partial Class frmPrincipal
     Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
     Friend WithEvents miNovaCompraNormal As ToolStripMenuItem
     Friend WithEvents miNovaCompraNFeXML As ToolStripMenuItem
+    Friend WithEvents lblInfoMessage As Label
 End Class

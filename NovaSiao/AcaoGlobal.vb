@@ -1,6 +1,6 @@
 ﻿Imports CamadaBLL
 Imports CamadaDTO
-
+'
 Public Class AcaoGlobal
     '
     '================================================================================
@@ -355,5 +355,29 @@ Public Class AcaoGlobal
         Return newDev
         '
     End Function
+    '
+End Class
+'
+'
+'==========================================================================================
+' CONTROLE DO INFO MESSAGE FRM PRINCIPAL
+'==========================================================================================
+Public Class Info
+    '
+    Public Shared Sub InfoShow(message As String)
+        '
+        Dim frmP As frmPrincipal = My.Application.OpenForms().OfType(Of frmPrincipal).First
+        '
+        frmP.InfoMessageShow(message)
+        '
+    End Sub
+    '
+    Public Shared Sub InfoHide()
+        '
+        Dim frmP As frmPrincipal = My.Application.OpenForms().OfType(Of frmPrincipal).First
+        '
+        frmP.InfoMessageHide()
+        '
+    End Sub
     '
 End Class

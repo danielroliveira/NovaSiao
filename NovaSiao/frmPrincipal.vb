@@ -1455,4 +1455,44 @@ Public Class frmPrincipal
     '
 #End Region
     '
+    '========================================================================================================
+    ' INFO MESSAGE
+    '========================================================================================================
+#Region "INFO MESSAGE"
+    '
+    Public Sub InfoMessageShow(message As String)
+        '
+        lblInfoMessage.Text = message
+        lblInfoMessage.Visible = True
+        '
+        If Panel1.BackColor <> Color.SlateGray Then
+            lblInfoMessage.ForeColor = Color.LightSlateGray
+        End If
+        '
+        lblInfoMessage.Refresh()
+        '
+    End Sub
+    '
+    Public Sub InfoMessageUpdate(message As String)
+        '
+        lblInfoMessage.Text = message
+        lblInfoMessage.Visible = True
+        '
+        If Panel1.BackColor <> Color.SlateGray Then
+            lblInfoMessage.ForeColor = Color.LightSlateGray
+        End If
+        '
+        lblInfoMessage.Refresh()
+        '
+    End Sub
+    '
+    Public Sub InfoMessageHide()
+        '
+        lblInfoMessage.Visible = False
+        lblInfoMessage.Text = ""
+        '
+    End Sub
+    '
+#End Region '/ INFO MESSAGE
+    '
 End Class
