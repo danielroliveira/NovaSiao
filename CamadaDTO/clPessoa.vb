@@ -497,3 +497,28 @@ Public Class clPessoaJuridica
     End Property
     '
 End Class
+'
+'========================================================================
+' CLASSE PESSOAENVIO
+'========================================================================
+Public Class clPessoaEnvio
+    Property IDPessoaEnvio As Integer
+    Property EnvioDescricao As String
+    Property EnvioData As Date
+    Property Impresso As Boolean
+    Property Enviado As Boolean
+End Class
+
+Public Class clPessoaEnvioEndereco
+    Inherits clPessoaEnvio
+    '
+    Property IDPessoa As Integer
+    Property Cadastro As String
+    Property Endereco As String
+    Property Bairro As String
+    Property Cidade As String
+    Property UF As String
+    Property CEP As String
+    Property DataPostagem As Date?
+    '
+End Class
