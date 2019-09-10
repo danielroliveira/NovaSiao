@@ -274,8 +274,6 @@ Public Class frmCompra
         dtFTipo.Rows.Add(New Object() {0, "Sem Frete"})
         dtFTipo.Rows.Add(New Object() {1, "Emitente"})
         dtFTipo.Rows.Add(New Object() {2, "Destinatário"})
-        'dtFTipo.Rows.Add(New Object() {3, "Reembolso Postal"})
-        'dtFTipo.Rows.Add(New Object() {4, "A Cobrar"})
         '
         With cmbFreteTipo
             .DataSource = dtFTipo

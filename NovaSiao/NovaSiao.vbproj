@@ -315,6 +315,18 @@
     <Compile Include="Compras\frmCompraGetNFe.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="EnvioMalaDireta\frmEnvioListagem.designer.vb">
+      <DependentUpon>frmEnvioListagem.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EnvioMalaDireta\frmEnvioListagem.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormsPrincipais\frmDataMesAno.designer.vb">
+      <DependentUpon>frmDataMesAno.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormsPrincipais\frmDataMesAno.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Fornecedores\frmFornecedor.Designer.vb">
       <DependentUpon>frmFornecedor.vb</DependentUpon>
     </Compile>
@@ -1019,6 +1031,12 @@
     <EmbeddedResource Include="Compras\frmCompraGetNFe.resx">
       <DependentUpon>frmCompraGetNFe.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="EnvioMalaDireta\frmEnvioListagem.resx">
+      <DependentUpon>frmEnvioListagem.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsPrincipais\frmDataMesAno.resx">
+      <DependentUpon>frmDataMesAno.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Fornecedores\frmFornecedor.resx">
       <DependentUpon>frmFornecedor.vb</DependentUpon>
     </EmbeddedResource>
@@ -1512,6 +1530,7 @@
     <None Include="Resources\loading1.gif" />
     <None Include="Resources\loading3.gif" />
     <None Include="Resources\loading_blue2.gif" />
+    <None Include="Resources\mail.png" />
     <Content Include="SqlServerTypes\Loader.cs" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">

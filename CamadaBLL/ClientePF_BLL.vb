@@ -3,8 +3,9 @@ Imports CamadaDAL
 Imports System.Data.SqlClient
 
 Public Class ClientePF_BLL
+    '
     '===================================================================================================
-    'GET CLIENTEPF | PELO ID | RETORNA CLIENTEPF
+    '--- GET CLIENTEPF | PELO ID | RETORNA CLIENTEPF
     '===================================================================================================
     Public Function GetClientePF_PorID(ByVal IDCliente As Integer) As clClientePF
         '
@@ -86,7 +87,7 @@ Public Class ClientePF_BLL
     End Function
     '
     '===================================================================================================
-    'GET CLIENTEPF | COM WHERE | RETORNA LISTAGEM
+    '--- GET CLIENTEPF | COM WHERE | RETORNA LISTAGEM
     '===================================================================================================
     Public Function GetClientesPF_Where(myWhere As String) As List(Of clClientePF)
         '
@@ -167,6 +168,74 @@ Public Class ClientePF_BLL
             '--- CLOSE DB CONNECTION
             objdb.CloseConn()
             '
+        End Try
+        '
+    End Function
+    '
+    '===================================================================================================
+    '--- INSERT CLIENTEPF ANIVERSARIANTES
+    '===================================================================================================
+    Public Function ClienteSearchInsertAniversariantes(MesRef As Integer) As Integer
+        '
+        Dim db As AcessoDados = Nothing
+        '
+        Try
+            '
+            db = New AcessoDados
+            Dim query As String = ""
+            '
+            '--- GET CLIENTES ANIVERSARIANTES
+            '----------------------------------------------------------------------------------
+            db.LimparParametros()
+            db.AdicionarParametros("@Mes", MesRef)
+            '
+            query = "SELECT IDPessoa, NascimentoData " &
+                    "FROM qryClientePF " &
+                    "WHERE IDSituacao = 1 AND MONTH(NascimentoData) = @Mes"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            Dim NiverCount As Integer = dt.Rows.Count
+            If NiverCount = 0 Then Return 0
+            '
+            If Not IsNumeric(dt.Rows(0).Item(0)) Then
+                Throw New Exception(dt.Rows(0).Item(0))
+            End If
+            '
+            '--- Cria TRANSACTION
+            '----------------------------------------------------------------------------------
+            db.BeginTransaction()
+            '
+            '--- Cria o ENVIO
+            '----------------------------------------------------------------------------------
+            Dim Envio As New clPessoaEnvio With {
+                .EnvioDescricao = "Aniversariantes do Mês de " & Format(DateSerial(Year(Today), MesRef, 1), "MMMM"),
+                .EnvioData = Today
+            }
+            '
+            Dim eBLL As New PessoaEnvioBLL
+            Dim response As clPessoaEnvio = eBLL.InsertEnvio(Envio, db)
+            '
+            '--- Insere cada Cliente encontrado na Lista de Envio
+            '----------------------------------------------------------------------------------
+            For Each r In dt.Rows
+                '
+                Dim DiaNascimento As Integer = DirectCast(r("NascimentoData"), Date).Day
+                '
+                Dim dtPostagem As Date = DateSerial(Year(Today), MesRef, DiaNascimento)
+                If Not eBLL.InsertEnvioPessoa(response.IDPessoaEnvio, r("IDPessoa"), dtPostagem, db) Then
+                    Throw New Exception("Um erro desconhecido ocorreu ao inserir Aniversariantes...")
+                End If
+                '
+            Next
+            '
+            '--- COMMIT AND RETURN
+            '----------------------------------------------------------------------------------
+            db.CommitTransaction()
+            Return NiverCount
+            '
+        Catch ex As Exception
+            db.RollBackTransaction()
+            Throw ex
         End Try
         '
     End Function

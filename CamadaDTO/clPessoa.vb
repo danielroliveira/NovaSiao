@@ -502,15 +502,27 @@ End Class
 ' CLASSE PESSOAENVIO
 '========================================================================
 Public Class clPessoaEnvio
+    '
+    Sub New()
+        EnvioData = Today
+        Impresso = False
+        Enviado = False
+    End Sub
+    '
     Property IDPessoaEnvio As Integer
     Property EnvioDescricao As String
     Property EnvioData As Date
     Property Impresso As Boolean
     Property Enviado As Boolean
+    '
 End Class
 
 Public Class clPessoaEnvioEndereco
     Inherits clPessoaEnvio
+    '
+    Sub New()
+        DataPostagem = Nothing
+    End Sub
     '
     Property IDPessoa As Integer
     Property Cadastro As String

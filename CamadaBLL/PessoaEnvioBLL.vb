@@ -103,9 +103,34 @@ Public Class PessoaEnvioBLL
     '==========================================================================================
     ' INSERT PESSOA ENVIO
     '==========================================================================================
-    Public Function InsertEnvio(envio As clPessoaEnvio) As clPessoaEnvio
+    Public Function InsertEnvio(envio As clPessoaEnvio,
+                                Optional dbTran As Object = Nothing) As clPessoaEnvio
         '
-
+        Dim db As AcessoDados = If(dbTran, New AcessoDados)
+        '
+        Try
+            '
+            Dim query As String = ""
+            query = "INSERT INTO tblPessoaEnvio " &
+                    "(EnvioDescricao, EnvioData, Impresso, Enviado) " &
+                    "VALUES " &
+                    "(@EnvioDescricao, @EnvioData, @Impresso, @Enviado)"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@EnvioDescricao", envio.EnvioDescricao)
+            db.AdicionarParametros("@EnvioData", envio.EnvioData)
+            db.AdicionarParametros("@Impresso", envio.Impresso)
+            db.AdicionarParametros("@Enviado", envio.Enviado)
+            '
+            Dim NewID As Integer = db.ExecutarInsertGetID(query)
+            '
+            '--- return
+            envio.IDPessoaEnvio = NewID
+            Return envio
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
         '
     End Function
     '
@@ -114,9 +139,32 @@ Public Class PessoaEnvioBLL
     '==========================================================================================
     Public Function InsertEnvioPessoa(IDPessoaEnvio As Integer,
                                       IDPessoa As Integer,
-                                      Optional dtPostagem As Date = Nothing) As clPessoaEnvioEndereco
+                                      Optional dtPostagem As Date = Nothing,
+                                      Optional dbTran As Object = Nothing) As Boolean
         '
-
+        Dim db As AcessoDados = If(dbTran, New AcessoDados)
+        '
+        Try
+            '
+            Dim query As String = ""
+            query = "INSERT INTO tblPessoaEnvioEndereco " &
+                    "(IDPessoaEnvio, IDPessoa, DataPostagem) " &
+                    "VALUES " &
+                    "(@IDPessoaEnvio, @IDPessoa, @DataPostagem)"
+            '
+            db.LimparParametros()
+            db.AdicionarParametros("@IDPessoaEnvio", IDPessoaEnvio)
+            db.AdicionarParametros("@IDPessoa", IDPessoa)
+            db.AdicionarParametros("@DataPostagem", dtPostagem)
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            '--- return
+            Return True
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
         '
     End Function
     '

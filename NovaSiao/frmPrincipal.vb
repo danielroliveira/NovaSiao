@@ -369,6 +369,7 @@ Public Class frmPrincipal
     ' MENU CLIENTE
     '========================================================================================================
 #Region "MENU CLIENTE"
+    '
     Private Sub miClienteNovo_Click(sender As Object, e As EventArgs) Handles miClienteNovo.Click
         '
         Dim frmCN As New frmClienteNovo
@@ -445,6 +446,75 @@ Public Class frmPrincipal
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao abrir formulário..." & vbNewLine &
             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub miGerarParaAniversariantes_Click(sender As Object, e As EventArgs) Handles miGerarParaAniversariantes.Click
+        '
+        Try
+            '
+            Dim MesRef As Integer = Month(Today)
+            '
+            Using fMes As New frmDataMesAno("Informe o Mês do Aniversário para consulta...", MesRef, Me)
+                fMes.ShowDialog()
+                If fMes.DialogResult <> vbOK Then Exit Sub
+                '
+                MesRef = fMes.propMes
+                '
+            End Using
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- INSERT NIVER
+            Dim cBLL As New ClientePF_BLL
+            Dim CountNiver As Integer = cBLL.ClienteSearchInsertAniversariantes(MesRef)
+            Dim Mensagem As String = ""
+            '
+            If CountNiver = 0 Then
+                Mensagem = "Não nenhum cliente com aniversário no mês selecionado..."
+            ElseIf CountNiver = 1 Then
+                Mensagem = "Operação de Inserção concluída com sucesso!" & vbNewLine &
+                           "Foi inserido apenas 1(UM) Cliente."
+            Else
+                Mensagem = "Operação de Inserção concluída com sucesso!" & vbNewLine &
+                           "Foram inseridos " & CountNiver & " Clientes."
+            End If
+            '
+            AbrirDialog(Mensagem, "Operação Concluída", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao Gerar envio para os Clientes Aniversariantes..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
+    '
+    Private Sub miEnvioMalaDiretaImpressão_Click(sender As Object, e As EventArgs) Handles miEnvioMalaDiretaImpressão.Click
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frmE As New frmEnvioListagem
+            frmE.MdiParent = Me
+            OcultaMenuPrincipal()
+            frmE.Show()
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir formulário..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
             '--- Ampulheta OFF
             Cursor = Cursors.Default
