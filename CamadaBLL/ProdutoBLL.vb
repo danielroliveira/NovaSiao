@@ -1041,7 +1041,8 @@ Public Class TipoSubTipoCategoriaBLL
     '-----------------------------------------------------------------------------------------------------------------
     ' GET TIPOS WITH WHERE DATATABLE
     '-----------------------------------------------------------------------------------------------------------------
-    Public Function ProdutoTipo_GET_WithWhere(Optional myWhere As String = "") As DataTable
+    Public Function ProdutoTipo_GET_WithWhere(Optional myWhere As String = "",
+                                              Optional myFieldOrder As String = "") As DataTable
         '
         Dim SQL As New SQLControl
         Dim myQuery As String = "SELECT * FROM tblProdutoTipo "
@@ -1050,8 +1051,12 @@ Public Class TipoSubTipoCategoriaBLL
             myQuery = myQuery & " WHERE " & myWhere
         End If
         '
+        If myFieldOrder.Length > 0 Then
+            myQuery = myQuery & " ORDER BY " & myFieldOrder
+        End If
+        '
         Try
-            SQL.ExecQuery(myQuery, True)
+            SQL.ExecQuery(myQuery, False)
             '
             If SQL.HasException Then
                 Throw New Exception(SQL.Exception)
@@ -1130,7 +1135,8 @@ Public Class TipoSubTipoCategoriaBLL
     '-----------------------------------------------------------------------------------------------------------------
     ' GET SUBTIPOS WITH WHERE DATATABLE
     '-----------------------------------------------------------------------------------------------------------------
-    Public Function ProdutoSubTipo_GET_WithWhere(Optional myWhere As String = "") As DataTable
+    Public Function ProdutoSubTipo_GET_WithWhere(Optional myWhere As String = "",
+                                                 Optional myFieldOrder As String = "") As DataTable
         '
         Dim SQL As New SQLControl
         Dim myQuery As String = "SELECT * FROM tblProdutoSubTipo "
@@ -1139,8 +1145,12 @@ Public Class TipoSubTipoCategoriaBLL
             myQuery = myQuery & " WHERE " & myWhere
         End If
         '
+        If myFieldOrder.Length > 0 Then
+            myQuery = myQuery & " ORDER BY " & myFieldOrder
+        End If
+        '
         Try
-            SQL.ExecQuery(myQuery, True)
+            SQL.ExecQuery(myQuery, False)
             '
             If SQL.HasException Then
                 Throw New Exception(SQL.Exception)
@@ -1220,7 +1230,8 @@ Public Class TipoSubTipoCategoriaBLL
     '-----------------------------------------------------------------------------------------------------------------
     ' GET CATEGORIAS WITH WHERE DATATABLE
     '-----------------------------------------------------------------------------------------------------------------
-    Public Function ProdutoCategoria_GET_WithWhere(Optional myWhere As String = "") As DataTable
+    Public Function ProdutoCategoria_GET_WithWhere(Optional myWhere As String = "",
+                                                   Optional myFieldOrder As String = "") As DataTable
         '
         Dim SQL As New SQLControl
         Dim myQuery As String = "SELECT * FROM tblProdutoCategoria "
@@ -1229,8 +1240,12 @@ Public Class TipoSubTipoCategoriaBLL
             myQuery = myQuery & " WHERE " & myWhere
         End If
         '
+        If myFieldOrder.Length > 0 Then
+            myQuery = myQuery & " ORDER BY " & myFieldOrder
+        End If
+        '
         Try
-            SQL.ExecQuery(myQuery, True)
+            SQL.ExecQuery(myQuery, False)
             '
             If SQL.HasException Then
                 Throw New Exception(SQL.Exception)

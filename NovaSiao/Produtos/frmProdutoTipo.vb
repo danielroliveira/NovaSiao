@@ -10,64 +10,9 @@ Public Class frmProdutoTipo
     Property ItemEscolhido() As Integer? '--- quando o form fechar informa o Tipo, SubTipo ou Categoria
     Private _tipoPadrao As Integer?
     Private pTipoBLL As New TipoSubTipoCategoriaBLL
-    'Dim SQL As New SQLControl
     Dim _Sit As Byte
     '
 #Region "LOAD"
-    '
-    ' PROPRIEDADE SIT
-    Private Property Sit As EnumFlagEstado
-        '
-        Get
-            Sit = _Sit
-        End Get
-        '
-        Set(value As EnumFlagEstado)
-            _Sit = value
-            Select Case _Sit
-                Case EnumFlagEstado.RegistroSalvo
-                    btnSalvar.Enabled = False
-                    If _formProcura <> ProcurarPor.None Then
-                        btnFechar.Text = "&Escolher"
-                    Else
-                        btnFechar.Text = "&Fechar"
-                    End If
-                    AtualizarTabs(True)
-                Case EnumFlagEstado.Alterado
-                    btnSalvar.Enabled = True
-                    btnFechar.Text = "&Cancelar"
-                    AtualizarTabs(False)
-                Case EnumFlagEstado.NovoRegistro
-                    btnSalvar.Enabled = True
-                    btnFechar.Text = "&Cancelar"
-                    AtualizarTabs(False)
-            End Select
-            '
-        End Set
-        '
-    End Property
-    '
-    '--- Propriedade que declara o tipo de procura
-    Public Property propTipoPadrao() As Integer?
-        '
-        Get
-            Return _tipoPadrao
-        End Get
-        '
-        Set(ByVal value As Integer?)
-            _tipoPadrao = value
-            PreencheListaSubTipo()
-            PreencheListaCategoria()
-        End Set
-        '
-    End Property
-    '
-    Enum ProcurarPor
-        None = 0
-        Tipo = 1
-        SubTipo = 2
-        Categoria = 3
-    End Enum
     '
     Sub New(formProcura As ProcurarPor, Optional tipoPadrao As Integer? = Nothing)
         '
@@ -75,12 +20,18 @@ Public Class frmProdutoTipo
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
-        PreencheListaTipo()
+        GetListaTipo()
         Sit = EnumFlagEstado.RegistroSalvo
         _formProcura = formProcura
         '
         lblTitulo.Text = "Controle de Tipos de Produto"
         '
+        '--- Formata as Listas Insert Columns
+        FormataListaTipo()
+        FormataListaSubTipo()
+        FormataListaCategoria()
+        '
+        '--- Define Tipo and obtain SubTipo and Tipo For TipoPadrao
         propTipoPadrao = tipoPadrao
         '
         '--- Se houver um tipo selecionado
@@ -125,23 +76,79 @@ Public Class frmProdutoTipo
     '
     Private Sub frmProdutoTipo_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Abrindo = False
-
     End Sub
+    '
+    ' PROPRIEDADE SIT
+    Private Property Sit As EnumFlagEstado
+        '
+        Get
+            Sit = _Sit
+        End Get
+        '
+        Set(value As EnumFlagEstado)
+            _Sit = value
+            Select Case _Sit
+                Case EnumFlagEstado.RegistroSalvo
+                    btnSalvar.Enabled = False
+                    If _formProcura <> ProcurarPor.None Then
+                        btnFechar.Text = "&Escolher"
+                    Else
+                        btnFechar.Text = "&Fechar"
+                    End If
+                    AtualizarTabs(True)
+                Case EnumFlagEstado.Alterado
+                    btnSalvar.Enabled = True
+                    btnFechar.Text = "&Cancelar"
+                    AtualizarTabs(False)
+                Case EnumFlagEstado.NovoRegistro
+                    btnSalvar.Enabled = True
+                    btnFechar.Text = "&Cancelar"
+                    AtualizarTabs(False)
+            End Select
+            '
+        End Set
+        '
+    End Property
+    '
+    '--- Propriedade que declara o tipo de procura
+    Public Property propTipoPadrao() As Integer?
+        '
+        Get
+            Return _tipoPadrao
+        End Get
+        '
+        Set(ByVal value As Integer?)
+            '
+            '--- Change value only new value is diferent
+            If If(value, -1) <> If(_tipoPadrao, -1) Then
+                _tipoPadrao = value
+                GetListaSubTipo()
+                GetListaCategoria()
+            End If
+            '
+        End Set
+        '
+    End Property
+    '
+    Enum ProcurarPor
+        None = 0
+        Tipo = 1
+        SubTipo = 2
+        Categoria = 3
+    End Enum
     '
 #End Region
     '
 #Region "CONTROLE DOS DATAGRID"
     '
     ' PREENCHE LISTAGEM TIPOS
-    Private Sub PreencheListaTipo()
-        Dim SQL As New SQLControl
+    Private Sub GetListaTipo()
         '
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            SQL.ExecQuery("SELECT * FROM tblProdutoTipo")
-            dtTipo = SQL.DBDT
+            dtTipo = pTipoBLL.ProdutoTipo_GET_WithWhere()
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Evento: Obter Lista de Tipos de Produto..." & vbNewLine &
@@ -154,7 +161,14 @@ Public Class frmProdutoTipo
         '
         dgvTipos.Columns.Clear()
         dgvTipos.AutoGenerateColumns = False
-
+        '
+        dgvTipos.DataSource = dtTipo
+        '
+    End Sub
+    '
+    '--- FORMATA LISTA TIPO
+    Private Sub FormataListaTipo()
+        '
         ' (1) COLUNA REG
         dgvTipos.Columns.Add("clnIDProdutoTipo", "Reg.")
         With dgvTipos.Columns("clnIDProdutoTipo")
@@ -200,30 +214,10 @@ Public Class frmProdutoTipo
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
         '
-        dgvTipos.DataSource = dtTipo
-        '
     End Sub
     '
-    ' PREENCHE LISTAGEM SUB TIPOS
-    Private Sub PreencheListaSubTipo()
-        If dgvTipos.Rows.Count = 0 Then Exit Sub
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            Dim SQL As New SQLControl
-            SQL.ExecQuery("SELECT * FROM tblProdutoSubTipo WHERE IDProdutoTipo = " & propTipoPadrao)
-            dtSubTipo = SQL.DBDT
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Obter SubTipos de Produtos..." & vbNewLine &
-            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
+    '--- FORMATA LISTA SUBTIPO
+    Private Sub FormataListaSubTipo()
         '
         dgvSubTipo.Columns.Clear()
         dgvSubTipo.AutoGenerateColumns = False
@@ -273,25 +267,24 @@ Public Class frmProdutoTipo
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
         '
-        dgvSubTipo.DataSource = dtSubTipo
-        '
     End Sub
     '
-    ' PREENCHE LISTAGEM CATEGORIAS
-    Private Sub PreencheListaCategoria()
+    ' PREENCHE LISTAGEM SUB TIPOS
+    Private Sub GetListaSubTipo()
+        '
         If dgvTipos.Rows.Count = 0 Then Exit Sub
+        If IsNothing(propTipoPadrao) Then Exit Sub
         '
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Dim SQL As New SQLControl
-            SQL.ExecQuery("SELECT * FROM tblProdutoCategoria WHERE IDProdutoTipo = " & propTipoPadrao)
-
-            dtCat = SQL.DBDT
+            '
+            Dim query As String = "IDProdutoTipo = " & propTipoPadrao
+            dtSubTipo = pTipoBLL.ProdutoSubTipo_GET_WithWhere(query, "ProdutoSubTipo")
             '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Obter Lista de Categorias de Produto..." & vbNewLine &
+            MessageBox.Show("Uma exceção ocorreu ao Obter SubTipos de Produtos..." & vbNewLine &
             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
         Finally
@@ -299,9 +292,16 @@ Public Class frmProdutoTipo
             Cursor = Cursors.Default
         End Try
         '
+        dgvSubTipo.DataSource = dtSubTipo
+        '
+    End Sub
+    '
+    '--- FORMATA LISTA CATEGORIA
+    Private Sub FormataListaCategoria()
+        '
         dgvCategoria.Columns.Clear()
         dgvCategoria.AutoGenerateColumns = False
-
+        '
         ' (1) COLUNA REG
         dgvCategoria.Columns.Add("clnIDCategoria", "Reg.")
         With dgvCategoria.Columns("clnIDCategoria")
@@ -346,8 +346,33 @@ Public Class frmProdutoTipo
             .Resizable = False
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
-
+        '
+    End Sub
+    '
+    ' PREENCHE LISTAGEM CATEGORIAS
+    Private Sub GetListaCategoria()
+        '
+        If dgvTipos.Rows.Count = 0 Then Exit Sub
+        If IsNothing(propTipoPadrao) Then Exit Sub
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim query As String = "IDProdutoTipo = " & propTipoPadrao
+            dtCat = pTipoBLL.ProdutoCategoria_GET_WithWhere(query, "ProdutoCategoria")
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Obter Lista de Categorias de Produto..." & vbNewLine &
+            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
         dgvCategoria.DataSource = dtCat
+        '
     End Sub
     '
     ' PREENCHE AS IMAGENS DA LISTA
@@ -384,12 +409,14 @@ Public Class frmProdutoTipo
     Private Sub dgvTipos_RowValidated(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTipos.RowValidated
         '
         If Not IsDBNull(dgvTipos.Rows(e.RowIndex).Cells(0).Value) AndAlso Abrindo = False Then
+            '
             propTipoPadrao = dgvTipos.Rows(e.RowIndex).Cells(0).Value
             '
             If Not IsNothing(dgvTipos.Rows(e.RowIndex).Cells(e.ColumnIndex).Value) Then
                 lblTipo1.Text = "Classificações de " & dgvTipos.Rows(e.RowIndex).Cells(1).Value.ToString.ToUpper
                 lblTipo2.Text = "Categorias de " & dgvTipos.Rows(e.RowIndex).Cells(1).Value.ToString.ToUpper
             End If
+            '
         End If
         '
     End Sub
@@ -464,7 +491,7 @@ Public Class frmProdutoTipo
                     dgvTipos.CancelEdit()
                 End If
                 '
-                PreencheListaTipo()
+                GetListaTipo()
             Case 1
                 If Sit = EnumFlagEstado.NovoRegistro Then
                     dgvSubTipo.Rows.Remove(dgvSubTipo.CurrentRow)
@@ -472,7 +499,7 @@ Public Class frmProdutoTipo
                     dgvSubTipo.CancelEdit()
                 End If
                 '
-                PreencheListaSubTipo()
+                GetListaSubTipo()
             Case 2
                 If Sit = EnumFlagEstado.NovoRegistro Then
                     dgvCategoria.Rows.Remove(dgvCategoria.CurrentRow)
@@ -480,7 +507,7 @@ Public Class frmProdutoTipo
                     dgvCategoria.CancelEdit()
                 End If
                 '
-                PreencheListaCategoria()
+                GetListaCategoria()
         End Select
         '
         Sit = EnumFlagEstado.RegistroSalvo
@@ -520,6 +547,10 @@ Public Class frmProdutoTipo
             '
             '---salva os registros
             Try
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
                 If dtTipo.Rows(r.Index).RowState = DataRowState.Modified Then ' registro ALTERADO
                     '
                     pTipoBLL.ProdutoTipo_Update(r.Cells(0).Value,
@@ -533,11 +564,17 @@ Public Class frmProdutoTipo
                     regSalvos += 1
                     '
                 End If
+                '
             Catch ex As Exception
                 MessageBox.Show("O seguinte registro não pôde ser salvo:" & vbNewLine &
                                     CStr(r.Cells(1).Value).ToUpper, "Erro ao Salvar",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error)
                 regSalvos -= 1
+            Finally
+                '
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+                '
             End Try
             '
         Next
@@ -551,12 +588,13 @@ Public Class frmProdutoTipo
         End If
         '
         '---preencher a listagem com os novos valores
-        PreencheListaTipo()
+        GetListaTipo()
         Sit = EnumFlagEstado.RegistroSalvo
         '
     End Sub
     '
     Private Sub SalvarSubTipo()
+        '
         '-- variavel para informar o número de registros salvos
         Dim regSalvos As Integer = 0
         '
@@ -573,6 +611,9 @@ Public Class frmProdutoTipo
             '
             '---salva os registros
             Try
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
                 '
                 If dtSubTipo.Rows(r.Index).RowState = DataRowState.Modified Then ' registro ALTERADO
                     '
@@ -591,6 +632,11 @@ Public Class frmProdutoTipo
                                 CStr(r.Cells(1).Value).ToUpper, "Erro ao Salvar",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error)
                 regSalvos -= 1
+            Finally
+                '
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+                '
             End Try
         Next
         '
@@ -603,7 +649,7 @@ Public Class frmProdutoTipo
         End If
         '
         '---preencher a listagem com os novos valores
-        PreencheListaSubTipo()
+        GetListaSubTipo()
         Sit = EnumFlagEstado.RegistroSalvo
         '
     End Sub
@@ -625,7 +671,10 @@ Public Class frmProdutoTipo
             '
             '---salva os registros
             Try
-
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
                 If dtCat.Rows(r.Index).RowState = DataRowState.Modified Then ' registro ALTERADO
                     '
                     pTipoBLL.ProdutoCategoria_Update(r.Cells(0).Value, r.Cells(1).Value, r.Cells(3).Value)
@@ -645,6 +694,11 @@ Public Class frmProdutoTipo
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
                 regSalvos -= 1
                 '
+            Finally
+                '
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+                '
             End Try
         Next
         '
@@ -657,7 +711,7 @@ Public Class frmProdutoTipo
         End If
         '
         '---preencher a listagem com os novos valores
-        PreencheListaCategoria()
+        GetListaCategoria()
         Sit = EnumFlagEstado.RegistroSalvo
     End Sub
     '
@@ -756,13 +810,13 @@ Public Class frmProdutoTipo
                 Select Case tabPrincipal.SelectedIndex
                     Case 0 ' cancela TIPO
                         If Sit = EnumFlagEstado.NovoRegistro Then dgvTipos.Rows.Remove(dgvTipos.CurrentRow)
-                        PreencheListaTipo()
+                        GetListaTipo()
                     Case 1 ' cancela SubTipo
                         If Sit = EnumFlagEstado.NovoRegistro Then dgvSubTipo.Rows.Remove(dgvSubTipo.CurrentRow)
-                        PreencheListaSubTipo()
+                        GetListaSubTipo()
                     Case 2 ' cancela Categoria
                         If Sit = EnumFlagEstado.NovoRegistro Then dgvCategoria.Rows.Remove(dgvCategoria.CurrentRow)
-                        PreencheListaCategoria()
+                        GetListaCategoria()
                 End Select
                 '
                 Sit = EnumFlagEstado.RegistroSalvo
@@ -786,19 +840,6 @@ Public Class frmProdutoTipo
             Case 2
                 btnNovo.Text = "&Nova Categoria"
         End Select
-        '
-        '--- Se for form de procura não permite editar noutra guia
-        'If tabPrincipal.SelectedIndex > -1 AndAlso _formProcura <> ProcurarPor.None Then
-        '    If _formProcura = tabPrincipal.SelectedIndex + 1 Then
-        '        btnNovo.Enabled = True
-        '        btnFechar.Enabled = True
-        '        dgvTipos.Columns(1).ReadOnly = False
-        '    Else
-        '        btnNovo.Enabled = False
-        '        btnFechar.Enabled = False
-        '        dgvTipos.Columns(1).ReadOnly = True
-        '    End If
-        'End If
         '
     End Sub
     '
@@ -830,6 +871,7 @@ Public Class frmProdutoTipo
     ' CRIA TECLA DE ATALHO PARA O CONTROLE DE TABULACAO
     '---------------------------------------------------------------------------------------------------
     Private Sub Form_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+        '
         If e.Alt AndAlso e.KeyCode = Keys.D1 Then
             If VTabTipos.Enabled Then
                 tabPrincipal.SelectedTab = VTabTipos
@@ -846,6 +888,7 @@ Public Class frmProdutoTipo
                 tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
             End If
         End If
+        '
     End Sub
     '
 #End Region

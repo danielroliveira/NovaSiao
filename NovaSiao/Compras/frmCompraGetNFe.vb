@@ -114,7 +114,7 @@ Public Class frmCompraGetNFe
         dgvItens.AutoGenerateColumns = False
         '
         ' altera as propriedades importantes
-        dgvItens.MultiSelect = False
+        dgvItens.MultiSelect = True
         dgvItens.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         dgvItens.ColumnHeadersVisible = True
         dgvItens.AllowUserToResizeRows = False
@@ -1052,7 +1052,9 @@ Public Class frmCompraGetNFe
     '
     '--- INSERT NEW PRODUTO INTO LIST
     '----------------------------------------------------------------------------------
-    Private Sub InsertNewProdutoIntoList(item As clNFeItem, produto As clProduto)
+    Private Sub InsertNewProdutoIntoList(item As clNFeItem,
+                                         produto As clProduto,
+                                         IsEndItem As Boolean)
         '
         '--- AO ESCOLHER UM PRODUTO - PREENCHE A LISTA
         item.IDProduto = produto.IDProduto
@@ -1060,6 +1062,9 @@ Public Class frmCompraGetNFe
         item.Produto = produto.Produto
         item.PCompra = produto.PCompra
         item.DescontoCompra = produto.DescontoCompra
+        '
+        '--- CHECK IF IS TRE LAST ITEM OF SELECTED ITEMS
+        If Not IsEndItem Then Exit Sub
         '
         '--- MESSAGE
         If AbrirDialog("Item relacionado com Produto com sucesso!" & vbCrLf & vbCrLf &
@@ -1163,25 +1168,51 @@ Public Class frmCompraGetNFe
             If f.DialogResult <> DialogResult.OK Then Exit Sub
             '
             Dim prodEncontrado As clProduto = f.ProdutoEscolhido
-            Dim item As clNFeItem = dgvItens.CurrentRow.DataBoundItem
+            '
+            '--- Check LIST of Selected Items
+            If Not IsFreeToInsertNewProduto() Then Exit Sub
+            '
+            '--- Create Message AND ask to USER
+            Dim message As String = ""
+            Dim CountItemsSelected As Integer = dgvItens.SelectedRows.Count
+            '
+            If CountItemsSelected = 1 Then
+                Dim curItem As clNFeItem = dgvItens.CurrentRow.DataBoundItem
+                message = "Você deseja realmente relacionar o ITEM:" & vbCrLf &
+                           curItem.xProd & vbCrLf &
+                           "com o PRODUTO:" & vbCrLf &
+                           prodEncontrado.Produto & " ?"
+            Else
+                message = "Você deseja realmente relacionar todos os " &
+                          CountItemsSelected & " ITENS selecionados" & vbCrLf &
+                          "com o PRODUTO:" & vbCrLf &
+                          prodEncontrado.Produto & " ?"
+            End If
             '
             '--- ASK USER
-            If AbrirDialog("Você deseja realmente relacionar o PRODUTO:" & vbCrLf &
-                           item.xProd & vbCrLf &
-                           "com o ITEM:" & vbCrLf &
-                           prodEncontrado.Produto & " ?",
-                           "Relacionar Item/Produto",
-                           frmDialog.DialogType.SIM_NAO,
-                           frmDialog.DialogIcon.Question,
-                           frmDialog.DialogDefaultButton.First) = DialogResult.No Then
+            If AbrirDialog(message, "Relacionar Item/Produto",
+                frmDialog.DialogType.SIM_NAO,
+                frmDialog.DialogIcon.Question,
+                frmDialog.DialogDefaultButton.First) = DialogResult.No Then
                 Exit Sub
             End If
             '
-            '--- CHECK PRECO DE COMPRA DIVERGENTE
-            CheckPrecoDivergente(item, prodEncontrado.PCompra, prodEncontrado.IDProduto)
+            '--- Insert ALL Selected ITEMS
+            Dim ItemActual As Integer = 1
             '
-            '--- AO ESCOLHER UM PRODUTO - PREENCHE A LISTA
-            InsertNewProdutoIntoList(item, prodEncontrado)
+            For Each r In dgvItens.SelectedRows
+                '
+                Dim Item As clNFeItem = r.DataBoundItem
+                '
+                '--- CHECK PRECO DE COMPRA DIVERGENTE
+                CheckPrecoDivergente(item, prodEncontrado.PCompra, prodEncontrado.IDProduto)
+                '
+                '--- AO ESCOLHER UM PRODUTO - PREENCHE A LISTA
+                InsertNewProdutoIntoList(Item, prodEncontrado, ItemActual = CountItemsSelected)
+                '
+                ItemActual += 1
+                '
+            Next
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao relacionar o produto..." & vbNewLine &
@@ -1192,6 +1223,29 @@ Public Class frmCompraGetNFe
         End Try
         '
     End Sub
+    '
+    '--- VERIFICA SE A LISTA DE ITENS ESTA LIVRE PARA RELACIONAR PRODUTOS
+    '----------------------------------------------------------------------------------
+    Private Function IsFreeToInsertNewProduto() As Boolean
+        '
+        If dgvItens.SelectedRows.Count = 0 Then
+            AbrirDialog("Não há nenhum Item selecionado ainda", "Selecionar",
+                        frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+            Return False
+        End If
+        '
+        For Each r In dgvItens.SelectedRows
+            Dim item As clNFeItem = r.DataBoundItem
+            If Not IsNothing(item.IDProduto) Then
+                AbrirDialog("Existem itens selecionados que já possuem uma relação com um Produto", "Seleção",
+                            frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                Return False
+            End If
+        Next
+        '
+        Return True
+        '
+    End Function
     '
     '--- MENU ITEM - ABRIR PRODUTO
     '----------------------------------------------------------------------------------

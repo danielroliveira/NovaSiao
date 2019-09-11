@@ -62,10 +62,20 @@ Public Class frmProdutoProcurarTipo
         Dim pBLL As New TipoSubTipoCategoriaBLL
         '
         Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
             dtTipos = pBLL.GetTipos
+            '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao obter lista de Tipos de Produtos", "Exceção",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub

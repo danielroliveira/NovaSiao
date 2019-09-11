@@ -2223,8 +2223,46 @@ Public Class frmCompra
     ' IMPRIMIR ETIQUETAS COMPRA
     '-----------------------------------------------------------------------------------------------------
     Private Sub miImprimirEtiquetas_Click(sender As Object, e As EventArgs) Handles miImprimirEtiquetas.Click
-        MsgBox("Em Implementação")
-
+        '
+        If Sit <> EnumFlagEstado.RegistroSalvo OrElse IsNothing(_Compra.IDCompra) OrElse _Compra.IDCompra = 0 Then
+            '
+            AbrirDialog("A Compra ainda não efetuada..." & vbNewLine &
+                        "Favor efetuar a compra para imprimir as Etiquetas.",
+                        "Efetue a Compra", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+            Exit Sub
+            '
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim eBLL As New ProdutoEtiquetaBLL
+            '
+            eBLL.Insert_EtiquetasTransacao(_Compra.IDCompra)
+            '
+            If AbrirDialog("Etiquetas inseridas na listagem com sucesso..." &
+                           "Deseja abrir o formulário de Impressão de Etiquetas?",
+                           "Etiquetas", frmDialog.DialogType.SIM_NAO, frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                '
+                Using frmE As Form = New frmProdutoEtiquetaControle(Me)
+                    '
+                    Visible = False
+                    frmE.ShowDialog()
+                    Visible = True
+                    '
+                End Using
+                '
+            End If
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Inserir Etiquetas na Lista de Impressão..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
     End Sub
     '
     ' IMPRIMIR RELATORIO

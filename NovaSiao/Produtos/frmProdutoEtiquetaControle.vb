@@ -2,6 +2,7 @@
 Imports CamadaDTO
 '
 Public Class frmProdutoEtiquetaControle
+    Private etiqBLL As New ProdutoEtiquetaBLL
     Private lstEtiq As New List(Of clProdutoEtiqueta)
     Private bindEtiq As New BindingSource
     Private dtRelatorios As New DataTable
@@ -9,15 +10,18 @@ Public Class frmProdutoEtiquetaControle
     Private returnKey As Boolean = False
     Private CancelCellEndEdit As Boolean = False
     Private EtqPorPag As Integer
+    Private _formOrigem As Form = Nothing
     '
 #Region "NEW | INICIALIZAR"
     '
-    Sub New()
+    Sub New(Optional formOrigem As Form = Nothing)
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
+        _formOrigem = formOrigem
+        '
         obterEtiquetas()
         GetRelatoriosTipos()
         CarregaComboRelatorioTipo()
@@ -27,12 +31,20 @@ Public Class frmProdutoEtiquetaControle
     Private Sub GetRelatoriosTipos()
         '
         '-- obtem os registros de tipos de relatorio de etiqueta
-        Dim eBLL As New ProdutoEtiquetaBLL
         Try
-            dtRelatorios = eBLL.Get_ProdutoEtiquetaRelatorios
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            dtRelatorios = etiqBLL.Get_ProdutoEtiquetaRelatorios
         Catch ex As Exception
             MessageBox.Show("Ocorreu um erro ao obter a lista de relatórios" & vbNewLine &
                 ex.Message, "Erro Inseperado", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -83,18 +95,25 @@ Public Class frmProdutoEtiquetaControle
     '
     Private Sub obterEtiquetas()
         '
-        Dim db As New ProdutoEtiquetaBLL
-        '
         Try
-            '--- GET Lista de Movimentacoes
-            lstEtiq = db.Get_Etiquetas()
             '
-            bindEtiq.Datasource = lstEtiq
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- GET Lista de Movimentacoes
+            lstEtiq = etiqBLL.Get_Etiquetas()
+            '
+            bindEtiq.DataSource = lstEtiq
             dgvListagem.DataSource = bindEtiq
             '
         Catch ex As Exception
             MessageBox.Show("Um exceção ocorreu ao tentar obter a listagem de Etiquetas..." & vbNewLine &
                             ex.Message, "Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
         PreencheListagem()
@@ -325,7 +344,6 @@ Public Class frmProdutoEtiquetaControle
     Private Sub dgvListagem_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListagem.CellValueChanged
         If CanFocus = False Then Exit Sub
         '
-        Dim etiqBLL As New ProdutoEtiquetaBLL
         Dim OLDetiq As clProdutoEtiqueta = dgvListagem.Rows(e.RowIndex).DataBoundItem
         '
         If e.ColumnIndex = 0 Then '--- alterado a column do RGProduto
@@ -333,6 +351,10 @@ Public Class frmProdutoEtiquetaControle
             Dim NEWetiq As New clProdutoEtiqueta
             '
             Try
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
                 If IsNothing(OLDetiq.IDEtiqueta) Then '--- etiqueta nova
                     '-- Insere nova etiqueta
                     NEWetiq = etiqBLL.InserirAlterar_EtiquetaItem(OLDetiq)
@@ -355,15 +377,29 @@ Public Class frmProdutoEtiquetaControle
             Catch ex As Exception
                 MessageBox.Show("Ocorreu uma exceção inseperada:" & vbNewLine &
                                 ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Finally
+                '
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+                '
             End Try
             '
         ElseIf e.ColumnIndex = 2 Or e.ColumnIndex = 4 Then '--- alteração da column da Quantidade
             Try
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
                 etiqBLL.InserirAlterar_EtiquetaItem(OLDetiq)
                 AtualizaLabelInfo()
             Catch ex As Exception
                 MessageBox.Show("Ocorreu uma exceção inseperada ao alterar os dados da Etiqueta:" & vbNewLine &
                                 ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Finally
+                '
+                '--- Ampulheta OFF
+                Cursor = Cursors.Default
+                '
             End Try
         End If
         '
@@ -422,15 +458,22 @@ Public Class frmProdutoEtiquetaControle
     Private Sub dgvListagem_UserDeletingRow(sender As Object, e As DataGridViewRowCancelEventArgs) Handles dgvListagem.UserDeletingRow
         Dim delEtiq As clProdutoEtiqueta = e.Row.DataBoundItem
         '
-        Dim etBLL As New ProdutoEtiquetaBLL
-        '
         Try
-            etBLL.Delete_Etiquetas(delEtiq.IDProduto)
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            etiqBLL.Delete_Etiquetas(delEtiq.IDProduto)
             AtualizaLabelInfo()
         Catch ex As Exception
             MessageBox.Show("Uma exceção inesperada ocorreu ao excluir esse produto da listagem de etiqueta:" & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             e.Cancel = True
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Sub
@@ -542,7 +585,7 @@ Public Class frmProdutoEtiquetaControle
                         '
                         '--- numera as etiquetas
 
-                        etiquetas(colNum * etqPorCol + rowNum + pageNum * etqPorPag) = myList.Item(etqAtual)
+                        etiquetas(colNum * etqPorCol + rowNum + pageNum * EtqPorPag) = myList.Item(etqAtual)
 
                         'myList.Item(etqAtual).IDEtiqueta = colNum * etqPorCol + rowNum + pageNum * etqPorPag
                         etqAtual += 1
@@ -598,4 +641,24 @@ Public Class frmProdutoEtiquetaControle
     '
 #End Region
     '
+#Region "EFEITOS VISUAIS"
+    '
+    '-------------------------------------------------------------------------------------------------
+    ' CRIAR EFEITO VISUAL DE FORM SELECIONADO
+    '-------------------------------------------------------------------------------------------------
+    Private Sub form_Activated(sender As Object, e As EventArgs) Handles Me.Activated
+        If Not IsNothing(_formOrigem) Then
+            Dim pnl As Panel = _formOrigem.Controls("Panel1")
+            pnl.BackColor = Color.Silver
+        End If
+    End Sub
+    '
+    Private Sub frmProdutoProcurar_Closed(sender As Object, e As EventArgs) Handles Me.Closed
+        If Not IsNothing(_formOrigem) Then
+            Dim pnl As Panel = _formOrigem.Controls("Panel1")
+            pnl.BackColor = Color.SlateGray
+        End If
+    End Sub
+    '
+#End Region
 End Class

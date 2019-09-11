@@ -16,6 +16,7 @@ Public Class frmProduto
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
     '
     Private _formOrigem As Form
+    Private _OldRGProduto As Integer? '--- control changes in value of RGProduto
     '
 #Region "EVENTO LOAD E PROPRIEDADE SIT"
     '
@@ -562,6 +563,10 @@ Public Class frmProduto
         ' VERIFICA A CONEXÃO COM O SQL
         Try
             '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '
             If Sit = EnumFlagEstado.NovoRegistro Then ' nesse caso é um novo registro
                 lista = prodBLL.GetProdutos_Where("RGProduto = " & myRGProduto)
             ElseIf Sit = EnumFlagEstado.RegistroSalvo Then
@@ -572,6 +577,11 @@ Public Class frmProduto
             '
             MessageBox.Show(ex.Message)
             Return Nothing
+            '
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
             '
         End Try
         '
@@ -625,8 +635,15 @@ Public Class frmProduto
         '
     End Sub
     '
+    '--- GET THE RGPRODUTO VALUE
+    Private Sub txtRGProduto_Enter(sender As Object, e As EventArgs) Handles txtRGProduto.Enter
+        '--- save the RGProduto to control changes
+        _OldRGProduto = _produto.RGProduto
+    End Sub
+    '
     '--- ENABLE AUTOVALIDATE AGAIN
     Private Sub txtRGProduto_Leave(sender As Object, e As EventArgs) Handles txtRGProduto.Leave
+        _OldRGProduto = _produto.RGProduto
         AutoValidate = True
     End Sub
     '
@@ -786,7 +803,12 @@ Public Class frmProduto
             Return
         End If
         '
-        '--- CHECK IF RGPRODUTO ALREADY IN USE
+        '--- CHECK ANY CHANGES IN RGPRODUTO
+        If txtRGProduto.Text = _OldRGProduto Then
+            Return '---> no changes
+        End If
+        '
+        '--- CHECK IF RGPRODUTO IS ALREADY IN USE
         If Not IsNothing(ProcurarProduto_RG(txtRGProduto.Text)) Then
             '
             AbrirDialog("Já existe produto cadastrado com esse mesmo número de Reg. Interno...",
