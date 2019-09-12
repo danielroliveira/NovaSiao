@@ -52,6 +52,7 @@ Partial Class frmCompraGetNFe
         Me.Label6 = New System.Windows.Forms.Label()
         Me.btnTransp = New System.Windows.Forms.Button()
         Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
+        Me.lblSelectInfo = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.mnuItens.SuspendLayout()
@@ -158,6 +159,7 @@ Partial Class frmCompraGetNFe
         Me.dgvItens.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvItens.Size = New System.Drawing.Size(1161, 444)
         Me.dgvItens.TabIndex = 12
+        Me.dgvItens.VirtualMode = True
         '
         'clnIDProdutoNfe
         '
@@ -268,7 +270,7 @@ Partial Class frmCompraGetNFe
         Me.mnuItens.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.mnuItens.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAnexarProduto, Me.miObterProdutoDBAnterior, Me.miNovoProduto, Me.ToolStripSeparator1, Me.miAbrirProduto})
         Me.mnuItens.Name = "mnuItens"
-        Me.mnuItens.Size = New System.Drawing.Size(249, 128)
+        Me.mnuItens.Size = New System.Drawing.Size(249, 106)
         '
         'miAnexarProduto
         '
@@ -392,10 +394,22 @@ Partial Class frmCompraGetNFe
         Me.btnClose.UseVisualStyleBackColor = False
         Me.btnClose.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICE2003SILVER
         '
+        'lblSelectInfo
+        '
+        Me.lblSelectInfo.AutoSize = True
+        Me.lblSelectInfo.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblSelectInfo.Location = New System.Drawing.Point(690, 608)
+        Me.lblSelectInfo.Name = "lblSelectInfo"
+        Me.lblSelectInfo.Size = New System.Drawing.Size(181, 26)
+        Me.lblSelectInfo.TabIndex = 17
+        Me.lblSelectInfo.Text = "Selecionado: 1 Item"
+        Me.lblSelectInfo.Visible = False
+        '
         'frmCompraGetNFe
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
         Me.ClientSize = New System.Drawing.Size(1191, 656)
+        Me.Controls.Add(Me.lblSelectInfo)
         Me.Controls.Add(Me.btnTransp)
         Me.Controls.Add(Me.dgvItens)
         Me.Controls.Add(Me.Label17)
@@ -430,6 +444,7 @@ Partial Class frmCompraGetNFe
         Me.Controls.SetChildIndex(Me.Label17, 0)
         Me.Controls.SetChildIndex(Me.dgvItens, 0)
         Me.Controls.SetChildIndex(Me.btnTransp, 0)
+        Me.Controls.SetChildIndex(Me.lblSelectInfo, 0)
         Me.Panel1.ResumeLayout(False)
         CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
         Me.mnuItens.ResumeLayout(False)
@@ -469,4 +484,5 @@ Partial Class frmCompraGetNFe
     Friend WithEvents Label6 As Label
     Friend WithEvents btnTransp As Button
     Friend WithEvents btnClose As VIBlend.WinForms.Controls.vFormButton
+    Friend WithEvents lblSelectInfo As Label
 End Class

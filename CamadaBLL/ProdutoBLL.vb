@@ -1819,16 +1819,22 @@ Public Class ProdutoFornecedorBLL
     '
     '--- INSERT PRODUTO CODIGO/ID FORNECEDOR
     '----------------------------------------------------------------------------------
-    Public Function Insert_ProdutoFornecedorItem(PFitem As clProdutoFornecedorItem) As Integer
+    Public Function Insert_ProdutoFornecedorItem(PFitem As clProdutoFornecedorItem,
+                                                 Optional dbTran As Object = Nothing) As Integer
         '
-        Dim dbTran As AcessoDados = Nothing
+        Dim db As AcessoDados = Nothing
+        '
+        If Not IsNothing(dbTran) Then
+            db = dbTran
+        Else
+            db = New AcessoDados
+            db.BeginTransaction()
+        End If
         '
         Try
-            dbTran = New AcessoDados
-            dbTran.BeginTransaction()
             '
             '--- INSERT UPDATE PRODUTO FORNECEDOR
-            Dim PF As clProdutoFornecedor = InsertUpdate_ProdutoFornecedor(PFitem, dbTran)
+            Dim PF As clProdutoFornecedor = InsertUpdate_ProdutoFornecedor(PFitem, db)
             PFitem.IDProdutoFornecedor = PF.IDProdutoFornecedor
             '
             Dim query As String = ""
@@ -1837,20 +1843,20 @@ Public Class ProdutoFornecedorBLL
                     "VALUES " &
                     "(@IDProdutoOrigem, @IDProdutoFornecedor, @DescricaoOrigem, @CodBarrasOrigem)"
             '
-            dbTran.LimparParametros()
-            dbTran.AdicionarParametros("@IDProdutoOrigem", PFitem.IDProdutoOrigem)
-            dbTran.AdicionarParametros("@IDProdutoFornecedor", PFitem.IDProdutoFornecedor)
-            dbTran.AdicionarParametros("@DescricaoOrigem", PFitem.DescricaoOrigem)
-            dbTran.AdicionarParametros("@CodBarrasOrigem", If(PFitem.CodBarrasOrigem, DBNull.Value))
+            db.LimparParametros()
+            db.AdicionarParametros("@IDProdutoOrigem", PFitem.IDProdutoOrigem)
+            db.AdicionarParametros("@IDProdutoFornecedor", PFitem.IDProdutoFornecedor)
+            db.AdicionarParametros("@DescricaoOrigem", PFitem.DescricaoOrigem)
+            db.AdicionarParametros("@CodBarrasOrigem", If(PFitem.CodBarrasOrigem, DBNull.Value))
             '
-            Dim NewID As Integer = dbTran.ExecutarInsertGetID(query)
+            Dim NewID As Integer = db.ExecutarInsertGetID(query)
             '
             '--- return
-            dbTran.CommitTransaction()
+            If IsNothing(dbTran) Then db.CommitTransaction()
             Return NewID
             '
         Catch ex As Exception
-            dbTran.RollBackTransaction()
+            If IsNothing(dbTran) Then db.RollBackTransaction()
             Throw ex
         End Try
         '
