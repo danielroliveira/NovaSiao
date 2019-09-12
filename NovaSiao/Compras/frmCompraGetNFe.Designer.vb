@@ -20,7 +20,7 @@ Partial Class frmCompraGetNFe
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.btnImportar = New System.Windows.Forms.Button()
         Me.btnFechar = New System.Windows.Forms.Button()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -138,14 +138,14 @@ Partial Class frmCompraGetNFe
         Me.dgvItens.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.dgvItens.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
         Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvItens.ColumnHeadersHeight = 25
         Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDProdutoNfe, Me.clnProdutoNfe, Me.clnQuantidadeNFe, Me.clnPrecoNfe, Me.clnDescontoNfe, Me.clnTotalNfe, Me.clnRGProduto, Me.clnProduto})
         Me.dgvItens.EnableHeadersVisualStyles = False
@@ -268,7 +268,7 @@ Partial Class frmCompraGetNFe
         Me.mnuItens.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.mnuItens.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAnexarProduto, Me.miObterProdutoDBAnterior, Me.miNovoProduto, Me.ToolStripSeparator1, Me.miAbrirProduto})
         Me.mnuItens.Name = "mnuItens"
-        Me.mnuItens.Size = New System.Drawing.Size(249, 106)
+        Me.mnuItens.Size = New System.Drawing.Size(249, 128)
         '
         'miAnexarProduto
         '
