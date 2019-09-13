@@ -266,21 +266,20 @@ Public Class frmCompraGetNFe
         '--- Reselect Backuped itens
         If dgvItens.Rows(e.RowIndex).DataBoundItem.Selected = True Then
             dgvItens.Rows(e.RowIndex).Selected = True
-        End If
-        '
-        '--- Clear on Last Row
-        If e.IsLastVisibleRow Then
-            ItensNFe.ForEach(Function(x) x.Selected = False)
+            dgvItens.Rows(e.RowIndex).DataBoundItem.Selected = False '--- To Clear selected
         End If
         '
     End Sub
     '
     '--- BEFORE HIDE FORM DO BACKUP OF SELECTED ITEMS IN DATAGRIDVIEW
     '----------------------------------------------------------------------------------
-    Private Sub ItensSelecionadosBackup()
+    Private Sub ItensSelecionadosBackup(Optional onlyClear As Boolean = False)
         '
         ItensNFe.ForEach(Function(x) x.Selected = False)
         '
+        If onlyClear Then Exit Sub '--- se for somente limpar exit
+        '
+        '--- cria o backup da selecao nos items
         For Each r As DataGridViewRow In dgvItens.SelectedRows
             r.DataBoundItem.Selected = True
         Next
@@ -304,6 +303,7 @@ Public Class frmCompraGetNFe
         End If
         '
     End Sub
+    '
 #End Region
     '
 #Region "IMPORT NFE XML"
@@ -795,8 +795,14 @@ Public Class frmCompraGetNFe
             '----------------------------------------------------------------------------------
             Info.InfoShow("Verificando os Itens da NFe...")
             Dim countEncontrados As Integer = 0
+            Dim countItens As Integer = dgvItens.Rows.Count
+            Dim atualItem As Integer = 1
             '
             For Each item In ItensNFe
+                '
+                '--- EMIT INFO
+                Info.InfoShow("Verificando os Itens da NFe... ITEM " & Format(atualItem, "00") & " DE " & Format(countItens, "00"))
+                atualItem += 1
                 '
                 '--- PERCORRE E ATUALIZA A LISTAGEM
                 dgvItens.CurrentCell = dgvItens.Rows(ItensNFe.IndexOf(item)).Cells(0)
@@ -1129,12 +1135,12 @@ Public Class frmCompraGetNFe
                 '
                 Try
                     Using pBLL As New ProdutoBLL
-                        pBLL.ProdutoAlterarPrecoDescontoCompra(IDProduto, ItemPrecoCompra, dbTran)
+                        pBLL.ProdutoAlterarPrecoDescontoCompra(IDProduto, ItemPrecoCompra, , dbTran)
                     End Using
                     '
                     ProdFornBLL.Update_ProdutoFornecedor_PrecoCompra(IDProduto,
                                                                      FornecedorNFe.IDPessoa,
-                                                                     ItemPrecoCompra,
+                                                                     ItemPrecoCompra, Nothing,
                                                                      dbTran)
                     '
                 Catch ex As Exception
@@ -1333,11 +1339,25 @@ Public Class frmCompraGetNFe
                            frmDialog.DialogIcon.Question,
                            frmDialog.DialogDefaultButton.First) = DialogResult.Yes Then
                 '
+                Dim cItensSelected As Integer = dgvItens.SelectedRows.Count
+                Dim atualItem As Integer = 1
+                '
                 For Each r In dgvItens.SelectedRows
+                    '
+                    '--- Emit Info
+                    Info.InfoShow("Salvando relação Item => Produto... Item " & Format(atualItem, "00") & " de " & Format(cItensSelected, "00"))
+                    '
+                    '--- Get Item to Save
                     Dim Item As clNFeItem = r.DataBoundItem
+                    '
+                    '--- Save the Relacao
                     SalvarRelacao(Item, dbTran)
+                    '
+                    atualItem += 1
+                    '
                 Next
-
+                '
+                Info.InfoHide()
                 '
             End If
             '
@@ -1434,6 +1454,7 @@ Public Class frmCompraGetNFe
             '
             Dim frm As New frmProduto(EnumFlagAcao.EDITAR, prod, Me)
             frm.MdiParent = My.Application.OpenForms().Item(0)
+            'ItensSelecionadosBackup()
             Me.Visible = False
             frm.Show()
             '

@@ -754,9 +754,10 @@ Public Class ProdutoBLL
     '---------------------------------------------------------------------------------------------------------
     Public Function ProdutoAlterarPrecoDescontoCompra(IDProduto As Integer,
                                                       Optional newPrecoCompra? As Double = Nothing,
-                                                      Optional newDescontoCompra? As Double = Nothing) As Object
+                                                      Optional newDescontoCompra? As Double = Nothing,
+                                                      Optional dbTran As Object = Nothing) As Object
         '
-        Dim db As New AcessoDados
+        Dim db As AcessoDados = If(dbTran, New AcessoDados)
         Dim myQuery As String = "UPDATE tblProduto SET "
         '
         db.LimparParametros()
