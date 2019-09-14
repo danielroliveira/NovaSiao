@@ -230,6 +230,7 @@ Partial Class frmCompraGetNFe
         Me.btnCorrelacao.Name = "btnCorrelacao"
         Me.btnCorrelacao.Size = New System.Drawing.Size(195, 43)
         Me.btnCorrelacao.TabIndex = 14
+        Me.btnCorrelacao.Tag = "Clique aqui para Relacionar Itens e Produtos"
         Me.btnCorrelacao.Text = "Fazer Correlação"
         Me.btnCorrelacao.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnCorrelacao.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -317,6 +318,7 @@ Partial Class frmCompraGetNFe
         Me.btnSalvarCompra.Name = "btnSalvarCompra"
         Me.btnSalvarCompra.Size = New System.Drawing.Size(195, 43)
         Me.btnSalvarCompra.TabIndex = 15
+        Me.btnSalvarCompra.Tag = "Clique aqui para criar uma nova Compra"
         Me.btnSalvarCompra.Text = "Salvar Compra"
         Me.btnSalvarCompra.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.btnSalvarCompra.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -373,6 +375,7 @@ Partial Class frmCompraGetNFe
         Me.btnTransp.Name = "btnTransp"
         Me.btnTransp.Size = New System.Drawing.Size(161, 27)
         Me.btnTransp.TabIndex = 11
+        Me.btnTransp.Tag = "Clique aqui para Inserir nova Transportadora"
         Me.btnTransp.Text = "Não Encontrada"
         Me.btnTransp.UseVisualStyleBackColor = False
         Me.btnTransp.Visible = False

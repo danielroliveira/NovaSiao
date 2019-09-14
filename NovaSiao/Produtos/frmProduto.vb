@@ -426,7 +426,7 @@ Public Class frmProduto
             AbrirDialog("Já foi encontrado um Produto com esse mesmo número de Reg. Interno..." & vbNewLine &
                         ProdRG.Produto.ToUpper & vbNewLine &
                         "Insira outro Reg. Interno ou altere o registro do outro Produto.",
-                        "Reg. Interno Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        "Reg. Interno Duplicado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
             txtRGProduto.Focus()
             Return False
         Else

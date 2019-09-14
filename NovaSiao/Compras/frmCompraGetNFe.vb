@@ -20,6 +20,7 @@ Public Class frmCompraGetNFe
     Private ProdFornBLL As New ProdutoFornecedorBLL
     Private CNPJFilial As String
     Private _APagarList As New List(Of clAPagar)
+    Private _AreSelectedRows As Boolean
     '
     Private Class clNFeItem
         Inherits TNFeInfNFeDetProd
@@ -83,6 +84,29 @@ Public Class frmCompraGetNFe
             End Select
             '
         End Set
+    End Property
+    '
+    Property AreSelectedRows As Boolean
+        Get
+            Return _AreSelectedRows
+        End Get
+        Set(value As Boolean)
+            _AreSelectedRows = value
+            '
+            '--- clear all old selected
+            For Each r As DataGridViewRow In dgvItens.Rows
+                r.DataBoundItem.Selected = False
+            Next
+            '
+            If value Then
+                '--- cria o backup da selecao nos items
+                For Each r As DataGridViewRow In dgvItens.SelectedRows
+                    r.DataBoundItem.Selected = True
+                Next
+            End If
+            '
+        End Set
+        '
     End Property
     '
     Private Function GetCNPJFilial() As String
@@ -261,28 +285,20 @@ Public Class frmCompraGetNFe
     '
     '--- AFTER HIDE | ON SHOW FORM RETURN STATE OF SELECTED ITEMS IN DATAGRIDVIEW
     '----------------------------------------------------------------------------------
-    Private Sub dgvItens_RowPostPaint(sender As Object, e As DataGridViewRowPostPaintEventArgs) Handles dgvItens.RowPostPaint
+    Private Sub dgvItens_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles dgvItens.DataBindingComplete
         '
-        '--- Reselect Backuped itens
-        If dgvItens.Rows(e.RowIndex).DataBoundItem.Selected = True Then
-            dgvItens.Rows(e.RowIndex).Selected = True
-            dgvItens.Rows(e.RowIndex).DataBoundItem.Selected = False '--- To Clear selected
+        If AreSelectedRows Then
+            '
+            '--- Reselect Backuped itens
+            For Each r As DataGridViewRow In dgvItens.Rows
+                If r.DataBoundItem.selected Then
+                    r.Selected = True
+                Else
+                    r.Selected = False
+                End If
+            Next
+            '
         End If
-        '
-    End Sub
-    '
-    '--- BEFORE HIDE FORM DO BACKUP OF SELECTED ITEMS IN DATAGRIDVIEW
-    '----------------------------------------------------------------------------------
-    Private Sub ItensSelecionadosBackup(Optional onlyClear As Boolean = False)
-        '
-        ItensNFe.ForEach(Function(x) x.Selected = False)
-        '
-        If onlyClear Then Exit Sub '--- se for somente limpar exit
-        '
-        '--- cria o backup da selecao nos items
-        For Each r As DataGridViewRow In dgvItens.SelectedRows
-            r.DataBoundItem.Selected = True
-        Next
         '
     End Sub
     '
@@ -782,6 +798,7 @@ Public Class frmCompraGetNFe
                             "Transportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
                 '
                 btnTransp.Visible = True
+                btnTransp.Refresh()
                 '
             Else
                 TranspNFe = procTransp
@@ -850,6 +867,11 @@ Public Class frmCompraGetNFe
             '--- ALTERA O ESTAGIO
             propEstagio = 3
             TryEnableEstagioCompra()
+            '
+            '--- CHECK btnTransp VISIBILITY
+            If btnTransp.Visible Then
+                showToolTip(btnTransp)
+            End If
             '
         Catch ex As AppException
             acesso.RollbackAcessoWithTransaction(dbTran)
@@ -1073,9 +1095,6 @@ Public Class frmCompraGetNFe
         '
         Try
             '
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
             Dim obj As Object = ProdFornBLL.Insert_ProdutoFornecedorItem(prodFornItem, dbTran)
             '
             If Not obj.GetType Is GetType(Integer) Then
@@ -1088,10 +1107,6 @@ Public Class frmCompraGetNFe
         Catch ex As Exception
             Throw New AppException("Uma exceção ocorreu ao Salvar Registro de Relacionamento..." & vbNewLine &
                                     ex.Message)
-        Finally
-            '
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
             '
         End Try
         '
@@ -1171,7 +1186,7 @@ Public Class frmCompraGetNFe
             ' seleciona o ROW se estiver fora da selecao
             If dgvItens.Rows(hit.RowIndex).Selected = False Then
                 dgvItens.ClearSelection()
-                dgvItens.Rows(hit.RowIndex).Cells(1).Selected = True
+                dgvItens.CurrentCell = dgvItens.Rows(hit.RowIndex).Cells(1)
                 dgvItens.Rows(hit.RowIndex).Selected = True
             End If
             '
@@ -1293,6 +1308,9 @@ Public Class frmCompraGetNFe
             '--- COMMIT TRANSACTION
             acesso.CommitAcessoWithTransaction(dbTran)
             '
+            AbrirDialog("Relacionamento Item NFe & Produto realizado com sucesso!",
+                        "Sucesso", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            '
         Catch ex As Exception
             '
             '--- REMOVE A RELACAO ITEM PRODUTO
@@ -1341,6 +1359,10 @@ Public Class frmCompraGetNFe
                 '
                 Dim cItensSelected As Integer = dgvItens.SelectedRows.Count
                 Dim atualItem As Integer = 1
+                '
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
                 '
                 For Each r In dgvItens.SelectedRows
                     '
@@ -1446,7 +1468,8 @@ Public Class frmCompraGetNFe
             Cursor = Cursors.WaitCursor
             '
             '--- Get IDProduto and clProduto
-            Dim item As clNFeItem = dgvItens.CurrentRow.DataBoundItem
+            'Dim item As clNFeItem = dgvItens.CurrentRow.DataBoundItem
+            Dim item As clNFeItem = dgvItens.SelectedRows(0).DataBoundItem
             Dim pBLL As New ProdutoBLL
             Dim IDFilial As Integer = Obter_FilialPadrao()
             '
@@ -1454,9 +1477,10 @@ Public Class frmCompraGetNFe
             '
             Dim frm As New frmProduto(EnumFlagAcao.EDITAR, prod, Me)
             frm.MdiParent = My.Application.OpenForms().Item(0)
-            'ItensSelecionadosBackup()
+            AreSelectedRows = True
             Me.Visible = False
             frm.Show()
+            'AreSelectedRows = False
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao abrir o formuário de Produto..." & vbNewLine &
@@ -1555,9 +1579,10 @@ Public Class frmCompraGetNFe
             '---------------------------------------------------------------------------------
             Using frm As New frmProduto(EnumFlagAcao.INSERIR, prod, Me)
                 '
-                ItensSelecionadosBackup()
+                AreSelectedRows = True
                 Me.Visible = False
                 frm.ShowDialog()
+                AreSelectedRows = False
                 '
                 If frm.DialogResult = DialogResult.OK Then
                     prodEncontrado = frm.propProduto
@@ -1619,9 +1644,10 @@ Public Class frmCompraGetNFe
             '--- Open frmProcura ProdutoAntigo
             Using frm As New frmProdutosAntigosProcurar(FirstItem.xProd, RGTipoAnterior, Me)
                 '
-                ItensSelecionadosBackup()
+                AreSelectedRows = True
                 Visible = False
                 frm.ShowDialog()
+                'AreSelectedRows = False
                 '
                 If frm.DialogResult <> DialogResult.OK Then Exit Sub
                 '
@@ -1647,9 +1673,10 @@ Public Class frmCompraGetNFe
             '---TRY OPEN PRODUTO FORM
             Using frmProd As New frmProduto(EnumFlagAcao.INSERIR, prodEncontrado, Me, RGProdAnteriorEscolhido)
                 '
-                ItensSelecionadosBackup()
+                AreSelectedRows = True
                 Visible = False
                 frmProd.ShowDialog()
+                AreSelectedRows = False
                 '
                 If frmProd.DialogResult <> DialogResult.OK Then Exit Sub
                 '
@@ -2005,4 +2032,45 @@ Public Class frmCompraGetNFe
     '
 #End Region '/ INSERT COMPRA FUNCTIONS
     '
+#Region "VISUAL DESIGN"
+    '
+    Private Sub showToolTip(control As Control)
+        '
+        ' Cria a ToolTip e associa com o Form container.
+        Dim toolTip1 As New ToolTip()
+        '
+        ' Define o delay para a ToolTip.
+        With toolTip1
+            .AutoPopDelay = 2000
+            .InitialDelay = 2000
+            .ReshowDelay = 500
+            .IsBalloon = True
+            .UseAnimation = True
+            .UseFading = True
+        End With
+        '
+        If control.Tag = "" Then
+            toolTip1.Show("Clique aqui...", control, control.Width - 30, -40, 2000)
+        Else
+            toolTip1.Show(control.Tag, control, control.Width - 30, -40, 2000)
+        End If
+        '
+        '
+    End Sub
+    '
+    Private Sub btn_EnabledChanged(sender As Object, e As EventArgs) Handles btnCorrelacao.EnabledChanged, btnSalvarCompra.EnabledChanged
+        '
+        Dim control As Control = DirectCast(sender, Control)
+        '
+        If control.Enabled = True Then
+            showToolTip(control)
+        End If
+        '
+    End Sub
+    '
+#End Region '/ VISUAL DESIGN
+
+
+
+
 End Class

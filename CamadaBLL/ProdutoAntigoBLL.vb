@@ -358,7 +358,9 @@ Public Class ProdutoAntigoBLL
             db.LimparParametros()
             db.AdicionarParametros("@RGProdutoTipo", RGProdutoTipo)
             '
-            Dim query As String = "SELECT * FROM qryProdutos WHERE RGProdutoTipo = @RGProdutoTipo"
+            Dim query As String = "SELECT * FROM qryProdutos " &
+                                  "WHERE RGProdutoTipo = @RGProdutoTipo " &
+                                  "ORDER BY Produto"
             '
             Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             Dim list As New List(Of clProduto)
