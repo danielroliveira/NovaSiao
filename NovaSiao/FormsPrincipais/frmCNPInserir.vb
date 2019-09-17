@@ -3,20 +3,25 @@ Imports CamadaDTO
 '
 Public Class frmCNPInserir
     '
-    Private _formOrigem As Form
+    Private _formOrigem As Form = Nothing
+    Private ExpectedType As String = ""
     Private _PessoaTipo As PessoaBLL.EnumPessoaGrupo
     Property propPessoa As Object
     '
 #Region "SUB NEW | LOAD"
     '
     Sub New(PessoaTipo As PessoaBLL.EnumPessoaGrupo,
-            Optional formOrigem As Form = Nothing)
+            Optional formOrigem As Form = Nothing,
+            Optional CNPJ_or_CPF As String = "")
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
-        _formOrigem = formOrigem
+        '
+        _formOrigem = formOrigem '---> form will be changed color of panel1
+        ExpectedType = CNPJ_or_CPF '---> define Type
+        '
         propPessoaTipo = PessoaTipo
         '
     End Sub
@@ -37,8 +42,13 @@ Public Class frmCNPInserir
             '
             Select Case _PessoaTipo
                 Case PessoaBLL.EnumPessoaGrupo.CLIENTE
-                    lblTitulo.Text = "Deseja inserir um Novo Cliente?"
-                    lblSubtitulo.Text = "Informe o CPF ou CNPJ do Novo Cliente..."
+                    If ExpectedType = "CPF" Then
+                        lblTitulo.Text = "Deseja inserir um Novo Cliente?"
+                        lblSubtitulo.Text = "Informe o CPF do Novo Cliente..."
+                    ElseIf ExpectedType = "CNPJ" Then
+                        lblTitulo.Text = "Deseja inserir um Novo Cliente?"
+                        lblSubtitulo.Text = "Informe o CNPJ do Novo Cliente..."
+                    End If
                 Case PessoaBLL.EnumPessoaGrupo.FORNECEDOR
                     lblTitulo.Text = "Deseja inserir um Novo Fornecedor?"
                     lblSubtitulo.Text = "Informe o CNPJ do Novo Fornecedor..."
@@ -49,8 +59,13 @@ Public Class frmCNPInserir
                     lblTitulo.Text = "Deseja inserir um Novo Funcionário?"
                     lblSubtitulo.Text = "Informe o CPF do Novo Funcionário..."
                 Case PessoaBLL.EnumPessoaGrupo.CREDOR
-                    lblTitulo.Text = "Deseja inserir um Novo Credor?"
-                    lblSubtitulo.Text = "Informe o CPF ou CNPJ do Novo Credor..."
+                    If ExpectedType = "CPF" Then
+                        lblTitulo.Text = "Deseja inserir um Novo Credor?"
+                        lblSubtitulo.Text = "Informe o CPF do Novo Credor..."
+                    ElseIf ExpectedType = "CNPJ" Then
+                        lblTitulo.Text = "Deseja inserir um Novo Credor?"
+                        lblSubtitulo.Text = "Informe o CNPJ do Novo Credor..."
+                    End If
                 Case PessoaBLL.EnumPessoaGrupo.FILIAL
                     lblTitulo.Text = "Deseja inserir uma Nova Filial?"
                     lblSubtitulo.Text = "Informe o CNPJ da Nova Filial..."
@@ -309,6 +324,18 @@ Public Class frmCNPInserir
         '
         Select Case propPessoaTipo
             '
+            Case PessoaBLL.EnumPessoaGrupo.CLIENTE
+                If ExpectedType = "CPF" AndAlso CNPLenght <> 14 Then
+                    AbrirDialog("Digite um número de CPF Válido!", "CPF inválido",
+                                frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                    SelecionaTxtCNPJ()
+                    Return False
+                ElseIf ExpectedType = "CNPJ" AndAlso CNPLenght <> 18 Then
+                    AbrirDialog("Digite um número de CNPJ Válido!", "CNPJ inválido",
+                                frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                    SelecionaTxtCNPJ()
+                    Return False
+                End If
             Case PessoaBLL.EnumPessoaGrupo.FUNCIONARIO
                 If CNPLenght <> 14 Then
                     AbrirDialog("Digite um número de CPF Válido!", "CPF inválido",
@@ -333,6 +360,18 @@ Public Class frmCNPInserir
             Case PessoaBLL.EnumPessoaGrupo.FILIAL
                 If CNPLenght <> 18 Then
                     AbrirDialog("Digite um número CNPJ Válido!", "CNPJ inválido",
+                                frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                    SelecionaTxtCNPJ()
+                    Return False
+                End If
+            Case PessoaBLL.EnumPessoaGrupo.CREDOR
+                If ExpectedType = "CPF" AndAlso CNPLenght <> 14 Then
+                    AbrirDialog("Digite um número de CPF Válido!", "CPF inválido",
+                                frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                    SelecionaTxtCNPJ()
+                    Return False
+                ElseIf ExpectedType = "CNPJ" AndAlso CNPLenght <> 18 Then
+                    AbrirDialog("Digite um número de CNPJ Válido!", "CNPJ inválido",
                                 frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
                     SelecionaTxtCNPJ()
                     Return False
@@ -407,10 +446,12 @@ Public Class frmCNPInserir
                            frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Return False
             '
             db.RemoverCNPJRelacionado(txtCNPJ.Text)
+            Return True
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Procurar CNPJ Relacionado..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
         Finally
             '
             '--- Ampulheta OFF

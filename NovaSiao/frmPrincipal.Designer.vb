@@ -27,11 +27,14 @@ Partial Class frmPrincipal
         Me.tsPrincipal = New System.Windows.Forms.ToolStrip()
         Me.tsbClientes = New System.Windows.Forms.ToolStripSplitButton()
         Me.miClienteNovo = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miClientePFInserir = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miClientePJInserir = New System.Windows.Forms.ToolStripMenuItem()
         Me.miClienteProcurar = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.miClienteAtividades = New System.Windows.Forms.ToolStripMenuItem()
         Me.miCartasClientes = New System.Windows.Forms.ToolStripMenuItem()
         Me.miGerarParaAniversariantes = New System.Windows.Forms.ToolStripMenuItem()
+        Me.miEnvioMalaDiretaImpressão = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsbCadastros = New System.Windows.Forms.ToolStripSplitButton()
         Me.miFuncionarios = New System.Windows.Forms.ToolStripMenuItem()
         Me.miTransportadoras = New System.Windows.Forms.ToolStripMenuItem()
@@ -129,7 +132,6 @@ Partial Class frmPrincipal
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblHora = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-        Me.miEnvioMalaDiretaImpressão = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsPrincipal.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.SContainerPrincipal, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -171,12 +173,30 @@ Partial Class frmPrincipal
         '
         'miClienteNovo
         '
+        Me.miClienteNovo.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miClientePFInserir, Me.miClientePJInserir})
         Me.miClienteNovo.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
         Me.miClienteNovo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
         Me.miClienteNovo.Name = "miClienteNovo"
         Me.miClienteNovo.Size = New System.Drawing.Size(213, 38)
         Me.miClienteNovo.Tag = "3"
         Me.miClienteNovo.Text = "Novo Cliente"
+        '
+        'miClientePFInserir
+        '
+        Me.miClientePFInserir.Image = Global.NovaSiao.My.Resources.Resources.Novo_PEQ
+        Me.miClientePFInserir.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miClientePFInserir.Name = "miClientePFInserir"
+        Me.miClientePFInserir.Size = New System.Drawing.Size(242, 46)
+        Me.miClientePFInserir.Text = "Cliente Pessoa Física"
+        '
+        'miClientePJInserir
+        '
+        Me.miClientePJInserir.Image = Global.NovaSiao.My.Resources.Resources.cliente_empresa
+        Me.miClientePJInserir.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miClientePJInserir.Name = "miClientePJInserir"
+        Me.miClientePJInserir.ShowShortcutKeys = False
+        Me.miClientePJInserir.Size = New System.Drawing.Size(242, 46)
+        Me.miClientePJInserir.Text = "Cliente Pessoa Jurídica"
         '
         'miClienteProcurar
         '
@@ -217,6 +237,14 @@ Partial Class frmPrincipal
         Me.miGerarParaAniversariantes.Name = "miGerarParaAniversariantes"
         Me.miGerarParaAniversariantes.Size = New System.Drawing.Size(305, 36)
         Me.miGerarParaAniversariantes.Text = "Gerar Envio para Aniversariantes"
+        '
+        'miEnvioMalaDiretaImpressão
+        '
+        Me.miEnvioMalaDiretaImpressão.Image = Global.NovaSiao.My.Resources.Resources.Imprimir_PEQ
+        Me.miEnvioMalaDiretaImpressão.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+        Me.miEnvioMalaDiretaImpressão.Name = "miEnvioMalaDiretaImpressão"
+        Me.miEnvioMalaDiretaImpressão.Size = New System.Drawing.Size(305, 36)
+        Me.miEnvioMalaDiretaImpressão.Text = "Envio Mala Direta - Impressão"
         '
         'tsbCadastros
         '
@@ -1048,14 +1076,6 @@ Partial Class frmPrincipal
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 600
         '
-        'miEnvioMalaDiretaImpressão
-        '
-        Me.miEnvioMalaDiretaImpressão.Image = Global.NovaSiao.My.Resources.Resources.Imprimir_PEQ
-        Me.miEnvioMalaDiretaImpressão.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-        Me.miEnvioMalaDiretaImpressão.Name = "miEnvioMalaDiretaImpressão"
-        Me.miEnvioMalaDiretaImpressão.Size = New System.Drawing.Size(305, 36)
-        Me.miEnvioMalaDiretaImpressão.Text = "Envio Mala Direta - Impressão"
-        '
         'frmPrincipal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -1194,4 +1214,6 @@ Partial Class frmPrincipal
     Friend WithEvents miCartasClientes As ToolStripMenuItem
     Friend WithEvents miGerarParaAniversariantes As ToolStripMenuItem
     Friend WithEvents miEnvioMalaDiretaImpressão As ToolStripMenuItem
+    Friend WithEvents miClientePFInserir As ToolStripMenuItem
+    Friend WithEvents miClientePJInserir As ToolStripMenuItem
 End Class

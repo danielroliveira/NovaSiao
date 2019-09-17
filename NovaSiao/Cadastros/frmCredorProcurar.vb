@@ -199,29 +199,50 @@ Public Class frmCredorProcurar
     '
     Private Sub btnAdicionar_Click(sender As Object, e As EventArgs) Handles btnAdicionar.Click
         '
-        Dim cred As New clCredor
-        Dim frmC As New frmCredor(cred, Me)
-        '
-        frmC.ShowDialog()
-        '
-        If frmC.DialogResult = DialogResult.OK Then
+        Try
             '
-            cmbAtivo.SelectedValue = True
-            txtProcura.Clear()
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
             '
-            '--- atualiza os dados da listagem
-            Select Case frmC._Credor.CredorTipo
-                Case 0
-                    rbtSimples.Checked = True
-                Case 1
-                    rbtPF.Checked = True
-                Case 2
-                    rbtPJ.Checked = True
-                Case 3
-                    rbtOrgaoPublico.Checked = True
-            End Select
+            Dim frmC As New frmCredor(New clCredor, Me)
             '
-        End If
+            If Not frmC.InsertNewCNP(Me) Then
+                frmC.Dispose()
+                Exit Sub
+            End If
+            '
+            frmC.ShowDialog()
+            '
+            If frmC.DialogResult = DialogResult.OK Then
+                '
+                cmbAtivo.SelectedValue = True
+                txtProcura.Clear()
+                '
+                '--- atualiza os dados da listagem
+                Select Case frmC._Credor.CredorTipo
+                    Case 0
+                        rbtSimples.Checked = True
+                    Case 1
+                        rbtPF.Checked = True
+                    Case 2
+                        rbtPJ.Checked = True
+                    Case 3
+                        rbtOrgaoPublico.Checked = True
+                End Select
+                '
+            End If
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao inserir novo Credor..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
         '
     End Sub
     '

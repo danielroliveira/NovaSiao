@@ -249,6 +249,12 @@
     <Compile Include="AReceber\frmCobrancaForma.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Cadastros\frmCredorTipo.designer.vb">
+      <DependentUpon>frmCredorTipo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Cadastros\frmCredorTipo.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Cadastros\frmFilialEscolher.designer.vb">
       <DependentUpon>frmFilialEscolher.vb</DependentUpon>
     </Compile>
@@ -421,12 +427,6 @@
       <DependentUpon>frmClienteAtividades.vb</DependentUpon>
     </Compile>
     <Compile Include="Clientes\frmClienteAtividades.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Clientes\frmClienteNovo.Designer.vb">
-      <DependentUpon>frmClienteNovo.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Clientes\frmClienteNovo.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Clientes\frmClientePJ.Designer.vb">
@@ -1010,6 +1010,9 @@
     <EmbeddedResource Include="AReceber\frmCobrancaForma.resx">
       <DependentUpon>frmCobrancaForma.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Cadastros\frmCredorTipo.resx">
+      <DependentUpon>frmCredorTipo.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Cadastros\frmFilialEscolher.resx">
       <DependentUpon>frmFilialEscolher.vb</DependentUpon>
     </EmbeddedResource>
@@ -1096,9 +1099,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Clientes\frmClienteAtividades.resx">
       <DependentUpon>frmClienteAtividades.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Clientes\frmClienteNovo.resx">
-      <DependentUpon>frmClienteNovo.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Clientes\frmClientePJ.resx">
       <DependentUpon>frmClientePJ.vb</DependentUpon>
@@ -1401,7 +1401,6 @@
     <None Include="Resources\Lixeira_PEQ.png" />
     <None Include="Resources\AReceber_30px.png" />
     <None Include="Resources\AReceber_30px.bmp" />
-    <None Include="Resources\AReceber1.png" />
     <None Include="Resources\NovaSiao_PNG_256px.PNG" />
     <None Include="Resources\limpar 24x24.png" />
     <None Include="packages.config" />
@@ -1412,9 +1411,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Contas a pagar.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Produtos.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\shopping_cart.png" />
@@ -1522,7 +1518,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="NovaSiao_ico_256px.ico" />
-    <None Include="Resources\Next.png" />
     <None Include="Resources\Next_32px.png" />
     <None Include="Resources\First_32px.png" />
     <None Include="Resources\Previous_32px.png" />
@@ -1533,22 +1528,8 @@
     <None Include="Resources\Last_32px_disabled.png" />
     <None Include="Resources\download_button.png" />
     <None Include="Resources\upload_button.png" />
-    <None Include="Resources\show_loader.gif" />
-    <None Include="Resources\loading_color.gif" />
-    <None Include="Resources\loading.gif" />
-    <None Include="Resources\esperando.gif" />
-    <None Include="Resources\ezgif.com-crop.gif" />
-    <None Include="Resources\esperando2.gif" />
-    <None Include="Resources\esperando21.gif" />
-    <None Include="Resources\show_loader1.gif" />
-    <None Include="Resources\show_loader2.gif" />
-    <None Include="Resources\loading2.gif" />
-    <None Include="Resources\loading_blue.gif" />
-    <None Include="Resources\loading_blue1.gif" />
-    <None Include="Resources\loading1.gif" />
-    <None Include="Resources\loading3.gif" />
-    <None Include="Resources\loading_blue2.gif" />
     <None Include="Resources\mail.png" />
+    <None Include="Resources\cliente_empresa.png" />
     <Content Include="SqlServerTypes\Loader.cs" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">

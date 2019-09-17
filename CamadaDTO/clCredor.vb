@@ -88,6 +88,26 @@ Public Class clCredor
         End Set
     End Property
     '
+    '--- Propriedade CredorTipoDescricao
+    Public ReadOnly Property CredorTipoDescricao() As String
+        '
+        Get
+            Select Case CredData._CredorTipo
+                Case 0
+                    Return "Credor Simples"
+                Case 1
+                    Return "Pessoa Física"
+                Case 2
+                    Return "Pessoa Jurídica"
+                Case 3
+                    Return "Orgão Público"
+                Case Else
+                    Return ""
+            End Select
+        End Get
+        '
+    End Property
+    '
     '--- Propriedade Ativo
     Public Property Ativo() As Boolean
         Get

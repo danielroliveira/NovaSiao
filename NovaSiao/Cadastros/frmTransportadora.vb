@@ -2,6 +2,7 @@
 Imports CamadaBLL
 '
 Public Class frmTransportadora
+    '
     Private _Transp As clTransportadora
     Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
     Private BindTransp As New BindingSource
@@ -34,6 +35,30 @@ Public Class frmTransportadora
         AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
     End Sub
     '
+    '--- PROPERTY TRANSPORTADORA
+    '----------------------------------------------------------------------------------
+    Public Property propTransp() As clTransportadora
+        '
+        Get
+            Return _Transp
+        End Get
+        '
+        Set(ByVal value As clTransportadora)
+            '
+            _Transp = value
+            BindTransp.DataSource = _Transp
+            AddHandler DirectCast(BindTransp.CurrencyManager.Current, clTransportadora).AoAlterar, AddressOf HandlerAoAlterar
+            If Not IsNothing(_Transp.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
+            AtivoButtonImage()
+            '
+            If Not IsNothing(_Transp.IDPessoa) Then
+                lblIDTransportadora.Text = Format(_Transp.IDPessoa, "0000")
+            End If
+            '
+        End Set
+        '
+    End Property
+    '
     '--- GET CNPJ OF NEW TRANSPORTADORA
     '----------------------------------------------------------------------------------
     Public Function InsertNewCNP(frmOrigem As Form) As Boolean
@@ -50,9 +75,11 @@ Public Class frmTransportadora
             propTransp = frmCNP.propPessoa
             '
             If IsNothing(propTransp.IDPessoa) Then
+                '
                 '--- SET VALORES DEFAULT DOS CAMPOS
                 _Transp.Cidade = ObterDefault("CidadePadrao")
                 _Transp.UF = ObterDefault("UFPadrao")
+                '
                 '--- SET NEW
                 Sit = EnumFlagEstado.NovoRegistro
             Else
@@ -99,6 +126,10 @@ Public Class frmTransportadora
                 .InsercaoData = PJ.InsercaoData,
                 .NomeFantasia = PJ.NomeFantasia
             }
+            '
+            '--- SET NEW
+            Sit = EnumFlagEstado.NovoRegistro
+            '
         End If
         '
         Return True
@@ -134,26 +165,6 @@ Public Class frmTransportadora
         End Set
     End Property
     '
-    Public Property propTransp() As clTransportadora
-        '
-        Get
-            Return _Transp
-        End Get
-        '
-        Set(ByVal value As clTransportadora)
-            '
-            _Transp = value
-            BindTransp.DataSource = _Transp
-            AtivoButtonImage()
-            '
-            If Not IsNothing(_Transp.IDPessoa) Then
-                lblIDTransportadora.Text = Format(_Transp.IDPessoa, "0000")
-            End If
-            '
-        End Set
-        '
-    End Property
-    '
 #End Region
     '
 #Region "DATABINDINGS"
@@ -182,9 +193,6 @@ Public Class frmTransportadora
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler lblIDTransportadora.DataBindings("Tag").Format, AddressOf idFormatRG
         AddHandler BindTransp.CurrentChanged, AddressOf handler_CurrentChanged
-        '
-        ' ADD HANDLER PARA DATABINGS
-        AddHandler DirectCast(BindTransp.CurrencyManager.Current, clTransportadora).AoAlterar, AddressOf HandlerAoAlterar
         '
     End Sub
     '
@@ -381,7 +389,7 @@ Public Class frmTransportadora
             End If
             '
         Else
-                MsgBox("Registro NÃO pôde ser salvo!", vbInformation, "Erro ao Salvar")
+            MsgBox("Registro NÃO pôde ser salvo!", vbInformation, "Erro ao Salvar")
         End If
         '
     End Sub

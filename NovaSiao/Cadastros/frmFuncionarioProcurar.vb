@@ -298,6 +298,38 @@ Public Class frmFuncionarioProcurar
         FiltrarListagem()
         '
     End Sub
+
+    Private Sub btnAdicionar_Click(sender As Object, e As EventArgs) Handles btnAdicionar.Click
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frmF As New frmFuncionario(New clFuncionario, Me)
+            '
+            If Not frmF.InsertNewCNP(Me) Then
+                frmF.Dispose()
+                Exit Sub
+            End If
+            '
+            frmF.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
+            Close()
+            frmF.Show()
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao inserir novo Funcionário..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
     '
 #End Region '/ FILTRO LISTAGEM
     '

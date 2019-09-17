@@ -3,9 +3,6 @@ Imports CamadaBLL
 '
 Public Class frmFuncionario
     '
-#Region "PRIVATE VARIAVEIS" ' DECLARAÇÃO DE VARIÁVEIS
-    '
-    'Private WithEvents listFunc As New List(Of clFuncionario)
     Private WithEvents bindFunc As New BindingSource
     Private _Func As clFuncionario
     '
@@ -19,6 +16,58 @@ Public Class frmFuncionario
     Private Opening As Boolean = True
     Private _formOrigem As Form = Nothing
     '
+#Region "EVENTO LOAD"
+    '
+    '--- SUB NEW
+    '----------------------------------------------------------------------------------
+    Sub New(funcionario As clFuncionario, Optional formOrigem As Form = Nothing)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _formOrigem = formOrigem
+        propFunc = funcionario
+        PreencheDataBindings()
+        AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
+        '
+    End Sub
+    '
+    ' Evento LOAD
+    '----------------------------------------------------------------------------------
+    Private Sub frmFuncionario_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        '
+        ' redimensiona o form
+        RedimensionarForm()
+        Opening = False
+        '
+    End Sub
+    '
+    '--- DEFINE O FUNCIONARIO PROPERTY
+    '----------------------------------------------------------------------------------
+    Public Property propFunc() As clFuncionario
+        '
+        Get
+            Return _Func
+        End Get
+        '
+        Set(ByVal value As clFuncionario)
+            _Func = value
+            bindFunc.DataSource = _Func
+            AddHandler DirectCast(bindFunc.CurrencyManager.Current, clFuncionario).AoAlterar, AddressOf HandlerAoAlterar
+            AtivoButtonImage()
+            If Not IsNothing(_Func.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
+            '
+            If Not IsNothing(_Func.IDPessoa) Then
+                lblIDFuncionario.Text = Format(_Func.IDPessoa, "0000")
+            End If
+            '
+        End Set
+        '
+    End Property
+    '
+    '--- SIT PROPERTY
+    '----------------------------------------------------------------------------------
     Private Property Sit As EnumFlagEstado
         Get
             Return _Sit
@@ -50,53 +99,6 @@ Public Class frmFuncionario
         End Set
     End Property
     '
-#End Region
-    '
-#Region "EVENTO LOAD"
-    '
-    Sub New(funcionario As clFuncionario, Optional formOrigem As Form = Nothing)
-
-        ' This call is required by the designer.
-        InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
-        _formOrigem = formOrigem
-        propFunc = funcionario
-        PreencheDataBindings()
-        AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
-        '
-    End Sub
-    '
-    ' Evento LOAD
-    Private Sub frmFuncionario_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        '
-        ' redimensiona o form
-        RedimensionarForm()
-        Opening = False
-        '
-    End Sub
-    '
-    '--- DEFINE O FUNCIONARIO PROPERTY
-    '----------------------------------------------------------------------------------
-    Public Property propFunc() As clFuncionario
-        '
-        Get
-            Return _Func
-        End Get
-        '
-        Set(ByVal value As clFuncionario)
-            _Func = value
-            bindFunc.DataSource = _Func
-            AtivoButtonImage()
-            '
-            If Not IsNothing(_Func.IDPessoa) Then
-                lblIDFuncionario.Text = Format(_Func.IDPessoa, "0000")
-            End If
-            '
-        End Set
-        '
-    End Property
-    '
     '--- GET CPF OF NEW FUNCIONARIO
     '----------------------------------------------------------------------------------
     Public Function InsertNewCNP(frmOrigem As Form) As Boolean
@@ -113,9 +115,11 @@ Public Class frmFuncionario
             propFunc = frmCNP.propPessoa
             '
             If IsNothing(propFunc.IDPessoa) Then
+                '
                 '--- SET VALORES DEFAULT DOS CAMPOS
                 If _Func.Cidade.Trim.Length = 0 Then _Func.Cidade = ObterDefault("CidadePadrao")
                 If _Func.UF.Trim.Length = 0 Then _Func.UF = ObterDefault("UFPadrao")
+                '
                 '--- SET NEW
                 Sit = EnumFlagEstado.NovoRegistro
             Else
@@ -163,6 +167,10 @@ Public Class frmFuncionario
                 .InsercaoData = PF.InsercaoData,
                 .Sexo = PF.Sexo
             }
+            '
+            '--- SET NEW
+            Sit = EnumFlagEstado.NovoRegistro
+            '
         End If
         '
         Return True
@@ -208,9 +216,6 @@ Public Class frmFuncionario
         ' CARREGA OS COMBOBOX
         CarregaComboVendaTipo()
         CarregaComboSexo()
-        '
-        ' ADD HANDLER PARA DATABINGS
-        AddHandler DirectCast(bindFunc.CurrencyManager.Current, clFuncionario).AoAlterar, AddressOf HandlerAoAlterar
         '
     End Sub
     '

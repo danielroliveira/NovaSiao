@@ -81,6 +81,8 @@ Public Class frmFornecedor
         Set(ByVal value As clFornecedor)
             _forn = value
             BindForn.DataSource = _forn
+            AddHandler DirectCast(BindForn.CurrencyManager.Current, clFornecedor).AoAlterar, AddressOf HandlerAoAlterar
+            If Not IsNothing(_forn.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
             AtivoButtonImage()
             '
             If Not IsNothing(_forn.IDPessoa) Then
@@ -107,9 +109,11 @@ Public Class frmFornecedor
             propForn = frmCNP.propPessoa
             '
             If IsNothing(propForn.IDPessoa) Then
+                '
                 '--- SET VALORES DEFAULT DOS CAMPOS
                 If _forn.Cidade.Trim.Length = 0 Then _forn.Cidade = ObterDefault("CidadePadrao")
                 If _forn.UF.Trim.Length = 0 Then _forn.UF = ObterDefault("UFPadrao")
+                '
                 '--- SET NEW
                 Sit = EnumFlagEstado.NovoRegistro
             Else
@@ -156,6 +160,10 @@ Public Class frmFornecedor
                 .InsercaoData = PJ.InsercaoData,
                 .NomeFantasia = PJ.NomeFantasia
             }
+            '
+            '--- SET NEW
+            Sit = EnumFlagEstado.NovoRegistro
+            '
         End If
         '
         Return True
@@ -192,9 +200,6 @@ Public Class frmFornecedor
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler lblID.DataBindings("Tag").Format, AddressOf idFormatRG
         AddHandler BindForn.CurrentChanged, AddressOf handler_CurrentChanged
-        '
-        ' ADD HANDLER PARA DATABINGS
-        AddHandler DirectCast(BindForn.CurrencyManager.Current, clFornecedor).AoAlterar, AddressOf HandlerAoAlterar
         '
     End Sub
     '

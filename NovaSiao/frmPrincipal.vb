@@ -370,17 +370,71 @@ Public Class frmPrincipal
     '========================================================================================================
 #Region "MENU CLIENTE"
     '
-    Private Sub miClienteNovo_Click(sender As Object, e As EventArgs) Handles miClienteNovo.Click
+    Private Sub miClientePFInserir_Click(sender As Object, e As EventArgs) Handles miClientePFInserir.Click
         '
-        Dim frmCN As New frmClienteNovo
-        frmCN.MdiParent = Me
-        frmCN.Show()
-        OcultaMenuPrincipal()
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frmC As New frmClientePF(New clClientePF)
+            '
+            If Not frmC.InsertNewCNP(Me) Then
+                frmC.Dispose()
+                Exit Sub
+            End If
+            '
+            frmC.MdiParent = Me
+            OcultaMenuPrincipal()
+            frmC.Show()
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao inserir novo Cliente..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Sub
+    '
+    Private Sub miClientePJInserir_Click(sender As Object, e As EventArgs) Handles miClientePJInserir.Click
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frmC As New frmClientePJ(New clClientePJ)
+            '
+            If Not frmC.InsertNewCNP(Me) Then
+                frmC.Dispose()
+                Exit Sub
+            End If
+            '
+            frmC.MdiParent = Me
+            OcultaMenuPrincipal()
+            frmC.Show()
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao inserir novo Cliente..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
         '
     End Sub
     '
     Private Sub miClienteProcurar_Click(sender As Object, e As EventArgs) Handles miClienteProcurar.Click
-        '
         '
         '--- Ampulheta ON
         Cursor = Cursors.WaitCursor
@@ -406,7 +460,7 @@ Public Class frmPrincipal
                 Dim cliBll As New ClientePF_BLL
 
                 Dim myCliPF As clClientePF = cliBll.GetClientePF_PorID(frm.propClienteEscolhido.IDPessoa)
-                Dim frmCli As New frmClientePF(EnumFlagAcao.EDITAR, myCliPF)
+                Dim frmCli As New frmClientePF(myCliPF)
                 frmCli.MdiParent = Me
                 frmCli.Show()
             ElseIf frm.propClienteEscolhido.PessoaTipo = 2 Then ' PESSOA JURÍDICA
@@ -416,7 +470,7 @@ Public Class frmPrincipal
                 Dim cliBLL As New ClientePJ_BLL
 
                 Dim myCliPJ As clClientePJ = cliBLL.GetClientesPJ_PorID(frm.propClienteEscolhido.IDPessoa)
-                Dim frmCli As New frmClientePJ(EnumFlagAcao.EDITAR, myCliPJ)
+                Dim frmCli As New frmClientePJ(myCliPJ)
                 frmCli.MdiParent = Me
                 frmCli.Show()
             End If

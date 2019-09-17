@@ -23,11 +23,10 @@ Partial Class frmCredor
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Me.cmbCredorTipo = New Controles.ComboBox_OnlyValues()
         Me.txtCadastro = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lblCadastro = New System.Windows.Forms.Label()
-        Me.lblCNP = New System.Windows.Forms.Label()
+        Me.lblCNPTexto = New System.Windows.Forms.Label()
         Me.lblIDCredor = New System.Windows.Forms.Label()
         Me.lbl_IdTexto = New System.Windows.Forms.Label()
         Me.txtTelefoneB = New Controles.MaskText_Telefone()
@@ -47,10 +46,11 @@ Partial Class frmCredor
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.pnlEndereco = New System.Windows.Forms.Panel()
-        Me.txtCNP = New System.Windows.Forms.MaskedTextBox()
         Me.btnSalvar = New System.Windows.Forms.Button()
         Me.btnFechar = New System.Windows.Forms.Button()
         Me.pnlPrincipal = New System.Windows.Forms.Panel()
+        Me.lblCNP = New System.Windows.Forms.Label()
+        Me.lblCredorTipo = New System.Windows.Forms.Label()
         Me.EProvider = New System.Windows.Forms.ErrorProvider(Me.components)
         Me.Panel1.SuspendLayout()
         Me.pnlEndereco.SuspendLayout()
@@ -73,17 +73,6 @@ Partial Class frmCredor
         Me.lblTitulo.Location = New System.Drawing.Point(331, 0)
         Me.lblTitulo.Size = New System.Drawing.Size(219, 50)
         Me.lblTitulo.Text = "Cadastro de Credor"
-        '
-        'cmbCredorTipo
-        '
-        Me.cmbCredorTipo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-        Me.cmbCredorTipo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cmbCredorTipo.FormattingEnabled = True
-        Me.cmbCredorTipo.Location = New System.Drawing.Point(105, 14)
-        Me.cmbCredorTipo.Name = "cmbCredorTipo"
-        Me.cmbCredorTipo.RestrictContentToListItems = True
-        Me.cmbCredorTipo.Size = New System.Drawing.Size(142, 27)
-        Me.cmbCredorTipo.TabIndex = 0
         '
         'txtCadastro
         '
@@ -110,14 +99,14 @@ Partial Class frmCredor
         Me.lblCadastro.Text = "Cadastro"
         Me.lblCadastro.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'lblCNP
+        'lblCNPTexto
         '
-        Me.lblCNP.Location = New System.Drawing.Point(256, 17)
-        Me.lblCNP.Name = "lblCNP"
-        Me.lblCNP.Size = New System.Drawing.Size(50, 19)
-        Me.lblCNP.TabIndex = 4
-        Me.lblCNP.Text = "CNPJ"
-        Me.lblCNP.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.lblCNPTexto.Location = New System.Drawing.Point(240, 17)
+        Me.lblCNPTexto.Name = "lblCNPTexto"
+        Me.lblCNPTexto.Size = New System.Drawing.Size(50, 19)
+        Me.lblCNPTexto.TabIndex = 4
+        Me.lblCNPTexto.Text = "CNPJ"
+        Me.lblCNPTexto.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'lblIDCredor
         '
@@ -326,14 +315,6 @@ Partial Class frmCredor
         Me.pnlEndereco.Size = New System.Drawing.Size(522, 222)
         Me.pnlEndereco.TabIndex = 3
         '
-        'txtCNP
-        '
-        Me.txtCNP.Location = New System.Drawing.Point(312, 14)
-        Me.txtCNP.Name = "txtCNP"
-        Me.txtCNP.RejectInputOnFirstFailure = True
-        Me.txtCNP.Size = New System.Drawing.Size(161, 27)
-        Me.txtCNP.TabIndex = 1
-        '
         'btnSalvar
         '
         Me.btnSalvar.Image = Global.NovaSiao.My.Resources.Resources.save
@@ -362,16 +343,34 @@ Partial Class frmCredor
         'pnlPrincipal
         '
         Me.pnlPrincipal.BackColor = System.Drawing.Color.FromArgb(CType(CType(228, Byte), Integer), CType(CType(235, Byte), Integer), CType(CType(244, Byte), Integer))
-        Me.pnlPrincipal.Controls.Add(Me.txtCNP)
         Me.pnlPrincipal.Controls.Add(Me.lblCNP)
+        Me.pnlPrincipal.Controls.Add(Me.lblCredorTipo)
+        Me.pnlPrincipal.Controls.Add(Me.lblCNPTexto)
         Me.pnlPrincipal.Controls.Add(Me.lblCadastro)
         Me.pnlPrincipal.Controls.Add(Me.Label1)
         Me.pnlPrincipal.Controls.Add(Me.txtCadastro)
-        Me.pnlPrincipal.Controls.Add(Me.cmbCredorTipo)
         Me.pnlPrincipal.Location = New System.Drawing.Point(12, 66)
         Me.pnlPrincipal.Name = "pnlPrincipal"
         Me.pnlPrincipal.Size = New System.Drawing.Size(521, 88)
         Me.pnlPrincipal.TabIndex = 1
+        '
+        'lblCNP
+        '
+        Me.lblCNP.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCNP.Location = New System.Drawing.Point(296, 14)
+        Me.lblCNP.Name = "lblCNP"
+        Me.lblCNP.Size = New System.Drawing.Size(177, 27)
+        Me.lblCNP.TabIndex = 5
+        Me.lblCNP.Text = "000.000.000-00"
+        '
+        'lblCredorTipo
+        '
+        Me.lblCredorTipo.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCredorTipo.Location = New System.Drawing.Point(105, 14)
+        Me.lblCredorTipo.Name = "lblCredorTipo"
+        Me.lblCredorTipo.Size = New System.Drawing.Size(133, 27)
+        Me.lblCredorTipo.TabIndex = 5
+        Me.lblCredorTipo.Text = "Tipo"
         '
         'EProvider
         '
@@ -404,12 +403,10 @@ Partial Class frmCredor
         Me.ResumeLayout(False)
 
     End Sub
-
-    Friend WithEvents cmbCredorTipo As Controles.ComboBox_OnlyValues
     Friend WithEvents txtCadastro As TextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents lblCadastro As Label
-    Friend WithEvents lblCNP As Label
+    Friend WithEvents lblCNPTexto As Label
     Friend WithEvents lblIDCredor As Label
     Friend WithEvents lbl_IdTexto As Label
     Friend WithEvents txtTelefoneB As Controles.MaskText_Telefone
@@ -429,9 +426,10 @@ Partial Class frmCredor
     Friend WithEvents Label8 As Label
     Friend WithEvents Label7 As Label
     Friend WithEvents pnlEndereco As Panel
-    Friend WithEvents txtCNP As MaskedTextBox
     Friend WithEvents btnSalvar As Button
     Friend WithEvents btnFechar As Button
     Friend WithEvents pnlPrincipal As Panel
     Friend WithEvents EProvider As ErrorProvider
+    Friend WithEvents lblCredorTipo As Label
+    Friend WithEvents lblCNP As Label
 End Class

@@ -1,84 +1,19 @@
-﻿Imports System.ComponentModel
-Imports CamadaBLL
+﻿Imports CamadaBLL
 Imports CamadaDTO
 
 Public Class frmCredor
-    Private _Tipo As Byte
+    '
     Property _Credor As clCredor
-    Private BindCred As New BindingSource
     Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
-    Private VerificaAlteracao As Boolean = False
+    Private BindCred As New BindingSource
+    Private _Tipo As Byte
+    '
     Private _formOrigem As Form
     '
 #Region "LOAD OPEN"
     '
-    '--- Property Tipo
-    Public Property propTipo() As Byte
-        Get
-            Return _Tipo
-        End Get
-        Set(ByVal value As Byte)
-            _Tipo = value
-
-            If value = 0 Or value = 3 Then '--- SIMPLES or ORGAO PUBLICO
-                txtCNP.Enabled = False
-                lblCNP.Text = "CNP"
-                lblCadastro.Text = "Descrição"
-                pnlEndereco.Enabled = False
-                pnlEndereco.BackColor = Color.Gainsboro
-                '
-            ElseIf value = 1 Then '--- PF
-                txtCNP.Enabled = True
-                txtCNP.Mask = "000,000,000-00"
-                lblCNP.Text = "CPF"
-                lblCadastro.Text = "Nome"
-                pnlEndereco.Enabled = True
-                pnlEndereco.BackColor = Color.FromArgb(255, 234, 213)
-                '
-            ElseIf value = 2 Then '--- PJ
-                txtCNP.Enabled = True
-                txtCNP.Mask = "00,000,000/0000-00"
-                lblCNP.Text = "CNPJ"
-                lblCadastro.Text = "Razão Social"
-                pnlEndereco.Enabled = True
-                pnlEndereco.BackColor = Color.FromArgb(255, 234, 213)
-                '
-            End If
-            '
-            '--- Apaga os valores do campos
-            If value = 0 Or value = 3 Then
-                txtCNP.Clear()
-                txtEndereco.Clear()
-                txtBairro.Clear()
-                txtCidade.Clear()
-                txtUF.Clear()
-                txtCEP.Clear()
-                txtTelefoneA.Clear()
-                txtTelefoneB.Clear()
-                txtEmail.Clear()
-            End If
-        End Set
-    End Property
-    '
-    Private Property Sit As EnumFlagEstado
-        Get
-            Return _Sit
-        End Get
-        Set(value As EnumFlagEstado)
-            _Sit = value
-            If _Sit = EnumFlagEstado.RegistroSalvo Then
-                txtCNP.ReadOnly = True
-                btnSalvar.Enabled = False
-            ElseIf _Sit = enumFlagEstado.Alterado Then
-                txtCNP.ReadOnly = True
-                btnSalvar.Enabled = True
-            ElseIf _Sit = enumFlagEstado.NovoRegistro Then
-                txtCNP.ReadOnly = False
-                btnSalvar.Enabled = True
-            End If
-        End Set
-    End Property
-    '
+    '--- SUB NEW
+    '----------------------------------------------------------------------------------
     Sub New(Credor As clCredor, Optional formOrigem As Form = Nothing)
         '
         ' This call is required by the designer.
@@ -86,40 +21,286 @@ Public Class frmCredor
         '
         ' Add any initialization after the InitializeComponent() call.
         _formOrigem = formOrigem
-        CarregaComboTipo()
-        _Credor = Credor
-        BindCred.DataSource = _Credor
+        propCredor = Credor
         PreencheDataBindings()
         '
-        '
         '--- verifica se o é um NOVO CREDOR
-        If IsNothing(_Credor.IDPessoa) Then
-            propTipo = 0
-            Sit = EnumFlagEstado.NovoRegistro
-        Else
-            Sit = EnumFlagEstado.RegistroSalvo
-        End If
-        '
-        AddHandler cmbCredorTipo.SelectedIndexChanged, AddressOf cmbCredorTipo_SelectedIndexChanged
-        AddHandler cmbCredorTipo.SelectedValueChanged, AddressOf cmbCredorTipo_SelectedValueChanged
+        If Not IsNothing(_Credor.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
         '
         Handler_MouseDown()
         Handler_MouseUp()
         Handler_MouseMove()
         '
-        VerificaAlteracao = True
-        '
     End Sub
+    '
+    '--- PROPERTY CREDOR
+    '----------------------------------------------------------------------------------
+    Public Property propCredor() As clCredor
+        '
+        Get
+            Return _Credor
+        End Get
+        '
+        Set(ByVal value As clCredor)
+            '
+            _Credor = value
+            BindCred.DataSource = _Credor
+            AddHandler DirectCast(BindCred.CurrencyManager.Current, clCredor).AoAlterar, AddressOf HandlerAoAlterar
+            propTipo = _Credor.CredorTipo
+            If Not IsNothing(_Credor.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
+            '
+            If Not IsNothing(_Credor.IDPessoa) Then
+                lblIDCredor.Text = Format(_Credor.IDPessoa, "0000")
+            End If
+            '
+        End Set
+        '
+    End Property
+    '
+    '--- PROPERTY TIPO
+    '----------------------------------------------------------------------------------
+    Public Property propTipo() As Byte
+        '
+        Get
+            Return _Tipo
+        End Get
+        '
+        Set(ByVal value As Byte)
+            _Tipo = value
+
+            If value = 0 Or value = 3 Then '--- SIMPLES or ORGAO PUBLICO
+                lblCNPTexto.Visible = False
+                lblCNP.Visible = False
+                lblCadastro.Text = "Descrição"
+                pnlEndereco.Enabled = False
+                pnlEndereco.BackColor = Color.Gainsboro
+                '
+            ElseIf value = 1 Then '--- PF
+                lblCNPTexto.Visible = True
+                lblCNP.Visible = True
+                lblCNPTexto.Text = "CPF"
+                lblCadastro.Text = "Nome"
+                pnlEndereco.Enabled = True
+                pnlEndereco.BackColor = Color.FromArgb(255, 234, 213)
+                '
+            ElseIf value = 2 Then '--- PJ
+                lblCNPTexto.Visible = True
+                lblCNP.Visible = True
+                lblCNPTexto.Text = "CNPJ"
+                lblCadastro.Text = "Razão Social"
+                pnlEndereco.Enabled = True
+                pnlEndereco.BackColor = Color.FromArgb(255, 234, 213)
+                '
+            End If
+            '
+        End Set
+        '
+    End Property
+    '
+    '--- GET TIPO AND CNP OF NEW CREDOR
+    '----------------------------------------------------------------------------------
+    Public Function InsertNewCNP(frmOrigem As Form) As Boolean
+        '
+        '--- GET THE CREDOR TIPO
+        Dim frmTipo As New frmCredorTipo(frmOrigem)
+        '
+        frmTipo.ShowDialog()
+        If frmTipo.DialogResult = DialogResult.Cancel Then
+            Return False
+        End If
+        '
+        Dim newCredorTipo As Byte = frmTipo.CredorTipo
+        '
+        '--- GET CNPJ OR CPF IF NECESSARY
+        If newCredorTipo = 0 Or newCredorTipo = 3 Then '--> CREDOR SIMPLES OU GOVERNO
+            _Credor.CredorTipo = newCredorTipo
+            _Credor.CNP = Nothing
+            Return True
+        ElseIf newCredorTipo = 1 Then '---> CREDOR PESSOA FISICA
+            Return GetNewCPF(frmOrigem)
+        ElseIf newCredorTipo = 2 Then '---> CREDOR PESSOA JURIDICA
+            Return GetNewCNPJ(frmOrigem)
+        End If
+        '
+        Return False
+        '
+    End Function
+    '
+    '--- GET CNPJ OF NEW CREDOR PJ
+    '----------------------------------------------------------------------------------
+    Public Function GetNewCNPJ(frmOrigem As Form) As Boolean
+        '
+        Dim frmCNP As New frmCNPInserir(PessoaBLL.EnumPessoaGrupo.CREDOR, frmOrigem, "CNPJ")
+        '
+        frmCNP.ShowDialog()
+        If frmCNP.DialogResult = DialogResult.Cancel Then
+            Return False
+        End If
+        '
+        If TypeOf frmCNP.propPessoa Is clCredor Then
+            '
+            propCredor = frmCNP.propPessoa
+            '
+            If IsNothing(propCredor.IDPessoa) Then
+                '
+                '--- SET VALORES DEFAULT DOS CAMPOS
+                _Credor.Cidade = ObterDefault("CidadePadrao")
+                _Credor.UF = ObterDefault("UFPadrao")
+                '
+                '--- SET NEW
+                Sit = EnumFlagEstado.NovoRegistro
+            Else
+                AbrirDialog("Já existe um CREDOR com esse mesmo CNPJ." & vbNewLine &
+                            "O registro dO CREDOR encontrado será aberto...",
+                            "CNPJ Encontrado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Sit = EnumFlagEstado.RegistroSalvo
+            End If
+            '
+        Else
+            '
+            Dim PJ As clPessoaJuridica = frmCNP.propPessoa
+            '
+            If AbrirDialog("Foi encontrada uma Pessoa Jurídica que possui o mesmo CNPJ informado." & vbNewLine &
+                           PJ.Cadastro & vbNewLine &
+                           "Deseja inserir um novo CREDOR com os dados dessa pessoa Jurídica?",
+                           "CNPJ Encontrado",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.No Then
+                '
+                Return False
+                '
+            End If
+            '
+            propCredor = New clCredor With {
+                .IDPessoa = PJ.IDPessoa,
+                .Cadastro = PJ.Cadastro,
+                .CNP = PJ.CNPJ,
+                .PessoaTipo = PJ.PessoaTipo,
+                .Ativo = True,
+                .Endereco = PJ.Endereco,
+                .Bairro = PJ.Bairro,
+                .Cidade = PJ.Cidade,
+                .UF = PJ.UF,
+                .CEP = PJ.CEP,
+                .TelefoneA = PJ.TelefoneA,
+                .TelefoneB = PJ.TelefoneB,
+                .Email = PJ.Email,
+                .InsercaoData = PJ.InsercaoData
+            }
+            '
+            '--- SET NEW
+            Sit = EnumFlagEstado.NovoRegistro
+            '
+        End If
+        '
+        Return True
+        '
+    End Function
+    '
+    '--- GET CPF OF NEW CREDOR PF
+    '----------------------------------------------------------------------------------
+    Public Function GetNewCPF(frmOrigem As Form) As Boolean
+        '
+        Dim frmCNP As New frmCNPInserir(PessoaBLL.EnumPessoaGrupo.CREDOR, frmOrigem, "CPF")
+        '
+        frmCNP.ShowDialog()
+        If frmCNP.DialogResult = DialogResult.Cancel Then
+            Return False
+        End If
+        '
+        If TypeOf frmCNP.propPessoa Is clCredor Then
+            '
+            propCredor = frmCNP.propPessoa
+            '
+            If IsNothing(propCredor.IDPessoa) Then
+                '
+                '--- SET VALORES DEFAULT DOS CAMPOS
+                _Credor.Cidade = ObterDefault("CidadePadrao")
+                _Credor.UF = ObterDefault("UFPadrao")
+                '
+                '--- SET NEW
+                Sit = EnumFlagEstado.NovoRegistro
+            Else
+                AbrirDialog("Já existe um CREDOR com esse mesmo CPF." & vbNewLine &
+                            "O registro dO CREDOR encontrado será aberto...",
+                            "CPF Encontrado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Sit = EnumFlagEstado.RegistroSalvo
+            End If
+            '
+        Else
+            '
+            Dim PF As clPessoaFisica = frmCNP.propPessoa
+            '
+            If AbrirDialog("Foi encontrada uma Pessoa Física que possui o mesmo CPF informado." & vbNewLine &
+                           PF.Cadastro & vbNewLine &
+                           "Deseja inserir um novo CREDOR com os dados dessa pessoa Física?",
+                           "CPF Encontrado",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.No Then
+                '
+                Return False
+                '
+            End If
+            '
+            propCredor = New clCredor With {
+                .IDPessoa = PF.IDPessoa,
+                .Cadastro = PF.Cadastro,
+                .CNP = PF.CPF,
+                .PessoaTipo = PF.PessoaTipo,
+                .Ativo = True,
+                .Endereco = PF.Endereco,
+                .Bairro = PF.Bairro,
+                .Cidade = PF.Cidade,
+                .UF = PF.UF,
+                .CEP = PF.CEP,
+                .TelefoneA = PF.TelefoneA,
+                .TelefoneB = PF.TelefoneB,
+                .Email = PF.Email,
+                .InsercaoData = PF.InsercaoData
+            }
+            '
+            '--- SET NEW
+            Sit = EnumFlagEstado.NovoRegistro
+            '
+        End If
+        '
+        Return True
+        '
+    End Function
+    '
+    '--- SITUACAO DO REGISTRO
+    '----------------------------------------------------------------------------------
+    Private Property Sit As EnumFlagEstado
+        '
+        Get
+            Return _Sit
+        End Get
+        '
+        Set(value As EnumFlagEstado)
+            _Sit = value
+            If _Sit = EnumFlagEstado.RegistroSalvo Then
+                btnSalvar.Enabled = False
+            ElseIf _Sit = EnumFlagEstado.Alterado Then
+                btnSalvar.Enabled = True
+            ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
+                btnSalvar.Enabled = True
+            End If
+        End Set
+        '
+    End Property
+    '
 #End Region
     '
 #Region "BINDING"
+    '
     Private Sub PreencheDataBindings()
         ' ADICIONANDO O DATABINDINGS AOS CONTROLES TEXT
         ' OS COMBOS JA SÃO ADICIONADOS DATABINDINGS QUANDO CARREGA
         '
         lblIDCredor.DataBindings.Add("Text", BindCred, "IDPessoa")
+        lblCredorTipo.DataBindings.Add("Text", BindCred, "CredorTipoDescricao")
         txtCadastro.DataBindings.Add("Text", BindCred, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
-        txtCNP.DataBindings.Add("Text", BindCred, "CNP", True, DataSourceUpdateMode.OnPropertyChanged)
+        lblCNP.DataBindings.Add("Text", BindCred, "CNP")
         txtEndereco.DataBindings.Add("Text", BindCred, "Endereco", True, DataSourceUpdateMode.OnPropertyChanged)
         txtBairro.DataBindings.Add("Text", BindCred, "Bairro", True, DataSourceUpdateMode.OnPropertyChanged)
         txtCidade.DataBindings.Add("Text", BindCred, "Cidade", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -129,14 +310,8 @@ Public Class frmCredor
         txtTelefoneB.DataBindings.Add("Text", BindCred, "TelefoneB", True, DataSourceUpdateMode.OnPropertyChanged)
         txtEmail.DataBindings.Add("Text", BindCred, "Email", True, DataSourceUpdateMode.OnPropertyChanged)
         '
-        ' --- valor definido ao alterar o cmbTipo
-        ' txtCNP.DataBindings.Add("Text", BindCred, "CredorPJ.CNPJ", True, DataSourceUpdateMode.OnPropertyChanged)
-        '
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler lblIDCredor.DataBindings("Text").Format, AddressOf idFormatRG
-        '
-        ' ADD HANDLER PARA DATABINGS
-        AddHandler _Credor.AoAlterar, AddressOf HandlerAoAlterar
         '
     End Sub
     '
@@ -153,77 +328,10 @@ Public Class frmCredor
     '
 #End Region
     '
-#Region "CARREGA E CONTROLA COMBOS"
-    '
-    ' CARREGA OS COMBOBOX
-    '--------------------------------------------------------------------------------------------------------
-    Private Sub CarregaComboTipo()
-        Dim dtTipo As New DataTable
-        'Adiciona todas as possibilidades
-        dtTipo.Columns.Add("IDTipo")
-        dtTipo.Columns.Add("Tipo")
-        dtTipo.Rows.Add(New Object() {0, "Simples"})
-        dtTipo.Rows.Add(New Object() {1, "Pessoa Física"})
-        dtTipo.Rows.Add(New Object() {2, "Pessoa Jurídica"})
-        dtTipo.Rows.Add(New Object() {3, "Orgão Público"})
-        With cmbCredorTipo
-            .DataSource = dtTipo
-            .ValueMember = "IDTipo"
-            .DisplayMember = "Tipo"
-            .SelectedValue = -1
-            .DataBindings.Add("SelectedValue", BindCred, "CredorTipo", True, DataSourceUpdateMode.OnPropertyChanged)
-        End With
-    End Sub
-    '
-    ' COMBO TIPO ATUALIZAR ALTERA ESTADO DOS CONTROLES
-    '--------------------------------------------------------------------------------------------------------
-    Private Sub cmbCredorTipo_SelectedIndexChanged(sender As Object, e As EventArgs)
-        '
-        If VerificaAlteracao = False Then Exit Sub
-        '
-        propTipo = cmbCredorTipo.SelectedValue
-        '
-    End Sub
-    '
-    ' INIBE A ALTERACAO DO TIPO QUANDO NÃO FOR UM NOVO REGISTRO
-    '--------------------------------------------------------------------------------------------------------
-    Private Sub cmbCredorTipo_SelectedValueChanged(sender As Object, e As EventArgs)
-        '
-        If _Credor.CredorTipo = 0 Or _Credor.CredorTipo = 3 Then Exit Sub
-        '
-        If Sit <> EnumFlagEstado.NovoRegistro Then
-            VerificaAlteracao = False
-            cmbCredorTipo.SelectedValue = IIf(IsNothing(_Credor.CredorTipo), -1, _Credor.CredorTipo)
-            VerificaAlteracao = True
-        End If
-        '
-    End Sub
-    '
-    '------------------------------------------------------------------------------------------
-    ' CRIA UM ATALHO PARA OS COMBO BOX
-    '------------------------------------------------------------------------------------------
-    Private Sub cmbTipo_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cmbCredorTipo.KeyPress
-        If Char.IsNumber(e.KeyChar) AndAlso Sit = EnumFlagEstado.NovoRegistro Then
-            e.Handled = True
-            '
-            Dim dt As DataTable = cmbCredorTipo.DataSource
-            Dim rCount As Integer = dt.Rows.Count
-            Dim item As Integer = e.KeyChar.ToString
-            '
-            If item <= rCount And item > 0 Then
-                Dim Valor As Integer = dt.Rows(e.KeyChar.ToString - 1)("IDTipo")
-                '
-                cmbCredorTipo.SelectedValue = Valor
-                '
-            End If
-        End If
-    End Sub
-    '
-#End Region
-    '
 #Region "FUNCOES UTILITARIAS"
+    '
     '--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
-    Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) Handles txtCadastro.KeyDown, txtCNP.KeyDown,
+    Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) Handles txtCadastro.KeyDown,
             txtEndereco.KeyDown, txtBairro.KeyDown, txtCidade.KeyDown,
             txtUF.KeyDown, txtCEP.KeyDown, txtEmail.KeyDown
         '
@@ -241,127 +349,6 @@ Public Class frmCredor
             e.Handled = True
             btnFechar_Click(New Object, New EventArgs)
         End If
-        '
-    End Sub
-    '
-#End Region
-    '
-#Region "VALIDACAO DO CNP"
-    '
-    '=============================================================================================
-    ' VALIDA CNPJ / CPF
-    '=============================================================================================
-    Private Sub txtCNP_Validating(sender As Object, e As CancelEventArgs) Handles txtCNP.Validating
-        '
-        ' Verifica o texto do CNP
-        Dim CNP As String = ""
-        '
-        For Each c As Char In txtCNP.Text
-            If IsNumeric(c) Then
-                CNP = CNP & c.ToString
-            End If
-        Next
-        '
-        If CNP.Length > 0 AndAlso ValidaCNP() = False Then
-            e.Cancel = True
-        Else
-            e.Cancel = False
-        End If
-    End Sub
-    '
-    Private Sub txtCNP_Validated(sender As Object, e As EventArgs) Handles txtCNP.Validated
-        '
-        VerPessoaExistente()
-        '
-    End Sub
-    '
-    '------------------------------------------------------------------------------------------
-    ' FUNCAO QUE PROCURA UMA PESSOA PJ OU PF PELO CNP
-    ' VERIFICA PESSOA EXISTENTE RETORNA UM clClientePF ou PJ
-    '------------------------------------------------------------------------------------------
-    Private Sub VerPessoaExistente()
-        Dim db As New PessoaBLL
-        Dim myPessoa As Object = Nothing
-        '
-        Try
-            myPessoa = db.ProcurarCNP_Pessoa(txtCNP.Text, PessoaBLL.EnumPessoaGrupo.CREDOR)
-            '
-            ' NÃO ENCOTROU NENHUM CLIENTE NO CPF/CNPJ RETORNA NOVO CLIENTE
-            If IsNothing(myPessoa) Then
-                Exit Sub
-            End If
-            '
-            ' VERIFICA SE A PESSOA ENCONTRADA É PF OU PJ
-            If txtCNP.TextLength = 14 Then ' PESSOA FÍSICA
-                '
-                Dim myPF As clPessoaFisica = DirectCast(myPessoa, clPessoaFisica)
-                '
-                txtCadastro.Text = myPF.Cadastro
-                txtEndereco.Text = myPF.Endereco
-                txtBairro.Text = myPF.Bairro
-                txtCidade.Text = myPF.Cidade
-                txtUF.Text = myPF.UF
-                txtCEP.Text = myPF.CEP
-                txtTelefoneA.Text = myPF.TelefoneA
-                txtTelefoneB.Text = myPF.TelefoneB
-                txtEmail.Text = myPF.Email
-                '
-            ElseIf txtCNP.TextLength = 18 Then ' PESSOA JURIDICA
-                '
-                Dim myPJ As clPessoaJuridica = DirectCast(myPessoa, clPessoaJuridica)
-                '
-                txtCadastro.Text = myPJ.Cadastro
-                txtEndereco.Text = myPJ.Endereco
-                txtBairro.Text = myPJ.Bairro
-                txtCidade.Text = myPJ.Cidade
-                txtUF.Text = myPJ.UF
-                txtCEP.Text = myPJ.CEP
-                txtTelefoneA.Text = myPJ.TelefoneA
-                txtTelefoneB.Text = myPJ.TelefoneB
-                txtEmail.Text = myPJ.Email
-                '
-            End If
-        Catch ex As Exception
-            MessageBox.Show("Um erro inesperado ocorreu: " & ex.Message,
-                            "Falha na procura de CPF/CNPJ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-        '
-    End Sub
-    '
-    ' VALIDAR O NÚMERO DO CNPJ OU CPF
-    Private Function ValidaCNP() As Boolean
-        Dim obj As New Valida_CPF_CNPJ
-        '
-        Try
-            If propTipo = 1 Then
-                obj.cpf = txtCNP.Text
-                If obj.isCpfValido = False Then
-                    MessageBox.Show("O CPF digitado é inválido!", "CPF inválido", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    Return False
-                Else
-                    Return True
-                End If
-            ElseIf propTipo = 2 Then
-                obj.cnpj = txtCNP.Text
-                If obj.isCnpjValido = False Then
-                    MessageBox.Show("O CNPJ digitado é inválido!", "CNPJ inválido", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    Return False
-                Else
-                    Return True
-                End If
-            Else
-                Return False
-            End If
-        Catch ex As Exception
-            MessageBox.Show(ex.Message, "Erro inesperado!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            Return False
-        End Try
-        '
-    End Function
-    '
-    Private Sub txtCNP_GotFocus(sender As Object, e As EventArgs) Handles txtCNP.GotFocus
-        '
-        txtCNP.SelectAll()
         '
     End Sub
     '
@@ -471,9 +458,6 @@ Public Class frmCredor
         End If
         '
         If propTipo = 1 Or propTipo = 2 Then
-            If f.VerificaControlesForm(txtCNP, "CPF/CNPJ", EProvider) = False Then
-                Return False
-            End If
 
             If f.VerificaControlesForm(txtBairro, "Bairro", EProvider) = False Then
                 Return False

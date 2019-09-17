@@ -5,69 +5,57 @@ Imports VIBlend.WinForms.Controls
 Public Class frmClientePF
     '
     Private WithEvents _ClientePF As clClientePF
+    Private WithEvents BindingCliente As New BindingSource
     Private dtRef As DataTable
     Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
-    Private _acao As EnumFlagAcao
-    Private WithEvents BindingCliente As New BindingSource
+    '
     Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
     '
-#Region "PROPERTYS" ' DECLARAÇÃO DE VARIÁVEIS
+#Region "FORM LOAD" ' FORM NEW e LOAD
     '
-    Private Property Sit As EnumFlagEstado
-        Get
-            Return _Sit
-        End Get
-        Set(value As EnumFlagEstado)
-            _Sit = value
-            If _Sit = EnumFlagEstado.RegistroSalvo Then
-                btnSalvar.Enabled = False
-                btnNovo.Enabled = True
-                btnProcurar.Enabled = True
-                btnImprimir.Enabled = True
-                btnCancelar.Enabled = False
-                lblIDCliente.Text = Format(_ClientePF.IDPessoa, "0000")
-                AtivoButtonImage()
-            ElseIf _Sit = EnumFlagEstado.Alterado Then
-                btnSalvar.Enabled = True
-                btnNovo.Enabled = False
-                btnProcurar.Enabled = False
-                btnImprimir.Enabled = True
-                btnCancelar.Enabled = True
-                AtivoButtonImage()
-            ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
-                txtClienteNome.Select()
-                btnSalvar.Enabled = True
-                btnNovo.Enabled = False
-                btnProcurar.Enabled = False
-                btnImprimir.Enabled = False
-                btnCancelar.Enabled = False
-                lblIDCliente.Text = "NOVO"
-                ' OBTER OS VALORES DEFAULT DOS CAMPOS
-                txtCidade.Text = ObterDefault("CidadePadrao")
-                txtNaturalidade.Text = ObterDefault("NaturalidadePadrao")
-                txtUF.Text = ObterDefault("UFPadrao")
-                AtivoButtonImage()
-            End If
-        End Set
-    End Property
+    '--- SUB NEW
+    '----------------------------------------------------------------------------------
+    Public Sub New(myClientePF As clClientePF)
+        '
+        ' This call is required by the designer.
+        InitializeComponent()
+        '
+        ' Add any initialization after the InitializeComponent() call.
+        propClientePF = myClientePF
+        PreencheDataBindings()
+        '
+        HandlerKeyDownControl()
+        '
+    End Sub
     '
-    '--- Propriedade propClientePF
+    '--- FORM LOAD
+    '----------------------------------------------------------------------------------
+    Private Sub frmClientesPF_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        '
+        AddHandler dgvReferencias.CellValueChanged, AddressOf AlteraReferencia
+        '
+    End Sub
+    '
+    '--- PROPRIEDADE PROPCLIENTEPF
+    '----------------------------------------------------------------------------------
     Public Property propClientePF() As clClientePF
+        '
         Get
             Return _ClientePF
         End Get
+        '
         Set(ByVal value As clClientePF)
-            _ClientePF = value
             '
-            If IsNothing(BindingCliente.DataSource) Then
-                BindingCliente.DataSource = _ClientePF
-                PreencheDataBindings()
-            Else
-                BindingCliente.Clear()
-                BindingCliente.DataSource = _ClientePF
-                BindingCliente.ResetBindings(True)
-                AddHandler _ClientePF.AoAlterar, AddressOf HandlerAoAlterar
+            _ClientePF = value
+            BindingCliente.DataSource = _ClientePF
+            AddHandler _ClientePF.AoAlterar, AddressOf HandlerAoAlterar
+            If Not IsNothing(_ClientePF.RGCliente) Then Sit = EnumFlagEstado.RegistroSalvo
+            AtivoButtonImage()
+            '
+            '--- FORMATA ID CLIENTE
+            If Not IsNothing(_ClientePF.IDPessoa) Then
+                lblIDCliente.Text = Format(_ClientePF.IDPessoa, "0000")
             End If
             '
             '--- VERIFICA O ESTADO CIVIL PARA HABILITAR O CONJUGE
@@ -84,44 +72,121 @@ Public Class frmClientePF
             End If
             '
         End Set
+        '
     End Property
     '
-    Public Property propAcao As EnumFlagAcao
-        Get
-            Return _acao
-        End Get
-        Set(value As EnumFlagAcao)
-            _acao = value
-            If value = EnumFlagAcao.INSERIR Then
+    '--- GET CPF OF NEW CLIENTE PF
+    '----------------------------------------------------------------------------------
+    Public Function InsertNewCNP(frmOrigem As Form) As Boolean
+        '
+        Dim frmCNP As New frmCNPInserir(PessoaBLL.EnumPessoaGrupo.CLIENTE, frmOrigem, "CPF")
+        '
+        frmCNP.ShowDialog()
+        If frmCNP.DialogResult = DialogResult.Cancel Then
+            Return False
+        End If
+        '
+        If TypeOf frmCNP.propPessoa Is clClientePF Then
+            '
+            propClientePF = frmCNP.propPessoa
+            '
+            If IsNothing(propClientePF.IDPessoa) Then
+                '
+                '--- SET VALORES DEFAULT DOS CAMPOS
+                If _ClientePF.Cidade.Trim.Length = 0 Then _ClientePF.Cidade = ObterDefault("CidadePadrao")
+                If _ClientePF.UF.Trim.Length = 0 Then _ClientePF.UF = ObterDefault("UFPadrao")
+                If _ClientePF.Naturalidade.Trim.Length = 0 Then txtNaturalidade.Text = ObterDefault("NaturalidadePadrao")
+                '
+                '--- SET NEW
                 Sit = EnumFlagEstado.NovoRegistro
-            ElseIf value = enumFlagAcao.EDITAR Then
+            Else
+                AbrirDialog("Já existe um CLIENTE com esse mesmo CPF." & vbNewLine &
+                            "O registro do CLIENTE encontrado será aberto...",
+                            "CPF Encontrado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
                 Sit = EnumFlagEstado.RegistroSalvo
+            End If
+            '
+        Else
+            '
+            Dim PF As clPessoaFisica = frmCNP.propPessoa
+            '
+            If AbrirDialog("Foi encontrada uma Pessoa Física que possui o mesmo CPF informado." & vbNewLine &
+                           PF.Cadastro & vbNewLine &
+                           "Deseja inserir um NOVO CLIENTE com os dados dessa pessoa Física?",
+                           "CPF Encontrado",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.No Then
+                '
+                Return False
+                '
+            End If
+            '
+            propClientePF = New clClientePF With {
+                .IDPessoa = PF.IDPessoa,
+                .Cadastro = PF.Cadastro,
+                .CPF = PF.CPF,
+                .PessoaTipo = PF.PessoaTipo,
+                .Situacao = True,
+                .Endereco = PF.Endereco,
+                .Bairro = PF.Bairro,
+                .Cidade = PF.Cidade,
+                .UF = PF.UF,
+                .CEP = PF.CEP,
+                .TelefoneA = PF.TelefoneA,
+                .TelefoneB = PF.TelefoneB,
+                .Identidade = PF.Identidade,
+                .IdentidadeOrgao = PF.IdentidadeOrgao,
+                .IdentidadeData = PF.IdentidadeData,
+                .Email = PF.Email,
+                .EmailDestino = PF.EmailDestino,
+                .EmailPrincipal = PF.EmailPrincipal,
+                .NascimentoData = PF.NascimentoData,
+                .InsercaoData = PF.InsercaoData,
+                .Sexo = PF.Sexo
+            }
+            '
+            '--- SET NEW
+            Sit = EnumFlagEstado.NovoRegistro
+            '
+        End If
+        '
+        Return True
+        '
+    End Function
+    '
+    '--- SIT PROPERTY
+    '----------------------------------------------------------------------------------
+    Private Property Sit As EnumFlagEstado
+        Get
+            Return _Sit
+        End Get
+        Set(value As EnumFlagEstado)
+            _Sit = value
+            If _Sit = EnumFlagEstado.RegistroSalvo Then
+                btnSalvar.Enabled = False
+                btnNovo.Enabled = True
+                btnProcurar.Enabled = True
+                btnImprimir.Enabled = True
+                btnCancelar.Enabled = False
+                lblIDCliente.Text = Format(_ClientePF.IDPessoa, "0000")
+            ElseIf _Sit = EnumFlagEstado.Alterado Then
+                btnSalvar.Enabled = True
+                btnNovo.Enabled = False
+                btnProcurar.Enabled = False
+                btnImprimir.Enabled = True
+                btnCancelar.Enabled = True
+            ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
+                txtClienteNome.Select()
+                btnSalvar.Enabled = True
+                btnNovo.Enabled = False
+                btnProcurar.Enabled = False
+                btnImprimir.Enabled = False
+                btnCancelar.Enabled = False
+                lblIDCliente.Text = "NOVO"
             End If
         End Set
     End Property
     '
-#End Region
-    '
-#Region "FORM LOAD" ' FORM NEW e LOAD
-    '
-    Public Sub New(myAcao As EnumFlagAcao, myClientePF As clClientePF)
-        '
-        ' This call is required by the designer.
-        InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        propClientePF = myClientePF
-        propAcao = myAcao
-        '
-        HandlerKeyDownControl()
-        '
-    End Sub
-    '
-    Private Sub frmClientesPF_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        '
-        AddHandler dgvReferencias.CellValueChanged, AddressOf AlteraReferencia
-        '
-    End Sub
 #End Region
     '
 #Region "BINDINGS"
@@ -174,8 +239,6 @@ Public Class frmClientePF
         CarregaComboEstadoCivil()
         CarregaAtividade()
 
-        ' ADD HANDLER PARA DATABINGS
-        AddHandler _ClientePF.AoAlterar, AddressOf HandlerAoAlterar
     End Sub
     '
     Private Sub HandlerAoAlterar()
@@ -195,18 +258,22 @@ Public Class frmClientePF
     ' CARREGA OS COMBOBOX
     '--------------------------------------------------------------------------------------------------------
     Private Sub CarregaComboSexo()
+        '
         Dim dtSexo As New DataTable
+        '
         'Adiciona todas as possibilidades de instrucao
         dtSexo.Columns.Add("idSexo")
         dtSexo.Columns.Add("Sexo")
         dtSexo.Rows.Add(New Object() {False, "Masculino"})
         dtSexo.Rows.Add(New Object() {True, "Feminino"})
+        '
         With cmbSexo
             .DataSource = dtSexo
             .ValueMember = "idSexo"
             .DisplayMember = "Sexo"
             .DataBindings.Add("SelectedValue", BindingCliente, "Sexo", True, DataSourceUpdateMode.OnPropertyChanged)
         End With
+        '
     End Sub
     '
     Private Sub CarregaComboEstadoCivil()
@@ -745,7 +812,6 @@ Public Class frmClientePF
                 '
                 Dim myCliPF As clClientePF = cliBll.GetClientePF_PorID(frm.propClienteEscolhido.IDPessoa)
                 propClientePF = myCliPF
-                propAcao = EnumFlagAcao.EDITAR
                 '
             ElseIf frm.propClienteEscolhido.PessoaTipo = 2 Then ' PESSOA JURÍDICA
                 ' ABRIR FORMULÁRIO CLIENTEPJ
@@ -754,7 +820,7 @@ Public Class frmClientePF
                 Dim cliBLL As New ClientePJ_BLL
                 '
                 Dim myCliPJ As clClientePJ = cliBLL.GetClientesPJ_PorID(frm.propClienteEscolhido.IDPessoa)
-                Dim frmCli As New frmClientePJ(EnumFlagAcao.EDITAR, myCliPJ)
+                Dim frmCli As New frmClientePJ(myCliPJ)
                 frmCli.Show()
                 '
             End If
@@ -840,11 +906,16 @@ Public Class frmClientePF
     '
     ' BOTÃO NOVO REGISTRO
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
-
-        ' ABRE O FORM NOVOCLIENTE
-        Dim frm As New frmClienteNovo
-        frm.ShowDialog()
-
+        '
+        Try
+            InsertNewCNP(Me)
+            txtClienteNome.Focus()
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao inserir novo registro de Cliente..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        '
     End Sub
     '
 #End Region

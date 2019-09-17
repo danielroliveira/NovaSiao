@@ -3,69 +3,39 @@ Imports CamadaBLL
 '
 Public Class frmClientePJ
     '
-#Region "PRIVATE VARIAVEIS" ' DECLARAÇÃO DE VARIÁVEIS
     Private WithEvents _ClientePJ As clClientePJ
-    Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
     Private WithEvents BindingCliente As New BindingSource
+    Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
+    '
     Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
-    Private _acao As EnumFlagAcao
-    '
-    Private Property Sit As EnumFlagEstado
-        Get
-            Return _Sit
-        End Get
-        Set(value As EnumFlagEstado)
-            _Sit = value
-            If _Sit = EnumFlagEstado.RegistroSalvo Then
-                btnSalvar.Enabled = False
-                btnNovo.Enabled = True
-                btnProcurar.Enabled = True
-                btnImprimir.Enabled = True
-                btnCancelar.Enabled = False
-                lblIDCliente.Text = Format(_ClientePJ.IDPessoa, "0000")
-                AtivoButtonImage()
-            ElseIf _Sit = EnumFlagEstado.Alterado Then
-                btnSalvar.Enabled = True
-                btnNovo.Enabled = False
-                btnProcurar.Enabled = False
-                btnImprimir.Enabled = True
-                btnCancelar.Enabled = True
-                AtivoButtonImage()
-            ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
-                txtCadastroNome.Select()
-                btnSalvar.Enabled = True
-                btnNovo.Enabled = False
-                btnProcurar.Enabled = False
-                btnImprimir.Enabled = False
-                btnCancelar.Enabled = False
-                lblIDCliente.Text = "NOVO"
-                ' OBTER OS VALORES DEFAULT DOS CAMPOS
-                txtCidade.Text = ObterDefault("CidadePadrao")
-                txtUF.Text = ObterDefault("UFPadrao")
-                AtivoButtonImage()
-            End If
-        End Set
-    End Property
-#End Region
     '
 #Region "FORM LOAD" ' FORM LOAD
     '
-    Public Sub New(myAcao As EnumFlagAcao, myClientePJ As clClientePJ)
+    '--- SUB NEW
+    '----------------------------------------------------------------------------------
+    Public Sub New(myClientePJ As clClientePJ)
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
         propClientePJ = myClientePJ
-        propAcao = myAcao
-        HandlerKeyDownControl()
+        PreencheDataBindings()
         '
+        HandlerKeyDownControl()
         dtpDataFundacao.MaxDate = Today
         '
     End Sub
     '
-    '--- Propriedade propClientePJ
+    '--- FORM LOAD
+    '----------------------------------------------------------------------------------
+    Private Sub frmClientesPJ_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        MdiParent = frmPrincipal
+    End Sub
+    '
+    '--- PROPRIEDADE PROPCLIENTEPJ
+    '----------------------------------------------------------------------------------
     Public Property propClientePJ() As clClientePJ
         '
         Get
@@ -75,15 +45,14 @@ Public Class frmClientePJ
         Set(ByVal value As clClientePJ)
             '
             _ClientePJ = value
+            BindingCliente.DataSource = _ClientePJ
+            AddHandler _ClientePJ.AoAlterar, AddressOf HandlerAoAlterar
+            If Not IsNothing(_ClientePJ.RGCliente) Then Sit = EnumFlagEstado.RegistroSalvo
+            AtivoButtonImage()
             '
-            If IsNothing(BindingCliente.DataSource) Then
-                BindingCliente.DataSource = _ClientePJ
-                PreencheDataBindings()
-            Else
-                BindingCliente.Clear()
-                BindingCliente.DataSource = _ClientePJ
-                BindingCliente.ResetBindings(True)
-                AddHandler _ClientePJ.AoAlterar, AddressOf HandlerAoAlterar
+            '--- FORMATA ID CLIENTE
+            If Not IsNothing(_ClientePJ.IDPessoa) Then
+                lblIDCliente.Text = Format(_ClientePJ.IDPessoa, "0000")
             End If
             '
             dtpDataFundacao.Checked = Not IsNothing(_ClientePJ.FundacaoData)
@@ -92,38 +61,123 @@ Public Class frmClientePJ
         '
     End Property
     '
-    Public Property propAcao As EnumFlagAcao
+    '--- GET CNPJ OF NEW CLIENTE PJ
+    '----------------------------------------------------------------------------------
+    Public Function InsertNewCNP(frmOrigem As Form) As Boolean
+        '
+        Dim frmCNP As New frmCNPInserir(PessoaBLL.EnumPessoaGrupo.CLIENTE, frmOrigem, "CNPJ")
+        '
+        frmCNP.ShowDialog()
+        If frmCNP.DialogResult = DialogResult.Cancel Then
+            Return False
+        End If
+        '
+        If TypeOf frmCNP.propPessoa Is clClientePJ Then
+            '
+            propClientePJ = frmCNP.propPessoa
+            '
+            If IsNothing(propClientePJ.IDPessoa) Then
+                '
+                '--- SET VALORES DEFAULT DOS CAMPOS
+                If _ClientePJ.Cidade.Trim.Length = 0 Then _ClientePJ.Cidade = ObterDefault("CidadePadrao")
+                If _ClientePJ.UF.Trim.Length = 0 Then _ClientePJ.UF = ObterDefault("UFPadrao")
+                '
+                '--- SET NEW
+                Sit = EnumFlagEstado.NovoRegistro
+            Else
+                AbrirDialog("Já existe um CLIENTE com esse mesmo CNPJ." & vbNewLine &
+                            "O registro do CLIENTE encontrado será aberto...",
+                            "CNPJ Encontrado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Sit = EnumFlagEstado.RegistroSalvo
+            End If
+            '
+        Else
+            '
+            Dim PJ As clPessoaJuridica = frmCNP.propPessoa
+            '
+            If AbrirDialog("Foi encontrada uma Pessoa Jurídica que possui o mesmo CNPJ informado." & vbNewLine &
+                           PJ.Cadastro & vbNewLine &
+                           "Deseja inserir um NOVO CLIENTE com os dados dessa pessoa Jurídica?",
+                           "CNPJ Encontrado",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.No Then
+                '
+                Return False
+                '
+            End If
+            '
+            propClientePJ = New clClientePJ With {
+                .IDPessoa = PJ.IDPessoa,
+                .Cadastro = PJ.Cadastro,
+                .CNPJ = PJ.CNPJ,
+                .PessoaTipo = PJ.PessoaTipo,
+                .Endereco = PJ.Endereco,
+                .Bairro = PJ.Bairro,
+                .Cidade = PJ.Cidade,
+                .UF = PJ.UF,
+                .CEP = PJ.CEP,
+                .TelefoneA = PJ.TelefoneA,
+                .TelefoneB = PJ.TelefoneB,
+                .InscricaoEstadual = PJ.InscricaoEstadual,
+                .Email = PJ.Email,
+                .EmailDestino = PJ.EmailDestino,
+                .EmailPrincipal = PJ.EmailPrincipal,
+                .ContatoNome = PJ.ContatoNome,
+                .FundacaoData = PJ.FundacaoData,
+                .InsercaoData = PJ.InsercaoData,
+                .NomeFantasia = PJ.NomeFantasia
+            }
+            '
+            '--- SET NEW
+            Sit = EnumFlagEstado.NovoRegistro
+            '
+        End If
+        '
+        Return True
+        '
+    End Function
+    '
+    '--- SIT PROPERTY
+    '----------------------------------------------------------------------------------
+    Private Property Sit As EnumFlagEstado
         '
         Get
-            Return _acao
+            Return _Sit
         End Get
         '
-        Set(value As EnumFlagAcao)
+        Set(value As EnumFlagEstado)
             '
-            _acao = value
+            _Sit = value
             '
-            If value = EnumFlagAcao.INSERIR Then
-                '
-                Sit = EnumFlagEstado.NovoRegistro
-                '
+            If _Sit = EnumFlagEstado.RegistroSalvo Then
+                btnSalvar.Enabled = False
+                btnNovo.Enabled = True
+                btnProcurar.Enabled = True
+                btnImprimir.Enabled = True
+                btnCancelar.Enabled = False
+                lblIDCliente.Text = Format(_ClientePJ.IDPessoa, "0000")
+                dtpDataFundacao.Checked = Not IsNothing(_ClientePJ.FundacaoData)
+            ElseIf _Sit = EnumFlagEstado.Alterado Then
+                btnSalvar.Enabled = True
+                btnNovo.Enabled = False
+                btnProcurar.Enabled = False
+                btnImprimir.Enabled = True
+                btnCancelar.Enabled = True
+            ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
+                txtCadastroNome.Select()
+                btnSalvar.Enabled = True
+                btnNovo.Enabled = False
+                btnProcurar.Enabled = False
+                btnImprimir.Enabled = False
+                btnCancelar.Enabled = False
+                lblIDCliente.Text = "NOVO"
                 dtpDataFundacao.Checked = False
                 dtpDataFundacao.Value = Today
-                '
-            ElseIf value = EnumFlagAcao.EDITAR Then
-                '
-                Sit = EnumFlagEstado.RegistroSalvo
-                '
-                dtpDataFundacao.Checked = Not IsNothing(_ClientePJ.FundacaoData)
-                '
             End If
             '
         End Set
         '
     End Property
-    '
-    Private Sub frmClientesPJ_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        MdiParent = frmPrincipal
-    End Sub
     '
 #End Region
     '
@@ -162,8 +216,7 @@ Public Class frmClientePJ
         CarregaAtividade()
         '
         ' ADD HANDLER PARA DATABINGS
-        'AddHandler BindingCliente.CurrentItemChanged, AddressOf HandlerAlteraSit
-        AddHandler _ClientePJ.AoAlterar, AddressOf HandlerAoAlterar
+
     End Sub
     '
     Private Sub HandlerAoAlterar()
@@ -592,7 +645,7 @@ Public Class frmClientePJ
                 Dim cliBll As New ClientePF_BLL
                 '
                 Dim myCliPF As clClientePF = cliBll.GetClientePF_PorID(frm.propClienteEscolhido.IDPessoa)
-                Dim frmCli As New frmClientePF(EnumFlagAcao.EDITAR, myCliPF)
+                Dim frmCli As New frmClientePF(myCliPF)
                 frmCli.Show()
                 '
             ElseIf frm.propClienteEscolhido.PessoaTipo = 2 Then ' PESSOA JURÍDICA
@@ -602,7 +655,6 @@ Public Class frmClientePJ
                 '
                 Dim myCliPJ As clClientePJ = cliBLL.GetClientesPJ_PorID(frm.propClienteEscolhido.IDPessoa)
                 propClientePJ = myCliPJ
-                propAcao = EnumFlagAcao.EDITAR
             End If
         Catch ex As Exception
             MessageBox.Show(ex.Message)
@@ -613,6 +665,7 @@ Public Class frmClientePJ
     ' CANCELAR ALTERAÇÃO DO REGISTRO ATUAL
     '-------------------------------------------------------------------------------------------------------
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
+        '
         If MessageBox.Show("Deseja cancelar todas as alterações feitas no registro atual?",
                            "Cancelar Alterações", MessageBoxButtons.YesNo,
                            MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) = DialogResult.Yes Then
@@ -620,18 +673,20 @@ Public Class frmClientePJ
             txtCadastroNome.Focus()
             Sit = EnumFlagEstado.RegistroSalvo
         End If
+        '
     End Sub
     '
     '-------------------------------------------------------------------------------------------------------
     ' ATIVAR OU DESATIVAR CLIENTE BOTÃO
     '-------------------------------------------------------------------------------------------------------
     Private Sub btnAtivo_Click(sender As Object, e As EventArgs) Handles btnAtivo.Click
+        '
         If Sit = EnumFlagEstado.NovoRegistro Then
             MessageBox.Show("Você não pode DESATIVAR um Cliente Novo", "Desativar Cliente",
                             MessageBoxButtons.OK, MessageBoxIcon.Information)
             Exit Sub
         End If
-
+        '
         If _ClientePJ.IDSituacao = 1 Then ' Cliente ativo
             If MessageBox.Show("Você deseja realmente DESATIVAR o Cliente:" & vbNewLine &
                         txtCadastroNome.Text.ToUpper, "Desativar Cliente", MessageBoxButtons.YesNo,
@@ -651,12 +706,14 @@ Public Class frmClientePJ
                 AtivoButtonImage()
             End If
         End If
+        '
     End Sub
     '
     '-------------------------------------------------------------------------------------------------------
     ' ALTERA A IMAGEM E O TEXTO DO BOTÃO ATIVO E DESATIVO
     '-------------------------------------------------------------------------------------------------------
     Private Sub AtivoButtonImage()
+        '
         If _ClientePJ.IDSituacao = 1 Then ' Nesse caso é Cliente Ativo
             btnAtivo.Image = AtivarImage
             btnAtivo.Text = _ClientePJ.Situacao
@@ -664,12 +721,14 @@ Public Class frmClientePJ
             btnAtivo.Image = DesativarImage
             btnAtivo.Text = _ClientePJ.Situacao
         End If
+        '
     End Sub
     '
     '-------------------------------------------------------------------------------------------------------
     ' FECHA O FORMULÁRIO
     '-------------------------------------------------------------------------------------------------------
     Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+        '
         If Sit <> EnumFlagEstado.RegistroSalvo Then
             If MessageBox.Show("Esse registro ainda não foi salvo..." & vbNewLine & vbNewLine &
                                "Se você fechar agora, todas as alterações feitas serão perdidas!" & vbNewLine &
@@ -686,9 +745,16 @@ Public Class frmClientePJ
     ' BOTÃO NOVO REGISTRO
     '-------------------------------------------------------------------------------------------------------
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
-        ' ABRE O FORM NOVOCLIENTE
-        Dim frm As New frmClienteNovo
-        frm.ShowDialog()
+        '
+        Try
+            InsertNewCNP(Me)
+            txtCadastroNome.Focus()
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao inserir novo registro de Cliente..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        '
     End Sub
     '
     '-------------------------------------------------------------------------------------------------------
@@ -697,6 +763,7 @@ Public Class frmClientePJ
     Private Sub FichaCadastroToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles FichaCadastroToolStripMenuItem1.Click
         MessageBox.Show("Essa Função ainda não foi implementada...")
     End Sub
+    '
 #End Region
     '
 #Region "OUTRAS FUNÇÕES"
