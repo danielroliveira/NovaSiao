@@ -2194,6 +2194,7 @@ Public Class PessoaBLL
     ' CONVERTE UM DATAROW EM UM clPessoaFisica OU UM clPessoaJuridica
     '------------------------------------------------------------------------------------------------------------------------------------------------
     Private Function ConverteDtRow_Pessoa(myRow As DataRow) As Object
+        '
         If myRow("PessoaTipo") = 1 Then
             Dim PF As New clPessoaFisica
             '
@@ -2447,5 +2448,65 @@ Public Class PessoaBLL
     End Function
     '
 #End Region '/ CONVERT ROW IN PESSOA OF
+    '
+#Region "CNPJ'S RELACIONADOS"
+    '
+    Public Function ProcurarCNPJRelacionado(CNPJ As String) As clPessoaJuridica
+        '
+        Try
+            Dim db As New AcessoDados
+            db.LimparParametros()
+            db.AdicionarParametros("@CNPJ", CNPJ)
+            '
+            Dim query As String = "SELECT * FROM tblPessoaJuridicaRelacionada WHERE CNPJ = @CNPJ"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+            If dt.Rows.Count = 0 Then Return Nothing
+            '
+            '--- check if return sql message error
+            If dt.Columns.Count = 1 Then
+                Throw New Exception(dt.Rows(0).Item(0))
+            End If
+            '
+            '--- get IDPessoa to obtain PessoaJuridica
+            Dim IDPessoa As Integer = 0
+            IDPessoa = dt.Rows(0).Item("IDPessoaOrigem")
+            '
+            '--- get Classe PessoaJuridica
+            db.LimparParametros()
+            db.AdicionarParametros("@IDPessoa", IDPessoa)
+            '
+            query = "SELECT * FROM qryPessoaJuridica WHERE IDPessoa = @IDPessoa"
+            '
+            dt = db.ExecutarManipulacao(CommandType.Text, query)
+            '
+            If dt.Rows.Count = 0 Then Return Nothing
+            '
+            Return ConverteDtRow_Pessoa(dt.Rows(0)(0))
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Function
+    '
+    Public Sub RemoverCNPJRelacionado(CNPJ As String)
+        '
+        Try
+            Dim db As New AcessoDados
+            db.LimparParametros()
+            db.AdicionarParametros("@CNPJ", CNPJ)
+            '
+            Dim query As String = "DELETE tblPessoaJuridicaRelacionada WHERE CNPJ = @CNPJ"
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+#End Region '/ CNPJ'S RELACIONADOS
     '
 End Class

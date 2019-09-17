@@ -83,8 +83,9 @@ Partial Class frmFornecedorProcurar
         '
         'btnEditar
         '
+        Me.btnEditar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnEditar.Image = Global.NovaSiao.My.Resources.Resources.editar
-        Me.btnEditar.Location = New System.Drawing.Point(21, 492)
+        Me.btnEditar.Location = New System.Drawing.Point(21, 500)
         Me.btnEditar.Name = "btnEditar"
         Me.btnEditar.Size = New System.Drawing.Size(126, 42)
         Me.btnEditar.TabIndex = 5
@@ -95,8 +96,9 @@ Partial Class frmFornecedorProcurar
         '
         'btnAdicionar
         '
+        Me.btnAdicionar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnAdicionar.Image = Global.NovaSiao.My.Resources.Resources.add
-        Me.btnAdicionar.Location = New System.Drawing.Point(164, 492)
+        Me.btnAdicionar.Location = New System.Drawing.Point(164, 500)
         Me.btnAdicionar.Name = "btnAdicionar"
         Me.btnAdicionar.Size = New System.Drawing.Size(126, 42)
         Me.btnAdicionar.TabIndex = 6
@@ -107,8 +109,9 @@ Partial Class frmFornecedorProcurar
         '
         'btnFechar
         '
+        Me.btnFechar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.delete
-        Me.btnFechar.Location = New System.Drawing.Point(442, 492)
+        Me.btnFechar.Location = New System.Drawing.Point(442, 500)
         Me.btnFechar.Name = "btnFechar"
         Me.btnFechar.Size = New System.Drawing.Size(126, 42)
         Me.btnFechar.TabIndex = 7
@@ -151,7 +154,7 @@ Partial Class frmFornecedorProcurar
         'frmFornecedorProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(590, 542)
+        Me.ClientSize = New System.Drawing.Size(590, 558)
         Me.Controls.Add(Me.cmbAtivo)
         Me.Controls.Add(Me.btnFechar)
         Me.Controls.Add(Me.btnAdicionar)

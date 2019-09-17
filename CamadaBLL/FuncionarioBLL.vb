@@ -1,24 +1,47 @@
 ﻿Imports CamadaDTO
 Imports CamadaDAL
-Imports System.Data.SqlClient
 '
 Public Class FuncionarioBLL
     '
     '=====================================================================================================
     ' GET LIST OF
     '=====================================================================================================
-    Public Function GetFuncionarios() As List(Of clFuncionario)
+    Public Function GetFuncionarios(Optional IDFilial As Integer? = Nothing,
+                                    Optional Ativo As Boolean? = Nothing) As List(Of clFuncionario)
         '
-        Dim objdb As New AcessoDados
-        Dim strSql As String = ""
-
-        strSql = "SELECT * FROM qryFuncionario"
-
         Try
             '
-            Dim dr As SqlDataReader = objdb.ExecuteAndGetReader(strSql)
+            Dim db As New AcessoDados
+            Dim query As String = ""
+            '
+            query = "SELECT * FROM qryFuncionario "
+            db.LimparParametros()
+            '
+            '--- INSERT PARAMETERS
+            If Not IsNothing(IDFilial) Then
+                db.AdicionarParametros("@IDFilial", IDFilial)
+                query += " WHERE IDFilial = @IDFilial "
+            End If
+            '
+            If Not IsNothing(Ativo) Then
+                db.AdicionarParametros("@Ativo", Ativo)
+                '
+                If IsNothing(IDFilial) Then
+                    query += " WHERE Ativo = @Ativo "
+                Else
+                    query += " AND Ativo = @Ativo "
+                End If
+                '
+            End If
+            '
+            '--- INSERT ORDER BY
+            query += " ORDER BY Cadastro"
+            '
+            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
             Dim lista As New List(Of clFuncionario)
-            While dr.Read
+            If dt.Rows.Count = 0 Then Return lista
+            '
+            For Each dr As DataRow In dt.Rows
                 Dim func As clFuncionario = New clFuncionario
                 '
                 func.IDPessoa = IIf(IsDBNull(dr("IDFuncionario")), Nothing, dr("IDFuncionario"))
@@ -48,21 +71,15 @@ Public Class FuncionarioBLL
                 func.VendedorAtivo = IIf(IsDBNull(dr("VendedorAtivo")), Nothing, dr("VendedorAtivo"))
                 lista.Add(func)
                 '
-            End While
+            Next
             '
-            '--- CLOSE DATAREADER
-            dr.Close()
+            dt.Dispose()
             '
             '--- RETURN
             Return lista
             '
         Catch ex As Exception
             Throw ex
-        Finally
-            '
-            '--- CLOSE DB CONNECTION
-            objdb.CloseConn()
-            '
         End Try
         '
     End Function

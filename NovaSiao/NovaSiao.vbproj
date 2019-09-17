@@ -255,6 +255,12 @@
     <Compile Include="Cadastros\frmFilialEscolher.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Cadastros\frmFuncionarioEscolher.Designer.vb">
+      <DependentUpon>frmFuncionarioEscolher.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Cadastros\frmFuncionarioEscolher.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Caixa\frmCaixaEntradaSimples.designer.vb">
       <DependentUpon>frmCaixaEntradaSimples.vb</DependentUpon>
     </Compile>
@@ -319,6 +325,12 @@
       <DependentUpon>frmEnvioListagem.vb</DependentUpon>
     </Compile>
     <Compile Include="EnvioMalaDireta\frmEnvioListagem.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormsPrincipais\frmCNPInserir.designer.vb">
+      <DependentUpon>frmCNPInserir.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormsPrincipais\frmCNPInserir.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormsPrincipais\frmDataMesAno.designer.vb">
@@ -1001,6 +1013,9 @@
     <EmbeddedResource Include="Cadastros\frmFilialEscolher.resx">
       <DependentUpon>frmFilialEscolher.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Cadastros\frmFuncionarioEscolher.resx">
+      <DependentUpon>frmFuncionarioEscolher.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Caixa\frmCaixaEntradaSimples.resx">
       <DependentUpon>frmCaixaEntradaSimples.vb</DependentUpon>
     </EmbeddedResource>
@@ -1033,6 +1048,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="EnvioMalaDireta\frmEnvioListagem.resx">
       <DependentUpon>frmEnvioListagem.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsPrincipais\frmCNPInserir.resx">
+      <DependentUpon>frmCNPInserir.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormsPrincipais\frmDataMesAno.resx">
       <DependentUpon>frmDataMesAno.vb</DependentUpon>

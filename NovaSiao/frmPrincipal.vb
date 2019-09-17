@@ -535,7 +535,7 @@ Public Class frmPrincipal
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '
-            Dim frmF As New frmFuncionario
+            Dim frmF As New frmFuncionarioProcurar
             OcultaMenuPrincipal()
             frmF.MdiParent = Me
             frmF.Show()

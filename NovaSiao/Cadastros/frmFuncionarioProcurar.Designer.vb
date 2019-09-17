@@ -19,174 +19,248 @@ Partial Class frmFuncionarioProcurar
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmFuncionarioProcurar))
-        Me.btnEscolher = New System.Windows.Forms.Button()
-        Me.btnCancelar = New System.Windows.Forms.Button()
-        Me.lstListagem = New ComponentOwl.BetterListView.BetterListView()
-        Me.IDFuncionario = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.Funcionario = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-        Me.chkAtivo = New CheckedButton_OnOff.CheckedButton_OnOff()
-        Me.lblAtivo = New System.Windows.Forms.Label()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.lblFilial = New System.Windows.Forms.Label()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Me.cmbAtivo = New Controles.ComboBox_OnlyValues()
+        Me.txtProcura = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.btnAdicionar = New System.Windows.Forms.Button()
+        Me.btnEditar = New System.Windows.Forms.Button()
+        Me.btnFechar = New System.Windows.Forms.Button()
+        Me.lblApelidoFilial = New System.Windows.Forms.Label()
+        Me.btnAlterarFilial = New System.Windows.Forms.Button()
+        Me.dgvFuncionarios = New System.Windows.Forms.DataGridView()
+        Me.clnID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.clnNome = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
-        CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvFuncionarios, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
         '
-        Me.Panel1.Size = New System.Drawing.Size(398, 50)
+        Me.Panel1.Controls.Add(Me.btnAlterarFilial)
+        Me.Panel1.Controls.Add(Me.lblApelidoFilial)
+        Me.Panel1.Size = New System.Drawing.Size(427, 50)
+        Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
+        Me.Panel1.Controls.SetChildIndex(Me.lblApelidoFilial, 0)
+        Me.Panel1.Controls.SetChildIndex(Me.btnAlterarFilial, 0)
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(97, 0)
+        Me.lblTitulo.Location = New System.Drawing.Point(195, 0)
         Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.lblTitulo.Size = New System.Drawing.Size(301, 50)
-        Me.lblTitulo.Text = "Escolha um Funcionário"
+        Me.lblTitulo.Size = New System.Drawing.Size(232, 50)
+        Me.lblTitulo.Text = "Procurar Funcionário"
         '
-        'btnEscolher
+        'cmbAtivo
         '
-        Me.btnEscolher.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.btnEscolher.Location = New System.Drawing.Point(112, 428)
-        Me.btnEscolher.Name = "btnEscolher"
-        Me.btnEscolher.Size = New System.Drawing.Size(136, 42)
-        Me.btnEscolher.TabIndex = 5
-        Me.btnEscolher.Text = "&Escolher"
-        Me.btnEscolher.UseVisualStyleBackColor = True
+        Me.cmbAtivo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.cmbAtivo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cmbAtivo.FormattingEnabled = True
+        Me.cmbAtivo.Location = New System.Drawing.Point(325, 66)
+        Me.cmbAtivo.Name = "cmbAtivo"
+        Me.cmbAtivo.RestrictContentToListItems = True
+        Me.cmbAtivo.Size = New System.Drawing.Size(82, 27)
+        Me.cmbAtivo.TabIndex = 20
         '
-        'btnCancelar
+        'txtProcura
         '
-        Me.btnCancelar.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancelar.Location = New System.Drawing.Point(254, 428)
-        Me.btnCancelar.Name = "btnCancelar"
-        Me.btnCancelar.Size = New System.Drawing.Size(136, 42)
-        Me.btnCancelar.TabIndex = 6
-        Me.btnCancelar.Text = "&Cancelar"
-        Me.btnCancelar.UseVisualStyleBackColor = True
+        Me.txtProcura.Location = New System.Drawing.Point(80, 66)
+        Me.txtProcura.Margin = New System.Windows.Forms.Padding(6)
+        Me.txtProcura.Name = "txtProcura"
+        Me.txtProcura.Size = New System.Drawing.Size(188, 27)
+        Me.txtProcura.TabIndex = 18
         '
-        'lstListagem
+        'Label2
         '
-        Me.lstListagem.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.lstListagem.Columns.Add(Me.IDFuncionario)
-        Me.lstListagem.Columns.Add(Me.Funcionario)
-        Me.lstListagem.DisplayMember = "IDFuncionario"
-        Me.lstListagem.Font = New System.Drawing.Font("Verdana", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lstListagem.FontColumns = New System.Drawing.Font("Verdana", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lstListagem.HeaderStyle = ComponentOwl.BetterListView.BetterListViewHeaderStyle.Nonclickable
-        Me.lstListagem.HideSelectionMode = ComponentOwl.BetterListView.BetterListViewHideSelectionMode.KeepSelection
-        Me.lstListagem.Location = New System.Drawing.Point(12, 98)
-        Me.lstListagem.Margin = New System.Windows.Forms.Padding(6)
-        Me.lstListagem.MultiSelect = False
-        Me.lstListagem.Name = "lstListagem"
-        Me.lstListagem.Size = New System.Drawing.Size(378, 321)
-        Me.lstListagem.TabIndex = 4
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(277, 69)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(42, 19)
+        Me.Label2.TabIndex = 19
+        Me.Label2.Text = "Ativo"
         '
-        'IDFuncionario
+        'Label3
         '
-        Me.IDFuncionario.AllowResize = False
-        Me.IDFuncionario.DisplayMember = "IDFuncionario"
-        Me.IDFuncionario.ForeColor = System.Drawing.Color.Black
-        Me.IDFuncionario.Name = "IDFuncionario"
-        Me.IDFuncionario.Text = "No."
-        Me.IDFuncionario.Width = 50
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(16, 69)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(58, 19)
+        Me.Label3.TabIndex = 17
+        Me.Label3.Text = "Procura"
         '
-        'Funcionario
+        'btnAdicionar
         '
-        Me.Funcionario.AllowResize = False
-        Me.Funcionario.DisplayMember = "Funcionario"
-        Me.Funcionario.ForeColor = System.Drawing.Color.Black
-        Me.Funcionario.Name = "Funcionario"
-        Me.Funcionario.Text = "Nome"
-        Me.Funcionario.ValueMember = "Funcionario"
-        Me.Funcionario.Width = 300
+        Me.btnAdicionar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnAdicionar.Image = Global.NovaSiao.My.Resources.Resources.add
+        Me.btnAdicionar.Location = New System.Drawing.Point(149, 437)
+        Me.btnAdicionar.Name = "btnAdicionar"
+        Me.btnAdicionar.Size = New System.Drawing.Size(126, 42)
+        Me.btnAdicionar.TabIndex = 22
+        Me.btnAdicionar.Text = "&Adicionar"
+        Me.btnAdicionar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnAdicionar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnAdicionar.UseVisualStyleBackColor = True
         '
-        'chkAtivo
+        'btnEditar
         '
-        Me.chkAtivo.Appearance = System.Windows.Forms.Appearance.Button
-        Me.chkAtivo.BackColor = System.Drawing.Color.Transparent
-        Me.chkAtivo.BackgroundImage = CType(resources.GetObject("chkAtivo.BackgroundImage"), System.Drawing.Image)
-        Me.chkAtivo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.chkAtivo.Checked = True
-        Me.chkAtivo.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkAtivo.FlatAppearance.BorderColor = System.Drawing.Color.Gray
-        Me.chkAtivo.FlatAppearance.BorderSize = 0
-        Me.chkAtivo.FlatAppearance.CheckedBackColor = System.Drawing.Color.Transparent
-        Me.chkAtivo.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent
-        Me.chkAtivo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
-        Me.chkAtivo.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.chkAtivo.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkAtivo.Location = New System.Drawing.Point(26, 443)
-        Me.chkAtivo.Margin = New System.Windows.Forms.Padding(0)
-        Me.chkAtivo.Name = "chkAtivo"
-        Me.chkAtivo.Size = New System.Drawing.Size(50, 23)
-        Me.chkAtivo.TabIndex = 14
-        Me.chkAtivo.UseVisualStyleBackColor = False
+        Me.btnEditar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnEditar.Image = Global.NovaSiao.My.Resources.Resources.editar
+        Me.btnEditar.Location = New System.Drawing.Point(17, 437)
+        Me.btnEditar.Name = "btnEditar"
+        Me.btnEditar.Size = New System.Drawing.Size(126, 42)
+        Me.btnEditar.TabIndex = 21
+        Me.btnEditar.Text = "&Editar"
+        Me.btnEditar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnEditar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnEditar.UseVisualStyleBackColor = True
         '
-        'lblAtivo
+        'btnFechar
         '
-        Me.lblAtivo.Location = New System.Drawing.Point(16, 423)
-        Me.lblAtivo.Name = "lblAtivo"
-        Me.lblAtivo.Size = New System.Drawing.Size(73, 19)
-        Me.lblAtivo.TabIndex = 15
-        Me.lblAtivo.Text = "Ativos"
-        Me.lblAtivo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.btnFechar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.delete
+        Me.btnFechar.Location = New System.Drawing.Point(281, 437)
+        Me.btnFechar.Name = "btnFechar"
+        Me.btnFechar.Size = New System.Drawing.Size(126, 42)
+        Me.btnFechar.TabIndex = 23
+        Me.btnFechar.Text = "&Fechar"
+        Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnFechar.UseVisualStyleBackColor = True
         '
-        'Label1
+        'lblApelidoFilial
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(13, 63)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(79, 19)
-        Me.Label1.TabIndex = 16
-        Me.Label1.Text = "Filial Sede:"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.lblApelidoFilial.AutoSize = True
+        Me.lblApelidoFilial.BackColor = System.Drawing.Color.Transparent
+        Me.lblApelidoFilial.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblApelidoFilial.ForeColor = System.Drawing.Color.White
+        Me.lblApelidoFilial.Location = New System.Drawing.Point(12, 13)
+        Me.lblApelidoFilial.Name = "lblApelidoFilial"
+        Me.lblApelidoFilial.Size = New System.Drawing.Size(114, 23)
+        Me.lblApelidoFilial.TabIndex = 4
+        Me.lblApelidoFilial.Text = "Apelido Filial"
+        Me.lblApelidoFilial.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'lblFilial
+        'btnAlterarFilial
         '
-        Me.lblFilial.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblFilial.Location = New System.Drawing.Point(92, 60)
-        Me.lblFilial.Name = "lblFilial"
-        Me.lblFilial.Size = New System.Drawing.Size(274, 26)
-        Me.lblFilial.TabIndex = 16
-        Me.lblFilial.Text = "Filial Nome"
-        Me.lblFilial.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.btnAlterarFilial.BackColor = System.Drawing.Color.Transparent
+        Me.btnAlterarFilial.BackgroundImage = Global.NovaSiao.My.Resources.Resources.refresh
+        Me.btnAlterarFilial.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.btnAlterarFilial.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption
+        Me.btnAlterarFilial.FlatAppearance.BorderSize = 0
+        Me.btnAlterarFilial.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MistyRose
+        Me.btnAlterarFilial.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke
+        Me.btnAlterarFilial.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnAlterarFilial.Font = New System.Drawing.Font("Calibri", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.btnAlterarFilial.Location = New System.Drawing.Point(132, 11)
+        Me.btnAlterarFilial.Name = "btnAlterarFilial"
+        Me.btnAlterarFilial.Size = New System.Drawing.Size(28, 28)
+        Me.btnAlterarFilial.TabIndex = 25
+        Me.btnAlterarFilial.TabStop = False
+        Me.btnAlterarFilial.UseVisualStyleBackColor = False
+        '
+        'dgvFuncionarios
+        '
+        Me.dgvFuncionarios.AllowUserToAddRows = False
+        Me.dgvFuncionarios.AllowUserToDeleteRows = False
+        Me.dgvFuncionarios.AllowUserToResizeColumns = False
+        Me.dgvFuncionarios.AllowUserToResizeRows = False
+        DataGridViewCellStyle9.BackColor = System.Drawing.Color.AntiqueWhite
+        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.Black
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White
+        Me.dgvFuncionarios.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
+        Me.dgvFuncionarios.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
+        Me.dgvFuncionarios.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle10.BackColor = System.Drawing.Color.LightSteelBlue
+        DataGridViewCellStyle10.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle10.ForeColor = System.Drawing.Color.Navy
+        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvFuncionarios.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
+        Me.dgvFuncionarios.ColumnHeadersHeight = 33
+        Me.dgvFuncionarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.dgvFuncionarios.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnID, Me.clnNome})
+        Me.dgvFuncionarios.EnableHeadersVisualStyles = False
+        Me.dgvFuncionarios.GridColor = System.Drawing.SystemColors.ActiveCaption
+        Me.dgvFuncionarios.Location = New System.Drawing.Point(20, 112)
+        Me.dgvFuncionarios.MultiSelect = False
+        Me.dgvFuncionarios.Name = "dgvFuncionarios"
+        Me.dgvFuncionarios.ReadOnly = True
+        Me.dgvFuncionarios.RowHeadersVisible = False
+        Me.dgvFuncionarios.RowHeadersWidth = 45
+        Me.dgvFuncionarios.RowTemplate.Height = 30
+        Me.dgvFuncionarios.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvFuncionarios.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.dgvFuncionarios.Size = New System.Drawing.Size(387, 311)
+        Me.dgvFuncionarios.TabIndex = 41
+        '
+        'clnID
+        '
+        DataGridViewCellStyle11.BackColor = System.Drawing.Color.PowderBlue
+        DataGridViewCellStyle11.Padding = New System.Windows.Forms.Padding(5, 0, 0, 0)
+        Me.clnID.DefaultCellStyle = DataGridViewCellStyle11
+        Me.clnID.HeaderText = "Reg.:"
+        Me.clnID.Name = "clnID"
+        Me.clnID.ReadOnly = True
+        Me.clnID.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.clnID.Width = 60
+        '
+        'clnNome
+        '
+        DataGridViewCellStyle12.BackColor = System.Drawing.Color.PowderBlue
+        Me.clnNome.DefaultCellStyle = DataGridViewCellStyle12
+        Me.clnNome.HeaderText = "Funcionário"
+        Me.clnNome.Name = "clnNome"
+        Me.clnNome.ReadOnly = True
+        Me.clnNome.Width = 220
         '
         'frmFuncionarioProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(398, 480)
-        Me.Controls.Add(Me.lblFilial)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.lblAtivo)
-        Me.Controls.Add(Me.chkAtivo)
-        Me.Controls.Add(Me.btnEscolher)
-        Me.Controls.Add(Me.btnCancelar)
-        Me.Controls.Add(Me.lstListagem)
+        Me.ClientSize = New System.Drawing.Size(427, 491)
+        Me.Controls.Add(Me.dgvFuncionarios)
+        Me.Controls.Add(Me.btnFechar)
+        Me.Controls.Add(Me.btnAdicionar)
+        Me.Controls.Add(Me.btnEditar)
+        Me.Controls.Add(Me.cmbAtivo)
+        Me.Controls.Add(Me.txtProcura)
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.Label3)
         Me.KeyPreview = True
         Me.Name = "frmFuncionarioProcurar"
         Me.Text = "Escolha um Funcionario"
+        Me.Controls.SetChildIndex(Me.Label3, 0)
+        Me.Controls.SetChildIndex(Me.Label2, 0)
+        Me.Controls.SetChildIndex(Me.txtProcura, 0)
+        Me.Controls.SetChildIndex(Me.cmbAtivo, 0)
+        Me.Controls.SetChildIndex(Me.btnEditar, 0)
+        Me.Controls.SetChildIndex(Me.btnAdicionar, 0)
+        Me.Controls.SetChildIndex(Me.btnFechar, 0)
+        Me.Controls.SetChildIndex(Me.dgvFuncionarios, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
-        Me.Controls.SetChildIndex(Me.lstListagem, 0)
-        Me.Controls.SetChildIndex(Me.btnCancelar, 0)
-        Me.Controls.SetChildIndex(Me.btnEscolher, 0)
-        Me.Controls.SetChildIndex(Me.chkAtivo, 0)
-        Me.Controls.SetChildIndex(Me.lblAtivo, 0)
-        Me.Controls.SetChildIndex(Me.Label1, 0)
-        Me.Controls.SetChildIndex(Me.lblFilial, 0)
         Me.Panel1.ResumeLayout(False)
-        CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel1.PerformLayout()
+        CType(Me.dgvFuncionarios, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-
-    Friend WithEvents btnEscolher As Button
-    Friend WithEvents btnCancelar As Button
-    Friend WithEvents lstListagem As ComponentOwl.BetterListView.BetterListView
-    Friend WithEvents IDFuncionario As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents Funcionario As ComponentOwl.BetterListView.BetterListViewColumnHeader
-    Friend WithEvents chkAtivo As CheckedButton_OnOff.CheckedButton_OnOff
-    Friend WithEvents lblAtivo As Label
-    Friend WithEvents Label1 As Label
-    Friend WithEvents lblFilial As Label
+    Friend WithEvents cmbAtivo As Controles.ComboBox_OnlyValues
+    Friend WithEvents txtProcura As TextBox
+    Friend WithEvents Label2 As Label
+    Friend WithEvents Label3 As Label
+    Friend WithEvents btnAdicionar As Button
+    Friend WithEvents btnEditar As Button
+    Friend WithEvents btnFechar As Button
+    Friend WithEvents lblApelidoFilial As Label
+    Friend WithEvents btnAlterarFilial As Button
+    Friend WithEvents dgvFuncionarios As DataGridView
+    Friend WithEvents clnID As DataGridViewTextBoxColumn
+    Friend WithEvents clnNome As DataGridViewTextBoxColumn
 End Class

@@ -1,51 +1,57 @@
 ﻿Imports CamadaBLL
-Imports ComponentOwl.BetterListView
+Imports CamadaDTO
 '
 Public Class frmFuncionarioProcurar
     '
-    Private _DestinoVenda As Boolean
+    Private WithEvents listFunc As New List(Of clFuncionario)
     Private _formOrigem As Form
     Private _IDFilial As Integer
-    Private dtFunc As DataTable
-    Property IDEscolhido As Integer?
-    Property NomeEscolhido As String
+    Private IsOpened = False
+    '
+    '--- PROPRIEDADES DE RESPOSTA
+    Property propFuncionario_Escolha As clFuncionario
     '
 #Region "SUBNEW E LOAD"
     '
     '--- SUB NEW
-    Public Sub New(Optional DestinoVenda As Boolean = False, Optional frmOrigem As Form = Nothing)
+    Public Sub New(Optional formOrigem As Form = Nothing)
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
+        CarregaCmbAtivo()
+        _formOrigem = formOrigem
         _IDFilial = Obter_FilialPadrao()
-        lblFilial.Text = ObterDefault("FilialDescricao")
-        _DestinoVenda = DestinoVenda
+        lblApelidoFilial.Text = ObterDefault("FilialDescricao")
         '
-        If Not IsNothing(frmOrigem) Then
-            _formOrigem = frmOrigem
-        End If
+        FormataFuncionarios()
+        GetData()
+        FiltrarListagem()
         '
     End Sub
     '
-    '--- EVENTO LOAD
-    Private Sub frmFuncionarioProcurar_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub frmFuncionarioProcurar_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        IsOpened = True
+    End Sub
+    '
+    '--- PREENCHE O COMBO ATIVO
+    Private Sub CarregaCmbAtivo()
         '
-        If PreencheData() = False Then
-            Me.Close()
-            Exit Sub
-        End If
+        Dim dtAtivo As New DataTable
         '
-        PreencheListagem()
+        'Adiciona todas as possibilidades de instrucao
+        dtAtivo.Columns.Add("Ativo")
+        dtAtivo.Columns.Add("Texto")
+        dtAtivo.Rows.Add(New Object() {True, "Ativo"})
+        dtAtivo.Rows.Add(New Object() {False, "Inativo"})
         '
-        If _DestinoVenda = False Then
-            lblTitulo.Text = "Escolha um Funcionário"
-        Else
-            lblTitulo.Text = "Escolha um Vendedor"
-        End If
-        '
-        AddHandler chkAtivo.CheckedChanged, AddressOf chkAtivo_CheckedChanged
+        With cmbAtivo
+            .DataSource = dtAtivo
+            .ValueMember = "Ativo"
+            .DisplayMember = "Texto"
+            .SelectedValue = True
+        End With
         '
     End Sub
     '
@@ -53,123 +59,90 @@ Public Class frmFuncionarioProcurar
     '
 #Region "LISTAGEM GET E CONTROLE"
     '
-    Private Function PreencheData() As Boolean
+    '--- GET DATA FOR LIST OF FUNCIONARIOS
+    '----------------------------------------------------------------------------------
+    Private Sub GetData()
         '
         Dim fBLL As New FuncionarioBLL
-        Dim strSQL As String
         '
         '--- Preenche o Datatable
         Try
-            If _DestinoVenda = True Then
-                strSQL = $"Vendedor = 'TRUE' AND Ativo = '{chkAtivo.Checked}' AND IDFilial = {_IDFilial} ORDER BY ApelidoFuncionario ASC"
-                dtFunc = fBLL.GetFuncionarios_DT(strSQL)
-                '
-                '--- verifica se retornou algum registro
-                If dtFunc.Rows.Count = 0 Then
-                    MessageBox.Show("Não há vendedores" & IIf(chkAtivo.Checked = True, " Ativos ", " Inativos ") & "cadastrados no sistema",
-                                    "Sem Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    Return False
-                End If
-                '
-            Else
-                strSQL = $"Ativo = '{chkAtivo.Checked}' AND IDFilial = {_IDFilial} ORDER BY Cadastro ASC"
-                dtFunc = fBLL.GetFuncionarios_DT(strSQL)
-                '
-                '--- verifica se retornou algum registro
-                If dtFunc.Rows.Count = 0 Then
-                    MessageBox.Show("Não há funcionários" & IIf(chkAtivo.Checked = True, " Ativos ", " Inativos ") & "cadastrados no sistema",
-                                    "Sem Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    Return False
-                End If
-                '
-            End If
             '
-            Return True
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            Dim Ativo As Boolean = cmbAtivo.SelectedValue
+            listFunc = fBLL.GetFuncionarios(_IDFilial, Ativo)
             '
         Catch ex As Exception
-            MessageBox.Show("Não foi possível apresentar a lista de funcionários...",
+            MessageBox.Show("Não foi possível apresentar a lista de funcionários..." & vbNewLine &
+                            ex.Message,
                             "Procurar Funcionário", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            Return False
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
-    End Function
-    '
-    Private Sub PreencheListagem()
-        '
-        lstListagem.DataSource = dtFunc
-        lstListagem.Columns(1).DisplayMember = "ApelidoFuncionario"
-        '
     End Sub
     '
-    Private Sub lstListagem_DrawColumnHeader(sender As Object, eventArgs As BetterListViewDrawColumnHeaderEventArgs) Handles lstListagem.DrawColumnHeader
+    '--------------------------------------------------------------------------------------------------------
+    ' PREENCHE A LISTAGEM
+    '--------------------------------------------------------------------------------------------------------
+    Private Sub FormataFuncionarios()
         '
-        If eventArgs.ColumnHeaderBounds.BoundsOuter.Width > 0 AndAlso eventArgs.ColumnHeaderBounds.BoundsOuter.Height > 0 Then
-            Dim brush As Brush = New SolidBrush(Color.LightSteelBlue)
+        With dgvFuncionarios
+            .Columns.Clear()
+            .AutoGenerateColumns = False
+            .DataSource = listFunc
+            ' altera as propriedades importantes
+            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
+            .MultiSelect = False
+            .ColumnHeadersVisible = True
+            .AllowUserToResizeRows = False
+            .AllowUserToResizeColumns = False
+            .RowHeadersWidth = 36
+            .RowTemplate.Height = 30
+            .StandardTab = True
+        End With
+        '
+        ' (1) COLUNA REG
+        dgvFuncionarios.Columns.Add("clnID", "Reg.:")
+        With dgvFuncionarios.Columns("clnID")
+            .DataPropertyName = "IDPessoa"
+            .Width = 60
+            .Visible = True
+            .ReadOnly = True
+            .Resizable = False
+            .DefaultCellStyle.Format = "0000"
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            Dim newPadding As New Padding(5, 0, 0, 0)
+            .DefaultCellStyle.Padding = newPadding
+        End With
+        '
+        ' (2) COLUNA NOME
+        dgvFuncionarios.Columns.Add("clnCadastro", "Funcionário:")
+        With dgvFuncionarios.Columns("clnCadastro")
+            .DataPropertyName = "Cadastro"
+            .Width = 220
+            .Visible = True
+            .ReadOnly = True
+            .Resizable = False
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+        End With
 
-            eventArgs.Graphics.FillRectangle(brush, eventArgs.ColumnHeaderBounds.BoundsOuter)
-            eventArgs.Graphics.DrawString(eventArgs.ColumnHeader.Text, New Font("Verdana", 12, FontStyle.Regular), New SolidBrush(Color.Black), eventArgs.ColumnHeaderBounds.BoundsText)
-
-            brush.Dispose()
-        End If
-        '
-    End Sub
-    Private Sub lstListagem_DrawItem(sender As Object, eventArgs As BetterListViewDrawItemEventArgs) Handles lstListagem.DrawItem
-        '
-        If IsNumeric(eventArgs.Item.Text) Then
-            eventArgs.Item.Text = Format(CInt(eventArgs.Item.Text), "00")
-        End If
-        '
     End Sub
     '
-    Private Sub lstListagem_ItemActivate(sender As Object, eventArgs As BetterListViewItemActivateEventArgs) Handles lstListagem.ItemActivate
-        btnEscolher_Click(New Object, New System.EventArgs)
-    End Sub
-    '
-    Private Sub chkAtivo_CheckedChanged(sender As Object, e As EventArgs)
-        PreencheData()
-        PreencheListagem()
-        '
-        If lstListagem.Count > 0 Then
-            lstListagem.Focus()
-        Else
-            btnCancelar.Focus()
-        End If
-        '
-        If chkAtivo.Checked Then
-            lblAtivo.Text = "Ativos"
-        Else
-            lblAtivo.Text = "Inativos"
-        End If
+    '-------------------------------------------------------------------------------------------------
+    '--- SELECIONAR ITEM QUANDO PRESSIONA A TECLA (ENTER)
+    '-------------------------------------------------------------------------------------------------
+    Private Sub dgv_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvFuncionarios.CellDoubleClick
+        btnEditar_Click(New Object, New EventArgs)
     End Sub
     '
 #End Region '/ LISTAGEM GET E CONTROLE
     '
 #Region "BUTTONS FUNCTION"
-    '
-    ' BOTÃO FECHAR
-    '----------------------------------------------------------------------------------
-    Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
-        Me.DialogResult = DialogResult.Cancel
-    End Sub
-    '
-    ' ESCOLHER E SAIR
-    '----------------------------------------------------------------------------------
-    Private Sub btnEscolher_Click(sender As Object, e As EventArgs) Handles btnEscolher.Click
-        '
-        If lstListagem.SelectedItems.Count = 0 Then
-            MessageBox.Show("Não nenhum Funcionário selecionado..." & vbNewLine &
-                "Favor antes selecione um Funcionário!",
-                "Escolher Funcionário", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Exit Sub
-        End If
-        '
-        ' DEFINIR O VALOR
-        IDEscolhido = CInt(lstListagem.SelectedItems(0).Text) ' ID DO FUNCIONARIO/VENDEDOR
-        NomeEscolhido = lstListagem.SelectedItems(0).SubItems(1).Text ' NOME DO FUNCIONARIO/VENDEDOR
-        '
-        Me.DialogResult = DialogResult.OK
-        '
-    End Sub
     '
     '--- FECHAR QUANDO PRESS ESC
     '----------------------------------------------------------------------------------
@@ -178,17 +151,77 @@ Public Class frmFuncionarioProcurar
         If e.KeyCode = Keys.Escape Then
             '
             e.Handled = True
-            btnCancelar_Click(New Object, New EventArgs)
+            btnFechar_Click(New Object, New EventArgs)
             '
         End If
         '
     End Sub
     '
+    ' ALTERAR A FILIAL SEDE DO FUNCIONARIO
+    Private Sub btnAlterarFilial_Click(sender As Object, e As EventArgs) Handles btnAlterarFilial.Click
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- Abre o frmFilial
+            Dim fFil As New frmFilialEscolher(Me, _IDFilial)
+            '
+            fFil.ShowDialog()
+            '
+            If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
+            '
+            If fFil.propFilial.IDPessoa <> _IDFilial Then
+                _IDFilial = fFil.propFilial.IDPessoa
+                lblApelidoFilial.Text = fFil.propFilial.ApelidoFilial
+                GetData()
+                FiltrarListagem()
+            End If
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao abrir o formulário de procurar filial..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
+        '
+        '--- verifica se existe algum item selecionado
+        If dgvFuncionarios.SelectedRows.Count = 0 Then
+            MessageBox.Show("Não existe nenhum Funcionário selecionado...", "Escolher",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information)
+            dgvFuncionarios.Focus()
+            Exit Sub
+        End If
+        '
+        '--- Seleciona o Funcionario
+        Dim func As clFuncionario = dgvFuncionarios.SelectedRows(0).DataBoundItem
+        '
+        '--- Ampulheta ON
+        Cursor = Cursors.WaitCursor
+        '
+        Dim frmF As New frmFuncionario(func)
+        frmF.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
+        Close()
+        frmF.Show()
+        '
+        '--- Ampulheta OFF
+        Cursor = Cursors.Default
+        '
+    End Sub
+    '
+    Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+        Close()
+        MostraMenuPrincipal()
+    End Sub
+    '
 #End Region '/ BUTTONS FUNCTION
     '
 #Region "EFEITO VISUAL"
-
-    '
     '
     '-------------------------------------------------------------------------------------------------
     ' CONSTRUIR UMA BORDA NO FORMULÁRIO
@@ -200,14 +233,6 @@ Public Class frmFuncionarioProcurar
         Dim pen As New Pen(Color.SlateGray, 3)
 
         e.Graphics.DrawRectangle(pen, rect)
-    End Sub
-    '
-    Private Sub frmTransacaoItem_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
-        If e.KeyCode = Keys.Escape Then
-            e.Handled = True
-            '
-            btnCancelar_Click(New Object, New EventArgs)
-        End If
     End Sub
     '
     '-------------------------------------------------------------------------------------------------
@@ -235,6 +260,45 @@ Public Class frmFuncionarioProcurar
         '
     End Sub
     '
+    '--- MOVE BTN FILIAL
+    '----------------------------------------------------------------------------------
+    Private Sub lblApelidoFilial_SizeChanged(sender As Object, e As EventArgs) Handles lblApelidoFilial.SizeChanged
+        Dim newX As Integer = lblApelidoFilial.Location.X + lblApelidoFilial.Size.Width + 5
+        btnAlterarFilial.Location = New Point(newX, btnAlterarFilial.Location.Y)
+    End Sub
+    '
 #End Region '/ EFEITO VISUAL
+    '
+#Region "FILTRO LISTAGEM"
+    '
+    '--- FILTRAR LISTAGEM
+    Private Sub FiltrarListagem()
+        dgvFuncionarios.DataSource = listFunc.FindAll(AddressOf FindForn)
+    End Sub
+    '
+    Private Function FindForn(ByVal T As clFuncionario) As Boolean
+        '
+        If T.Cadastro.ToLower Like "*" & txtProcura.Text.ToLower & "*" Then
+            Return True
+        Else
+            Return False
+        End If
+        '
+    End Function
+    '
+    Private Sub txtProcura_TextChanged(sender As Object, e As EventArgs) Handles txtProcura.TextChanged
+        FiltrarListagem()
+    End Sub
+    '
+    Private Sub cmbAtivo_SelectedValueChanged(sender As Object, e As EventArgs) Handles cmbAtivo.SelectedValueChanged
+        '
+        If Not IsOpened Then Exit Sub
+        '
+        GetData()
+        FiltrarListagem()
+        '
+    End Sub
+    '
+#End Region '/ FILTRO LISTAGEM
     '
 End Class

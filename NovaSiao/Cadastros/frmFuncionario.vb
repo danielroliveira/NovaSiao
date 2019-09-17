@@ -4,15 +4,20 @@ Imports CamadaBLL
 Public Class frmFuncionario
     '
 #Region "PRIVATE VARIAVEIS" ' DECLARAÇÃO DE VARIÁVEIS
+    '
+    'Private WithEvents listFunc As New List(Of clFuncionario)
+    Private WithEvents bindFunc As New BindingSource
+    Private _Func As clFuncionario
+    '
     Private WithEvents t As New Timer
     Const Tmax = 535
     Const Tmin = 455
     Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
-    Private WithEvents listFunc As New List(Of clFuncionario)
-    Private WithEvents bindFunc As New BindingSource
+    '
     Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
     Private Opening As Boolean = True
+    Private _formOrigem As Form = Nothing
     '
     Private Property Sit As EnumFlagEstado
         Get
@@ -21,7 +26,6 @@ Public Class frmFuncionario
         Set(value As EnumFlagEstado)
             _Sit = value
             If _Sit = EnumFlagEstado.RegistroSalvo Then
-                dgvFuncionarios.Enabled = True
                 btnSalvar.Enabled = False
                 btnNovo.Enabled = True
                 btnCancelar.Enabled = False
@@ -29,23 +33,18 @@ Public Class frmFuncionario
                 txtCPF.ReadOnly = True
                 AtivoButtonImage()
             ElseIf _Sit = EnumFlagEstado.Alterado Then
-                dgvFuncionarios.Enabled = True
                 btnSalvar.Enabled = True
                 btnNovo.Enabled = False
                 btnCancelar.Enabled = True
                 txtCPF.ReadOnly = True
                 AtivoButtonImage()
             ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
-                dgvFuncionarios.Enabled = False
                 txtFuncionario.Select()
                 btnSalvar.Enabled = True
                 btnNovo.Enabled = False
                 btnCancelar.Enabled = True
                 txtCPF.ReadOnly = False
                 lblIDFuncionario.Text = "NOVO"
-                ' OBTER OS VALORES DEFAULT DOS CAMPOS
-                txtCidade.Text = ObterDefault("CidadePadrao")
-                txtUF.Text = ObterDefault("UFPadrao")
                 AtivoButtonImage()
             End If
         End Set
@@ -55,37 +54,120 @@ Public Class frmFuncionario
     '
 #Region "EVENTO LOAD"
     '
+    Sub New(funcionario As clFuncionario, Optional formOrigem As Form = Nothing)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _formOrigem = formOrigem
+        propFunc = funcionario
+        PreencheDataBindings()
+        AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
+        '
+    End Sub
+    '
     ' Evento LOAD
     Private Sub frmFuncionario_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim funcBLL As New FuncionarioBLL
         '
-        Try
-            listFunc = funcBLL.GetFuncionarios.OrderBy(Function(x) x.Cadastro).ToList
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        End Try
-        '
-        bindFunc.DataSource = listFunc
-        '
-        If listFunc.Count = 0 Then
-            '
-            btnNovo_Click(Me, New EventArgs)
-            PreencheDataBindings()
-            '
-        Else
-            bindFunc.MoveFirst()
-            PreencheDataBindings()
-            Sit = EnumFlagEstado.RegistroSalvo
-        End If
-        '
-        ' preencher a listagem
-        PreencheFuncionarios()
         ' redimensiona o form
-        AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
         RedimensionarForm()
         Opening = False
         '
     End Sub
+    '
+    '--- DEFINE O FUNCIONARIO PROPERTY
+    '----------------------------------------------------------------------------------
+    Public Property propFunc() As clFuncionario
+        '
+        Get
+            Return _Func
+        End Get
+        '
+        Set(ByVal value As clFuncionario)
+            _Func = value
+            bindFunc.DataSource = _Func
+            AtivoButtonImage()
+            '
+            If Not IsNothing(_Func.IDPessoa) Then
+                lblIDFuncionario.Text = Format(_Func.IDPessoa, "0000")
+            End If
+            '
+        End Set
+        '
+    End Property
+    '
+    '--- GET CPF OF NEW FUNCIONARIO
+    '----------------------------------------------------------------------------------
+    Public Function InsertNewCNP(frmOrigem As Form) As Boolean
+        '
+        Dim frmCNP As New frmCNPInserir(PessoaBLL.EnumPessoaGrupo.FUNCIONARIO, frmOrigem)
+        '
+        frmCNP.ShowDialog()
+        If frmCNP.DialogResult = DialogResult.Cancel Then
+            Return False
+        End If
+        '
+        If TypeOf frmCNP.propPessoa Is clFuncionario Then
+            '
+            propFunc = frmCNP.propPessoa
+            '
+            If IsNothing(propFunc.IDPessoa) Then
+                '--- SET VALORES DEFAULT DOS CAMPOS
+                If _Func.Cidade.Trim.Length = 0 Then _Func.Cidade = ObterDefault("CidadePadrao")
+                If _Func.UF.Trim.Length = 0 Then _Func.UF = ObterDefault("UFPadrao")
+                '--- SET NEW
+                Sit = EnumFlagEstado.NovoRegistro
+            Else
+                AbrirDialog("Já existe um FUNCIONÁRIO com esse mesmo CPF." & vbNewLine &
+                            "O registro do FUNCIONÁRIO encontrado será aberto...",
+                            "CPF Encontrado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Sit = EnumFlagEstado.RegistroSalvo
+            End If
+            '
+        Else
+            '
+            Dim PF As clPessoaFisica = frmCNP.propPessoa
+            '
+            If AbrirDialog("Foi encontrada uma Pessoa Física que possui o mesmo CPF informado." & vbNewLine &
+                           PF.Cadastro & vbNewLine &
+                           "Deseja inserir um NOVO FUNCIONÁRIO com os dados dessa pessoa Física?",
+                           "CPF Encontrado",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question) = DialogResult.No Then
+                '
+                Return False
+                '
+            End If
+            '
+            propFunc = New clFuncionario With {
+                .IDPessoa = PF.IDPessoa,
+                .Cadastro = PF.Cadastro,
+                .CPF = PF.CPF,
+                .PessoaTipo = PF.PessoaTipo,
+                .Ativo = True,
+                .Endereco = PF.Endereco,
+                .Bairro = PF.Bairro,
+                .Cidade = PF.Cidade,
+                .UF = PF.UF,
+                .CEP = PF.CEP,
+                .TelefoneA = PF.TelefoneA,
+                .TelefoneB = PF.TelefoneB,
+                .Identidade = PF.Identidade,
+                .IdentidadeData = PF.IdentidadeData,
+                .IdentidadeOrgao = PF.IdentidadeOrgao,
+                .Email = PF.Email,
+                .EmailDestino = PF.EmailDestino,
+                .EmailPrincipal = PF.EmailPrincipal,
+                .NascimentoData = PF.NascimentoData,
+                .InsercaoData = PF.InsercaoData,
+                .Sexo = PF.Sexo
+            }
+        End If
+        '
+        Return True
+        '
+    End Function
     '
 #End Region
     '
@@ -120,6 +202,7 @@ Public Class frmFuncionario
         ' FORMATA OS VALORES DO DATABINDING
         AddHandler lblIDFuncionario.DataBindings("Tag").Format, AddressOf idFormatRG
         AddHandler txtComissao.DataBindings("Text").Format, AddressOf idFormatPercent
+        AddHandler lblApelidoFilial.DataBindings("Text").Format, AddressOf formatApelidoFilial
         AddHandler bindFunc.CurrentChanged, AddressOf handler_CurrentChanged
         '
         ' CARREGA OS COMBOBOX
@@ -163,87 +246,53 @@ Public Class frmFuncionario
         e.Value = Format(e.Value, "#.##\%")
     End Sub
     '
+    Private Sub formatApelidoFilial(sender As Object, e As ConvertEventArgs)
+        e.Value = "Filial " & e.Value.ToString.ToUpper
+    End Sub
+    '
     ' CARREGA OS COMBOBOX
     '--------------------------------------------------------------------------------------------------------
     Private Sub CarregaComboVendaTipo()
+        '
         Dim dtTipo As New DataTable
+        '
         'Adiciona todas as possibilidades de instrucao
         dtTipo.Columns.Add("VendaTipo")
         dtTipo.Columns.Add("Tipo")
         dtTipo.Rows.Add(New Object() {1, "Varejo"})
         dtTipo.Rows.Add(New Object() {2, "Atacado"})
         dtTipo.Rows.Add(New Object() {0, "Todas"})
+        '
         With cmbVendaTipo
             .DataSource = dtTipo
             .ValueMember = "VendaTipo"
             .DisplayMember = "Tipo"
             .DataBindings.Add("SelectedValue", bindFunc, "VendaTipo", True, DataSourceUpdateMode.OnPropertyChanged)
         End With
+        '
     End Sub
     '
     ' COMBOBOX SEXO
     '--------------------------------------------------------------------------------------------------------
     Private Sub CarregaComboSexo()
+        '
         Dim dtSexo As New DataTable
+        '
         'Adiciona todas as possibilidades de instrucao
         dtSexo.Columns.Add("idSexo")
         dtSexo.Columns.Add("Sexo")
         dtSexo.Rows.Add(New Object() {False, "Masc"})
         dtSexo.Rows.Add(New Object() {True, "Fem"})
+        '
         With cmbSexo
             .DataSource = dtSexo
             .ValueMember = "idSexo"
             .DisplayMember = "Sexo"
             .DataBindings.Add("SelectedValue", bindFunc, "Sexo", True, DataSourceUpdateMode.OnPropertyChanged)
         End With
+        '
     End Sub
     '
-    '--------------------------------------------------------------------------------------------------------
-    ' PREENCHE A LISTAGEM
-    '--------------------------------------------------------------------------------------------------------
-    Private Sub PreencheFuncionarios()
-        With dgvFuncionarios
-            .Columns.Clear()
-            .AutoGenerateColumns = False
-            .DataSource = bindFunc
-            ' altera as propriedades importantes
-            .SelectionMode = DataGridViewSelectionMode.FullRowSelect
-            .MultiSelect = False
-            .ColumnHeadersVisible = True
-            .AllowUserToResizeRows = False
-            .AllowUserToResizeColumns = False
-            .RowHeadersWidth = 36
-            .RowTemplate.Height = 30
-            .StandardTab = True
-        End With
-        '
-        ' (1) COLUNA REG
-        dgvFuncionarios.Columns.Add("clnID", "Reg.:")
-        With dgvFuncionarios.Columns("clnID")
-            .DataPropertyName = "IDPessoa"
-            .Width = 60
-            .Visible = True
-            .ReadOnly = True
-            .Resizable = False
-            .DefaultCellStyle.Format = "0000"
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            Dim newPadding As New Padding(5, 0, 0, 0)
-            .DefaultCellStyle.Padding = newPadding
-        End With
-        '
-        ' (2) COLUNA NOME
-        dgvFuncionarios.Columns.Add("clnCadastro", "Funcionário:")
-        With dgvFuncionarios.Columns("clnCadastro")
-            .DataPropertyName = "Cadastro"
-            .Width = 220
-            .Visible = True
-            .ReadOnly = True
-            .Resizable = False
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
-
-    End Sub
-    '--------------------------------------------------------------------------------------------------------
 #End Region
     '
 #Region "SALVAR REGISTRO"
@@ -656,7 +705,7 @@ Public Class frmFuncionario
     '-----------------------------------------------------------------------------------------------------
     'Sub QUE() VERIFICA A ALTERAÇÃO DE REGISTRO PELO DATAGRIDVIEW
     '-----------------------------------------------------------------------------------------------------
-    Private Sub dgvFuncionarios_RowValidating(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvFuncionarios.RowValidating
+    Private Sub dgvFuncionarios_RowValidating(sender As Object, e As DataGridViewCellCancelEventArgs)
         '
         If Sit = EnumFlagEstado.Alterado Then
             If MessageBox.Show("Esse registro foi alterado..." & vbNewLine &
@@ -678,6 +727,16 @@ Public Class frmFuncionario
     '
 #Region "ACAO DOS BOTOES"
     '
+    Private Sub btnProcurar_Click(sender As Object, e As EventArgs) Handles btnProcurar.Click
+        '
+        AutoValidate = AutoValidate.Disable
+        Close()
+        '
+        Dim fProc As New frmFuncionarioProcurar
+        fProc.Show()
+        '
+    End Sub
+    '
     Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
         AutoValidate = AutoValidate.Disable
         Me.Close()
@@ -685,32 +744,36 @@ Public Class frmFuncionario
     End Sub
     '
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
-        'listFunc.Add(New clFuncionario)
-        bindFunc.AddNew()
-        bindFunc.MoveLast()
-        bindFunc.Current.IDFilial = Obter_FilialPadrao()
-        bindFunc.Current.ApelidoFilial = ObterDefault("FilialDescricao")
-        dgvFuncionarios.ClearSelection()
-        Sit = EnumFlagEstado.NovoRegistro
-        txtFuncionario.Focus()
+        '
+        Try
+            InsertNewCNP(Me)
+            txtFuncionario.Focus()
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao inserir novo registro de Funcionário..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        '
     End Sub
     '
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
+        '
         If Sit = EnumFlagEstado.NovoRegistro Then
-            If bindFunc.Count = 1 Then
-                MessageBox.Show("Você não pode cancelar a inserção no primeiro registro de Funcionários" & vbNewLine &
-                                "Se quiser sair pressione o botão 'FECHAR'", "Primeiro Registro",
-                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+            '
+            If IsNothing(_formOrigem) Then
+                btnProcurar_Click(btnCancelar, New EventArgs)
                 Exit Sub
+            Else
+                DialogResult = DialogResult.Cancel
+                _formOrigem.Visible = True
+                Me.Close()
             End If
             '
-            dgvFuncionarios.DataSource = Nothing
-            bindFunc.CancelEdit()
-            bindFunc.MoveLast()
-            dgvFuncionarios.DataSource = bindFunc
-            '
         ElseIf Sit = EnumFlagEstado.Alterado Then
+            '
             bindFunc.CancelEdit()
+            AtivoButtonImage()
+            '
         End If
         '
         Sit = EnumFlagEstado.RegistroSalvo
@@ -718,7 +781,7 @@ Public Class frmFuncionario
     End Sub
     '
     Private Sub btnExcluir_Click(sender As Object, e As EventArgs) Handles btnExcluir.Click
-        MsgBox("Em complementação...")
+        MsgBox("Em implementação...")
     End Sub
     '
     ' ALTERA A IMAGEM E O TEXTO DO BOTÃO ATIVO E DESATIVO
@@ -762,36 +825,8 @@ Public Class frmFuncionario
             End If
         End If
     End Sub
-    '
-    ' ALTERAR A FILIAL SEDE DO FUNCIONARIO
-    Private Sub btnAlterarFilial_Click(sender As Object, e As EventArgs) Handles btnAlterarFilial.Click
-        '
-        '--- Abre o frmFilial
-        Dim fFil As New frmFilialEscolher()
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            fFil.ShowDialog()
-            '
-            If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
-            '
-            If fFil.propFilial.IDPessoa <> bindFunc.Current.IDFilial Then
-                Sit = EnumFlagEstado.Alterado
-                bindFunc.Current.IDFilial = fFil.propFilial.IDPessoa
-                lblApelidoFilial.Text = fFil.propFilial.ApelidoFilial
-            End If
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao abrir o formulário de procurar filial..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
-        '
-    End Sub
+
+
     '
 #End Region
     '

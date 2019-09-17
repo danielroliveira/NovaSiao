@@ -21,10 +21,6 @@ Partial Class frmFuncionario
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmFuncionario))
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.txtFuncionario = New System.Windows.Forms.TextBox()
         Me.txtNascimentoData = New Controles.MaskText_Data()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -45,8 +41,8 @@ Partial Class frmFuncionario
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
         Me.tsMenu = New System.Windows.Forms.ToolStrip()
+        Me.btnProcurar = New System.Windows.Forms.ToolStripButton()
         Me.btnNovo = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnSalvar = New System.Windows.Forms.ToolStripButton()
@@ -54,7 +50,7 @@ Partial Class frmFuncionario
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnExcluir = New System.Windows.Forms.ToolStripButton()
         Me.btnAtivo = New System.Windows.Forms.ToolStripButton()
-        Me.btnFechar = New System.Windows.Forms.Button()
+        Me.btnFechar = New System.Windows.Forms.ToolStripButton()
         Me.lblIDFuncionario = New System.Windows.Forms.Label()
         Me.lbl_IdTexto = New System.Windows.Forms.Label()
         Me.pnlVenda = New System.Windows.Forms.Panel()
@@ -80,31 +76,18 @@ Partial Class frmFuncionario
         Me.cmbSexo = New System.Windows.Forms.ComboBox()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.txtAdmissaoData = New Controles.MaskText_Data()
-        Me.dgvFuncionarios = New System.Windows.Forms.DataGridView()
-        Me.clnID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.clnNome = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.VPanel1 = New VIBlend.WinForms.Controls.vPanel()
         Me.lblApelidoFilial = New System.Windows.Forms.Label()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.btnAlterarFilial = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
-        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.SplitContainer1.Panel1.SuspendLayout()
-        Me.SplitContainer1.Panel2.SuspendLayout()
-        Me.SplitContainer1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         Me.pnlVenda.SuspendLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgvFuncionarios, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.VPanel1.Content.SuspendLayout()
-        Me.VPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.lblIDFuncionario)
         Me.Panel1.Controls.Add(Me.lbl_IdTexto)
-        Me.Panel1.Size = New System.Drawing.Size(922, 50)
+        Me.Panel1.Size = New System.Drawing.Size(768, 50)
         Me.Panel1.TabIndex = 0
         Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
         Me.Panel1.Controls.SetChildIndex(Me.lbl_IdTexto, 0)
@@ -112,7 +95,7 @@ Partial Class frmFuncionario
         '
         'lblTitulo
         '
-        Me.lblTitulo.Location = New System.Drawing.Point(650, 0)
+        Me.lblTitulo.Location = New System.Drawing.Point(496, 0)
         Me.lblTitulo.Size = New System.Drawing.Size(272, 50)
         Me.lblTitulo.TabIndex = 2
         Me.lblTitulo.Text = "Cadastro de Funcionários"
@@ -120,7 +103,7 @@ Partial Class frmFuncionario
         'txtFuncionario
         '
         Me.txtFuncionario.BackColor = System.Drawing.Color.White
-        Me.txtFuncionario.Location = New System.Drawing.Point(440, 68)
+        Me.txtFuncionario.Location = New System.Drawing.Point(173, 66)
         Me.txtFuncionario.MaxLength = 50
         Me.txtFuncionario.Name = "txtFuncionario"
         Me.txtFuncionario.Size = New System.Drawing.Size(454, 27)
@@ -128,7 +111,7 @@ Partial Class frmFuncionario
         '
         'txtNascimentoData
         '
-        Me.txtNascimentoData.Location = New System.Drawing.Point(664, 134)
+        Me.txtNascimentoData.Location = New System.Drawing.Point(397, 132)
         Me.txtNascimentoData.Mask = "00/00/0000"
         Me.txtNascimentoData.Name = "txtNascimentoData"
         Me.txtNascimentoData.Size = New System.Drawing.Size(107, 27)
@@ -140,7 +123,7 @@ Partial Class frmFuncionario
         Me.Label3.AutoSize = True
         Me.Label3.BackColor = System.Drawing.Color.Transparent
         Me.Label3.ForeColor = System.Drawing.Color.Black
-        Me.Label3.Location = New System.Drawing.Point(580, 137)
+        Me.Label3.Location = New System.Drawing.Point(313, 135)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(80, 19)
         Me.Label3.TabIndex = 8
@@ -151,7 +134,7 @@ Partial Class frmFuncionario
         Me.Label4.AutoSize = True
         Me.Label4.BackColor = System.Drawing.Color.Transparent
         Me.Label4.ForeColor = System.Drawing.Color.Black
-        Me.Label4.Location = New System.Drawing.Point(401, 138)
+        Me.Label4.Location = New System.Drawing.Point(134, 136)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(33, 19)
         Me.Label4.TabIndex = 6
@@ -162,7 +145,7 @@ Partial Class frmFuncionario
         Me.Label2.AutoSize = True
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(387, 71)
+        Me.Label2.Location = New System.Drawing.Point(120, 69)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(47, 19)
         Me.Label2.TabIndex = 2
@@ -171,7 +154,7 @@ Partial Class frmFuncionario
         'txtCidade
         '
         Me.txtCidade.BackColor = System.Drawing.Color.White
-        Me.txtCidade.Location = New System.Drawing.Point(720, 233)
+        Me.txtCidade.Location = New System.Drawing.Point(453, 231)
         Me.txtCidade.MaxLength = 50
         Me.txtCidade.Name = "txtCidade"
         Me.txtCidade.Size = New System.Drawing.Size(174, 27)
@@ -181,7 +164,7 @@ Partial Class frmFuncionario
         '
         Me.txtUF.BackColor = System.Drawing.Color.White
         Me.txtUF.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtUF.Location = New System.Drawing.Point(440, 268)
+        Me.txtUF.Location = New System.Drawing.Point(173, 266)
         Me.txtUF.MaxLength = 2
         Me.txtUF.Name = "txtUF"
         Me.txtUF.Size = New System.Drawing.Size(46, 27)
@@ -190,7 +173,7 @@ Partial Class frmFuncionario
         'txtEndereco
         '
         Me.txtEndereco.BackColor = System.Drawing.Color.White
-        Me.txtEndereco.Location = New System.Drawing.Point(440, 200)
+        Me.txtEndereco.Location = New System.Drawing.Point(173, 198)
         Me.txtEndereco.MaxLength = 50
         Me.txtEndereco.Name = "txtEndereco"
         Me.txtEndereco.Size = New System.Drawing.Size(454, 27)
@@ -201,7 +184,7 @@ Partial Class frmFuncionario
         Me.Label16.AutoSize = True
         Me.Label16.BackColor = System.Drawing.Color.Transparent
         Me.Label16.ForeColor = System.Drawing.Color.Black
-        Me.Label16.Location = New System.Drawing.Point(383, 338)
+        Me.Label16.Location = New System.Drawing.Point(116, 336)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(51, 19)
         Me.Label16.TabIndex = 32
@@ -209,7 +192,7 @@ Partial Class frmFuncionario
         '
         'txtBairro
         '
-        Me.txtBairro.Location = New System.Drawing.Point(440, 233)
+        Me.txtBairro.Location = New System.Drawing.Point(173, 231)
         Me.txtBairro.MaxLength = 30
         Me.txtBairro.Name = "txtBairro"
         Me.txtBairro.Size = New System.Drawing.Size(207, 27)
@@ -220,7 +203,7 @@ Partial Class frmFuncionario
         Me.Label6.AutoSize = True
         Me.Label6.BackColor = System.Drawing.Color.Transparent
         Me.Label6.ForeColor = System.Drawing.Color.Black
-        Me.Label6.Location = New System.Drawing.Point(386, 237)
+        Me.Label6.Location = New System.Drawing.Point(119, 235)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(48, 19)
         Me.Label6.TabIndex = 20
@@ -228,7 +211,7 @@ Partial Class frmFuncionario
         '
         'txtEmail
         '
-        Me.txtEmail.Location = New System.Drawing.Point(440, 334)
+        Me.txtEmail.Location = New System.Drawing.Point(173, 332)
         Me.txtEmail.MaxLength = 100
         Me.txtEmail.Name = "txtEmail"
         Me.txtEmail.Size = New System.Drawing.Size(357, 27)
@@ -239,7 +222,7 @@ Partial Class frmFuncionario
         Me.Label5.AutoSize = True
         Me.Label5.BackColor = System.Drawing.Color.Transparent
         Me.Label5.ForeColor = System.Drawing.Color.Black
-        Me.Label5.Location = New System.Drawing.Point(365, 204)
+        Me.Label5.Location = New System.Drawing.Point(98, 202)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(69, 19)
         Me.Label5.TabIndex = 18
@@ -247,7 +230,7 @@ Partial Class frmFuncionario
         '
         'txtCEP
         '
-        Me.txtCEP.Location = New System.Drawing.Point(536, 268)
+        Me.txtCEP.Location = New System.Drawing.Point(269, 266)
         Me.txtCEP.Mask = "00000-000"
         Me.txtCEP.Name = "txtCEP"
         Me.txtCEP.Size = New System.Drawing.Size(94, 27)
@@ -259,7 +242,7 @@ Partial Class frmFuncionario
         Me.Label9.AutoSize = True
         Me.Label9.BackColor = System.Drawing.Color.Transparent
         Me.Label9.ForeColor = System.Drawing.Color.Black
-        Me.Label9.Location = New System.Drawing.Point(369, 305)
+        Me.Label9.Location = New System.Drawing.Point(102, 303)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(65, 19)
         Me.Label9.TabIndex = 28
@@ -270,7 +253,7 @@ Partial Class frmFuncionario
         Me.Label15.AutoSize = True
         Me.Label15.BackColor = System.Drawing.Color.Transparent
         Me.Label15.ForeColor = System.Drawing.Color.Black
-        Me.Label15.Location = New System.Drawing.Point(500, 272)
+        Me.Label15.Location = New System.Drawing.Point(233, 270)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(34, 19)
         Me.Label15.TabIndex = 26
@@ -281,7 +264,7 @@ Partial Class frmFuncionario
         Me.Label10.AutoSize = True
         Me.Label10.BackColor = System.Drawing.Color.Transparent
         Me.Label10.ForeColor = System.Drawing.Color.Black
-        Me.Label10.Location = New System.Drawing.Point(592, 304)
+        Me.Label10.Location = New System.Drawing.Point(325, 302)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(55, 19)
         Me.Label10.TabIndex = 30
@@ -292,7 +275,7 @@ Partial Class frmFuncionario
         Me.Label8.AutoSize = True
         Me.Label8.BackColor = System.Drawing.Color.Transparent
         Me.Label8.ForeColor = System.Drawing.Color.Black
-        Me.Label8.Location = New System.Drawing.Point(408, 272)
+        Me.Label8.Location = New System.Drawing.Point(141, 270)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(26, 19)
         Me.Label8.TabIndex = 24
@@ -303,7 +286,7 @@ Partial Class frmFuncionario
         Me.Label7.AutoSize = True
         Me.Label7.BackColor = System.Drawing.Color.Transparent
         Me.Label7.ForeColor = System.Drawing.Color.Black
-        Me.Label7.Location = New System.Drawing.Point(660, 236)
+        Me.Label7.Location = New System.Drawing.Point(393, 234)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(54, 19)
         Me.Label7.TabIndex = 22
@@ -314,50 +297,38 @@ Partial Class frmFuncionario
         Me.Label1.AutoSize = True
         Me.Label1.BackColor = System.Drawing.Color.Transparent
         Me.Label1.ForeColor = System.Drawing.Color.Black
-        Me.Label1.Location = New System.Drawing.Point(362, 371)
+        Me.Label1.Location = New System.Drawing.Point(95, 369)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(72, 19)
         Me.Label1.TabIndex = 34
         Me.Label1.Text = "Admissão"
         '
-        'SplitContainer1
-        '
-        Me.SplitContainer1.BackColor = System.Drawing.Color.AntiqueWhite
-        Me.SplitContainer1.CausesValidation = False
-        Me.SplitContainer1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.SplitContainer1.IsSplitterFixed = True
-        Me.SplitContainer1.Location = New System.Drawing.Point(0, 494)
-        Me.SplitContainer1.Name = "SplitContainer1"
-        '
-        'SplitContainer1.Panel1
-        '
-        Me.SplitContainer1.Panel1.Controls.Add(Me.tsMenu)
-        '
-        'SplitContainer1.Panel2
-        '
-        Me.SplitContainer1.Panel2.Controls.Add(Me.btnFechar)
-        Me.SplitContainer1.Size = New System.Drawing.Size(922, 48)
-        Me.SplitContainer1.SplitterDistance = 819
-        Me.SplitContainer1.SplitterWidth = 1
-        Me.SplitContainer1.TabIndex = 39
-        Me.SplitContainer1.TabStop = False
-        '
         'tsMenu
         '
         Me.tsMenu.AutoSize = False
-        Me.tsMenu.BackColor = System.Drawing.Color.Transparent
-        Me.tsMenu.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.tsMenu.BackColor = System.Drawing.Color.AntiqueWhite
+        Me.tsMenu.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
-        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNovo, Me.ToolStripSeparator5, Me.btnSalvar, Me.btnCancelar, Me.ToolStripSeparator1, Me.btnExcluir, Me.btnAtivo})
-        Me.tsMenu.Location = New System.Drawing.Point(0, 0)
+        Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnProcurar, Me.btnNovo, Me.ToolStripSeparator5, Me.btnSalvar, Me.btnCancelar, Me.ToolStripSeparator1, Me.btnExcluir, Me.btnAtivo, Me.btnFechar})
+        Me.tsMenu.Location = New System.Drawing.Point(0, 494)
         Me.tsMenu.Name = "tsMenu"
         Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
         Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.tsMenu.Size = New System.Drawing.Size(819, 48)
+        Me.tsMenu.Size = New System.Drawing.Size(768, 48)
         Me.tsMenu.TabIndex = 0
         Me.tsMenu.TabStop = True
         Me.tsMenu.Text = "Menu Cliente PF"
+        '
+        'btnProcurar
+        '
+        Me.btnProcurar.Image = Global.NovaSiao.My.Resources.Resources.Procurar_Usuário
+        Me.btnProcurar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnProcurar.Margin = New System.Windows.Forms.Padding(0, 1, 3, 2)
+        Me.btnProcurar.Name = "btnProcurar"
+        Me.btnProcurar.Size = New System.Drawing.Size(97, 45)
+        Me.btnProcurar.Text = "&Procurar"
+        Me.btnProcurar.ToolTipText = "Procurar Cliente"
         '
         'btnNovo
         '
@@ -424,22 +395,13 @@ Partial Class frmFuncionario
         '
         'btnFechar
         '
-        Me.btnFechar.BackColor = System.Drawing.Color.Transparent
-        Me.btnFechar.CausesValidation = False
-        Me.btnFechar.FlatAppearance.BorderSize = 0
-        Me.btnFechar.FlatAppearance.MouseDownBackColor = System.Drawing.Color.LightCoral
-        Me.btnFechar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightBlue
-        Me.btnFechar.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.btnFechar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.Fechar
-        Me.btnFechar.Location = New System.Drawing.Point(4, 0)
-        Me.btnFechar.Margin = New System.Windows.Forms.Padding(0)
+        Me.btnFechar.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnFechar.Margin = New System.Windows.Forms.Padding(0, 1, 3, 2)
         Me.btnFechar.Name = "btnFechar"
-        Me.btnFechar.Size = New System.Drawing.Size(97, 48)
-        Me.btnFechar.TabIndex = 0
+        Me.btnFechar.Size = New System.Drawing.Size(86, 45)
         Me.btnFechar.Text = "&Fechar"
-        Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnFechar.UseVisualStyleBackColor = False
         '
         'lblIDFuncionario
         '
@@ -478,7 +440,7 @@ Partial Class frmFuncionario
         Me.pnlVenda.Controls.Add(Me.Label12)
         Me.pnlVenda.Controls.Add(Me.Label11)
         Me.pnlVenda.Enabled = False
-        Me.pnlVenda.Location = New System.Drawing.Point(387, 411)
+        Me.pnlVenda.Location = New System.Drawing.Point(120, 409)
         Me.pnlVenda.Name = "pnlVenda"
         Me.pnlVenda.Size = New System.Drawing.Size(488, 71)
         Me.pnlVenda.TabIndex = 38
@@ -539,7 +501,7 @@ Partial Class frmFuncionario
         'txtApelidoFuncionario
         '
         Me.txtApelidoFuncionario.BackColor = System.Drawing.Color.White
-        Me.txtApelidoFuncionario.Location = New System.Drawing.Point(440, 101)
+        Me.txtApelidoFuncionario.Location = New System.Drawing.Point(173, 99)
         Me.txtApelidoFuncionario.MaxLength = 50
         Me.txtApelidoFuncionario.Name = "txtApelidoFuncionario"
         Me.txtApelidoFuncionario.Size = New System.Drawing.Size(186, 27)
@@ -550,7 +512,7 @@ Partial Class frmFuncionario
         Me.lblApelido.AutoSize = True
         Me.lblApelido.BackColor = System.Drawing.Color.Transparent
         Me.lblApelido.ForeColor = System.Drawing.Color.Black
-        Me.lblApelido.Location = New System.Drawing.Point(376, 104)
+        Me.lblApelido.Location = New System.Drawing.Point(109, 102)
         Me.lblApelido.Name = "lblApelido"
         Me.lblApelido.Size = New System.Drawing.Size(58, 19)
         Me.lblApelido.TabIndex = 4
@@ -569,7 +531,7 @@ Partial Class frmFuncionario
         Me.chkVendas.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
         Me.chkVendas.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.chkVendas.Font = New System.Drawing.Font("Tahoma", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.chkVendas.Location = New System.Drawing.Point(584, 369)
+        Me.chkVendas.Location = New System.Drawing.Point(317, 367)
         Me.chkVendas.Margin = New System.Windows.Forms.Padding(0)
         Me.chkVendas.Name = "chkVendas"
         Me.chkVendas.Size = New System.Drawing.Size(50, 23)
@@ -578,7 +540,7 @@ Partial Class frmFuncionario
         '
         'lblVendedor
         '
-        Me.lblVendedor.Location = New System.Drawing.Point(636, 371)
+        Me.lblVendedor.Location = New System.Drawing.Point(369, 369)
         Me.lblVendedor.Name = "lblVendedor"
         Me.lblVendedor.Size = New System.Drawing.Size(225, 19)
         Me.lblVendedor.TabIndex = 37
@@ -591,7 +553,7 @@ Partial Class frmFuncionario
         'txtCPF
         '
         Me.txtCPF.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.txtCPF.Location = New System.Drawing.Point(440, 134)
+        Me.txtCPF.Location = New System.Drawing.Point(173, 132)
         Me.txtCPF.Mask = "000,000,000-00"
         Me.txtCPF.Name = "txtCPF"
         Me.txtCPF.Size = New System.Drawing.Size(134, 27)
@@ -601,7 +563,7 @@ Partial Class frmFuncionario
         '
         'txtTelefoneA
         '
-        Me.txtTelefoneA.Location = New System.Drawing.Point(440, 301)
+        Me.txtTelefoneA.Location = New System.Drawing.Point(173, 299)
         Me.txtTelefoneA.Mask = "(99) 99000-0000"
         Me.txtTelefoneA.Name = "txtTelefoneA"
         Me.txtTelefoneA.Size = New System.Drawing.Size(144, 27)
@@ -609,7 +571,7 @@ Partial Class frmFuncionario
         '
         'txtTelefoneB
         '
-        Me.txtTelefoneB.Location = New System.Drawing.Point(653, 301)
+        Me.txtTelefoneB.Location = New System.Drawing.Point(386, 299)
         Me.txtTelefoneB.Mask = "(99) 99000-0000"
         Me.txtTelefoneB.Name = "txtTelefoneB"
         Me.txtTelefoneB.Size = New System.Drawing.Size(144, 27)
@@ -618,7 +580,7 @@ Partial Class frmFuncionario
         'txtIdentidade
         '
         Me.txtIdentidade.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtIdentidade.Location = New System.Drawing.Point(440, 167)
+        Me.txtIdentidade.Location = New System.Drawing.Point(173, 165)
         Me.txtIdentidade.MaxLength = 20
         Me.txtIdentidade.Name = "txtIdentidade"
         Me.txtIdentidade.Size = New System.Drawing.Size(134, 27)
@@ -627,7 +589,7 @@ Partial Class frmFuncionario
         'txtIdentidadeOrgao
         '
         Me.txtIdentidadeOrgao.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.txtIdentidadeOrgao.Location = New System.Drawing.Point(636, 167)
+        Me.txtIdentidadeOrgao.Location = New System.Drawing.Point(369, 165)
         Me.txtIdentidadeOrgao.MaxLength = 10
         Me.txtIdentidadeOrgao.Name = "txtIdentidadeOrgao"
         Me.txtIdentidadeOrgao.Size = New System.Drawing.Size(110, 27)
@@ -637,7 +599,7 @@ Partial Class frmFuncionario
         '
         Me.Label17.AutoSize = True
         Me.Label17.BackColor = System.Drawing.Color.Transparent
-        Me.Label17.Location = New System.Drawing.Point(356, 170)
+        Me.Label17.Location = New System.Drawing.Point(89, 168)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(78, 19)
         Me.Label17.TabIndex = 12
@@ -647,7 +609,7 @@ Partial Class frmFuncionario
         '
         Me.Label18.AutoSize = True
         Me.Label18.BackColor = System.Drawing.Color.Transparent
-        Me.Label18.Location = New System.Drawing.Point(581, 170)
+        Me.Label18.Location = New System.Drawing.Point(314, 168)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(49, 19)
         Me.Label18.TabIndex = 14
@@ -657,7 +619,7 @@ Partial Class frmFuncionario
         '
         Me.Label19.AutoSize = True
         Me.Label19.BackColor = System.Drawing.Color.Transparent
-        Me.Label19.Location = New System.Drawing.Point(757, 170)
+        Me.Label19.Location = New System.Drawing.Point(490, 168)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(40, 19)
         Me.Label19.TabIndex = 16
@@ -665,7 +627,7 @@ Partial Class frmFuncionario
         '
         'txtIdentidadeData
         '
-        Me.txtIdentidadeData.Location = New System.Drawing.Point(802, 167)
+        Me.txtIdentidadeData.Location = New System.Drawing.Point(535, 165)
         Me.txtIdentidadeData.Mask = "00/00/0000"
         Me.txtIdentidadeData.Name = "txtIdentidadeData"
         Me.txtIdentidadeData.Size = New System.Drawing.Size(92, 27)
@@ -677,7 +639,7 @@ Partial Class frmFuncionario
         Me.cmbSexo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cmbSexo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cmbSexo.FormattingEnabled = True
-        Me.cmbSexo.Location = New System.Drawing.Point(824, 135)
+        Me.cmbSexo.Location = New System.Drawing.Point(557, 133)
         Me.cmbSexo.Name = "cmbSexo"
         Me.cmbSexo.Size = New System.Drawing.Size(70, 27)
         Me.cmbSexo.TabIndex = 11
@@ -687,7 +649,7 @@ Partial Class frmFuncionario
         Me.Label14.AutoSize = True
         Me.Label14.BackColor = System.Drawing.Color.Transparent
         Me.Label14.ForeColor = System.Drawing.Color.Black
-        Me.Label14.Location = New System.Drawing.Point(779, 138)
+        Me.Label14.Location = New System.Drawing.Point(512, 136)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(39, 19)
         Me.Label14.TabIndex = 10
@@ -695,140 +657,31 @@ Partial Class frmFuncionario
         '
         'txtAdmissaoData
         '
-        Me.txtAdmissaoData.Location = New System.Drawing.Point(440, 367)
+        Me.txtAdmissaoData.Location = New System.Drawing.Point(173, 365)
         Me.txtAdmissaoData.Mask = "00/00/0000"
         Me.txtAdmissaoData.Name = "txtAdmissaoData"
         Me.txtAdmissaoData.Size = New System.Drawing.Size(100, 27)
         Me.txtAdmissaoData.TabIndex = 35
         Me.txtAdmissaoData.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'dgvFuncionarios
-        '
-        Me.dgvFuncionarios.AllowUserToAddRows = False
-        Me.dgvFuncionarios.AllowUserToDeleteRows = False
-        Me.dgvFuncionarios.AllowUserToResizeColumns = False
-        Me.dgvFuncionarios.AllowUserToResizeRows = False
-        DataGridViewCellStyle9.BackColor = System.Drawing.Color.AntiqueWhite
-        DataGridViewCellStyle9.ForeColor = System.Drawing.Color.Black
-        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White
-        Me.dgvFuncionarios.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
-        Me.dgvFuncionarios.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
-        Me.dgvFuncionarios.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle10.BackColor = System.Drawing.Color.LightSteelBlue
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle10.ForeColor = System.Drawing.Color.Navy
-        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvFuncionarios.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
-        Me.dgvFuncionarios.ColumnHeadersHeight = 33
-        Me.dgvFuncionarios.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.dgvFuncionarios.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnID, Me.clnNome})
-        Me.dgvFuncionarios.EnableHeadersVisualStyles = False
-        Me.dgvFuncionarios.GridColor = System.Drawing.SystemColors.ActiveCaption
-        Me.dgvFuncionarios.Location = New System.Drawing.Point(14, 68)
-        Me.dgvFuncionarios.MultiSelect = False
-        Me.dgvFuncionarios.Name = "dgvFuncionarios"
-        Me.dgvFuncionarios.ReadOnly = True
-        Me.dgvFuncionarios.RowHeadersVisible = False
-        Me.dgvFuncionarios.RowHeadersWidth = 45
-        Me.dgvFuncionarios.RowTemplate.Height = 30
-        Me.dgvFuncionarios.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvFuncionarios.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.dgvFuncionarios.Size = New System.Drawing.Size(320, 275)
-        Me.dgvFuncionarios.TabIndex = 1
-        '
-        'clnID
-        '
-        DataGridViewCellStyle11.BackColor = System.Drawing.Color.PowderBlue
-        DataGridViewCellStyle11.Padding = New System.Windows.Forms.Padding(5, 0, 0, 0)
-        Me.clnID.DefaultCellStyle = DataGridViewCellStyle11
-        Me.clnID.HeaderText = "Reg.:"
-        Me.clnID.Name = "clnID"
-        Me.clnID.ReadOnly = True
-        Me.clnID.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.clnID.Width = 60
-        '
-        'clnNome
-        '
-        DataGridViewCellStyle12.BackColor = System.Drawing.Color.PowderBlue
-        Me.clnNome.DefaultCellStyle = DataGridViewCellStyle12
-        Me.clnNome.HeaderText = "Funcionário"
-        Me.clnNome.Name = "clnNome"
-        Me.clnNome.ReadOnly = True
-        Me.clnNome.Width = 220
-        '
-        'VPanel1
-        '
-        Me.VPanel1.AllowAnimations = True
-        Me.VPanel1.BorderRadius = 0
-        '
-        'VPanel1.Content
-        '
-        Me.VPanel1.Content.AutoScroll = True
-        Me.VPanel1.Content.BackColor = System.Drawing.SystemColors.Control
-        Me.VPanel1.Content.Controls.Add(Me.lblApelidoFilial)
-        Me.VPanel1.Content.Controls.Add(Me.btnAlterarFilial)
-        Me.VPanel1.Content.Location = New System.Drawing.Point(1, 1)
-        Me.VPanel1.Content.Name = "Content"
-        Me.VPanel1.Content.Size = New System.Drawing.Size(318, 36)
-        Me.VPanel1.Content.TabIndex = 3
-        Me.VPanel1.CustomScrollersIntersectionColor = System.Drawing.Color.Empty
-        Me.VPanel1.Location = New System.Drawing.Point(14, 349)
-        Me.VPanel1.Name = "VPanel1"
-        Me.VPanel1.Opacity = 1.0!
-        Me.VPanel1.PanelBorderColor = System.Drawing.Color.FromArgb(CType(CType(153, Byte), Integer), CType(CType(180, Byte), Integer), CType(CType(209, Byte), Integer))
-        Me.VPanel1.Size = New System.Drawing.Size(320, 38)
-        Me.VPanel1.TabIndex = 40
-        Me.VPanel1.Text = "VPanel1"
-        Me.VPanel1.UsePanelBorderColor = True
-        Me.VPanel1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.VISTABLUE
-        '
         'lblApelidoFilial
         '
         Me.lblApelidoFilial.BackColor = System.Drawing.Color.Transparent
         Me.lblApelidoFilial.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblApelidoFilial.Location = New System.Drawing.Point(3, 4)
+        Me.lblApelidoFilial.ForeColor = System.Drawing.Color.DarkGray
+        Me.lblApelidoFilial.Location = New System.Drawing.Point(432, 101)
         Me.lblApelidoFilial.Name = "lblApelidoFilial"
-        Me.lblApelidoFilial.Size = New System.Drawing.Size(277, 28)
+        Me.lblApelidoFilial.Size = New System.Drawing.Size(199, 24)
         Me.lblApelidoFilial.TabIndex = 4
         Me.lblApelidoFilial.Text = "Apelido Filial"
-        Me.lblApelidoFilial.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.BackColor = System.Drawing.Color.Transparent
-        Me.Label20.Font = New System.Drawing.Font("Calibri", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label20.Location = New System.Drawing.Point(770, 277)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(69, 14)
-        Me.Label20.TabIndex = 3
-        Me.Label20.Text = "Filial Sede:"
-        '
-        'btnAlterarFilial
-        '
-        Me.btnAlterarFilial.BackgroundImage = Global.NovaSiao.My.Resources.Resources.refresh
-        Me.btnAlterarFilial.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.btnAlterarFilial.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption
-        Me.btnAlterarFilial.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.btnAlterarFilial.Font = New System.Drawing.Font("Calibri", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.btnAlterarFilial.Location = New System.Drawing.Point(286, 4)
-        Me.btnAlterarFilial.Name = "btnAlterarFilial"
-        Me.btnAlterarFilial.Size = New System.Drawing.Size(28, 28)
-        Me.btnAlterarFilial.TabIndex = 25
-        Me.btnAlterarFilial.TabStop = False
-        Me.btnAlterarFilial.UseVisualStyleBackColor = True
+        Me.lblApelidoFilial.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'frmFuncionario
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(922, 542)
-        Me.Controls.Add(Me.VPanel1)
-        Me.Controls.Add(Me.Label20)
-        Me.Controls.Add(Me.dgvFuncionarios)
+        Me.ClientSize = New System.Drawing.Size(768, 542)
+        Me.Controls.Add(Me.lblApelidoFilial)
+        Me.Controls.Add(Me.tsMenu)
         Me.Controls.Add(Me.txtAdmissaoData)
         Me.Controls.Add(Me.cmbSexo)
         Me.Controls.Add(Me.Label14)
@@ -845,7 +698,6 @@ Partial Class frmFuncionario
         Me.Controls.Add(Me.txtCPF)
         Me.Controls.Add(Me.lblVendedor)
         Me.Controls.Add(Me.chkVendas)
-        Me.Controls.Add(Me.SplitContainer1)
         Me.Controls.Add(Me.txtCidade)
         Me.Controls.Add(Me.txtUF)
         Me.Controls.Add(Me.txtEndereco)
@@ -890,7 +742,6 @@ Partial Class frmFuncionario
         Me.Controls.SetChildIndex(Me.txtEndereco, 0)
         Me.Controls.SetChildIndex(Me.txtUF, 0)
         Me.Controls.SetChildIndex(Me.txtCidade, 0)
-        Me.Controls.SetChildIndex(Me.SplitContainer1, 0)
         Me.Controls.SetChildIndex(Me.Panel1, 0)
         Me.Controls.SetChildIndex(Me.chkVendas, 0)
         Me.Controls.SetChildIndex(Me.lblVendedor, 0)
@@ -908,23 +759,15 @@ Partial Class frmFuncionario
         Me.Controls.SetChildIndex(Me.Label14, 0)
         Me.Controls.SetChildIndex(Me.cmbSexo, 0)
         Me.Controls.SetChildIndex(Me.txtAdmissaoData, 0)
-        Me.Controls.SetChildIndex(Me.dgvFuncionarios, 0)
-        Me.Controls.SetChildIndex(Me.Label20, 0)
-        Me.Controls.SetChildIndex(Me.VPanel1, 0)
+        Me.Controls.SetChildIndex(Me.tsMenu, 0)
+        Me.Controls.SetChildIndex(Me.lblApelidoFilial, 0)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.SplitContainer1.Panel1.ResumeLayout(False)
-        Me.SplitContainer1.Panel2.ResumeLayout(False)
-        CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.SplitContainer1.ResumeLayout(False)
         Me.tsMenu.ResumeLayout(False)
         Me.tsMenu.PerformLayout()
         Me.pnlVenda.ResumeLayout(False)
         Me.pnlVenda.PerformLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgvFuncionarios, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.VPanel1.Content.ResumeLayout(False)
-        Me.VPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -950,7 +793,6 @@ Partial Class frmFuncionario
     Friend WithEvents Label8 As Label
     Friend WithEvents Label7 As Label
     Friend WithEvents Label1 As Label
-    Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents tsMenu As ToolStrip
     Friend WithEvents btnNovo As ToolStripButton
     Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
@@ -959,7 +801,6 @@ Partial Class frmFuncionario
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents btnExcluir As ToolStripButton
     Friend WithEvents btnAtivo As ToolStripButton
-    Friend WithEvents btnFechar As Button
     Friend WithEvents lblIDFuncionario As Label
     Friend WithEvents lbl_IdTexto As Label
     Friend WithEvents pnlVenda As Panel
@@ -985,11 +826,7 @@ Partial Class frmFuncionario
     Friend WithEvents Label14 As Label
     Friend WithEvents chkVendedorAtivo As CheckBox
     Friend WithEvents txtAdmissaoData As Controles.MaskText_Data
-    Friend WithEvents dgvFuncionarios As DataGridView
-    Friend WithEvents clnID As DataGridViewTextBoxColumn
-    Friend WithEvents clnNome As DataGridViewTextBoxColumn
-    Friend WithEvents VPanel1 As VIBlend.WinForms.Controls.vPanel
     Friend WithEvents lblApelidoFilial As Label
-    Friend WithEvents Label20 As Label
-    Friend WithEvents btnAlterarFilial As Button
+    Friend WithEvents btnFechar As ToolStripButton
+    Friend WithEvents btnProcurar As ToolStripButton
 End Class

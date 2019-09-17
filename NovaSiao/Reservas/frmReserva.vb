@@ -322,7 +322,7 @@ Public Class frmReserva
         '
         If _RegistroBloqueado Then Exit Sub
         '
-        Dim frmF As New frmFuncionarioProcurar(False, Me)
+        Dim frmF As New frmFuncionarioEscolher(False, Me)
         Dim oldID As Integer? = _Reserva.IDFuncionario
         '
         frmF.ShowDialog()

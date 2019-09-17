@@ -48,8 +48,9 @@ Partial Class frmFornecedor
         Me.Label2 = New System.Windows.Forms.Label()
         Me.tsMenu = New System.Windows.Forms.ToolStrip()
         Me.btnProcurar = New System.Windows.Forms.ToolStripButton()
-        Me.btnNovo = New System.Windows.Forms.ToolStripButton()
+        Me.btnProdutos = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator5 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnNovo = New System.Windows.Forms.ToolStripButton()
         Me.btnSalvar = New System.Windows.Forms.ToolStripButton()
         Me.btnCancelar = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
@@ -66,7 +67,6 @@ Partial Class frmFornecedor
         Me.txtVendedor = New System.Windows.Forms.TextBox()
         Me.txtEmailVendas = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.btnProdutos = New System.Windows.Forms.ToolStripButton()
         Me.Panel1.SuspendLayout()
         Me.tsMenu.SuspendLayout()
         CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -159,6 +159,7 @@ Partial Class frmFornecedor
         Me.txtCNPJ.Location = New System.Drawing.Point(178, 133)
         Me.txtCNPJ.Mask = "00,000,000/0000-00"
         Me.txtCNPJ.Name = "txtCNPJ"
+        Me.txtCNPJ.ReadOnly = True
         Me.txtCNPJ.Size = New System.Drawing.Size(152, 27)
         Me.txtCNPJ.TabIndex = 6
         Me.txtCNPJ.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -374,6 +375,19 @@ Partial Class frmFornecedor
         Me.btnProcurar.Text = "&Procurar"
         Me.btnProcurar.ToolTipText = "Procurar Cliente"
         '
+        'btnProdutos
+        '
+        Me.btnProdutos.Image = Global.NovaSiao.My.Resources.Resources.Estoque_24px
+        Me.btnProdutos.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnProdutos.Name = "btnProdutos"
+        Me.btnProdutos.Size = New System.Drawing.Size(100, 45)
+        Me.btnProdutos.Text = "Produtos"
+        '
+        'ToolStripSeparator5
+        '
+        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
+        Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 48)
+        '
         'btnNovo
         '
         Me.btnNovo.Image = Global.NovaSiao.My.Resources.Resources.Adicionar1
@@ -382,11 +396,6 @@ Partial Class frmFornecedor
         Me.btnNovo.Size = New System.Drawing.Size(76, 45)
         Me.btnNovo.Text = "&Novo"
         Me.btnNovo.ToolTipText = "Novo Funcionário"
-        '
-        'ToolStripSeparator5
-        '
-        Me.ToolStripSeparator5.Name = "ToolStripSeparator5"
-        Me.ToolStripSeparator5.Size = New System.Drawing.Size(6, 48)
         '
         'btnSalvar
         '
@@ -543,14 +552,6 @@ Partial Class frmFornecedor
         Me.Label13.Size = New System.Drawing.Size(102, 19)
         Me.Label13.TabIndex = 25
         Me.Label13.Text = "e-Mail Vendas"
-        '
-        'btnProdutos
-        '
-        Me.btnProdutos.Image = Global.NovaSiao.My.Resources.Resources.Estoque_24px
-        Me.btnProdutos.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnProdutos.Name = "btnProdutos"
-        Me.btnProdutos.Size = New System.Drawing.Size(100, 45)
-        Me.btnProdutos.Text = "Produtos"
         '
         'frmFornecedor
         '

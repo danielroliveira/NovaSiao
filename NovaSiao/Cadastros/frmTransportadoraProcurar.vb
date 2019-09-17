@@ -4,7 +4,6 @@ Imports CamadaBLL
 Public Class frmTransportadoraProcurar
     '
     Private WithEvents listTransp As New List(Of clTransportadora)
-    Private WithEvents bindT As New BindingSource
     Private _Procura As Boolean
     Private ImgInativo As Image = My.Resources.block
     Private ImgAtivo As Image = My.Resources.accept
@@ -188,11 +187,35 @@ Public Class frmTransportadoraProcurar
     End Sub
     '
     Private Sub btnAdicionar_Click(sender As Object, e As EventArgs) Handles btnAdicionar.Click
-        Dim Transp As New clTransportadora
-        Dim frmT As New frmTransportadora(Transp)
-        frmT.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
-        Close()
-        frmT.Show()
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frmT As New frmTransportadora(New clTransportadora, Me)
+            '
+            If Not frmT.InsertNewCNP(Me) Then
+                frmT.Dispose()
+                Exit Sub
+            End If
+            '
+            frmT.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
+            Close()
+            frmT.Show()
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao inserir nova Transportadora..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
     End Sub
     '
     Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click

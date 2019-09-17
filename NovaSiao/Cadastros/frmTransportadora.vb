@@ -12,6 +12,101 @@ Public Class frmTransportadora
     '
 #Region "LOAD E PROPERTIES"
     '
+    '--- SUB NEW
+    '----------------------------------------------------------------------------------
+    Sub New(objTransp As clTransportadora, Optional formOrigem As Form = Nothing)
+        '
+        ' This call is required by the designer.
+        InitializeComponent()
+        '
+        ' Add any initialization after the InitializeComponent() call.
+        _formOrigem = formOrigem
+        propTransp = objTransp
+        PreencheDataBindings()
+        '
+        If Not IsNothing(_Transp.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
+        '
+    End Sub
+    '
+    '--- ON LOAD FORM
+    '----------------------------------------------------------------------------------
+    Private Sub me_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
+    End Sub
+    '
+    '--- GET CNPJ OF NEW TRANSPORTADORA
+    '----------------------------------------------------------------------------------
+    Public Function InsertNewCNP(frmOrigem As Form) As Boolean
+        '
+        Dim frmCNP As New frmCNPInserir(PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA, frmOrigem)
+        '
+        frmCNP.ShowDialog()
+        If frmCNP.DialogResult = DialogResult.Cancel Then
+            Return False
+        End If
+        '
+        If TypeOf frmCNP.propPessoa Is clTransportadora Then
+            '
+            propTransp = frmCNP.propPessoa
+            '
+            If IsNothing(propTransp.IDPessoa) Then
+                '--- SET VALORES DEFAULT DOS CAMPOS
+                _Transp.Cidade = ObterDefault("CidadePadrao")
+                _Transp.UF = ObterDefault("UFPadrao")
+                '--- SET NEW
+                Sit = EnumFlagEstado.NovoRegistro
+            Else
+                AbrirDialog("Já existe uma transportadora com esse mesmo CNPJ." & vbNewLine &
+                            "O registro da transpotadora encontrada será aberto...",
+                            "CNPJ Encontrado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Sit = EnumFlagEstado.RegistroSalvo
+            End If
+            '
+        Else
+            '
+            Dim PJ As clPessoaJuridica = frmCNP.propPessoa
+            '
+            If AbrirDialog("Foi encontrada uma Pessoa Jurídica que possui o mesmo CNPJ informado." & vbNewLine &
+                        PJ.Cadastro & vbNewLine &
+                        "Deseja inserir uma nova transportadora com os dados dessa pessoa Jurídica?",
+                        "CNPJ Encontrado",
+                        frmDialog.DialogType.SIM_NAO,
+                        frmDialog.DialogIcon.Question) = DialogResult.No Then
+                '
+                Return False
+                '
+            End If
+            '
+            propTransp = New clTransportadora With {
+                .IDPessoa = PJ.IDPessoa,
+                .Cadastro = PJ.Cadastro,
+                .CNPJ = PJ.CNPJ,
+                .PessoaTipo = PJ.PessoaTipo,
+                .Ativo = True,
+                .Endereco = PJ.Endereco,
+                .Bairro = PJ.Bairro,
+                .Cidade = PJ.Cidade,
+                .UF = PJ.UF,
+                .CEP = PJ.CEP,
+                .TelefoneA = PJ.TelefoneA,
+                .TelefoneB = PJ.TelefoneB,
+                .InscricaoEstadual = PJ.InscricaoEstadual,
+                .Email = PJ.Email,
+                .EmailDestino = PJ.EmailDestino,
+                .EmailPrincipal = PJ.EmailPrincipal,
+                .ContatoNome = PJ.ContatoNome,
+                .FundacaoData = PJ.FundacaoData,
+                .InsercaoData = PJ.InsercaoData,
+                .NomeFantasia = PJ.NomeFantasia
+            }
+        End If
+        '
+        Return True
+        '
+    End Function
+    '
+    '--- SITUACAO DO REGISTRO
+    '----------------------------------------------------------------------------------
     Private Property Sit As EnumFlagEstado
         Get
             Return _Sit
@@ -23,65 +118,41 @@ Public Class frmTransportadora
                 btnNovo.Enabled = True
                 btnCancelar.Enabled = False
                 btnProcurar.Enabled = True
-                txtCNPJ.ReadOnly = True
             ElseIf _Sit = EnumFlagEstado.Alterado Then
                 btnSalvar.Enabled = True
                 btnNovo.Enabled = False
                 btnCancelar.Enabled = True
                 btnProcurar.Enabled = False
-                txtCNPJ.ReadOnly = True
             ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
                 txtRazaoSocial.Select()
                 btnSalvar.Enabled = True
                 btnNovo.Enabled = False
                 btnCancelar.Enabled = True
                 btnProcurar.Enabled = False
-                txtCNPJ.ReadOnly = False
                 lblIDTransportadora.Text = "NOVO"
             End If
         End Set
     End Property
     '
     Public Property propTransp() As clTransportadora
+        '
         Get
             Return _Transp
         End Get
+        '
         Set(ByVal value As clTransportadora)
+            '
             _Transp = value
             BindTransp.DataSource = _Transp
             AtivoButtonImage()
+            '
+            If Not IsNothing(_Transp.IDPessoa) Then
+                lblIDTransportadora.Text = Format(_Transp.IDPessoa, "0000")
+            End If
+            '
         End Set
+        '
     End Property
-    '
-    Sub New(objTransp As clTransportadora, Optional formOrigem As Form = Nothing)
-        '
-        ' This call is required by the designer.
-        InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        If IsNothing(objTransp) Then
-            MessageBox.Show("Esse formulário não pode ser aberto assim...", "Erro ao abrir")
-        End If
-        '
-        _formOrigem = formOrigem
-        propTransp = objTransp
-        PreencheDataBindings()
-        '
-        If Not IsNothing(_Transp.IDPessoa) Then
-            Sit = EnumFlagEstado.RegistroSalvo
-            lblIDTransportadora.Text = Format(_Transp.IDPessoa, "0000")
-        Else
-            Sit = EnumFlagEstado.NovoRegistro
-            ' OBTER OS VALORES DEFAULT DOS CAMPOS
-            _Transp.Cidade = ObterDefault("CidadePadrao")
-            _Transp.UF = ObterDefault("UFPadrao")
-        End If
-        '
-    End Sub
-    '
-    Private Sub me_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
-    End Sub
     '
 #End Region
     '
@@ -160,13 +231,21 @@ Public Class frmTransportadora
     '
     '--- BTN NOVO
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
-        propTransp = New clTransportadora
-        Sit = EnumFlagEstado.NovoRegistro
-        txtRazaoSocial.Focus()
+        '
+        Try
+            InsertNewCNP(Me)
+            txtRazaoSocial.Focus()
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao inserir novo registro de transportadora..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        '
     End Sub
     '
     '--- BTN CANCELAR
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
+        '
         If Sit = EnumFlagEstado.NovoRegistro Then
             btnProcurar_Click(btnCancelar, New EventArgs)
             '
@@ -352,141 +431,6 @@ Public Class frmTransportadora
         'Se nenhuma das condições acima forem verdadeira retorna TRUE
         Return True
     End Function
-    '
-#End Region
-    '
-#Region "VALIDACAO DO CNPJ/CPF"
-    '--------------------------------------------------------------------------------------------------------------------------------------
-    ' VALIDA O CNPJ - PROCURA UMA PESSOA COM MESMO CNPJ 
-    '--------------------------------------------------------------------------------------------------------------------------------------
-    Private Sub txtCNPJ_Leave(sender As Object, e As EventArgs) Handles txtCNPJ.Leave
-        '
-        If Sit <> EnumFlagEstado.NovoRegistro Then Exit Sub
-        '
-        ' verifica somente os numeros do CPF
-        Dim CNPJ As String = ""
-        CNPJ = txtCNPJ.Text
-        CNPJ = CNPJ.Replace(".", String.Empty)
-        CNPJ = CNPJ.Replace("-", String.Empty)
-        CNPJ = CNPJ.Replace("/", String.Empty)
-        CNPJ = CNPJ.Replace("_", String.Empty)
-        '
-        ' se nao houver numero nenhum entao sai
-        If String.IsNullOrWhiteSpace(CNPJ) Then Exit Sub
-        '
-        ' verifica a quantidade de caracteres digitados
-        If CNPJ.Length <> 14 Then
-            MessageBox.Show("Digite apenas números no CNPJ e apenas 14 dígitos...",
-                            "CNPJ inválido", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            txtCNPJ.Focus()
-            txtCNPJ.SelectAll()
-            Exit Sub
-        End If
-        '
-        '--- Verifica a validade do CNPJ
-        If ValidaCNPJ() = False Then
-            txtCNPJ.Focus()
-            txtCNPJ.SelectAll()
-            Exit Sub
-        End If
-        '
-        'VERIFICAR SE O CNPJ JÁ ESTÁ CADASTRADO COMO PESSOA OU FUNCIONARIO
-        Dim transp As Object = VerPessoaExistente()
-        '
-        If IsNothing(transp) Then Exit Sub
-        '
-        Select Case transp.GetType()
-            Case Is = GetType(clPessoaJuridica) ' É APENAS PessoaJuridica
-                If MessageBox.Show("Já Existe PESSOA JURÍDICA cadastrada com esse mesmo CNPJ:" & vbCrLf & vbCrLf &
-                                   DirectCast(transp, clPessoaJuridica).Cadastro.ToUpper & vbCrLf & vbCrLf &
-                                   "Deseja preencher os dados automaticamente com as informações dessa pessoa?",
-                                   "Copiar os Dados", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = vbYes Then
-                    '
-                    Dim t As New clPessoaJuridica
-                    t = DirectCast(transp, clPessoaJuridica)
-                    '
-                    '--- PREENCHE OS DADOS AUTOMATICAMENTE
-                    txtRazaoSocial.Text = t.Cadastro
-                    txtNomeFantasia.Text = t.NomeFantasia
-                    txtInscricao.Text = t.InscricaoEstadual
-                    txtEndereco.Text = t.Endereco
-                    txtBairro.Text = t.Bairro
-                    txtCidade.Text = t.Cidade
-                    txtUF.Text = t.UF
-                    txtCEP.Text = t.CEP
-                    txtTelefoneA.Text = t.TelefoneA
-                    txtTelefoneB.Text = t.TelefoneB
-                    txtEmail.Text = t.Email
-                    txtFundacaoData.Text = t.FundacaoData
-                    txtContatoNome.Text = t.ContatoNome
-                    '
-                End If
-            Case Is = GetType(clTransportadora) ' JÁ é um FUNCIONARIO
-                MessageBox.Show("Já existe uma TRANSPORTADORA cadastrada com esse mesmo CNPJ..." & vbCrLf & vbNewLine &
-                                "Não é possível inserir uma nova TRANSPORTADORA com o mesmo CNPJ",
-                                "CNPJ Já existe como TRANSPORTADORA", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                txtCNPJ.Text = String.Empty
-                txtCNPJ.Focus()
-        End Select
-        '
-    End Sub
-    '
-    '---------------------------------------------------------------------------------------------------
-    ' FUNÇÃO QUE VALIDA O CPF
-    '---------------------------------------------------------------------------------------------------
-    Private Function ValidaCNPJ() As Boolean
-        Dim vCPF As New Valida_CPF_CNPJ
-        vCPF.cnpj = txtCNPJ.Text
-        '
-        If vCPF.isCnpjValido = False Then
-            MessageBox.Show("O número de CNPJ digitado é inválido." & vbNewLine &
-                            "Digite um CNPJ válido por favor...", "CNPJ Inválido", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            txtCNPJ.Focus()
-            txtCNPJ.SelectAll()
-            Return False
-        Else
-            Return True
-        End If
-    End Function
-    '
-    '---------------------------------------------------------------------------------------------------
-    ' FUNCAO QUE VERIFICA PESSOA EXISTENTE RETORNA UM clTransportadora
-    '---------------------------------------------------------------------------------------------------
-    Private Function VerPessoaExistente() As Object
-        Dim db As New PessoaBLL
-        Dim myPessoa As Object = Nothing
-        '
-        Try
-            myPessoa = db.ProcurarCNP_Pessoa(txtCNPJ.Text, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA)
-            '
-            ' NÃO ENCOTROU NENHUM CLIENTE NO CPF/CNPJ RETORNA NOVO CLIENTE
-            If IsNothing(myPessoa) Then Return Nothing
-            '
-            ' VERIFICA SE A PESSOA ENCONTRADA É PJ OU TRANSPOTADORA
-            Return myPessoa
-            '
-        Catch ex As Exception
-            MessageBox.Show("Um erro inesperado ocorreu: " & ex.Message,
-                            "Falha na procura de CPF/CNPJ", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return Nothing
-        End Try
-        '
-    End Function
-    '
-    '---------------------------------------------------------------------------------------------------
-    ' FUNCAO QUE CONTROLA A DIGITACAO DO CNPJ
-    '---------------------------------------------------------------------------------------------------
-    Private Sub txtCNPJ_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtCNPJ.KeyPress
-        ' NÃO PERMITIR DIGITAÇÃO DE LETRAS OU CONTROLES
-        If Not (Char.IsDigit(e.KeyChar) OrElse Char.IsControl(e.KeyChar)) Then
-            e.Handled = True
-        End If
-        ' NÃO PERMITIR TEXTO MAIOR QUE 14 DÍGITOS
-        If txtCNPJ.TextLength >= 14 And Char.IsNumber(e.KeyChar) Then
-            e.Handled = True
-        End If
-        '
-    End Sub
     '
 #End Region
     '

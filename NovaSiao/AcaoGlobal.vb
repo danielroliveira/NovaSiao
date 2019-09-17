@@ -9,7 +9,7 @@ Public Class AcaoGlobal
     Public Function VendaPrazo_Nova() As clVenda
         '
         '--- Questiona o VENDEDOR
-        Dim fFunc As New frmFuncionarioProcurar(True)
+        Dim fFunc As New frmFuncionarioEscolher(True)
         fFunc.ShowDialog()
         If fFunc.DialogResult = DialogResult.Cancel Then Return Nothing
         '
@@ -85,7 +85,7 @@ Public Class AcaoGlobal
     Public Function VendaAVista_Nova() As clVenda
         '
         '--- Questiona o VENDEDOR
-        Dim fFunc As New frmFuncionarioProcurar(True)
+        Dim fFunc As New frmFuncionarioEscolher(True)
         fFunc.ShowDialog()
         If fFunc.DialogResult = DialogResult.Cancel Then Return Nothing
         '

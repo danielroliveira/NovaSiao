@@ -4,7 +4,6 @@ Imports CamadaBLL
 Public Class frmCredorProcurar
     '
     Private WithEvents listCred As New List(Of clCredor)
-    Private WithEvents bindC As New BindingSource
     Private _Procura As Boolean
     Private ImgInativo As Image = My.Resources.block
     Private ImgAtivo As Image = My.Resources.accept

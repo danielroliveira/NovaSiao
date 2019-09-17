@@ -451,7 +451,7 @@ Public Class frmCaixaInserir
         '
         '--- Ampulheta ON
         Cursor = Cursors.WaitCursor
-        Dim fFunc As New frmFuncionarioProcurar(False, Me)
+        Dim fFunc As New frmFuncionarioEscolher(False, Me)
         Cursor = Cursors.Default
         '
         fFunc.ShowDialog()

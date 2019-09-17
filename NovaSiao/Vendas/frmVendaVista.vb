@@ -657,7 +657,7 @@ Public Class frmVendaVista
     '--- ALTERA O VENDEDOR E SALVA NO BD
     Private Sub btnVendedorAlterar_Click(sender As Object, e As EventArgs) Handles btnVendedorAlterar.Click
         '
-        Dim fFunc As New frmFuncionarioProcurar(True, Me)
+        Dim fFunc As New frmFuncionarioEscolher(True, Me)
         fFunc.ShowDialog()
         If fFunc.DialogResult = DialogResult.Cancel Then Exit Sub
         '

@@ -157,6 +157,7 @@ Partial Class frmTransportadora
         Me.txtCNPJ.Location = New System.Drawing.Point(137, 145)
         Me.txtCNPJ.Mask = "00,000,000/0000-00"
         Me.txtCNPJ.Name = "txtCNPJ"
+        Me.txtCNPJ.ReadOnly = True
         Me.txtCNPJ.Size = New System.Drawing.Size(152, 27)
         Me.txtCNPJ.TabIndex = 6
         Me.txtCNPJ.TextAlign = System.Windows.Forms.HorizontalAlignment.Right

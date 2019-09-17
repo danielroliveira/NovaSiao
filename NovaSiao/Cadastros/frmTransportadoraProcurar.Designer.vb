@@ -82,8 +82,9 @@ Partial Class frmTransportadoraProcurar
         '
         'btnEditar
         '
+        Me.btnEditar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnEditar.Image = Global.NovaSiao.My.Resources.Resources.editar
-        Me.btnEditar.Location = New System.Drawing.Point(133, 501)
+        Me.btnEditar.Location = New System.Drawing.Point(21, 502)
         Me.btnEditar.Name = "btnEditar"
         Me.btnEditar.Size = New System.Drawing.Size(126, 42)
         Me.btnEditar.TabIndex = 5
@@ -94,8 +95,9 @@ Partial Class frmTransportadoraProcurar
         '
         'btnAdicionar
         '
+        Me.btnAdicionar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnAdicionar.Image = Global.NovaSiao.My.Resources.Resources.add
-        Me.btnAdicionar.Location = New System.Drawing.Point(276, 501)
+        Me.btnAdicionar.Location = New System.Drawing.Point(164, 502)
         Me.btnAdicionar.Name = "btnAdicionar"
         Me.btnAdicionar.Size = New System.Drawing.Size(126, 42)
         Me.btnAdicionar.TabIndex = 6
@@ -106,8 +108,9 @@ Partial Class frmTransportadoraProcurar
         '
         'btnFechar
         '
+        Me.btnFechar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.delete
-        Me.btnFechar.Location = New System.Drawing.Point(442, 501)
+        Me.btnFechar.Location = New System.Drawing.Point(442, 502)
         Me.btnFechar.Name = "btnFechar"
         Me.btnFechar.Size = New System.Drawing.Size(126, 42)
         Me.btnFechar.TabIndex = 7
@@ -131,7 +134,7 @@ Partial Class frmTransportadoraProcurar
         '
         Me.MenuListagem.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AtivarToolStripMenuItem, Me.DesativarToolStripMenuItem})
         Me.MenuListagem.Name = "MenuFab"
-        Me.MenuListagem.Size = New System.Drawing.Size(206, 70)
+        Me.MenuListagem.Size = New System.Drawing.Size(206, 48)
         '
         'AtivarToolStripMenuItem
         '
@@ -150,7 +153,7 @@ Partial Class frmTransportadoraProcurar
         'frmTransportadoraProcurar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-        Me.ClientSize = New System.Drawing.Size(590, 564)
+        Me.ClientSize = New System.Drawing.Size(590, 558)
         Me.Controls.Add(Me.cmbAtivo)
         Me.Controls.Add(Me.btnFechar)
         Me.Controls.Add(Me.btnAdicionar)

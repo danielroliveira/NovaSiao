@@ -4,7 +4,6 @@ Imports CamadaBLL
 Public Class frmFornecedorProcurar
     '
     Private WithEvents listForn As New List(Of clFornecedor)
-    Private WithEvents bindF As New BindingSource
     Private _Procura As Boolean
     Private ImgInativo As Image = My.Resources.block
     Private ImgAtivo As Image = My.Resources.accept
@@ -188,11 +187,35 @@ Public Class frmFornecedorProcurar
     End Sub
     '
     Private Sub btnAdicionar_Click(sender As Object, e As EventArgs) Handles btnAdicionar.Click
-        Dim forn As New clFornecedor
-        Dim frmF As New frmFornecedor(forn)
-        frmF.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
-        Close()
-        frmF.Show()
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim frmF As New frmFornecedor(New clFornecedor, Me)
+            '
+            If Not frmF.InsertNewCNP(Me) Then
+                frmF.Dispose()
+                Exit Sub
+            End If
+            '
+            frmF.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
+            Close()
+            frmF.Show()
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao inserir novo Fornecedor..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            '
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
     End Sub
     '
     Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
