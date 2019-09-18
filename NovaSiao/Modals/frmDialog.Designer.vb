@@ -76,6 +76,7 @@ Partial Class frmDialog
         'btnCancel
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.btnCancel.FlatAppearance.BorderColor = System.Drawing.Color.Maroon
         Me.btnCancel.FlatAppearance.MouseOverBackColor = System.Drawing.Color.NavajoWhite
         Me.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
@@ -90,10 +91,10 @@ Partial Class frmDialog
         '
         Me.lblMensagem.BackColor = System.Drawing.Color.Transparent
         Me.lblMensagem.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblMensagem.Location = New System.Drawing.Point(152, 45)
+        Me.lblMensagem.Location = New System.Drawing.Point(152, 43)
         Me.lblMensagem.Margin = New System.Windows.Forms.Padding(0)
         Me.lblMensagem.Name = "lblMensagem"
-        Me.lblMensagem.Size = New System.Drawing.Size(378, 186)
+        Me.lblMensagem.Size = New System.Drawing.Size(378, 188)
         Me.lblMensagem.TabIndex = 1
         Me.lblMensagem.Text = "Mensagem"
         Me.lblMensagem.TextAlign = System.Drawing.ContentAlignment.MiddleCenter

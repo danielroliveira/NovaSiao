@@ -21,6 +21,8 @@ Public Class frmCompraGetNFe
     Private CNPJFilial As String
     Private _APagarList As New List(Of clAPagar)
     Private _AreSelectedRows As Boolean
+    Private _RelacaoFornecedorEncontrada As Boolean = False
+    Private _RelacaoTranspEncontrada As Boolean = False
     '
     Private Class clNFeItem
         Inherits TNFeInfNFeDetProd
@@ -72,6 +74,9 @@ Public Class frmCompraGetNFe
                 Case = 1 '--- ESTAGIO INICIAL
                     btnCorrelacao.Enabled = False
                     btnSalvarCompra.Enabled = False
+                    tspMenuFornecedor.Visible = False
+                    tspMenuTransp.Visible = False
+                    lblRazaoSocial.Font = New Font("Calibri", 14.25!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
                 Case = 2 '--- XML OBTIDA
                     btnCorrelacao.Enabled = True
                     btnSalvarCompra.Enabled = False
@@ -336,11 +341,13 @@ Public Class frmCompraGetNFe
                 Cursor = Cursors.WaitCursor
                 '
                 '--- Clear old values
+                propEstagio = 1
                 FornecedorNFe = New clFornecedor
                 PreencheLabelsFornecedor()
+                _RelacaoFornecedorEncontrada = False
+                _RelacaoTranspEncontrada = False
                 TranspNFe = New clTransportadora
                 PreencheLabelsTransp()
-                btnTransp.Visible = False
                 '
                 dgvItens.DataSource = Nothing
                 dgvItens.Rows.Clear()
@@ -348,7 +355,6 @@ Public Class frmCompraGetNFe
                 '
                 '--- verifica CNPJ compativel com NFe obtida
                 If CheckCNPJNFe() = False Then
-                    propEstagio = 1
                     Exit Sub
                 End If
                 '
@@ -575,11 +581,9 @@ Public Class frmCompraGetNFe
         If Not IsNothing(FornecedorNFe) Then
             lblRazaoSocial.Text = FornecedorNFe.Cadastro
             lblCNPJ.Text = FornecedorNFe.CNPJ
-            lblInscricao.Text = FornecedorNFe.InscricaoEstadual
         Else
             lblRazaoSocial.Text = ""
             lblCNPJ.Text = ""
-            lblInscricao.Text = ""
         End If
         '
     End Sub
@@ -647,6 +651,7 @@ Public Class frmCompraGetNFe
             If IsNothing(transp.transporta) Then
                 AbrirDialog("Não há informação de Transportadora nessa NFe.",
                             "Sem Transportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                TranspNFe = Nothing
                 Exit Sub
             End If
             '
@@ -706,27 +711,6 @@ Public Class frmCompraGetNFe
         MostraMenuPrincipal()
     End Sub
     '
-    '--- INSERT NEW TRANSPORTADORA
-    '----------------------------------------------------------------------------------------------
-    Private Sub btnTransp_Click(sender As Object, e As EventArgs) Handles btnTransp.Click
-        '
-        Dim fTransp As New frmTransportadora(TranspNFe, Me)
-        '
-        Visible = False
-        fTransp.ShowDialog()
-        Visible = True
-        '
-        If fTransp.DialogResult = DialogResult.OK Then
-            '
-            '--- get new transportadora
-            TranspNFe = fTransp.propTransp
-            PreencheLabelsTransp()
-            btnTransp.Visible = False
-            '
-        End If
-        '
-    End Sub
-    '
 #End Region '/ BUTTONS FUNCTION
     '
 #Region "CORRELACAO FUNCTIONS"
@@ -766,20 +750,28 @@ Public Class frmCompraGetNFe
             '--- LOOKING FOR FORNECEDOR
             '-----------------------------------------------------------------------------
             Info.InfoShow("Verificando o fornecedor da NFe...")
-            Dim procForn As clFornecedor = FornecedorFind(dbTran)
             '
-            If Not IsNothing(procForn) AndAlso Not IsNothing(procForn.IDPessoa) Then
+            If IsNothing(FornecedorNFe.IDPessoa) Then
                 '
-                FornecedorNFe.IDPessoa = procForn.IDPessoa
-                AbrirDialog("Forncedor encontrado:" & vbCrLf & vbCrLf & procForn.Cadastro,
-                            "Fornecedor", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                Dim procForn As clFornecedor = FornecedorFind(dbTran) '---> PROCURA
                 '
-            Else
-                '
-                AbrirDialog("Um fornecedor correspondente à NFe não pode ser encontrado..." & vbCrLf &
-                            "Favor tentar encontrar um fornecedor para inserir a NFe.",
-                            "Fornecedor", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
-                Exit Sub
+                If Not IsNothing(procForn) AndAlso Not IsNothing(procForn.IDPessoa) Then '---> ENCONTRADO
+                    '
+                    tspMenuFornecedor.Visible = False
+                    FornecedorNFe.IDPessoa = procForn.IDPessoa
+                    AbrirDialog("Fornecedor encontrado:" & vbCrLf & vbCrLf & procForn.Cadastro,
+                                "Fornecedor", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                    '
+                Else '---> NAO ENCONTRADO
+                    If _RelacaoFornecedorEncontrada Then Exit Sub
+                    '
+                    AbrirDialog("Um fornecedor correspondente à NFe não pode ser encontrado..." & vbCrLf &
+                                "Favor tentar encontrar um fornecedor para inserir a NFe.",
+                                "Fornecedor", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                    tspMenuFornecedor.Visible = True
+                    Exit Sub
+                    '
+                End If
                 '
             End If
             '
@@ -789,20 +781,27 @@ Public Class frmCompraGetNFe
             '--- LOOKING FOR TRANSPORTADORA
             '-----------------------------------------------------------------------------
             Info.InfoShow("Verificando a Transportadora...")
-            Dim procTransp As clTransportadora = TransportadoraFind(dbTran)
             '
-            If IsNothing(procTransp) OrElse IsNothing(procTransp.IDPessoa) Then
+            If Not IsNothing(TranspNFe) AndAlso IsNothing(TranspNFe.IDPessoa) Then
                 '
-                AbrirDialog("Uma TRANSPORTADORA correspondente à NFe não pode ser encontrada." & vbCrLf &
-                            "É possível inserir a transportadora...",
-                            "Transportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                Dim procTransp As clTransportadora = TransportadoraFind(dbTran) '---> PROCURA
                 '
-                btnTransp.Visible = True
-                btnTransp.Refresh()
+                If IsNothing(procTransp) OrElse IsNothing(procTransp.IDPessoa) Then '---> NAO ENCONTRADA
+                    If _RelacaoTranspEncontrada Then Exit Sub
+                    '
+                    AbrirDialog("Uma TRANSPORTADORA correspondente à NFe não pode ser encontrada." & vbCrLf &
+                                "É possível inserir a transportadora...",
+                                "Transportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+                    '
+                    tspMenuTransp.Visible = True
+                    Exit Sub
+                    '
+                Else '---> ENCONTRADA
+                    TranspNFe = procTransp
+                    AbrirDialog("Transportadora encontrada:" & vbCrLf & vbCrLf & TranspNFe.Cadastro,
+                                "Tranportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                End If
                 '
-            Else
-                TranspNFe = procTransp
-                btnTransp.Visible = False
             End If
             '
             '--- Ampulheta ON
@@ -868,11 +867,6 @@ Public Class frmCompraGetNFe
             propEstagio = 3
             TryEnableEstagioCompra()
             '
-            '--- CHECK btnTransp VISIBILITY
-            If btnTransp.Visible Then
-                showToolTip(btnTransp)
-            End If
-            '
         Catch ex As AppException
             acesso.RollbackAcessoWithTransaction(dbTran)
             AbrirDialog("Uma exceção ocorreu ao Fazer correlação da NFe..." & vbNewLine &
@@ -932,14 +926,14 @@ Public Class frmCompraGetNFe
             Dim pBLL As New PessoaBLL
             Dim pessoa As Object = pBLL.ProcurarCNP_Pessoa(FornecedorNFe.CNPJ, PessoaBLL.EnumPessoaGrupo.FORNECEDOR, dbTran)
             '
-            If TypeOf pessoa Is clFornecedor Then
+            '--- VERIFICA PESSOA RETORNADA
+            '-----------------------------------------------------------------------------------------
+            If TypeOf pessoa Is clFornecedor Then '---> FORNCEDOR ENCONTRADO
                 '
                 '--- OPEN FRM FORNECEDOR
-                OpenFrmFornecedor(pessoa)
+                Return OpenFrmFornecedor(pessoa)
                 '
-                Return DirectCast(pessoa, clFornecedor)
-                '
-            ElseIf TypeOf pessoa Is clPessoaJuridica Then
+            ElseIf TypeOf pessoa Is clPessoaJuridica Then '---> PESSOA JURIDICA MESMO CNPJ
                 '
                 If AbrirDialog("Não foi encontrado um fornecedor correspondente, porém foi encontrado uma Pessoa Jurídica " &
                                "cadastrada com o mesmo CNPJ:" & vbCrLf & DirectCast(pessoa, clPessoaJuridica).Cadastro & vbCrLf &
@@ -948,48 +942,95 @@ Public Class frmCompraGetNFe
                                frmDialog.DialogType.SIM_NAO,
                                frmDialog.DialogIcon.Question) = DialogResult.Yes Then
                     '
-                    Dim pj As New clPessoaJuridica
-                    pj = DirectCast(pessoa, clPessoaJuridica)
+                    Dim PJ As New clPessoaJuridica
+                    PJ = DirectCast(pessoa, clPessoaJuridica)
                     '
                     '--- PREENCHE OS DADOS AUTOMATICAMENTE
                     Dim newForn As New clFornecedor With {
-                        .Cadastro = pj.Cadastro,
-                        .NomeFantasia = pj.NomeFantasia,
-                        .InscricaoEstadual = pj.InscricaoEstadual,
-                        .Endereco = pj.Endereco,
-                        .Bairro = pj.Bairro,
-                        .Cidade = pj.Cidade,
-                        .UF = pj.UF,
-                        .CEP = pj.CEP,
-                        .TelefoneA = pj.TelefoneA,
-                        .TelefoneB = pj.TelefoneB,
-                        .Email = pj.Email,
-                        .FundacaoData = If(pj.FundacaoData, ""),
-                        .ContatoNome = pj.ContatoNome
+                        .Cadastro = PJ.Cadastro,
+                        .NomeFantasia = PJ.NomeFantasia,
+                        .InscricaoEstadual = PJ.InscricaoEstadual,
+                        .Endereco = PJ.Endereco,
+                        .Bairro = PJ.Bairro,
+                        .Cidade = PJ.Cidade,
+                        .UF = PJ.UF,
+                        .CEP = PJ.CEP,
+                        .TelefoneA = PJ.TelefoneA,
+                        .TelefoneB = PJ.TelefoneB,
+                        .Email = PJ.Email,
+                        .FundacaoData = If(PJ.FundacaoData, ""),
+                        .ContatoNome = PJ.ContatoNome
                         }
                     '
                     '--- OPEN FRM FORNECEDOR
-                    OpenFrmFornecedor(newForn)
+                    Return OpenFrmFornecedor(newForn)
                     '
-                    Return newForn
+                Else '--> RESPOSTA NAO
+                    '
+                    FornecedorNFe.IDPessoa = Nothing
+                    Return Nothing
                     '
                 End If
                 '
-            Else
-                If AbrirDialog("Não foi encontrado um fornecedor correspondente " &
-                               "cadastrado com o mesmo CNPJ." & vbCrLf &
-                               "Deseja cadastrar essa Pessoa Jurídica como um novo fornecedor?" & vbCrLf &
-                               FornecedorNFe.Cadastro,
-                               "Pessoa Jurídica Encontrada",
-                               frmDialog.DialogType.SIM_NAO,
-                               frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+            Else '---> NAO ENCONTRADO (FORNECEDOR AND PJ)
+                '
+                '--- VERIFICA CNPJ RELACIONADO
+                '-----------------------------------------------------------------------------------------
+                Dim PessoaRelacionada As Object = VerCNPJRelacionadoFornecedor(dbTran)
+                '
+                If IsNothing(PessoaRelacionada) Then
+                    FornecedorNFe.IDPessoa = Nothing
+                    Return Nothing
+                Else
+                    _RelacaoFornecedorEncontrada = True
+                End If
+                '
+                If TypeOf PessoaRelacionada Is clFornecedor Then '---> FORNCEDOR RELACIONADO ENCONTRADO
                     '
-                    '--- OPEN FRM FORNECEDOR
-                    OpenFrmFornecedor(FornecedorNFe)
+                    If AbrirDialog("O CNPJ da NFe está relacionado com o CNPJ de:" & vbNewLine &
+                                   pessoa.Cadastro & vbNewLine &
+                                   "Deseja usar a relação existente e transferir a compra para o CNPJ relacionado?",
+                                   "CNPJ Relacionado",
+                                   frmDialog.DialogType.SIM_NAO,
+                                   frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                        '
+                        '--- CHANGE LABELS OF RELACAO
+                        lblRazaoSocial.Text += " (" & PessoaRelacionada.Cadastro & ")"
+                        lblCNPJ.Text += " >>> " & PessoaRelacionada.CNPJ
+                        ResizeFontLabel(lblRazaoSocial)
+                        '
+                        Return PessoaRelacionada
+                        '
+                    Else
+                        Return Nothing
+                    End If
                     '
-                    Return FornecedorNFe
+                ElseIf TypeOf PessoaRelacionada Is clPessoaJuridica Then '---> PJ RELACIONADA ENCONTRADA (NAO FORNECEDOR)
+                    '
+                    '--- REMOVE RELACAO ? ASK USER
+                    If AbrirDialog("Foi encontrada uma Pessoa Jurídica relacionada com esse CNPJ, mas que ainda não é um Fornecedor:" &
+                                   vbCrLf & vbCrLf & DirectCast(PessoaRelacionada, clPessoaJuridica).Cadastro & vbCrLf & vbCrLf &
+                                   "Deseja remover esse relacionamento entre CNPJs para Correlacionar a NFe?",
+                                   "CNPJs Relacionados",
+                                   frmDialog.DialogType.SIM_NAO,
+                                   frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                        '
+                        '--- REMOVE RELACAO
+                        RemoveRelacaoCNPJ(FornecedorNFe.CNPJ)
+                        '
+                        AbrirDialog("Relação entre CNPJs removida com sucesso!" & vbNewLine &
+                                    "Favor fazer a Correlação novamente...",
+                                    "Relação Removida", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                        '
+                        _RelacaoFornecedorEncontrada = False
+                        '
+                    End If
+                    '
+                    FornecedorNFe.IDPessoa = Nothing
+                    Return Nothing
                     '
                 End If
+                '
             End If
             '
             Return Nothing
@@ -1002,23 +1043,38 @@ Public Class frmCompraGetNFe
     '
     '--- ABRE O FORM FORNECEDOR
     '----------------------------------------------------------------------------------
-    Private Sub OpenFrmFornecedor(fornecedor As clFornecedor)
+    Private Function OpenFrmFornecedor(fornecedor As clFornecedor) As clFornecedor
         '
         Try
             '
-            Dim frmF As New frmFornecedor(fornecedor, Me)
-            Me.Visible = False
-            frmF.ShowDialog()
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
             '
-            If frmF.DialogResult = DialogResult.OK Then
-                fornecedor.IDPessoa = frmF.propForn.IDPessoa
-            End If
+            Using frmF As New frmFornecedor(fornecedor, Me)
+                '
+                Me.Visible = False
+                frmF.ShowDialog()
+                '
+                If frmF.DialogResult = DialogResult.OK Then
+                    fornecedor.IDPessoa = frmF.propForn.IDPessoa
+                    Return frmF.propForn
+                Else
+                    fornecedor.IDPessoa = Nothing
+                    Return Nothing
+                End If
+                '
+            End Using
             '
         Catch ex As Exception
             Throw New AppException("Uma exceção ocorreu ao abrir formulário de fornecedores..." & vbNewLine & ex.Message)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
-    End Sub
+    End Function
     '
     '--- PROCURA TRANSPORTADORA
     '----------------------------------------------------------------------------------
@@ -1026,35 +1082,158 @@ Public Class frmCompraGetNFe
         '
         Try
             '
-            Dim tBLL As New TransportadoraBLL
-            Dim transp As List(Of clTransportadora) = tBLL.GetTransportadoraByCNPJ(TranspNFe.CNPJ.Substring(0, 10), dbTran)
+            Dim pBLL As New PessoaBLL
+            Dim pessoa As Object = pBLL.ProcurarCNP_Pessoa(TranspNFe.CNPJ, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA, dbTran)
             '
-            If IsNothing(transp) OrElse transp.Count = 0 Then
-                Return Nothing
-            End If
-            '
-            Dim returnIndex As Integer = 0
-            '
-            If transp.Count > 1 Then
+            '--- VERIFICA PESSOA RETORNADA
+            '-----------------------------------------------------------------------------------------
+            If TypeOf pessoa Is clTransportadora Then '---> TRANSPORTADORA ENCONTRADA
                 '
-                '--- procura entre as transportadoras encontradas a com CNPJ identico
-                returnIndex = transp.FindIndex(Function(x) x.CNPJ = TranspNFe.CNPJ)
+                '--- OPEN FRM TRANSPORTADORA
+                Return OpenFrmTransportadora(pessoa)
                 '
-                '--- qdo nao encontra
-                If returnIndex = -1 Then
-                    AbrirDialog("Foram encontradas mais de uma transportadora com o CNPJ Filial parecidos." & vbNewLine &
-                                "Favor verificar a transportadora após a compra ser inserida.",
-                                "Transportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
-                    returnIndex = 0
+            ElseIf TypeOf pessoa Is clPessoaJuridica Then '---> PESSOA JURIDICA MESMO CNPJ
+                '
+                If AbrirDialog("Não foi encontrado um TRANSPORTADORA correspondente, porém foi encontrado uma Pessoa Jurídica " &
+                               "cadastrada com o mesmo CNPJ:" & vbCrLf & DirectCast(pessoa, clPessoaJuridica).Cadastro & vbCrLf &
+                               "Deseja cadastrar essa Pessoa Jurídica como uma NOVA TRANSPORTADORA?",
+                               "Pessoa Jurídica Encontrada",
+                               frmDialog.DialogType.SIM_NAO,
+                               frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                    '
+                    Dim PJ As clPessoaJuridica = DirectCast(pessoa, clPessoaJuridica)
+                    '
+                    '--- PREENCHE OS DADOS AUTOMATICAMENTE
+                    Dim newTransp As New clTransportadora With {
+                        .Cadastro = PJ.Cadastro,
+                        .NomeFantasia = PJ.NomeFantasia,
+                        .InscricaoEstadual = PJ.InscricaoEstadual,
+                        .Endereco = PJ.Endereco,
+                        .Bairro = PJ.Bairro,
+                        .Cidade = PJ.Cidade,
+                        .UF = PJ.UF,
+                        .CEP = PJ.CEP,
+                        .TelefoneA = PJ.TelefoneA,
+                        .TelefoneB = PJ.TelefoneB,
+                        .Email = PJ.Email,
+                        .FundacaoData = If(PJ.FundacaoData, ""),
+                        .ContatoNome = PJ.ContatoNome,
+                        .IDPessoa = PJ.IDPessoa,
+                        .CNPJ = PJ.CNPJ,
+                        .PessoaTipo = PJ.PessoaTipo
+                        }
+                    '
+                    '--- OPEN FRM FORNECEDOR
+                    Return OpenFrmTransportadora(newTransp)
+                    '
+                Else '--> RESPOSTA NAO
+                    '
+                    TranspNFe.IDPessoa = Nothing
+                    Return Nothing
+                    '
+                End If
+                '
+            Else '---> NAO ENCONTRADO (TRANSPORTADORA AND PJ)
+                '
+                '--- VERIFICA CNPJ RELACIONADO
+                '-----------------------------------------------------------------------------------------
+                Dim PessoaRelacionada As Object = VerCNPJRelacionadoTransp(dbTran)
+                '
+                If IsNothing(PessoaRelacionada) Then
+                    TranspNFe.IDPessoa = Nothing
+                    Return Nothing
+                Else
+                    _RelacaoTranspEncontrada = True
+                End If
+                '
+                If TypeOf PessoaRelacionada Is clTransportadora Then '---> TRANSPORTADORA RELACIONADA ENCONTRADA
+                    '
+                    If AbrirDialog("O CNPJ da Tranportadora na NFe está relacionado com o CNPJ de:" & vbNewLine &
+                                   pessoa.Cadastro & vbNewLine &
+                                   "Deseja usar a relação existente e substituir o transporte para o CNPJ relacionado?",
+                                   "CNPJ Relacionado",
+                                   frmDialog.DialogType.SIM_NAO,
+                                   frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                        '
+                        '--- CHANGE LABELS OF RELACAO
+                        lblTransportadora.Text += " (" & PessoaRelacionada.Cadastro & ")"
+                        lblTranspCNPJ.Text += " >>> " & PessoaRelacionada.CNPJ
+                        ResizeFontLabel(lblTransportadora)
+                        '
+                        Return PessoaRelacionada
+                        '
+                    Else
+                        Return Nothing
+                    End If
+                    '
+                ElseIf TypeOf PessoaRelacionada Is clPessoaJuridica Then '---> PJ RELACIONADA ENCONTRADA (NAO TRANSPORTADORA)
+                    '
+                    '--- REMOVE RELACAO ? ASK USER
+                    If AbrirDialog("Foi encontrada uma Pessoa Jurídica relacionada com esse CNPJ, mas que ainda não é uma TRANSPORTADORA:" &
+                                   vbCrLf & vbCrLf & DirectCast(PessoaRelacionada, clPessoaJuridica).Cadastro & vbCrLf & vbCrLf &
+                                   "Deseja remover esse relacionamento entre CNPJs para Correlacionar a NFe?",
+                                   "CNPJs Relacionados",
+                                   frmDialog.DialogType.SIM_NAO,
+                                   frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+                        '
+                        '--- REMOVE RELACAO
+                        RemoveRelacaoCNPJ(FornecedorNFe.CNPJ)
+                        '
+                        AbrirDialog("Relação entre CNPJs removida com sucesso!" & vbNewLine &
+                                    "Favor fazer a Correlação novamente...",
+                                    "Relação Removida", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+                        '
+                        _RelacaoTranspEncontrada = False
+                        '
+                    End If
+                    '
+                    TranspNFe.IDPessoa = Nothing
+                    Return Nothing
+                    '
                 End If
                 '
             End If
             '
-            TranspNFe.IDPessoa = transp.Item(returnIndex).IDPessoa
-            Return transp.Item(returnIndex)
+            Return Nothing
             '
         Catch ex As Exception
-            Throw New AppException("Uma exceção ocorreu ao procurar a TRANSPORTADORA..." & vbNewLine & ex.Message)
+            Throw New AppException("Uma exceção ocorreu ao procurar o transportadora..." & vbNewLine & ex.Message)
+        End Try
+        '
+    End Function
+    '
+    '--- ABRE O FORM TRANSPORTADORA
+    '----------------------------------------------------------------------------------
+    Private Function OpenFrmTransportadora(transp As clTransportadora) As clTransportadora
+        '
+        Try
+            '
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Using frmT As New frmTransportadora(transp, Me)
+                '
+                Me.Visible = False
+                frmT.ShowDialog()
+                '
+                If frmT.DialogResult = DialogResult.OK Then
+                    transp.IDPessoa = frmT.propTransp.IDPessoa
+                    Return frmT.propTransp
+                Else
+                    transp.IDPessoa = Nothing
+                    Return Nothing
+                End If
+                '
+            End Using
+            '
+        Catch ex As Exception
+            Throw New AppException("Uma exceção ocorreu ao abrir formulário de transportadoras..." &
+                                   vbNewLine & ex.Message)
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
         End Try
         '
     End Function
@@ -1167,7 +1346,107 @@ Public Class frmCompraGetNFe
         End If
         '
     End Sub
-
+    '
+    '--- VERIFICA SE O CNPJ DO FORNECEDOR ESTA RELACIONADO COM UMA PESSOA JURIDICA
+    '----------------------------------------------------------------------------------
+    Private Function VerCNPJRelacionadoFornecedor(dbTran As Object) As Object
+        '
+        Dim db As New PessoaBLL
+        Dim Pessoa As clPessoaJuridica = Nothing
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- PROCURA CNPJ RELACIONADO PELO CNP
+            Pessoa = db.ProcurarCNPJRelacionado(FornecedorNFe.CNPJ, dbTran)
+            If IsNothing(Pessoa) Then Return Nothing
+            '
+            '--- PROCURA PJ ENCONTRADA PELO TIPO
+            Dim pBLL As New PessoaBLL
+            Dim fornecedor As Object = pBLL.ProcurarCNP_Pessoa(Pessoa.CNPJ, PessoaBLL.EnumPessoaGrupo.FORNECEDOR, dbTran)
+            '
+            If TypeOf fornecedor Is clFornecedor Then
+                Return DirectCast(fornecedor, clFornecedor)
+            Else
+                Return Pessoa
+            End If
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Procurar CNPJ Relacionado..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return Nothing
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Function
+    '
+    '--- VERIFICA SE O CNPJ DA TRANSPORTADORA ESTA RELACIONADO COM UMA PESSOA JURIDICA 
+    '----------------------------------------------------------------------------------
+    Private Function VerCNPJRelacionadoTransp(dbTran As Object) As Object
+        '
+        Dim db As New PessoaBLL
+        Dim Pessoa As clPessoaJuridica = Nothing
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- PROCURA CNPJ RELACIONADO PELO CNP
+            Pessoa = db.ProcurarCNPJRelacionado(TranspNFe.CNPJ, dbTran)
+            If IsNothing(Pessoa) Then Return Nothing
+            '
+            '--- PROCURA PJ ENCONTRADA PELO TIPO
+            Dim pBLL As New PessoaBLL
+            Dim transp As Object = pBLL.ProcurarCNP_Pessoa(Pessoa.CNPJ, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA, dbTran)
+            '
+            If TypeOf transp Is clTransportadora Then
+                Return DirectCast(transp, clTransportadora)
+            Else
+                Return Pessoa
+            End If
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Procurar CNPJ Relacionado..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return Nothing
+        Finally
+            '
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+            '
+        End Try
+        '
+    End Function
+    '
+    '--- REMOVE A RELACAO ENTRE CNPJ RELACIONADOS
+    '----------------------------------------------------------------------------------
+    Private Function RemoveRelacaoCNPJ(CNPJ As String) As Boolean
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            Dim db As New PessoaBLL
+            db.RemoverCNPJRelacionado(CNPJ)
+            '
+            Return True
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Remover a Relação entre CNPJs..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Function
+    '
 #End Region '/ CORRELACAO FUNCTIONS
     '
 #Region "MENU CONTEXT ITENS"
@@ -1236,21 +1515,21 @@ Public Class frmCompraGetNFe
             If CountItemsSelected = 1 Then
                 Dim curItem As clNFeItem = dgvItens.CurrentRow.DataBoundItem
                 message = "Você deseja realmente relacionar o ITEM:" & vbCrLf &
-                               curItem.xProd & vbCrLf &
-                               "com o PRODUTO:" & vbCrLf &
-                               prodEncontrado.Produto & " ?"
+                           curItem.xProd & vbCrLf &
+                           "com o PRODUTO:" & vbCrLf &
+                           prodEncontrado.Produto & " ?"
             Else
                 message = "Você deseja realmente relacionar todos os " &
-                              CountItemsSelected & " ITENS selecionados" & vbCrLf &
-                              "com o PRODUTO:" & vbCrLf &
-                              prodEncontrado.Produto & " ?"
+                          CountItemsSelected & " ITENS selecionados" & vbCrLf &
+                          "com o PRODUTO:" & vbCrLf &
+                          prodEncontrado.Produto & " ?"
             End If
             '
             '--- ASK USER
             If AbrirDialog(message, "Relacionar Item/Produto",
-                    frmDialog.DialogType.SIM_NAO,
-                    frmDialog.DialogIcon.Question,
-                    frmDialog.DialogDefaultButton.First) = DialogResult.No Then Exit Sub
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question,
+                           frmDialog.DialogDefaultButton.First) = DialogResult.No Then Exit Sub
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao OBTER o Produto para relacionar..." & vbNewLine &
@@ -1726,6 +2005,14 @@ Public Class frmCompraGetNFe
         '
         If ItensNFe.Count = 0 Then propEstagio = 1
         '
+        '--- CHECK ESTAGIO
+        If propEstagio <> 3 Then Exit Sub
+        '
+        '--- CHECK FOUND Fornecedor AND Transportadora
+        If IsNothing(FornecedorNFe.IDPessoa) Then Exit Sub
+        If IsNothing(TranspNFe.IDPessoa) Then Exit Sub
+        '
+        '--- CHECK ITEMS FOUND
         If ItensNFe.Where(Function(x) IsNothing(x.IDProduto)).Count = 0 Then
             propEstagio = 4
             AbrirDialog("Todos items estão relacionados... " & vbNewLine &
@@ -2058,6 +2345,8 @@ Public Class frmCompraGetNFe
         '
     End Sub
     '
+    '--- ENABLE TOOLSTRIP
+    '----------------------------------------------------------------------------------
     Private Sub btn_EnabledChanged(sender As Object, e As EventArgs) Handles btnCorrelacao.EnabledChanged, btnSalvarCompra.EnabledChanged
         '
         Dim control As Control = DirectCast(sender, Control)
@@ -2068,9 +2357,199 @@ Public Class frmCompraGetNFe
         '
     End Sub
     '
+    Private Sub tspMenu_VisibleChanged(sender As Object, e As EventArgs) Handles tspMenuFornecedor.VisibleChanged, tspMenuTransp.VisibleChanged
+        '
+        Dim control As Control = DirectCast(sender, Control)
+        '
+        If control.Visible = True Then
+            showToolTip(control)
+        End If
+        '
+    End Sub
+    '
 #End Region '/ VISUAL DESIGN
 
+    '
+    '--- CHECK IF IS POSSIBLE CHANGE STATUS
+    '----------------------------------------------------------------------------------
+    Private Sub TryEnableEstagioPesquisado()
+        '
+        If ItensNFe.Count = 0 Then propEstagio = 1
+        '
+        '--- CHECK ESTAGIO
+        If propEstagio <> 2 Then Exit Sub
+        '
+        '--- CHECK FOUND Fornecedor AND Transportadora
+        If IsNothing(FornecedorNFe.IDPessoa) Then Exit Sub
+        If IsNothing(TranspNFe.IDPessoa) Then Exit Sub
+        '
+        '--- CHECK ITEMS FOUND
+        If ItensNFe.Where(Function(x) IsNothing(x.IDProduto)).Count = 0 Then
+            propEstagio = 4
+            AbrirDialog("Todos items estão relacionados... " & vbNewLine &
+                        "Pronto para inserir uma nova Compra",
+                        "Items Relacionados",
+                        frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+        End If
+        '
+    End Sub
 
 
+    '
+    '--- INSERT NEW FORNECEDOR
+    '----------------------------------------------------------------------------------
+    Private Sub btnInserirFornecedor_Click(sender As Object, e As EventArgs) Handles btnInserirFornecedor.Click
+        '
+        '--- ASK USER
+        If AbrirDialog("Não foi encontrado um fornecedor correspondente cadastrado com o mesmo CNPJ." & vbCrLf &
+                       "Deseja inserir um novo fornecedor?" & vbCrLf &
+                       FornecedorNFe.Cadastro,
+                       "Inserir Fornecedor",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question) = DialogResult.No Then
+            Return
+        End If
+        '
+        Try
+            '
+            '--- OPEN FRM FORNECEDOR
+            Dim newForn As clFornecedor = OpenFrmFornecedor(FornecedorNFe)
+        '
+        If IsNothing(newForn) Then Exit Sub
+        '
+        '--- FORNECEDOR DEFINIDO
+        FornecedorNFe.IDPessoa = newForn.IDPessoa
+        '
+        AbrirDialog("Fornecedor encontrado:" & vbCrLf & vbCrLf & newForn.Cadastro,
+                            "Fornecedor", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+        '
+        '--- TRY MAKE CORRELACAO AGAIN
+        btnCorrelacao_Click(sender, e)
+        '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Inserir novo fornecedor..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        '
+    End Sub
+    '
+    '--- VINCULAR A FORNECEDOR EXISTENTE
+    '----------------------------------------------------------------------------------------------
+    Private Sub btnVincularCNPJFornecedor_Click(sender As Object, e As EventArgs) Handles btnVincularCNPJFornecedor.Click
+        '
+        '--- ASK USER
+        If AbrirDialog("Deseja vincular o CNPJ da NFe com um Fornecedor existente?" & vbCrLf &
+                       "CNPJ: " & FornecedorNFe.CNPJ,
+                       "Vincular CNPJ Fornecedor",
+                       frmDialog.DialogType.SIM_NAO,
+                       frmDialog.DialogIcon.Question) = DialogResult.No Then
+            Return
+        End If
+        '
+        Try
+            '--- Ampulheta ON
+            Cursor = Cursors.WaitCursor
+            '
+            '--- GET FORNECEDOR
+            Dim forn As clFornecedor = Nothing
+            '
+            Using frmF As New frmFornecedorProcurar(True, Me)
+                '
+                frmF.ShowDialog()
+                If frmF.DialogResult <> DialogResult.OK Then Exit Sub
+                '
+                forn = frmF.propFornecedor_Escolha
+                '
+            End Using
+            '
+            '--- MAKE RELACAO
+            FornecedorNFe.IDPessoa = forn.IDPessoa
+            lblRazaoSocial.Text += " (" & forn.Cadastro & ")"
+            tspMenuFornecedor.Visible = False
+            lblCNPJ.Text += " >>> " & forn.CNPJ
+            '
+            '--- SAVE RELACAO ? ASK USER
+            If AbrirDialog("Item(s) relacionado(s) ao Produto com sucesso!" & vbCrLf & vbCrLf &
+                           "Você deseja GUARDAR/SALVAR essa relação do Fornecedor com o(s) Produto(s)?",
+                           "Item Relacionado",
+                           frmDialog.DialogType.SIM_NAO,
+                           frmDialog.DialogIcon.Question,
+                           frmDialog.DialogDefaultButton.First) = DialogResult.Yes Then
+                '
+                Dim db As New PessoaBLL
+                '
+                '--- Ampulheta ON
+                Cursor = Cursors.WaitCursor
+                '
+                db.CreateCNPJRelacionado(forn.IDPessoa, FornecedorNFe.CNPJ, FornecedorNFe.Cadastro, FornecedorNFe.InscricaoEstadual)
+                '
+            End If
+            '
+            '--- TRY MAKE CORRELACAO AGAIN
+            btnCorrelacao_Click(sender, e)
+            '
+        Catch ex As Exception
+            MessageBox.Show("Uma exceção ocorreu ao Vincular CNPJ..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            '--- Ampulheta OFF
+            Cursor = Cursors.Default
+        End Try
+        '
+    End Sub
+    '
+    '--- ONCLICK OPEN MENU
+    '----------------------------------------------------------------------------------
+    Private Sub btnMenu_Click(sender As Object, e As EventArgs) Handles btnMenuFornecedor.Click, btnMenuTransp.Click
+        DirectCast(sender, ToolStripSplitButton).ShowDropDown()
+    End Sub
+    '
+    '--- INSERT NEW TRANSPORTADORA
+    '----------------------------------------------------------------------------------------------
+    Private Sub btnInserirTransportadora_Click(sender As Object, e As EventArgs) Handles btnInserirTransportadora.Click
+        '
+        Try
+            '
+            '--- OPEN FRM TRANSPORTADORA
+            Dim newTransp As clTransportadora = OpenFrmTransportadora(TranspNFe)
+            '
+            If IsNothing(newTransp) Then Exit Sub
+            '
+            '--- TRANSPORTADORA DEFINIDO
+            TranspNFe.IDPessoa = newTransp.IDPessoa
+            '
+            AbrirDialog("Transportadora encontrada:" & vbCrLf & vbCrLf & newTransp.Cadastro,
+                        "Transportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+            '
+            '--- TRY MAKE CORRELACAO AGAIN
+            btnCorrelacao_Click(sender, e)
+            '
+        Catch ex As Exception
+            '
+            MessageBox.Show("Uma exceção ocorreu ao Inserir nova TRANSPORTADORA..." & vbNewLine &
+                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
+        '
+    End Sub
+    '
+    '--- VINCULAR A TRANSPORTADORA EXISTENTE
+    '----------------------------------------------------------------------------------------------
+    Private Sub btnVincularCNPJTransp_Click(sender As Object, e As EventArgs) Handles btnVincularCNPJTransp.Click
+        '
 
+        '
+    End Sub
+    '
+
+    Private Sub ResizeFontLabel(myLabel As Label)
+        '
+        Dim lblFont As Font = New Font(myLabel.Font.FontFamily, myLabel.Font.Size, myLabel.Font.Style)
+        '
+        While myLabel.Width < TextRenderer.MeasureText(myLabel.Text, lblFont).Width
+            myLabel.Font = New Font(myLabel.Font.FontFamily, myLabel.Font.Size - 0.5F, myLabel.Font.Style)
+            lblFont = New Font(myLabel.Font.FontFamily, myLabel.Font.Size, myLabel.Font.Style)
+        End While
+        '
+    End Sub
+    '
 End Class

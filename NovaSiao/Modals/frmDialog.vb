@@ -34,6 +34,14 @@
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        '
+        '--- DEFINE FONT SIZE OS MESSAGE
+        If mensagem.Length >= 180 AndAlso mensagem.Length < 240 Then
+            lblMensagem.Font = New Font("Calibri", 12.5!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
+        ElseIf mensagem.Length >= 240 Then
+            lblMensagem.Font = New Font("Calibri", 11.5!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
+        End If
+        '
         lblTitulo.Text = titulo
         lblMensagem.Text = mensagem
         '

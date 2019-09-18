@@ -2451,10 +2451,12 @@ Public Class PessoaBLL
     '
 #Region "CNPJ'S RELACIONADOS"
     '
-    Public Function ProcurarCNPJRelacionado(CNPJ As String) As clPessoaJuridica
+    Public Function ProcurarCNPJRelacionado(CNPJ As String, Optional dbTran As Object = Nothing) As clPessoaJuridica
         '
         Try
-            Dim db As New AcessoDados
+            '
+            Dim db As AcessoDados = If(dbTran, New AcessoDados)
+            '
             db.LimparParametros()
             db.AdicionarParametros("@CNPJ", CNPJ)
             '
@@ -2478,11 +2480,11 @@ Public Class PessoaBLL
             '
             query = "SELECT * FROM qryPessoaJuridica WHERE IDPessoa = @IDPessoa"
             '
-            dt = db.ExecutarManipulacao(CommandType.Text, query)
+            dt = db.ExecutarConsulta(CommandType.Text, query)
             '
             If dt.Rows.Count = 0 Then Return Nothing
             '
-            Return ConverteDtRow_Pessoa(dt.Rows(0)(0))
+            Return ConverteDtRow_Pessoa(dt.Rows(0))
             '
         Catch ex As Exception
             Throw ex
@@ -2498,6 +2500,37 @@ Public Class PessoaBLL
             db.AdicionarParametros("@CNPJ", CNPJ)
             '
             Dim query As String = "DELETE tblPessoaJuridicaRelacionada WHERE CNPJ = @CNPJ"
+            '
+            db.ExecutarManipulacao(CommandType.Text, query)
+            '
+        Catch ex As Exception
+            Throw ex
+        End Try
+        '
+    End Sub
+    '
+    Public Sub CreateCNPJRelacionado(IDPessoaOrigem As Integer,
+                                     CNPJ As String,
+                                     RazaoSocial As String,
+                                     Optional InscricaoSocial As String = "")
+        '
+        Try
+            Dim db As New AcessoDados
+            db.LimparParametros()
+            db.AdicionarParametros("@IDPessoaOrigem", IDPessoaOrigem)
+            db.AdicionarParametros("@CNPJ", CNPJ)
+            db.AdicionarParametros("@RazaoSocial", RazaoSocial)
+            '
+            If InscricaoSocial.Length > 0 Then
+                db.AdicionarParametros("@InscricaoSocial", InscricaoSocial)
+            Else
+                db.AdicionarParametros("@InscricaoSocial", DBNull.Value)
+            End If
+            '
+            Dim query As String = "INSERT INTO tblPessoaJuridicaRelacionada " &
+                                  "(CNPJ, IDPessoaOrigem, RazaoSocial, InscricaoEstadual, InsercaoData) " &
+                                  "VALUES " &
+                                  "(@CNPJ, @IDPessoaOrigem, @RazaoSocial, @InscricaoSocial, GETDATE())"
             '
             db.ExecutarManipulacao(CommandType.Text, query)
             '

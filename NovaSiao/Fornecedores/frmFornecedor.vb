@@ -82,7 +82,13 @@ Public Class frmFornecedor
             _forn = value
             BindForn.DataSource = _forn
             AddHandler DirectCast(BindForn.CurrencyManager.Current, clFornecedor).AoAlterar, AddressOf HandlerAoAlterar
-            If Not IsNothing(_forn.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
+            '
+            If Not IsNothing(_forn.IDPessoa) Then
+                Sit = EnumFlagEstado.RegistroSalvo
+            Else
+                Sit = EnumFlagEstado.NovoRegistro
+            End If
+            '
             AtivoButtonImage()
             '
             If Not IsNothing(_forn.IDPessoa) Then
@@ -359,7 +365,13 @@ Public Class frmFornecedor
         AutoValidate = AutoValidate.Disable
         '
         If Not IsNothing(_formOrigem) Then
-            DialogResult = DialogResult.Cancel
+            '
+            If Sit = EnumFlagEstado.RegistroSalvo Then
+                DialogResult = DialogResult.OK
+            Else
+                DialogResult = DialogResult.Cancel
+            End If
+            '
             _formOrigem.Visible = True
         Else
             Me.Close()
