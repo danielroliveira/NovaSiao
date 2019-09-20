@@ -26,14 +26,14 @@ Partial Class frmClienteSimples
 		Me.txtUF = New System.Windows.Forms.TextBox()
 		Me.txtEndereco = New System.Windows.Forms.TextBox()
 		Me.txtBairro = New System.Windows.Forms.TextBox()
-		Me.Label6 = New System.Windows.Forms.Label()
-		Me.Label5 = New System.Windows.Forms.Label()
+		Me.lbl2 = New System.Windows.Forms.Label()
+		Me.lbl1 = New System.Windows.Forms.Label()
 		Me.txtCEP = New System.Windows.Forms.MaskedTextBox()
 		Me.Label9 = New System.Windows.Forms.Label()
-		Me.Label15 = New System.Windows.Forms.Label()
+		Me.lbl5 = New System.Windows.Forms.Label()
 		Me.Label10 = New System.Windows.Forms.Label()
-		Me.Label8 = New System.Windows.Forms.Label()
-		Me.Label7 = New System.Windows.Forms.Label()
+		Me.lbl4 = New System.Windows.Forms.Label()
+		Me.lbl3 = New System.Windows.Forms.Label()
 		Me.txtClienteNome = New System.Windows.Forms.TextBox()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.tsMenu = New System.Windows.Forms.ToolStrip()
@@ -53,10 +53,12 @@ Partial Class frmClienteSimples
 		Me.chkTemWhatsapp = New System.Windows.Forms.CheckBox()
 		Me.picWathsapp = New System.Windows.Forms.PictureBox()
 		Me.chkEndereco = New System.Windows.Forms.CheckBox()
+		Me.pnlChk = New System.Windows.Forms.Panel()
 		Me.Panel1.SuspendLayout()
 		Me.tsMenu.SuspendLayout()
 		CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
 		CType(Me.picWathsapp, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.pnlChk.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'Panel1
@@ -91,7 +93,7 @@ Partial Class frmClienteSimples
 		Me.txtTelefoneA.Mask = "(99) 99000-0000"
 		Me.txtTelefoneA.Name = "txtTelefoneA"
 		Me.txtTelefoneA.Size = New System.Drawing.Size(144, 27)
-		Me.txtTelefoneA.TabIndex = 7
+		Me.txtTelefoneA.TabIndex = 8
 		'
 		'txtCidade
 		'
@@ -100,7 +102,7 @@ Partial Class frmClienteSimples
 		Me.txtCidade.MaxLength = 50
 		Me.txtCidade.Name = "txtCidade"
 		Me.txtCidade.Size = New System.Drawing.Size(190, 27)
-		Me.txtCidade.TabIndex = 16
+		Me.txtCidade.TabIndex = 17
 		'
 		'txtUF
 		'
@@ -110,7 +112,7 @@ Partial Class frmClienteSimples
 		Me.txtUF.MaxLength = 2
 		Me.txtUF.Name = "txtUF"
 		Me.txtUF.Size = New System.Drawing.Size(46, 27)
-		Me.txtUF.TabIndex = 18
+		Me.txtUF.TabIndex = 19
 		'
 		'txtEndereco
 		'
@@ -119,45 +121,47 @@ Partial Class frmClienteSimples
 		Me.txtEndereco.MaxLength = 50
 		Me.txtEndereco.Name = "txtEndereco"
 		Me.txtEndereco.Size = New System.Drawing.Size(357, 27)
-		Me.txtEndereco.TabIndex = 12
+		Me.txtEndereco.TabIndex = 13
 		'
 		'txtBairro
 		'
+		Me.txtBairro.BackColor = System.Drawing.Color.White
 		Me.txtBairro.Location = New System.Drawing.Point(166, 285)
 		Me.txtBairro.MaxLength = 30
 		Me.txtBairro.Name = "txtBairro"
 		Me.txtBairro.Size = New System.Drawing.Size(190, 27)
-		Me.txtBairro.TabIndex = 14
+		Me.txtBairro.TabIndex = 15
 		'
-		'Label6
+		'lbl2
 		'
-		Me.Label6.AutoSize = True
-		Me.Label6.BackColor = System.Drawing.Color.Transparent
-		Me.Label6.ForeColor = System.Drawing.Color.Black
-		Me.Label6.Location = New System.Drawing.Point(111, 289)
-		Me.Label6.Name = "Label6"
-		Me.Label6.Size = New System.Drawing.Size(48, 19)
-		Me.Label6.TabIndex = 13
-		Me.Label6.Text = "Bairro"
+		Me.lbl2.AutoSize = True
+		Me.lbl2.BackColor = System.Drawing.Color.Transparent
+		Me.lbl2.ForeColor = System.Drawing.Color.Black
+		Me.lbl2.Location = New System.Drawing.Point(111, 289)
+		Me.lbl2.Name = "lbl2"
+		Me.lbl2.Size = New System.Drawing.Size(48, 19)
+		Me.lbl2.TabIndex = 14
+		Me.lbl2.Text = "Bairro"
 		'
-		'Label5
+		'lbl1
 		'
-		Me.Label5.AutoSize = True
-		Me.Label5.BackColor = System.Drawing.Color.Transparent
-		Me.Label5.ForeColor = System.Drawing.Color.Black
-		Me.Label5.Location = New System.Drawing.Point(90, 256)
-		Me.Label5.Name = "Label5"
-		Me.Label5.Size = New System.Drawing.Size(69, 19)
-		Me.Label5.TabIndex = 11
-		Me.Label5.Text = "Endereço"
+		Me.lbl1.AutoSize = True
+		Me.lbl1.BackColor = System.Drawing.Color.Transparent
+		Me.lbl1.ForeColor = System.Drawing.Color.Black
+		Me.lbl1.Location = New System.Drawing.Point(90, 256)
+		Me.lbl1.Name = "lbl1"
+		Me.lbl1.Size = New System.Drawing.Size(69, 19)
+		Me.lbl1.TabIndex = 12
+		Me.lbl1.Text = "Endereço"
 		'
 		'txtCEP
 		'
+		Me.txtCEP.BackColor = System.Drawing.Color.White
 		Me.txtCEP.Location = New System.Drawing.Point(262, 351)
 		Me.txtCEP.Mask = "00000-000"
 		Me.txtCEP.Name = "txtCEP"
 		Me.txtCEP.Size = New System.Drawing.Size(94, 27)
-		Me.txtCEP.TabIndex = 20
+		Me.txtCEP.TabIndex = 21
 		Me.txtCEP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
 		'
 		'Label9
@@ -168,19 +172,19 @@ Partial Class frmClienteSimples
 		Me.Label9.Location = New System.Drawing.Point(94, 157)
 		Me.Label9.Name = "Label9"
 		Me.Label9.Size = New System.Drawing.Size(65, 19)
-		Me.Label9.TabIndex = 6
+		Me.Label9.TabIndex = 7
 		Me.Label9.Text = "Telefone"
 		'
-		'Label15
+		'lbl5
 		'
-		Me.Label15.AutoSize = True
-		Me.Label15.BackColor = System.Drawing.Color.Transparent
-		Me.Label15.ForeColor = System.Drawing.Color.Black
-		Me.Label15.Location = New System.Drawing.Point(226, 355)
-		Me.Label15.Name = "Label15"
-		Me.Label15.Size = New System.Drawing.Size(34, 19)
-		Me.Label15.TabIndex = 19
-		Me.Label15.Text = "CEP"
+		Me.lbl5.AutoSize = True
+		Me.lbl5.BackColor = System.Drawing.Color.Transparent
+		Me.lbl5.ForeColor = System.Drawing.Color.Black
+		Me.lbl5.Location = New System.Drawing.Point(226, 355)
+		Me.lbl5.Name = "lbl5"
+		Me.lbl5.Size = New System.Drawing.Size(34, 19)
+		Me.lbl5.TabIndex = 20
+		Me.lbl5.Text = "CEP"
 		'
 		'Label10
 		'
@@ -193,27 +197,27 @@ Partial Class frmClienteSimples
 		Me.Label10.TabIndex = 3
 		Me.Label10.Text = "Celular"
 		'
-		'Label8
+		'lbl4
 		'
-		Me.Label8.AutoSize = True
-		Me.Label8.BackColor = System.Drawing.Color.Transparent
-		Me.Label8.ForeColor = System.Drawing.Color.Black
-		Me.Label8.Location = New System.Drawing.Point(133, 355)
-		Me.Label8.Name = "Label8"
-		Me.Label8.Size = New System.Drawing.Size(26, 19)
-		Me.Label8.TabIndex = 17
-		Me.Label8.Text = "UF"
+		Me.lbl4.AutoSize = True
+		Me.lbl4.BackColor = System.Drawing.Color.Transparent
+		Me.lbl4.ForeColor = System.Drawing.Color.Black
+		Me.lbl4.Location = New System.Drawing.Point(133, 355)
+		Me.lbl4.Name = "lbl4"
+		Me.lbl4.Size = New System.Drawing.Size(26, 19)
+		Me.lbl4.TabIndex = 18
+		Me.lbl4.Text = "UF"
 		'
-		'Label7
+		'lbl3
 		'
-		Me.Label7.AutoSize = True
-		Me.Label7.BackColor = System.Drawing.Color.Transparent
-		Me.Label7.ForeColor = System.Drawing.Color.Black
-		Me.Label7.Location = New System.Drawing.Point(105, 321)
-		Me.Label7.Name = "Label7"
-		Me.Label7.Size = New System.Drawing.Size(54, 19)
-		Me.Label7.TabIndex = 15
-		Me.Label7.Text = "Cidade"
+		Me.lbl3.AutoSize = True
+		Me.lbl3.BackColor = System.Drawing.Color.Transparent
+		Me.lbl3.ForeColor = System.Drawing.Color.Black
+		Me.lbl3.Location = New System.Drawing.Point(105, 321)
+		Me.lbl3.Name = "lbl3"
+		Me.lbl3.Size = New System.Drawing.Size(54, 19)
+		Me.lbl3.TabIndex = 16
+		Me.lbl3.Text = "Cidade"
 		'
 		'txtClienteNome
 		'
@@ -248,7 +252,7 @@ Partial Class frmClienteSimples
 		Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
 		Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
 		Me.tsMenu.Size = New System.Drawing.Size(597, 48)
-		Me.tsMenu.TabIndex = 21
+		Me.tsMenu.TabIndex = 0
 		Me.tsMenu.TabStop = True
 		Me.tsMenu.Text = "Menu Cliente PF"
 		'
@@ -362,7 +366,7 @@ Partial Class frmClienteSimples
 		Me.txtClienteEmail.MaxLength = 100
 		Me.txtClienteEmail.Name = "txtClienteEmail"
 		Me.txtClienteEmail.Size = New System.Drawing.Size(357, 27)
-		Me.txtClienteEmail.TabIndex = 9
+		Me.txtClienteEmail.TabIndex = 10
 		'
 		'Label13
 		'
@@ -372,22 +376,22 @@ Partial Class frmClienteSimples
 		Me.Label13.Location = New System.Drawing.Point(108, 189)
 		Me.Label13.Name = "Label13"
 		Me.Label13.Size = New System.Drawing.Size(51, 19)
-		Me.Label13.TabIndex = 8
+		Me.Label13.TabIndex = 9
 		Me.Label13.Text = "e-Mail"
 		'
 		'chkTemWhatsapp
 		'
 		Me.chkTemWhatsapp.AutoSize = True
-		Me.chkTemWhatsapp.Location = New System.Drawing.Point(346, 125)
+		Me.chkTemWhatsapp.Location = New System.Drawing.Point(33, 9)
 		Me.chkTemWhatsapp.Name = "chkTemWhatsapp"
 		Me.chkTemWhatsapp.Size = New System.Drawing.Size(15, 14)
-		Me.chkTemWhatsapp.TabIndex = 5
+		Me.chkTemWhatsapp.TabIndex = 0
 		Me.chkTemWhatsapp.UseVisualStyleBackColor = True
 		'
 		'picWathsapp
 		'
 		Me.picWathsapp.Image = Global.NovaSiao.My.Resources.Resources.whatsapp_32
-		Me.picWathsapp.Location = New System.Drawing.Point(316, 120)
+		Me.picWathsapp.Location = New System.Drawing.Point(3, 3)
 		Me.picWathsapp.Name = "picWathsapp"
 		Me.picWathsapp.Size = New System.Drawing.Size(25, 25)
 		Me.picWathsapp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
@@ -400,17 +404,28 @@ Partial Class frmClienteSimples
 		Me.chkEndereco.Location = New System.Drawing.Point(166, 223)
 		Me.chkEndereco.Name = "chkEndereco"
 		Me.chkEndereco.Size = New System.Drawing.Size(170, 23)
-		Me.chkEndereco.TabIndex = 10
+		Me.chkEndereco.TabIndex = 11
 		Me.chkEndereco.Text = "Registrar o Endereço?"
 		Me.chkEndereco.UseVisualStyleBackColor = True
+		'
+		'pnlChk
+		'
+		Me.pnlChk.BackColor = System.Drawing.Color.Transparent
+		Me.pnlChk.CausesValidation = False
+		Me.pnlChk.Controls.Add(Me.picWathsapp)
+		Me.pnlChk.Controls.Add(Me.chkTemWhatsapp)
+		Me.pnlChk.Location = New System.Drawing.Point(316, 119)
+		Me.pnlChk.Name = "pnlChk"
+		Me.pnlChk.Size = New System.Drawing.Size(55, 32)
+		Me.pnlChk.TabIndex = 6
+		Me.pnlChk.TabStop = True
 		'
 		'frmClienteSimples
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
 		Me.ClientSize = New System.Drawing.Size(597, 463)
+		Me.Controls.Add(Me.pnlChk)
 		Me.Controls.Add(Me.chkEndereco)
-		Me.Controls.Add(Me.chkTemWhatsapp)
-		Me.Controls.Add(Me.picWathsapp)
 		Me.Controls.Add(Me.tsMenu)
 		Me.Controls.Add(Me.txtTelefoneB)
 		Me.Controls.Add(Me.txtTelefoneA)
@@ -419,29 +434,30 @@ Partial Class frmClienteSimples
 		Me.Controls.Add(Me.txtEndereco)
 		Me.Controls.Add(Me.Label13)
 		Me.Controls.Add(Me.txtBairro)
-		Me.Controls.Add(Me.Label6)
+		Me.Controls.Add(Me.lbl2)
 		Me.Controls.Add(Me.txtClienteEmail)
-		Me.Controls.Add(Me.Label5)
+		Me.Controls.Add(Me.lbl1)
 		Me.Controls.Add(Me.txtCEP)
 		Me.Controls.Add(Me.Label9)
-		Me.Controls.Add(Me.Label15)
+		Me.Controls.Add(Me.lbl5)
 		Me.Controls.Add(Me.Label10)
-		Me.Controls.Add(Me.Label8)
-		Me.Controls.Add(Me.Label7)
+		Me.Controls.Add(Me.lbl4)
+		Me.Controls.Add(Me.lbl3)
 		Me.Controls.Add(Me.txtClienteNome)
 		Me.Controls.Add(Me.Label2)
+		Me.KeyPreview = True
 		Me.Name = "frmClienteSimples"
 		Me.Controls.SetChildIndex(Me.Label2, 0)
 		Me.Controls.SetChildIndex(Me.txtClienteNome, 0)
-		Me.Controls.SetChildIndex(Me.Label7, 0)
-		Me.Controls.SetChildIndex(Me.Label8, 0)
+		Me.Controls.SetChildIndex(Me.lbl3, 0)
+		Me.Controls.SetChildIndex(Me.lbl4, 0)
 		Me.Controls.SetChildIndex(Me.Label10, 0)
-		Me.Controls.SetChildIndex(Me.Label15, 0)
+		Me.Controls.SetChildIndex(Me.lbl5, 0)
 		Me.Controls.SetChildIndex(Me.Label9, 0)
 		Me.Controls.SetChildIndex(Me.txtCEP, 0)
-		Me.Controls.SetChildIndex(Me.Label5, 0)
+		Me.Controls.SetChildIndex(Me.lbl1, 0)
 		Me.Controls.SetChildIndex(Me.txtClienteEmail, 0)
-		Me.Controls.SetChildIndex(Me.Label6, 0)
+		Me.Controls.SetChildIndex(Me.lbl2, 0)
 		Me.Controls.SetChildIndex(Me.txtBairro, 0)
 		Me.Controls.SetChildIndex(Me.Label13, 0)
 		Me.Controls.SetChildIndex(Me.txtEndereco, 0)
@@ -451,15 +467,16 @@ Partial Class frmClienteSimples
 		Me.Controls.SetChildIndex(Me.txtTelefoneB, 0)
 		Me.Controls.SetChildIndex(Me.Panel1, 0)
 		Me.Controls.SetChildIndex(Me.tsMenu, 0)
-		Me.Controls.SetChildIndex(Me.picWathsapp, 0)
-		Me.Controls.SetChildIndex(Me.chkTemWhatsapp, 0)
 		Me.Controls.SetChildIndex(Me.chkEndereco, 0)
+		Me.Controls.SetChildIndex(Me.pnlChk, 0)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
 		Me.tsMenu.ResumeLayout(False)
 		Me.tsMenu.PerformLayout()
 		CType(Me.EProvider, System.ComponentModel.ISupportInitialize).EndInit()
 		CType(Me.picWathsapp, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.pnlChk.ResumeLayout(False)
+		Me.pnlChk.PerformLayout()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
@@ -470,14 +487,14 @@ Partial Class frmClienteSimples
 	Friend WithEvents txtUF As TextBox
 	Friend WithEvents txtEndereco As TextBox
 	Friend WithEvents txtBairro As TextBox
-	Friend WithEvents Label6 As Label
-	Friend WithEvents Label5 As Label
+	Friend WithEvents lbl2 As Label
+	Friend WithEvents lbl1 As Label
 	Friend WithEvents txtCEP As MaskedTextBox
 	Friend WithEvents Label9 As Label
-	Friend WithEvents Label15 As Label
+	Friend WithEvents lbl5 As Label
 	Friend WithEvents Label10 As Label
-	Friend WithEvents Label8 As Label
-	Friend WithEvents Label7 As Label
+	Friend WithEvents lbl4 As Label
+	Friend WithEvents lbl3 As Label
 	Friend WithEvents txtClienteNome As TextBox
 	Friend WithEvents Label2 As Label
 	Friend WithEvents tsMenu As ToolStrip
@@ -497,4 +514,5 @@ Partial Class frmClienteSimples
 	Friend WithEvents chkTemWhatsapp As CheckBox
 	Friend WithEvents picWathsapp As PictureBox
 	Friend WithEvents chkEndereco As CheckBox
+	Friend WithEvents pnlChk As Panel
 End Class

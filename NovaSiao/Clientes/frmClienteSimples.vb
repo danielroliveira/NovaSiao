@@ -9,6 +9,7 @@ Public Class frmClienteSimples
 	Private BindCliente As New BindingSource
 	Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
 	Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
+	Private _RegistrarEndereco As Boolean = True
 	'
 #Region "LOAD E PROPERTIES"
 	'
@@ -22,12 +23,16 @@ Public Class frmClienteSimples
 		propCliente = ClienteSimples
 		PreencheDataBindings()
 		'
-		If Not IsNothing(_cliente.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
+		If Not IsNothing(_cliente.IDClienteSimples) Then Sit = EnumFlagEstado.RegistroSalvo
 		'
 	End Sub
 	'
 	Private Sub frmClienteSimples_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
+	End Sub
+	'
+	Private Sub frmClienteSimples_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+		txtClienteNome.Focus()
 	End Sub
 	'
 	'--- DEFINE SITUACAO PROPERTY
@@ -72,7 +77,7 @@ Public Class frmClienteSimples
 		'
 	End Property
 	'
-	'--- DEFINE O FORNECEDOR PROPERTY
+	'--- DEFINE O CLIENTE PROPERTY
 	'----------------------------------------------------------------------------------
 	Public Property propCliente() As clClienteSimples
 		'
@@ -81,21 +86,58 @@ Public Class frmClienteSimples
 		End Get
 		'
 		Set(ByVal value As clClienteSimples)
+			'
 			_cliente = value
 			BindCliente.DataSource = _cliente
 			AddHandler DirectCast(BindCliente.CurrencyManager.Current, clClienteSimples).AoAlterar, AddressOf HandlerAoAlterar
 			'
-			If Not IsNothing(_cliente.IDPessoa) Then
+			If Not IsNothing(_cliente.IDClienteSimples) Then
 				Sit = EnumFlagEstado.RegistroSalvo
 			Else
 				Sit = EnumFlagEstado.NovoRegistro
+				_cliente.IDFilial = Obter_FilialPadrao()
 			End If
 			'
 			AtivoButtonImage()
 			'
-			If Not IsNothing(_cliente.IDPessoa) Then
-				lblID.Text = Format(_cliente.IDPessoa, "0000")
+			If Not IsNothing(_cliente.IDClienteSimples) Then
+				lblID.Text = Format(_cliente.IDClienteSimples, "0000")
 			End If
+			'
+			PropRegistrarEndereco = _cliente.Endereco IsNot Nothing AndAlso _cliente.Endereco.Length > 0
+			chkEndereco.Checked = _cliente.Endereco IsNot Nothing AndAlso _cliente.Endereco.Length > 0
+			'
+		End Set
+		'
+	End Property
+	'
+	'--- PROPERTY REGISTRAR ENDERECO
+	'----------------------------------------------------------------------------------
+	Private Property PropRegistrarEndereco As Boolean
+		'
+		Get
+			Return _RegistrarEndereco
+		End Get
+		'
+		Set(value As Boolean)
+			'
+			If value <> _RegistrarEndereco Then
+				'
+				txtEndereco.Enabled = value
+				txtBairro.Enabled = value
+				txtCidade.Enabled = value
+				txtCEP.Enabled = value
+				txtUF.Enabled = value
+				'
+				lbl1.ForeColor = IIf(value, Color.Black, Color.Gainsboro)
+				lbl2.ForeColor = IIf(value, Color.Black, Color.Gainsboro)
+				lbl3.ForeColor = IIf(value, Color.Black, Color.Gainsboro)
+				lbl4.ForeColor = IIf(value, Color.Black, Color.Gainsboro)
+				lbl5.ForeColor = IIf(value, Color.Black, Color.Gainsboro)
+				'
+			End If
+			'
+			_RegistrarEndereco = value
 			'
 		End Set
 		'
@@ -130,7 +172,7 @@ Public Class frmClienteSimples
 	Private Sub handler_CurrentChanged()
 		'
 		'--- Nesse caso é um novo registro
-		If IsNothing(DirectCast(BindCliente.Current, clClienteSimples).IDPessoa) Then
+		If IsNothing(DirectCast(BindCliente.Current, clClienteSimples).IDClienteSimples) Then
 			Exit Sub
 		Else
 			' LER O ID
@@ -319,7 +361,7 @@ Public Class frmClienteSimples
 			ElseIf Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
 				'
 				If pBLL.ClienteSimples_Alterar(_cliente) Then
-					NewID = _cliente.IDPessoa
+					NewID = _cliente.IDClienteSimples
 				End If
 				'
 			End If
@@ -340,7 +382,7 @@ Public Class frmClienteSimples
 			'
 			'--- Retorna o número de Registro do Novo Cliente Cadastrado
 			If Sit = EnumFlagEstado.NovoRegistro Then
-				_cliente.IDPessoa = NewID
+				_cliente.IDClienteSimples = NewID
 				lblID.DataBindings("Tag").ReadValue()
 			End If
 
@@ -376,7 +418,18 @@ Public Class frmClienteSimples
 		'
 		Dim f As New Utilidades
 		'
-		If Not f.VerificaControlesForm(txtClienteNome, "ClienteNome", EProvider) Then Return False
+		If Not f.VerificaControlesForm(txtClienteNome, "Nome do Cliente", EProvider) Then Return False
+		'
+		If txtClienteNome.Text.Length < 5 Then
+			AbrirDialog("O Nome do cliente deve ter pelo menos 6 caracteres...",
+						"Nome do Cliente", frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			txtClienteNome.Focus()
+			Return False
+		Else
+			_cliente.ChaveExclusiva = f.removeAcentos(txtClienteNome.Text.ToUpper.Replace(" ", ""))
+			MsgBox(_cliente.ChaveExclusiva)
+		End If
 		'
 		If chkEndereco.Checked Then
 			'
@@ -400,7 +453,7 @@ Public Class frmClienteSimples
 			AbrirDialog("Deve haver pelo menos um telefone cadastrado nos dados do Cliente...",
 						"Telefone de Contato", frmDialog.DialogType.OK,
 						frmDialog.DialogIcon.Exclamation)
-			txtTelefoneA.Focus()
+			txtTelefoneB.Focus()
 			Return False
 		End If
 		'
@@ -414,15 +467,29 @@ Public Class frmClienteSimples
 #Region "NAVEGACAO NO FORM"
 	'
 	Private Sub AddHandlerControles()
+		'
 		For Each c As Control In Me.Controls
+			'
+			If c.HasChildren Then
+				For Each cp As Control In c.Controls
+					If TypeOf cp Is CheckBox Then
+						AddHandler cp.KeyDown, AddressOf EnterForTab
+					End If
+				Next
+			End If
+			'
 			If c.GetType = GetType(TextBox) Then
 				AddHandler DirectCast(c, TextBox).GotFocus, AddressOf SelTodoTexto
 				AddHandler DirectCast(c, TextBox).KeyDown, AddressOf EnterForTab
 			ElseIf c.GetType = GetType(MaskedTextBox) Then
 				AddHandler DirectCast(c, MaskedTextBox).GotFocus, AddressOf SelTodoTexto
 				AddHandler DirectCast(c, MaskedTextBox).KeyDown, AddressOf EnterForTab
+			ElseIf c.GetType = GetType(CheckBox) Then
+				AddHandler DirectCast(c, CheckBox).KeyDown, AddressOf EnterForTab
 			End If
+			'
 		Next
+		'
 	End Sub
 	'
 	' HANDLER SELECIONAR TODO O TEXTO
@@ -443,6 +510,44 @@ Public Class frmClienteSimples
 		End If
 	End Sub
 	'
+	'--- QUANDO CHKBOX RECEBE O FOCO REALÇA A COR DA IMAGEM
+	Private Sub chkTemWathsapp_ControleFocus(sender As Object, e As EventArgs) Handles chkTemWhatsapp.GotFocus, chkTemWhatsapp.LostFocus
+		'
+		If chkTemWhatsapp.Focused Then
+			pnlChk.BackColor = Color.Gainsboro
+		Else
+			pnlChk.BackColor = Color.Transparent
+		End If
+		'
+	End Sub
+	'
+	Private Sub picWathsapp_Click(sender As Object, e As EventArgs) Handles picWathsapp.Click
+		chkTemWhatsapp.Focus()
+	End Sub
+
+	Private Sub chkEndereco_CheckedChanged(sender As Object, e As EventArgs) Handles chkEndereco.CheckedChanged
+		'
+		PropRegistrarEndereco = chkEndereco.Checked
+		If chkEndereco.Checked Then
+			txtEndereco.Focus()
+		End If
+		'
+	End Sub
+	'
 #End Region
 	'
+
+
+	'
+	'--- TRANSFORM 'NOME' IN UPPER CASE
+	'----------------------------------------------------------------------------------
+	Private Sub txtClienteNome_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles txtClienteNome.Validating
+		'
+		If txtClienteNome.Text.Length > 0 Then
+			txtClienteNome.Text = Utilidades.PrimeiraLetraMaiuscula(txtClienteNome.Text)
+		End If
+		'
+	End Sub
+
+
 End Class

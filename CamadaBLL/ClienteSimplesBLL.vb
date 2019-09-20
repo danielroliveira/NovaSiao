@@ -109,8 +109,8 @@ Public Class ClienteSimplesBLL
 		'
 		Dim query As String =
 			"INSERT INTO tblClienteSimples " &
-			"(ClienteNome, TelefoneA, TelefoneB, TemWathsapp, ClienteEmail, ChaveExclusiva, InsercaoData, Ativo, IDFilial) " &
-			"VALUES (@ClienteNome, @TelefoneA, @TelefoneB, @TemWathsapp, @ClienteEmail, @ChaveExclusiva, @InsercaoData, @Ativo, @IDFilial)"
+			"(ClienteNome, TelefoneA, TelefoneB, TemWhatsapp, ClienteEmail, ChaveExclusiva, InsercaoData, Ativo, IDFilial) " &
+			"VALUES (@ClienteNome, @TelefoneA, @TelefoneB, @TemWhatsapp, @ClienteEmail, @ChaveExclusiva, @InsercaoData, @Ativo, @IDFilial)"
 		'
 		Try
 			'
@@ -121,7 +121,7 @@ Public Class ClienteSimplesBLL
 			End If
 			'
 			'--- INSERT ENDERECO IF NECESSARY
-			If ClienteSimples.Endereco.Trim.Length > 0 Then
+			If ClienteSimples.Endereco IsNot Nothing AndAlso ClienteSimples.Endereco.Trim.Length > 0 Then
 				'
 				db.LimparParametros()
 				db.AdicionarParametros("@IDClienteSimples", obj)
@@ -240,18 +240,18 @@ Public Class ClienteSimplesBLL
 		Dim cliente As New clClienteSimples With {
 			.IDClienteSimples = IIf(IsDBNull(r("IDClienteSimples")), Nothing, r("IDClienteSimples")),
 			.IDFilial = IIf(IsDBNull(r("IDFilial")), Nothing, r("IDFilial")),
+			.ChaveExclusiva = IIf(IsDBNull(r("ChaveExclusiva")), String.Empty, r("ChaveExclusiva")),
 			.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial")),
 			.ClienteNome = IIf(IsDBNull(r("ClienteNome")), String.Empty, r("ClienteNome")),
 			.TelefoneA = IIf(IsDBNull(r("TelefoneA")), String.Empty, r("TelefoneA")),
 			.TelefoneB = IIf(IsDBNull(r("TelefoneB")), String.Empty, r("TelefoneB")),
 			.TemWhatsapp = IIf(IsDBNull(r("TemWhatsapp")), Nothing, r("TemWhatsapp")),
 			.ClienteEmail = IIf(IsDBNull(r("ClienteEmail")), String.Empty, r("ClienteEmail")),
-			.Endereco = IIf(IsDBNull(r("Endereco")), String.Empty, r("Endereco")),
-			.Bairro = IIf(IsDBNull(r("Bairro")), String.Empty, r("Bairro")),
-			.Cidade = IIf(IsDBNull(r("Cidade")), String.Empty, r("Cidade")),
-			.ChaveExclusiva = IIf(IsDBNull(r("ChaveExclusiva")), String.Empty, r("ChaveExclusiva")),
-			.UF = IIf(IsDBNull(r("UF")), String.Empty, r("UF")),
-			.CEP = IIf(IsDBNull(r("CEP")), String.Empty, r("CEP")),
+			.Endereco = IIf(IsDBNull(r("Endereco")), Nothing, r("Endereco")),
+			.Bairro = IIf(IsDBNull(r("Bairro")), Nothing, r("Bairro")),
+			.Cidade = IIf(IsDBNull(r("Cidade")), Nothing, r("Cidade")),
+			.UF = IIf(IsDBNull(r("UF")), Nothing, r("UF")),
+			.CEP = IIf(IsDBNull(r("CEP")), Nothing, r("CEP")),
 			.Ativo = IIf(IsDBNull(r("Ativo")), Nothing, r("Ativo")),
 			.IDPessoa = IIf(IsDBNull(r("IDPessoa")), Nothing, r("IDPessoa")),
 			.InsercaoData = IIf(IsDBNull(r("InsercaoData")), Nothing, r("InsercaoData"))

@@ -40,26 +40,28 @@ Public Module GlobalPrincipal
         PRECO_VENDA = 1
         PRECO_COMPRA = 2
     End Enum
-    '
+	'
 #End Region '/ PUBLIC VAR
-    '
+	'
 #Region "PUBLIC FUNCTIONS"
-    '
-    ' OCULTAR E REVELAR O MENU PRINCIPAL
-    Public Sub OcultaMenuPrincipal()
-        frmPrincipal.SContainerPrincipal.Visible = False
-        frmPrincipal.Panel1.BackColor = Color.Gainsboro
-    End Sub
-    '
-    '--- REVELA MENU PRINCIPAL
-    Public Sub MostraMenuPrincipal()
-        frmPrincipal.SContainerPrincipal.Visible = True
-        frmPrincipal.Panel1.BackColor = Color.SlateGray
-    End Sub
-    '
-    '--- VERIFICA SE A DATA ESTA BLOQUEADA PELO SISTEMA
-    '--- PARECE COM mBLL.Conta_GetDataBloqueio (retorna a data de bloqueio)
-    Public Function DataBloqueada(myData As Date,
+	'
+	' OCULTAR E REVELAR O MENU PRINCIPAL
+	Public Sub OcultaMenuPrincipal()
+		frmPrincipal.tsPrincipal.Visible = False
+		frmPrincipal.SContainerPrincipal.Visible = False
+		frmPrincipal.Panel1.BackColor = Color.Gainsboro
+	End Sub
+	'
+	'--- REVELA MENU PRINCIPAL
+	Public Sub MostraMenuPrincipal()
+		frmPrincipal.tsPrincipal.Visible = True
+		frmPrincipal.SContainerPrincipal.Visible = True
+		frmPrincipal.Panel1.BackColor = Color.SlateGray
+	End Sub
+	'
+	'--- VERIFICA SE A DATA ESTA BLOQUEADA PELO SISTEMA
+	'--- PARECE COM mBLL.Conta_GetDataBloqueio (retorna a data de bloqueio)
+	Public Function DataBloqueada(myData As Date,
                                   IDConta As Byte,
                                   Optional ContaDescricao As String = "",
                                   Optional FilialDescricao As String = "",

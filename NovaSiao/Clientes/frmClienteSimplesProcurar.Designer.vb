@@ -19,42 +19,40 @@ Partial Class frmClienteSimplesProcurar
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-		Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Me.cmbAtivo = New Controles.ComboBox_OnlyValues()
 		Me.txtProcura = New System.Windows.Forms.TextBox()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.btnAdicionar = New System.Windows.Forms.Button()
 		Me.btnEditar = New System.Windows.Forms.Button()
-		Me.btnFechar = New System.Windows.Forms.Button()
-		Me.lblApelidoFilial = New System.Windows.Forms.Label()
-		Me.btnAlterarFilial = New System.Windows.Forms.Button()
 		Me.dgvLista = New System.Windows.Forms.DataGridView()
 		Me.clnID = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.clnNome = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.lblProc = New System.Windows.Forms.Label()
+		Me.btnProcurar = New System.Windows.Forms.Button()
+		Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
 		Me.Panel1.SuspendLayout()
 		CType(Me.dgvLista, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SuspendLayout()
 		'
 		'Panel1
 		'
-		Me.Panel1.Controls.Add(Me.btnAlterarFilial)
-		Me.Panel1.Controls.Add(Me.lblApelidoFilial)
+		Me.Panel1.Controls.Add(Me.btnClose)
 		Me.Panel1.Size = New System.Drawing.Size(427, 50)
 		Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
-		Me.Panel1.Controls.SetChildIndex(Me.lblApelidoFilial, 0)
-		Me.Panel1.Controls.SetChildIndex(Me.btnAlterarFilial, 0)
+		Me.Panel1.Controls.SetChildIndex(Me.btnClose, 0)
 		'
 		'lblTitulo
 		'
-		Me.lblTitulo.Location = New System.Drawing.Point(195, 0)
+		Me.lblTitulo.Location = New System.Drawing.Point(135, 0)
 		Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
-		Me.lblTitulo.Size = New System.Drawing.Size(232, 50)
-		Me.lblTitulo.Text = "Cliente Simples"
+		Me.lblTitulo.Size = New System.Drawing.Size(292, 50)
+		Me.lblTitulo.Text = "Cliente Simples Procurar"
+		Me.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
 		'
 		'cmbAtivo
 		'
@@ -97,9 +95,9 @@ Partial Class frmClienteSimplesProcurar
 		'
 		Me.btnAdicionar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.btnAdicionar.Image = Global.NovaSiao.My.Resources.Resources.add
-		Me.btnAdicionar.Location = New System.Drawing.Point(149, 437)
+		Me.btnAdicionar.Location = New System.Drawing.Point(286, 437)
 		Me.btnAdicionar.Name = "btnAdicionar"
-		Me.btnAdicionar.Size = New System.Drawing.Size(126, 42)
+		Me.btnAdicionar.Size = New System.Drawing.Size(120, 42)
 		Me.btnAdicionar.TabIndex = 22
 		Me.btnAdicionar.Text = "&Adicionar"
 		Me.btnAdicionar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -110,58 +108,14 @@ Partial Class frmClienteSimplesProcurar
 		'
 		Me.btnEditar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.btnEditar.Image = Global.NovaSiao.My.Resources.Resources.editar
-		Me.btnEditar.Location = New System.Drawing.Point(17, 437)
+		Me.btnEditar.Location = New System.Drawing.Point(153, 437)
 		Me.btnEditar.Name = "btnEditar"
-		Me.btnEditar.Size = New System.Drawing.Size(126, 42)
+		Me.btnEditar.Size = New System.Drawing.Size(120, 42)
 		Me.btnEditar.TabIndex = 21
 		Me.btnEditar.Text = "&Editar"
 		Me.btnEditar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		Me.btnEditar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
 		Me.btnEditar.UseVisualStyleBackColor = True
-		'
-		'btnFechar
-		'
-		Me.btnFechar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-		Me.btnFechar.Image = Global.NovaSiao.My.Resources.Resources.delete
-		Me.btnFechar.Location = New System.Drawing.Point(281, 437)
-		Me.btnFechar.Name = "btnFechar"
-		Me.btnFechar.Size = New System.Drawing.Size(126, 42)
-		Me.btnFechar.TabIndex = 23
-		Me.btnFechar.Text = "&Fechar"
-		Me.btnFechar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-		Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-		Me.btnFechar.UseVisualStyleBackColor = True
-		'
-		'lblApelidoFilial
-		'
-		Me.lblApelidoFilial.AutoSize = True
-		Me.lblApelidoFilial.BackColor = System.Drawing.Color.Transparent
-		Me.lblApelidoFilial.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.lblApelidoFilial.ForeColor = System.Drawing.Color.White
-		Me.lblApelidoFilial.Location = New System.Drawing.Point(12, 13)
-		Me.lblApelidoFilial.Name = "lblApelidoFilial"
-		Me.lblApelidoFilial.Size = New System.Drawing.Size(114, 23)
-		Me.lblApelidoFilial.TabIndex = 4
-		Me.lblApelidoFilial.Text = "Apelido Filial"
-		Me.lblApelidoFilial.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-		'
-		'btnAlterarFilial
-		'
-		Me.btnAlterarFilial.BackColor = System.Drawing.Color.Transparent
-		Me.btnAlterarFilial.BackgroundImage = Global.NovaSiao.My.Resources.Resources.refresh
-		Me.btnAlterarFilial.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-		Me.btnAlterarFilial.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveCaption
-		Me.btnAlterarFilial.FlatAppearance.BorderSize = 0
-		Me.btnAlterarFilial.FlatAppearance.MouseDownBackColor = System.Drawing.Color.MistyRose
-		Me.btnAlterarFilial.FlatAppearance.MouseOverBackColor = System.Drawing.Color.WhiteSmoke
-		Me.btnAlterarFilial.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-		Me.btnAlterarFilial.Font = New System.Drawing.Font("Calibri", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.btnAlterarFilial.Location = New System.Drawing.Point(132, 11)
-		Me.btnAlterarFilial.Name = "btnAlterarFilial"
-		Me.btnAlterarFilial.Size = New System.Drawing.Size(28, 28)
-		Me.btnAlterarFilial.TabIndex = 25
-		Me.btnAlterarFilial.TabStop = False
-		Me.btnAlterarFilial.UseVisualStyleBackColor = False
 		'
 		'dgvLista
 		'
@@ -169,21 +123,21 @@ Partial Class frmClienteSimplesProcurar
 		Me.dgvLista.AllowUserToDeleteRows = False
 		Me.dgvLista.AllowUserToResizeColumns = False
 		Me.dgvLista.AllowUserToResizeRows = False
-		DataGridViewCellStyle5.BackColor = System.Drawing.Color.AntiqueWhite
-		DataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black
-		DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-		DataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White
-		Me.dgvLista.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle5
+		DataGridViewCellStyle9.BackColor = System.Drawing.Color.AntiqueWhite
+		DataGridViewCellStyle9.ForeColor = System.Drawing.Color.Black
+		DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White
+		Me.dgvLista.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
 		Me.dgvLista.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
 		Me.dgvLista.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-		DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-		DataGridViewCellStyle6.BackColor = System.Drawing.Color.LightSteelBlue
-		DataGridViewCellStyle6.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		DataGridViewCellStyle6.ForeColor = System.Drawing.Color.Navy
-		DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-		DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-		DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-		Me.dgvLista.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle6
+		DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle10.BackColor = System.Drawing.Color.LightSteelBlue
+		DataGridViewCellStyle10.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle10.ForeColor = System.Drawing.Color.Navy
+		DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+		DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.dgvLista.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
 		Me.dgvLista.ColumnHeadersHeight = 33
 		Me.dgvLista.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
 		Me.dgvLista.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnID, Me.clnNome})
@@ -203,9 +157,9 @@ Partial Class frmClienteSimplesProcurar
 		'
 		'clnID
 		'
-		DataGridViewCellStyle7.BackColor = System.Drawing.Color.PowderBlue
-		DataGridViewCellStyle7.Padding = New System.Windows.Forms.Padding(5, 0, 0, 0)
-		Me.clnID.DefaultCellStyle = DataGridViewCellStyle7
+		DataGridViewCellStyle11.BackColor = System.Drawing.Color.PowderBlue
+		DataGridViewCellStyle11.Padding = New System.Windows.Forms.Padding(5, 0, 0, 0)
+		Me.clnID.DefaultCellStyle = DataGridViewCellStyle11
 		Me.clnID.HeaderText = "Reg.:"
 		Me.clnID.Name = "clnID"
 		Me.clnID.ReadOnly = True
@@ -214,8 +168,8 @@ Partial Class frmClienteSimplesProcurar
 		'
 		'clnNome
 		'
-		DataGridViewCellStyle8.BackColor = System.Drawing.Color.PowderBlue
-		Me.clnNome.DefaultCellStyle = DataGridViewCellStyle8
+		DataGridViewCellStyle12.BackColor = System.Drawing.Color.PowderBlue
+		Me.clnNome.DefaultCellStyle = DataGridViewCellStyle12
 		Me.clnNome.HeaderText = "Cliente"
 		Me.clnNome.Name = "clnNome"
 		Me.clnNome.ReadOnly = True
@@ -224,22 +178,54 @@ Partial Class frmClienteSimplesProcurar
 		'lblProc
 		'
 		Me.lblProc.BackColor = System.Drawing.Color.White
-		Me.lblProc.Font = New System.Drawing.Font("Calibri Light", 12.0!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.lblProc.Location = New System.Drawing.Point(85, 70)
+		Me.lblProc.Font = New System.Drawing.Font("Calibri Light", 11.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.lblProc.Location = New System.Drawing.Point(92, 70)
 		Me.lblProc.Margin = New System.Windows.Forms.Padding(0)
 		Me.lblProc.Name = "lblProc"
-		Me.lblProc.Size = New System.Drawing.Size(182, 19)
+		Me.lblProc.Size = New System.Drawing.Size(172, 19)
 		Me.lblProc.TabIndex = 42
 		Me.lblProc.Text = "Digite algo para procurar..."
 		Me.lblProc.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'btnProcurar
+		'
+		Me.btnProcurar.Enabled = False
+		Me.btnProcurar.Image = Global.NovaSiao.My.Resources.Resources.refresh1
+		Me.btnProcurar.Location = New System.Drawing.Point(20, 437)
+		Me.btnProcurar.Name = "btnProcurar"
+		Me.btnProcurar.Size = New System.Drawing.Size(120, 42)
+		Me.btnProcurar.TabIndex = 43
+		Me.btnProcurar.Text = "&Procurar"
+		Me.btnProcurar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		Me.btnProcurar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+		Me.btnProcurar.UseVisualStyleBackColor = True
+		'
+		'btnClose
+		'
+		Me.btnClose.AllowAnimations = True
+		Me.btnClose.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.btnClose.BackColor = System.Drawing.Color.Transparent
+		Me.btnClose.BorderStyle = VIBlend.WinForms.Controls.ButtonBorderStyle.NONE
+		Me.btnClose.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.CloseButton
+		Me.btnClose.CausesValidation = False
+		Me.btnClose.Location = New System.Drawing.Point(396, 14)
+		Me.btnClose.Name = "btnClose"
+		Me.btnClose.RibbonStyle = False
+		Me.btnClose.RoundedCornersMask = CType(15, Byte)
+		Me.btnClose.ShowFocusRectangle = False
+		Me.btnClose.Size = New System.Drawing.Size(19, 20)
+		Me.btnClose.TabIndex = 26
+		Me.btnClose.TabStop = False
+		Me.btnClose.UseVisualStyleBackColor = False
+		Me.btnClose.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.BLUEBLEND
 		'
 		'frmClienteSimplesProcurar
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
 		Me.ClientSize = New System.Drawing.Size(427, 491)
+		Me.Controls.Add(Me.btnProcurar)
 		Me.Controls.Add(Me.lblProc)
 		Me.Controls.Add(Me.dgvLista)
-		Me.Controls.Add(Me.btnFechar)
 		Me.Controls.Add(Me.btnAdicionar)
 		Me.Controls.Add(Me.btnEditar)
 		Me.Controls.Add(Me.cmbAtivo)
@@ -255,12 +241,11 @@ Partial Class frmClienteSimplesProcurar
 		Me.Controls.SetChildIndex(Me.cmbAtivo, 0)
 		Me.Controls.SetChildIndex(Me.btnEditar, 0)
 		Me.Controls.SetChildIndex(Me.btnAdicionar, 0)
-		Me.Controls.SetChildIndex(Me.btnFechar, 0)
 		Me.Controls.SetChildIndex(Me.dgvLista, 0)
 		Me.Controls.SetChildIndex(Me.Panel1, 0)
 		Me.Controls.SetChildIndex(Me.lblProc, 0)
+		Me.Controls.SetChildIndex(Me.btnProcurar, 0)
 		Me.Panel1.ResumeLayout(False)
-		Me.Panel1.PerformLayout()
 		CType(Me.dgvLista, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
@@ -272,11 +257,10 @@ Partial Class frmClienteSimplesProcurar
     Friend WithEvents Label3 As Label
     Friend WithEvents btnAdicionar As Button
     Friend WithEvents btnEditar As Button
-    Friend WithEvents btnFechar As Button
-    Friend WithEvents lblApelidoFilial As Label
-    Friend WithEvents btnAlterarFilial As Button
-    Friend WithEvents dgvLista As DataGridView
+	Friend WithEvents dgvLista As DataGridView
 	Friend WithEvents clnID As DataGridViewTextBoxColumn
 	Friend WithEvents clnNome As DataGridViewTextBoxColumn
 	Friend WithEvents lblProc As Label
+	Friend WithEvents btnProcurar As Button
+	Friend WithEvents btnClose As VIBlend.WinForms.Controls.vFormButton
 End Class

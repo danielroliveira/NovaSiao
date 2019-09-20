@@ -23,11 +23,10 @@ Public Class frmClienteSimplesProcurar
 		CarregaCmbAtivo()
 		_formOrigem = formOrigem
 		_IDFilial = Obter_FilialPadrao()
-		lblApelidoFilial.Text = ObterDefault("FilialDescricao")
 		'
 		FormataListagem()
-		GetData()
-		FiltrarListagem()
+		'GetDados()
+		'FiltrarListagem()
 		'
 	End Sub
 	'
@@ -61,7 +60,7 @@ Public Class frmClienteSimplesProcurar
 	'
 	'--- GET DATA FOR LIST OF FUNCIONARIOS
 	'----------------------------------------------------------------------------------
-	Private Sub GetData()
+	Private Sub GetDados()
 		'
 		Dim cBLL As New ClienteSimplesBLL
 		'
@@ -84,6 +83,10 @@ Public Class frmClienteSimplesProcurar
 			'
 		End Try
 		'
+		'--- Set Datasource
+		dgvLista.DataSource = listCliente
+		propPreenchido = Nothing
+		'
 	End Sub
 	'
 	'--------------------------------------------------------------------------------------------------------
@@ -94,7 +97,6 @@ Public Class frmClienteSimplesProcurar
 		With dgvLista
 			.Columns.Clear()
 			.AutoGenerateColumns = False
-			.DataSource = listCliente
 			' altera as propriedades importantes
 			.SelectionMode = DataGridViewSelectionMode.FullRowSelect
 			.MultiSelect = False
@@ -154,38 +156,7 @@ Public Class frmClienteSimplesProcurar
 		End If
 		'
 	End Sub
-	'
-	' ALTERAR A FILIAL SEDE DO FUNCIONARIO
-	'----------------------------------------------------------------------------------
-	Private Sub btnAlterarFilial_Click(sender As Object, e As EventArgs) Handles btnAlterarFilial.Click
-		'
-		Try
-			'--- Ampulheta ON
-			Cursor = Cursors.WaitCursor
-			'
-			'--- Abre o frmFilial
-			Dim fFil As New frmFilialEscolher(Me, _IDFilial)
-			'
-			fFil.ShowDialog()
-			'
-			If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
-			'
-			If fFil.propFilial.IDPessoa <> _IDFilial Then
-				_IDFilial = fFil.propFilial.IDPessoa
-				lblApelidoFilial.Text = fFil.propFilial.ApelidoFilial
-				GetData()
-				FiltrarListagem()
-			End If
-			'
-		Catch ex As Exception
-			MessageBox.Show("Uma exceção ocorreu ao abrir o formulário de procurar filial..." & vbNewLine &
-							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-		Finally
-			'--- Ampulheta OFF
-			Cursor = Cursors.Default
-		End Try
-		'
-	End Sub
+
 	'
 	'--- EDITAR
 	'----------------------------------------------------------------------------------
@@ -217,7 +188,7 @@ Public Class frmClienteSimplesProcurar
 	'
 	'--- FECHAR
 	'----------------------------------------------------------------------------------
-	Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+	Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnClose.Click
 		Close()
 		MostraMenuPrincipal()
 	End Sub
@@ -231,7 +202,7 @@ Public Class frmClienteSimplesProcurar
 			'--- Ampulheta ON
 			Cursor = Cursors.WaitCursor
 			'
-			Dim frmC As New frmClienteSimples(New clClienteSimples, Me)
+			Dim frmC As New frmClienteSimples(New clClienteSimples)
 			'
 			frmC.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
 			Close()
@@ -292,45 +263,118 @@ Public Class frmClienteSimplesProcurar
 		'
 	End Sub
 	'
-	'--- MOVE BTN FILIAL
-	'----------------------------------------------------------------------------------
-	Private Sub lblApelidoFilial_SizeChanged(sender As Object, e As EventArgs) Handles lblApelidoFilial.SizeChanged
-		Dim newX As Integer = lblApelidoFilial.Location.X + lblApelidoFilial.Size.Width + 5
-		btnAlterarFilial.Location = New Point(newX, btnAlterarFilial.Location.Y)
-	End Sub
-	'
 #End Region '/ EFEITO VISUAL
 	'
-#Region "FILTRO LISTAGEM"
-	'
-	'--- FILTRAR LISTAGEM
-	Private Sub FiltrarListagem()
-		dgvLista.DataSource = listCliente.FindAll(AddressOf FindForn)
-	End Sub
-	'
-	Private Function FindForn(ByVal T As clClienteSimples) As Boolean
+	'#Region "FILTRO LISTAGEM"
+	'	'
+	'	'--- FILTRAR LISTAGEM
+	'	Private Sub FiltrarListagem()
+	'		dgvLista.DataSource = listCliente.FindAll(AddressOf FindForn)
+	'	End Sub
+	'	'
+	'	Private Function FindForn(ByVal T As clClienteSimples) As Boolean
+	'		'
+	'		If T.ClienteNome.ToLower Like "*" & txtProcura.Text.ToLower & "*" Then
+	'			Return True
+	'		Else
+	'			Return False
+	'		End If
+	'		'
+	'	End Function
+	'	'
+	'	Private Sub cmbAtivo_SelectedValueChanged(sender As Object, e As EventArgs) Handles cmbAtivo.SelectedValueChanged
+	'		'
+	'		If Not IsOpened Then Exit Sub
+	'		'
+	'		GetDados()
+	'		FiltrarListagem()
+	'		'
+	'	End Sub
+	'	'
+	'#End Region '/ FILTRO LISTAGEM
+
+
+
+	Private Sub txtProcura_TextChanged(sender As Object, e As EventArgs) Handles txtProcura.TextChanged
 		'
-		If T.ClienteNome.ToLower Like "*" & txtProcura.Text.ToLower & "*" Then
-			Return True
+		If txtProcura.Text.Length > 0 Then
+			propPreenchido = True
 		Else
-			Return False
+			propPreenchido = False
 		End If
 		'
-	End Function
-	'
-	Private Sub txtProcura_TextChanged(sender As Object, e As EventArgs) Handles txtProcura.TextChanged
-		FiltrarListagem()
+		'FiltrarListagem()
 	End Sub
+
+	Private _propPreenchido As Boolean?
+
+	Property propPreenchido As Boolean?
+		'
+		Get
+			Return _propPreenchido
+		End Get
+		'
+		Set(value As Boolean?)
+			'
+			If IsNothing(value) Then
+				lblProc.Visible = False
+				'-- btnProcurar
+				btnProcurar.Visible = False
+				btnProcurar.Enabled = False
+				'
+			ElseIf If(value, 0) = True Then
+
+				lblProc.SendToBack()
+				Dim x As Integer = txtProcura.Location.X + 15
+				Dim y As Integer = txtProcura.Location.Y - 17
+				Dim newPoint As Point = New Point(x, y)
+				lblProc.Location = newPoint
+
+				lblProc.Font = New Font("Calibri Light", 8.0!, FontStyle.Bold)
+				lblProc.Text = "Pressione ENTER..."
+				lblProc.ForeColor = Color.DarkBlue
+				lblProc.BackColor = Color.Transparent
+				lblProc.Visible = True
+				'-- btnProcurar
+				btnProcurar.Visible = True
+				btnProcurar.Enabled = True
+				'
+			ElseIf If(value, -1) = False Then
+
+				Dim x As Integer = txtProcura.Location.X + 12
+				Dim y As Integer = txtProcura.Location.Y + 3
+				Dim newPoint As Point = New Point(x, y)
+				lblProc.Location = newPoint
+
+				lblProc.Font = New Font("Calibri Light", 11.25!, FontStyle.Italic)
+				lblProc.Text = "Digite algo para procurar..."
+				lblProc.ForeColor = Color.Black
+				lblProc.BackColor = Color.White
+				lblProc.BringToFront()
+				lblProc.Visible = True
+				'-- btnProcurar
+				btnProcurar.Visible = True
+				btnProcurar.Enabled = False
+				'
+			End If
+			'
+			_propPreenchido = value
+			'
+		End Set
+		'
+	End Property
+
 	'
-	Private Sub cmbAtivo_SelectedValueChanged(sender As Object, e As EventArgs) Handles cmbAtivo.SelectedValueChanged
+	'--- BTN PROCURAR
+	'----------------------------------------------------------------------------------
+	Private Sub btnProcurar_Click(sender As Object, e As EventArgs) Handles btnProcurar.Click
 		'
-		If Not IsOpened Then Exit Sub
-		'
-		GetData()
-		FiltrarListagem()
+		If If(propPreenchido, 0) = True Then
+			dgvLista.Focus()
+			GetDados()
+		End If
 		'
 	End Sub
-	'
-#End Region '/ FILTRO LISTAGEM
-	'
+
+
 End Class

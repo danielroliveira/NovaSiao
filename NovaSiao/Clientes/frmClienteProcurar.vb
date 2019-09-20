@@ -541,10 +541,8 @@ Public Class frmClienteProcurar
     '--- CONTROLE DO TXTPROCURAR
     '----------------------------------------------------------------------------------
     Private Sub txtProcurar_TextChanged(sender As Object, e As EventArgs) Handles txtProcurar.TextChanged
-        '
-        'ProcurarCliente()
-        '
-        Dim itemsFound As BetterListViewItemCollection
+		'
+		Dim itemsFound As BetterListViewItemCollection
         '
         If txtProcurar.Text.Length > 0 Then
             propPreenchido = True

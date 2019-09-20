@@ -483,8 +483,8 @@ Public Class frmPrincipal
             Cursor = Cursors.Default
             '
         End Try
-
-    End Sub
+		'
+	End Sub
     '
     Private Sub miClienteAtividades_Click(sender As Object, e As EventArgs) Handles miClienteAtividades.Click
         '
@@ -575,15 +575,44 @@ Public Class frmPrincipal
         End Try
         '
     End Sub
-    '
+	'
+	Private Sub miClientesSimples_Click(sender As Object, e As EventArgs) Handles miClientesSimples.Click
+		'
+		'--- Ampulheta ON
+		Cursor = Cursors.WaitCursor
+		'
+		'--- PESQUISA CLIENTE SIMPLES
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			OcultaMenuPrincipal()
+			'
+			Using frm As New frmClienteSimplesProcurar()
+				'
+				frm.ShowDialog()
+				If My.Application.OpenForms.Count = 1 Then MostraMenuPrincipal()
+				'
+			End Using
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao Abrir o formulário de Procura..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+			MostraMenuPrincipal()
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
 #End Region
-    '
-    '========================================================================================================
-    ' MENU CADASTROS
-    '========================================================================================================
+	'
+	'========================================================================================================
+	' MENU CADASTROS
+	'========================================================================================================
 #Region "MENU CADASTROS"
-    '
-    Private Sub miFuncionarios_Click(sender As Object, e As EventArgs) Handles miFuncionarios.Click
+	'
+	Private Sub miFuncionarios_Click(sender As Object, e As EventArgs) Handles miFuncionarios.Click
         '
         Try
             '--- Ampulheta ON
@@ -1616,7 +1645,7 @@ Public Class frmPrincipal
         lblInfoMessage.Text = ""
         '
     End Sub
-    '
+	'
 #End Region '/ INFO MESSAGE
-    '
+	'
 End Class
