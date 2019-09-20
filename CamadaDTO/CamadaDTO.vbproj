@@ -72,6 +72,7 @@
     <Compile Include="clCaixa.vb" />
     <Compile Include="clClientePF.vb" />
     <Compile Include="clClientePJ.vb" />
+    <Compile Include="clClienteSimples.vb" />
     <Compile Include="clCompra.vb" />
     <Compile Include="clConta.vb" />
     <Compile Include="clCredor.vb" />

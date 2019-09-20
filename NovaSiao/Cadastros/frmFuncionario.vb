@@ -220,11 +220,9 @@ Public Class frmFuncionario
     End Sub
     '
     Private Sub handler_CurrentChanged()
-        ' ADD HANDLER PARA DATABINGS
-        AddHandler DirectCast(bindFunc.CurrencyManager.Current, clFuncionario).AoAlterar, AddressOf HandlerAoAlterar
-        '
-        '--- Nesse caso é um novo registro
-        If IsNothing(DirectCast(bindFunc.Current, clFuncionario).IDPessoa) Then
+		'
+		'--- Nesse caso é um novo registro
+		If IsNothing(DirectCast(bindFunc.Current, clFuncionario).IDPessoa) Then
             Exit Sub
         Else
             ' LER O ID

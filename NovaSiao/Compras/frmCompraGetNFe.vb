@@ -551,8 +551,8 @@ Public Class frmCompraGetNFe
             '
             With FornecedorNFe
                 .Cadastro = Utilidades.PrimeiraLetraMaiuscula(emit.xNome)
-                .NomeFantasia = Utilidades.PrimeiraLetraMaiuscula(emit.xFant)
-                .CNPJ = Utilidades.CNPConvert(emit.Item)
+				.NomeFantasia = Utilidades.PrimeiraLetraMaiuscula(If(emit.xFant, ""))
+				.CNPJ = Utilidades.CNPConvert(emit.Item)
                 .InscricaoEstadual = emit.IE
                 .Endereco = Utilidades.PrimeiraLetraMaiuscula(emit.enderEmit.xLgr) & " " & emit.enderEmit.nro & " " & emit.enderEmit.xCpl
                 .Bairro = Utilidades.PrimeiraLetraMaiuscula(emit.enderEmit.xBairro)
@@ -1089,8 +1089,8 @@ Public Class frmCompraGetNFe
             '-----------------------------------------------------------------------------------------
             If TypeOf pessoa Is clTransportadora Then '---> TRANSPORTADORA ENCONTRADA
                 '
-                '--- OPEN FRM TRANSPORTADORA
-                Return OpenFrmTransportadora(pessoa)
+                '--- RETURN PESSOA
+                Return pessoa
                 '
             ElseIf TypeOf pessoa Is clPessoaJuridica Then '---> PESSOA JURIDICA MESMO CNPJ
                 '
@@ -1154,10 +1154,10 @@ Public Class frmCompraGetNFe
                                    "CNPJ Relacionado",
                                    frmDialog.DialogType.SIM_NAO,
                                    frmDialog.DialogIcon.Question) = DialogResult.Yes Then
-                        '
-                        '--- CHANGE LABELS OF RELACAO
-                        lblTransportadora.Text += " (" & PessoaRelacionada.Cadastro & ")"
-                        lblTranspCNPJ.Text += " >>> " & PessoaRelacionada.CNPJ
+						'
+						'--- CHANGE LABELS OF RELACAO
+						lblTransportadora.Text += " (" & PessoaRelacionada.Cadastro & ")"
+						lblTranspCNPJ.Text += " >>> " & PessoaRelacionada.CNPJ
                         ResizeFontLabel(lblTransportadora)
                         '
                         Return PessoaRelacionada
@@ -2393,8 +2393,6 @@ Public Class frmCompraGetNFe
         End If
         '
     End Sub
-
-
     '
     '--- INSERT NEW FORNECEDOR
     '----------------------------------------------------------------------------------
@@ -2467,26 +2465,26 @@ Public Class frmCompraGetNFe
             lblRazaoSocial.Text += " (" & forn.Cadastro & ")"
             tspMenuFornecedor.Visible = False
             lblCNPJ.Text += " >>> " & forn.CNPJ
-            '
-            '--- SAVE RELACAO ? ASK USER
-            If AbrirDialog("Item(s) relacionado(s) ao Produto com sucesso!" & vbCrLf & vbCrLf &
-                           "Você deseja GUARDAR/SALVAR essa relação do Fornecedor com o(s) Produto(s)?",
-                           "Item Relacionado",
-                           frmDialog.DialogType.SIM_NAO,
-                           frmDialog.DialogIcon.Question,
-                           frmDialog.DialogDefaultButton.First) = DialogResult.Yes Then
-                '
-                Dim db As New PessoaBLL
-                '
-                '--- Ampulheta ON
-                Cursor = Cursors.WaitCursor
-                '
-                db.CreateCNPJRelacionado(forn.IDPessoa, FornecedorNFe.CNPJ, FornecedorNFe.Cadastro, FornecedorNFe.InscricaoEstadual)
-                '
-            End If
-            '
-            '--- TRY MAKE CORRELACAO AGAIN
-            btnCorrelacao_Click(sender, e)
+			'
+			'--- SAVE RELACAO ? ASK USER
+			If AbrirDialog("Fornecedor NFe relacionado com sucesso!" & vbCrLf & vbCrLf &
+						   "Você deseja GUARDAR/SALVAR essa relação do Fornecedor para futuras associações?",
+						   "Fornecedor Relacionado",
+						   frmDialog.DialogType.SIM_NAO,
+						   frmDialog.DialogIcon.Question,
+						   frmDialog.DialogDefaultButton.First) = DialogResult.Yes Then
+				'
+				Dim db As New PessoaBLL
+				'
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				db.CreateCNPJRelacionado(forn.IDPessoa, FornecedorNFe.CNPJ, FornecedorNFe.Cadastro, FornecedorNFe.InscricaoEstadual)
+				'
+			End If
+			'
+			'--- TRY MAKE CORRELACAO AGAIN
+			btnCorrelacao_Click(sender, e)
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Vincular CNPJ..." & vbNewLine &
@@ -2531,17 +2529,79 @@ Public Class frmCompraGetNFe
         End Try
         '
     End Sub
-    '
-    '--- VINCULAR A TRANSPORTADORA EXISTENTE
-    '----------------------------------------------------------------------------------------------
-    Private Sub btnVincularCNPJTransp_Click(sender As Object, e As EventArgs) Handles btnVincularCNPJTransp.Click
-        '
+	'
+	'--- VINCULAR A TRANSPORTADORA EXISTENTE
+	'----------------------------------------------------------------------------------------------
+	Private Sub btnVincularCNPJTransp_Click(sender As Object, e As EventArgs) Handles btnVincularCNPJTransp.Click
+		'
+		'--- CHECK TranspNFe
+		If TranspNFe Is Nothing Then
+			Exit Sub
+		End If
+		'
+		'--- ASK USER
+		If AbrirDialog("Deseja vincular o CNPJ da Transportadora na NFe com uma já existente?" & vbCrLf &
+					   "CNPJ: " & TranspNFe.CNPJ,
+					   "Vincular CNPJ Transportadora",
+					   frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question) = DialogResult.No Then
+			Return
+		End If
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			'--- GET TRANSPORTADORA
+			Dim transp As clTransportadora = Nothing
+			'
+			Using frmT As New frmTransportadoraProcurar(True, Me)
+				'
+				frmT.ShowDialog()
+				If frmT.DialogResult <> DialogResult.OK Then Exit Sub
+				'
+				transp = frmT.propTransportadora_Escolha
+				'
+			End Using
+			'
+			'--- MAKE RELACAO
+			TranspNFe.IDPessoa = transp.IDPessoa
+			lblTransportadora.Text += " (" & transp.Cadastro & ")"
+			tspMenuTransp.Visible = False
+			lblTranspCNPJ.Text += " >>> " & transp.CNPJ
+			'
+			'--- SAVE RELACAO ? ASK USER
+			If AbrirDialog("Transportadora NFe relacionada com sucesso!" & vbCrLf & vbCrLf &
+						   "Você deseja GUARDAR/SALVAR essa relação da Transportadora para futuras associações?",
+						   "Transportadora Relacionada",
+						   frmDialog.DialogType.SIM_NAO,
+						   frmDialog.DialogIcon.Question,
+						   frmDialog.DialogDefaultButton.First) = DialogResult.Yes Then
+				'
+				Dim db As New PessoaBLL
+				'
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				db.CreateCNPJRelacionado(transp.IDPessoa, TranspNFe.CNPJ, TranspNFe.Cadastro, TranspNFe.InscricaoEstadual)
+				'
+			End If
+			'
+			'--- TRY MAKE CORRELACAO AGAIN
+			btnCorrelacao_Click(sender, e)
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao Vincular CNPJ..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
 
-        '
-    End Sub
-    '
-
-    Private Sub ResizeFontLabel(myLabel As Label)
+	Private Sub ResizeFontLabel(myLabel As Label)
         '
         Dim lblFont As Font = New Font(myLabel.Font.FontFamily, myLabel.Font.Size, myLabel.Font.Style)
         '

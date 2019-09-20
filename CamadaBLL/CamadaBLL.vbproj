@@ -74,6 +74,7 @@
     <Compile Include="ClientePF_BLL.vb" />
     <Compile Include="ClientePJ_BLL.vb" />
     <Compile Include="ClienteReferenciaBLL.vb" />
+    <Compile Include="ClienteSimplesBLL.vb" />
     <Compile Include="CompraBLL.vb" />
     <Compile Include="CredorBLL.vb" />
     <Compile Include="DespesaBLL.vb" />

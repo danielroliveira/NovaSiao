@@ -156,77 +156,116 @@ Public Class frmFuncionarioProcurar
         End If
         '
     End Sub
-    '
-    ' ALTERAR A FILIAL SEDE DO FUNCIONARIO
-    Private Sub btnAlterarFilial_Click(sender As Object, e As EventArgs) Handles btnAlterarFilial.Click
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            '--- Abre o frmFilial
-            Dim fFil As New frmFilialEscolher(Me, _IDFilial)
-            '
-            fFil.ShowDialog()
-            '
-            If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
-            '
-            If fFil.propFilial.IDPessoa <> _IDFilial Then
-                _IDFilial = fFil.propFilial.IDPessoa
-                lblApelidoFilial.Text = fFil.propFilial.ApelidoFilial
-                GetData()
-                FiltrarListagem()
-            End If
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao abrir o formulário de procurar filial..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
-        '
-    End Sub
-    '
-    Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
-        '
-        '--- verifica se existe algum item selecionado
-        If dgvFuncionarios.SelectedRows.Count = 0 Then
-            MessageBox.Show("Não existe nenhum Funcionário selecionado...", "Escolher",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information)
-            dgvFuncionarios.Focus()
-            Exit Sub
-        End If
-        '
-        '--- Seleciona o Funcionario
-        Dim func As clFuncionario = dgvFuncionarios.SelectedRows(0).DataBoundItem
-        '
-        '--- Ampulheta ON
-        Cursor = Cursors.WaitCursor
-        '
-        Dim frmF As New frmFuncionario(func)
-        frmF.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
-        Close()
-        frmF.Show()
-        '
-        '--- Ampulheta OFF
-        Cursor = Cursors.Default
-        '
-    End Sub
-    '
-    Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
-        Close()
-        MostraMenuPrincipal()
-    End Sub
-    '
+	'
+	' ALTERAR A FILIAL SEDE DO FUNCIONARIO
+	'----------------------------------------------------------------------------------
+	Private Sub btnAlterarFilial_Click(sender As Object, e As EventArgs) Handles btnAlterarFilial.Click
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			'--- Abre o frmFilial
+			Dim fFil As New frmFilialEscolher(Me, _IDFilial)
+			'
+			fFil.ShowDialog()
+			'
+			If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
+			'
+			If fFil.propFilial.IDPessoa <> _IDFilial Then
+				_IDFilial = fFil.propFilial.IDPessoa
+				lblApelidoFilial.Text = fFil.propFilial.ApelidoFilial
+				GetData()
+				FiltrarListagem()
+			End If
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao abrir o formulário de procurar filial..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
+	'--- EDITAR
+	'----------------------------------------------------------------------------------
+	Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click
+		'
+		'--- verifica se existe algum item selecionado
+		If dgvFuncionarios.SelectedRows.Count = 0 Then
+			MessageBox.Show("Não existe nenhum Funcionário selecionado...", "Escolher",
+							MessageBoxButtons.OK, MessageBoxIcon.Information)
+			dgvFuncionarios.Focus()
+			Exit Sub
+		End If
+		'
+		'--- Seleciona o Funcionario
+		Dim func As clFuncionario = dgvFuncionarios.SelectedRows(0).DataBoundItem
+		'
+		'--- Ampulheta ON
+		Cursor = Cursors.WaitCursor
+		'
+		Dim frmF As New frmFuncionario(func)
+		frmF.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
+		Close()
+		frmF.Show()
+		'
+		'--- Ampulheta OFF
+		Cursor = Cursors.Default
+		'
+	End Sub
+	'
+	'--- FECHAR
+	'----------------------------------------------------------------------------------
+	Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+		Close()
+		MostraMenuPrincipal()
+	End Sub
+	'
+	'--- ADICIONAR
+	'----------------------------------------------------------------------------------
+	Private Sub btnAdicionar_Click(sender As Object, e As EventArgs) Handles btnAdicionar.Click
+		'
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim frmF As New frmFuncionario(New clFuncionario, Me)
+			'
+			If Not frmF.InsertNewCNP(Me) Then
+				frmF.Dispose()
+				Exit Sub
+			End If
+			'
+			frmF.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
+			Close()
+			frmF.Show()
+			'
+		Catch ex As Exception
+			'
+			MessageBox.Show("Uma exceção ocorreu ao inserir novo Funcionário..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+			'
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
+		'
+	End Sub
+	'
 #End Region '/ BUTTONS FUNCTION
-    '
+	'
 #Region "EFEITO VISUAL"
-    '
-    '-------------------------------------------------------------------------------------------------
-    ' CONSTRUIR UMA BORDA NO FORMULÁRIO
-    '-------------------------------------------------------------------------------------------------
-    Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
+	'
+	'-------------------------------------------------------------------------------------------------
+	' CONSTRUIR UMA BORDA NO FORMULÁRIO
+	'-------------------------------------------------------------------------------------------------
+	Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
         MyBase.OnPaintBackground(e)
 
         Dim rect As New Rectangle(0, 0, Me.ClientSize.Width - 1, Me.ClientSize.Height - 1)
@@ -298,39 +337,7 @@ Public Class frmFuncionarioProcurar
         FiltrarListagem()
         '
     End Sub
-
-    Private Sub btnAdicionar_Click(sender As Object, e As EventArgs) Handles btnAdicionar.Click
-        '
-        Try
-            '
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            Dim frmF As New frmFuncionario(New clFuncionario, Me)
-            '
-            If Not frmF.InsertNewCNP(Me) Then
-                frmF.Dispose()
-                Exit Sub
-            End If
-            '
-            frmF.MdiParent = Application.OpenForms.OfType(Of frmPrincipal).First
-            Close()
-            frmF.Show()
-            '
-        Catch ex As Exception
-            '
-            MessageBox.Show("Uma exceção ocorreu ao inserir novo Funcionário..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            '
-        Finally
-            '
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-            '
-        End Try
-        '
-    End Sub
-    '
+	'
 #End Region '/ FILTRO LISTAGEM
-    '
+	'
 End Class

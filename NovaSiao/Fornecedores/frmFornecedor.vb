@@ -64,6 +64,7 @@ Public Class frmFornecedor
                 btnProcurar.Enabled = False
                 btnProdutos.Enabled = False
                 btnNovo.Enabled = False
+                btnFechar.Text = "OK"
             End If
             '
         End Set
@@ -210,11 +211,9 @@ Public Class frmFornecedor
     End Sub
     '
     Private Sub handler_CurrentChanged()
-        ' ADD HANDLER PARA DATABINGS
-        AddHandler DirectCast(BindForn.CurrencyManager.Current, clFornecedor).AoAlterar, AddressOf HandlerAoAlterar
-        '
-        '--- Nesse caso é um novo registro
-        If IsNothing(DirectCast(BindForn.Current, clFornecedor).IDPessoa) Then
+		'
+		'--- Nesse caso é um novo registro
+		If IsNothing(DirectCast(BindForn.Current, clFornecedor).IDPessoa) Then
             Exit Sub
         Else
             ' LER O ID
@@ -485,16 +484,16 @@ Public Class frmFornecedor
         If Not f.VerificaControlesForm(txtCEP, "CEP", EProvider) Then Return False
         '
         If Not f.VerificaControlesForm(txtVendedor, "Nome do Vendedor", EProvider) Then Return False
-        '
-        '--- Verifica se existe pelo menos um telefone Inserido na Fornecedor
-        Dim telA As Boolean = IsNothing(_forn.TelefoneA) OrElse _forn.TelefoneA.Length = 0
+		'
+		'--- Verifica se existe pelo menos um telefone Inserido
+		Dim telA As Boolean = IsNothing(_forn.TelefoneA) OrElse _forn.TelefoneA.Length = 0
         Dim telB As Boolean = IsNothing(_forn.TelefoneB) OrElse _forn.TelefoneB.Length = 0
         '
         If telA And telB Then
-            AbrirDialog("Deve haver pelo menos um telefone cadastrado nos dados da Reserva...",
-                        "Telefone de Contato", frmDialog.DialogType.OK,
-                        frmDialog.DialogIcon.Exclamation)
-            txtTelefoneA.Focus()
+			AbrirDialog("Deve haver pelo menos um telefone cadastrado nos dados do Fornecedor...",
+						"Telefone Principal", frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			txtTelefoneA.Focus()
             Return False
         End If
         '

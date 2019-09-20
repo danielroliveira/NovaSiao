@@ -139,9 +139,11 @@ Public Class frmTransportadora
     '--- SITUACAO DO REGISTRO
     '----------------------------------------------------------------------------------
     Private Property Sit As EnumFlagEstado
+        '
         Get
             Return _Sit
         End Get
+        '
         Set(value As EnumFlagEstado)
             _Sit = value
             If _Sit = EnumFlagEstado.RegistroSalvo Then
@@ -162,7 +164,16 @@ Public Class frmTransportadora
                 btnProcurar.Enabled = False
                 lblIDTransportadora.Text = "NOVO"
             End If
+            '
+            '--- check if FormOrigem is DEFINED
+            If Not IsNothing(_formOrigem) Then
+                btnProcurar.Enabled = False
+                btnNovo.Enabled = False
+                btnFechar.Text = "OK"
+            End If
+            '
         End Set
+        '
     End Property
     '
 #End Region
@@ -197,11 +208,9 @@ Public Class frmTransportadora
     End Sub
     '
     Private Sub handler_CurrentChanged()
-        ' ADD HANDLER PARA DATABINGS
-        AddHandler DirectCast(BindTransp.CurrencyManager.Current, clTransportadora).AoAlterar, AddressOf HandlerAoAlterar
-        '
-        '--- Nesse caso é um novo registro
-        If IsNothing(DirectCast(BindTransp.Current, clTransportadora).IDPessoa) Then
+		'
+		'--- Nesse caso é um novo registro
+		If IsNothing(DirectCast(BindTransp.Current, clTransportadora).IDPessoa) Then
             Exit Sub
         Else
             ' LER O ID
@@ -255,10 +264,21 @@ Public Class frmTransportadora
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
         '
         If Sit = EnumFlagEstado.NovoRegistro Then
-            btnProcurar_Click(btnCancelar, New EventArgs)
+            '
+            If IsNothing(_formOrigem) Then
+                btnProcurar_Click(btnCancelar, New EventArgs)
+                Exit Sub
+            Else
+                DialogResult = DialogResult.Cancel
+                _formOrigem.Visible = True
+                Close()
+            End If
             '
         ElseIf Sit = EnumFlagEstado.Alterado Then
+            '
             BindTransp.CancelEdit()
+            AtivoButtonImage()
+            '
         End If
         '
         Sit = EnumFlagEstado.RegistroSalvo
@@ -310,8 +330,21 @@ Public Class frmTransportadora
     '--- BTN FECHAR
     Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
         '
-        Close()
-        If Application.OpenForms.Count = 1 Then MostraMenuPrincipal()
+        AutoValidate = AutoValidate.Disable
+        '
+        If Not IsNothing(_formOrigem) Then
+            '
+            If Sit = EnumFlagEstado.RegistroSalvo Then
+                DialogResult = DialogResult.OK
+            Else
+                DialogResult = DialogResult.Cancel
+            End If
+            '
+            _formOrigem.Visible = True
+        Else
+            Me.Close()
+            MostraMenuPrincipal()
+        End If
         '
     End Sub
     '
