@@ -77,6 +77,9 @@ Partial Class frmReserva
 		Me.Panel5 = New System.Windows.Forms.Panel()
 		Me.Label6 = New System.Windows.Forms.Label()
 		Me.lblFilial = New System.Windows.Forms.Label()
+		Me.Label7 = New System.Windows.Forms.Label()
+		Me.Label8 = New System.Windows.Forms.Label()
+		Me.btnAdiantamento = New System.Windows.Forms.ToolStripButton()
 		Me.Panel1.SuspendLayout()
 		Me.tsMenu.SuspendLayout()
 		CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -188,7 +191,7 @@ Partial Class frmReserva
 		Me.tsMenu.Dock = System.Windows.Forms.DockStyle.None
 		Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
-		Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnProcurar, Me.btnNovo, Me.ToolStripSeparator5, Me.btnSalvar, Me.btnCancelar, Me.btnFechar})
+		Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnProcurar, Me.btnNovo, Me.ToolStripSeparator5, Me.btnSalvar, Me.btnCancelar, Me.btnFechar, Me.btnAdiantamento})
 		Me.tsMenu.Location = New System.Drawing.Point(0, 628)
 		Me.tsMenu.Name = "tsMenu"
 		Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
@@ -650,6 +653,7 @@ Partial Class frmReserva
 		Me.Panel4.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
 		Me.Panel4.Controls.Add(Me.txtRGProduto)
 		Me.Panel4.Controls.Add(Me.lblProdConhecido)
+		Me.Panel4.Controls.Add(Me.Label8)
 		Me.Panel4.Controls.Add(Me.chkProdutoConhecido)
 		Me.Panel4.Controls.Add(Me.btnProcFabricantes)
 		Me.Panel4.Controls.Add(Me.Label18)
@@ -660,6 +664,7 @@ Partial Class frmReserva
 		Me.Panel4.Controls.Add(Me.txtAutor)
 		Me.Panel4.Controls.Add(Me.Label14)
 		Me.Panel4.Controls.Add(Me.txtPVenda)
+		Me.Panel4.Controls.Add(Me.Label7)
 		Me.Panel4.Controls.Add(Me.Label13)
 		Me.Panel4.Controls.Add(Me.btnProcProdutoTipo)
 		Me.Panel4.Controls.Add(Me.Label12)
@@ -768,6 +773,34 @@ Partial Class frmReserva
 		Me.lblFilial.Text = "Filial"
 		Me.lblFilial.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
 		'
+		'Label7
+		'
+		Me.Label7.AutoSize = True
+		Me.Label7.Location = New System.Drawing.Point(291, 181)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(137, 19)
+		Me.Label7.TabIndex = 15
+		Me.Label7.Text = "Valor Adiantamento"
+		'
+		'Label8
+		'
+		Me.Label8.BackColor = System.Drawing.Color.WhiteSmoke
+		Me.Label8.ForeColor = System.Drawing.Color.Black
+		Me.Label8.Location = New System.Drawing.Point(434, 178)
+		Me.Label8.Name = "Label8"
+		Me.Label8.Size = New System.Drawing.Size(116, 27)
+		Me.Label8.TabIndex = 4
+		Me.Label8.Text = "R$ 0,00"
+		Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'btnAdiantamento
+		'
+		Me.btnAdiantamento.Image = Global.NovaSiao.My.Resources.Resources.dollar_currency_sign
+		Me.btnAdiantamento.ImageTransparentColor = System.Drawing.Color.Magenta
+		Me.btnAdiantamento.Name = "btnAdiantamento"
+		Me.btnAdiantamento.Size = New System.Drawing.Size(134, 45)
+		Me.btnAdiantamento.Text = "Adiantamento"
+		'
 		'frmReserva
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
@@ -863,4 +896,7 @@ Partial Class frmReserva
 	Friend WithEvents lblClienteEmail As Label
 	Friend WithEvents lblTelefoneA As Label
 	Friend WithEvents btnClienteSimples As VIBlend.WinForms.Controls.vButton
+	Friend WithEvents Label8 As Label
+	Friend WithEvents Label7 As Label
+	Friend WithEvents btnAdiantamento As ToolStripButton
 End Class

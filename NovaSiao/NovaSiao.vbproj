@@ -844,6 +844,12 @@
     <Compile Include="Produtos\Reports\frmProdutoEtiquetaPrint.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Reservas\frmAdiantamentoEntrada.designer.vb">
+      <DependentUpon>frmAdiantamentoEntrada.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reservas\frmAdiantamentoEntrada.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Reservas\frmReserva.designer.vb">
       <DependentUpon>frmReserva.vb</DependentUpon>
     </Compile>
@@ -1320,6 +1326,9 @@
       <DependentUpon>frmProdutoEtiquetaPrint.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Produtos\Reports\rptProdutoEtiquetaVenda.rdlc" />
+    <EmbeddedResource Include="Reservas\frmAdiantamentoEntrada.resx">
+      <DependentUpon>frmAdiantamentoEntrada.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reservas\frmReserva.resx">
       <DependentUpon>frmReserva.vb</DependentUpon>
     </EmbeddedResource>

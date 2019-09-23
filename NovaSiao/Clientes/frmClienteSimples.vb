@@ -461,8 +461,27 @@ Public Class frmClienteSimples
 		End If
 		'
 		'--- Verifica se existe pelo menos um telefone Inserido
-		Dim telA As Boolean = IsNothing(_cliente.TelefoneA) OrElse _cliente.TelefoneA.Length = 0
-		Dim telB As Boolean = IsNothing(_cliente.TelefoneB) OrElse _cliente.TelefoneB.Length = 0
+		Dim telA As Boolean = False
+		'
+		If _cliente.TelefoneA IsNot Nothing Then
+			Dim TelA_Number As String = _cliente.TelefoneA.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "")
+			If TelA_Number.Trim.Length > 0 Then
+				telA = True
+			Else
+				_cliente.TelefoneA = Nothing
+			End If
+		End If
+		'
+		Dim telB As Boolean = False
+		'
+		If _cliente.TelefoneB IsNot Nothing Then
+			Dim TelB_Number As String = _cliente.TelefoneB.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "")
+			If TelB_Number.Trim.Length > 0 Then
+				telB = True
+			Else
+				_cliente.TelefoneB = Nothing
+			End If
+		End If
 		'
 		If telA And telB Then
 			AbrirDialog("Deve haver pelo menos um telefone cadastrado nos dados do Cliente...",

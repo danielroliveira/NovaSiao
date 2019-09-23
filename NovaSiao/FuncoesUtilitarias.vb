@@ -180,10 +180,10 @@ Public Class Utilidades
 		Nome = Nome.Trim.ToLower
 
 		Dim palavrasExcluidas As String() = {
-            "de", "da", "do", "e"
-        }
+			"de", "da", "do", "e", "das", "dos"
+		}
 
-        Dim resposta As String = ""
+		Dim resposta As String = ""
         Dim palavras As String() = Nome.Split(" ")
         '
         For Each palavra In palavras
