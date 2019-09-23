@@ -86,146 +86,195 @@ Public Class ReservaBLL
         '
         Dim db As New AcessoDados
         db.BeginTransaction()
-        '
-        db.LimparParametros()
-        '
-        '--- ADICIONA OS PARAMENTROS NECESSARIOS
-        db.AdicionarParametros("@ReservaData", myReserva.ReservaData)
-        db.AdicionarParametros("@IDFuncionario", myReserva.IDFuncionario)
-        db.AdicionarParametros("@IDFilial", myReserva.IDFilial)
-        db.AdicionarParametros("@ClienteNome", myReserva.ClienteNome)
-        db.AdicionarParametros("@TelefoneA", If(myReserva.TelefoneA, DBNull.Value))
-        db.AdicionarParametros("@TelefoneB", If(myReserva.TelefoneB, DBNull.Value))
-        db.AdicionarParametros("@TemWathsapp", myReserva.TemWathsapp)
-        db.AdicionarParametros("@ClienteEmail", If(myReserva.ClienteEmail, DBNull.Value))
-        db.AdicionarParametros("@ProdutoConhecido", myReserva.ProdutoConhecido)
-        db.AdicionarParametros("@IDProduto", If(myReserva.IDProduto, DBNull.Value))
-        db.AdicionarParametros("@Produto", myReserva.Produto)
-        db.AdicionarParametros("@Autor", If(myReserva.Autor, DBNull.Value))
-        db.AdicionarParametros("@IDFornecedor", If(myReserva.IDFornecedor, DBNull.Value))
-        db.AdicionarParametros("@IDFabricante", If(myReserva.IDFabricante, DBNull.Value))
-        db.AdicionarParametros("@IDProdutoTipo", If(myReserva.IDProdutoTipo, DBNull.Value))
-        db.AdicionarParametros("@IDPedido", If(myReserva.IDPedido, DBNull.Value))
-        '
-        Dim query As String =
-            "INSERT INTO tblReserva " +
-            "( ReservaData, IDFuncionario, IDFilial, ClienteNome " +
-            ", TelefoneA, TelefoneB, TemWathsapp, ClienteEmail " +
-            ", ProdutoConhecido, IDProduto, Produto, Autor " +
-            ", IDFornecedor, IDFabricante, IDProdutoTipo, IDSituacaoReserva, IDPedido ) " +
-            "VALUES " +
-            "( @ReservaData, @IDFuncionario, @IDFilial, @ClienteNome " +
-            ", @TelefoneA, @TelefoneB, @TemWathsapp, @ClienteEmail " +
-            ", @ProdutoConhecido, @IDProduto, @Produto, @Autor " +
-            ", @IDFornecedor, @IDFabricante, @IDProdutoTipo, 1, @IDPedido )"
-        '
-        Try
-            '
-            Dim obj As Object = db.ExecutarManipulacao(CommandType.Text, query)
-            '
-            '--- obter NewID
-            db.LimparParametros()
-            query = "SELECT @@IDENTITY As LastID;"
-            Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
-            '
-            Dim newID As Object = dt.Rows(0)(0)
-            '
-            If Not IsNumeric(newID) Then
-                Throw New Exception(newID.ToString)
-            End If
-            '
-            '--- INSERT OBSERVACAO
-            If If(myReserva.Observacao, "").Trim <> "" Then
-                Dim oBLL As New ObservacaoBLL
-                oBLL.SaveObservacao(6, newID, myReserva.Observacao, db)
-            End If
-            '
-            db.CommitTransaction()
-            Return newID
-            '
-        Catch ex As Exception
-            db.RollBackTransaction()
+		'
+		Try
+			'
+			Dim query As String = ""
+			Dim response As Object = Nothing
+			Dim NewID As Integer = Nothing
+			'
+			'--- INSERT RESERVA - GET NewID
+			'-------------------------------------------------------------------------------------------------
+			db.LimparParametros()
+			'
+			'--- ADICIONA OS PARAMENTROS NECESSARIOS
+			db.AdicionarParametros("@IDClienteSimples", myReserva.IDClienteSimples)
+			db.AdicionarParametros("@ReservaData", myReserva.ReservaData)
+			db.AdicionarParametros("@IDFuncionario", myReserva.IDFuncionario)
+			db.AdicionarParametros("@IDFilial", myReserva.IDFilial)
+			db.AdicionarParametros("@ProdutoConhecido", myReserva.ProdutoConhecido)
+			db.AdicionarParametros("@IDProduto", If(myReserva.IDProduto, DBNull.Value))
+			db.AdicionarParametros("@Produto", myReserva.Produto)
+			db.AdicionarParametros("@Autor", If(myReserva.Autor, DBNull.Value))
+			db.AdicionarParametros("@IDFornecedor", If(myReserva.IDFornecedor, DBNull.Value))
+			db.AdicionarParametros("@IDFabricante", If(myReserva.IDFabricante, DBNull.Value))
+			db.AdicionarParametros("@IDProdutoTipo", If(myReserva.IDProdutoTipo, DBNull.Value))
+			db.AdicionarParametros("@IDPedido", If(myReserva.IDPedido, DBNull.Value))
+			db.AdicionarParametros("@ValorAntecipado", If(myReserva.ValorAntecipado, DBNull.Value))
+			'
+			query =
+			"INSERT INTO tblReserva " +
+			"( ReservaData, IDFuncionario, IDFilial, IDClienteSimples " +
+			", ProdutoConhecido, IDProduto, Produto, Autor " +
+			", IDFornecedor, IDFabricante, IDProdutoTipo, IDSituacaoReserva, IDPedido, ValorAntecipado ) " +
+			"VALUES " +
+			"( @ReservaData, @IDFuncionario, @IDFilial, @IDClienteSimples " +
+			", @ProdutoConhecido, @IDProduto, @Produto, @Autor " +
+			", @IDFornecedor, @IDFabricante, @IDProdutoTipo, 1, @IDPedido, @ValorAntecipado )"
+			'
+			response = db.ExecutarInsertGetID(query)
+			'
+			If IsNumeric(response) Then
+				NewID = response
+			Else
+				Throw New Exception(response.ToString)
+			End If
+			'
+			'--- INSERT OBSERVACAO
+			'-------------------------------------------------------------------------------------------------
+			If If(myReserva.Observacao, "").Trim <> "" Then
+				Dim oBLL As New ObservacaoBLL
+				oBLL.SaveObservacao(6, NewID, myReserva.Observacao, db)
+			End If
+			'
+			db.CommitTransaction()
+			Return NewID
+			'
+		Catch ex As Exception
+			db.RollBackTransaction()
             Throw ex
         End Try
         '
     End Function
-    '
-    '===================================================================================================
-    ' ALTERAR REGISTRO
-    '===================================================================================================
-    Public Function Reserva_Alterar(myReserva As clReserva) As Object
-        '
-        Dim bd As New AcessoDados
-        bd.BeginTransaction()
-        '
-        bd.LimparParametros()
-        '
-        '--- ADICIONA OS PARAMENTROS NECESSARIOS
-        bd.AdicionarParametros("@IDReserva", myReserva.IDReserva)
-        bd.AdicionarParametros("@ReservaData", myReserva.ReservaData)
-        bd.AdicionarParametros("@IDFuncionario", myReserva.IDFuncionario)
-        bd.AdicionarParametros("@IDFilial", myReserva.IDFilial)
-        bd.AdicionarParametros("@ClienteNome", myReserva.ClienteNome)
-        bd.AdicionarParametros("@TelefoneA", If(myReserva.TelefoneA, DBNull.Value))
-        bd.AdicionarParametros("@TelefoneB", If(myReserva.TelefoneB, DBNull.Value))
-        bd.AdicionarParametros("@TemWathsapp", myReserva.TemWathsapp)
-        bd.AdicionarParametros("@ClienteEmail", If(myReserva.ClienteEmail, DBNull.Value))
-        bd.AdicionarParametros("@ProdutoConhecido", myReserva.ProdutoConhecido)
-        bd.AdicionarParametros("@IDProduto", If(myReserva.IDProduto, DBNull.Value))
-        bd.AdicionarParametros("@Produto", myReserva.Produto)
-        bd.AdicionarParametros("@Autor", If(myReserva.Autor, DBNull.Value))
-        bd.AdicionarParametros("@IDFornecedor", If(myReserva.IDFornecedor, DBNull.Value))
-        bd.AdicionarParametros("@IDFabricante", If(myReserva.IDFabricante, DBNull.Value))
-        bd.AdicionarParametros("@IDProdutoTipo", If(myReserva.IDProdutoTipo, DBNull.Value))
-        bd.AdicionarParametros("@IDPedido", If(myReserva.IDPedido, DBNull.Value))
-        bd.AdicionarParametros("@IDSituacaoReserva", myReserva.IDSituacaoReserva)
-        bd.AdicionarParametros("@ConclusaoData", If(myReserva.ConclusaoData, DBNull.Value))
-        bd.AdicionarParametros("@Observacao", myReserva.Observacao)
-        '
-        Dim query = "UPDATE tblReserva SET " +
-                    "ReservaData = @ReservaData " +
-                    ", IDFuncionario = @IDFuncionario " +
-                    ", IDFilial = @IDFilial " +
-                    ", ClienteNome = @ClienteNome " +
-                    ", TelefoneA = @TelefoneA " +
-                    ", TelefoneB = @TelefoneB " +
-                    ", TemWathsapp = @TemWathsapp " +
-                    ", ClienteEmail = @ClienteEmail " +
-                    ", ProdutoConhecido = @ProdutoConhecido " +
-                    ", IDProduto = @IDProduto " +
-                    ", Produto = @Produto " +
-                    ", Autor = @Autor " +
-                    ", IDFornecedor = @IDFornecedor " +
-                    ", IDFabricante = @IDFabricante " +
-                    ", IDProdutoTipo = @IDProdutoTipo " +
-                    ", IDPedido = @IDPedido " +
-                    ", IDSituacaoReserva = @IDSituacaoReserva " +
-                    ", ConclusaoData = @ConclusaoData " +
-                    "WHERE " +
-                    "IDReserva = @IDReserva"
-        '
-        Try
-            '
-            bd.ExecutarManipulacao(CommandType.Text, query)
-            '
-            '--- OBSERVACAO
-            Dim oBLL As New ObservacaoBLL
-            oBLL.SaveObservacao(6, myReserva.IDReserva, myReserva.Observacao, bd)
-            '
-            bd.CommitTransaction()
-            Return myReserva.IDReserva
-            '
-        Catch ex As Exception
-            bd.RollBackTransaction()
-            Throw ex
-        End Try
-        '
-    End Function
-    '
-    '===================================================================================================
-    ' ALTERA A SITUCAO DA RESERVA
-    '===================================================================================================
-    Public Function Reserva_AlteraSituacao(IDReserva As Integer, IDSituacao As Byte, dbTran As Object) As Boolean
+	'
+	'===================================================================================================
+	' ALTERAR REGISTRO
+	'===================================================================================================
+	Public Function Reserva_Alterar(myReserva As clReserva) As Object
+		'
+		Dim db As New AcessoDados
+		db.BeginTransaction()
+		'
+		Try
+			'
+			'--- UPDATE RESERVA
+			'-------------------------------------------------------------------------------------------------
+			db.LimparParametros()
+			'
+			'--- ADICIONA OS PARAMENTROS NECESSARIOS
+			db.AdicionarParametros("@IDReserva", myReserva.IDReserva)
+			db.AdicionarParametros("@ReservaData", myReserva.ReservaData)
+			db.AdicionarParametros("@IDFuncionario", myReserva.IDFuncionario)
+			db.AdicionarParametros("@IDFilial", myReserva.IDFilial)
+			db.AdicionarParametros("@IDClienteSimples", myReserva.IDClienteSimples)
+			db.AdicionarParametros("@ProdutoConhecido", myReserva.ProdutoConhecido)
+			db.AdicionarParametros("@IDProduto", If(myReserva.IDProduto, DBNull.Value))
+			db.AdicionarParametros("@Produto", myReserva.Produto)
+			db.AdicionarParametros("@Autor", If(myReserva.Autor, DBNull.Value))
+			db.AdicionarParametros("@IDFornecedor", If(myReserva.IDFornecedor, DBNull.Value))
+			db.AdicionarParametros("@IDFabricante", If(myReserva.IDFabricante, DBNull.Value))
+			db.AdicionarParametros("@IDProdutoTipo", If(myReserva.IDProdutoTipo, DBNull.Value))
+			db.AdicionarParametros("@IDPedido", If(myReserva.IDPedido, DBNull.Value))
+			db.AdicionarParametros("@IDSituacaoReserva", myReserva.IDSituacaoReserva)
+			db.AdicionarParametros("@ConclusaoData", If(myReserva.ConclusaoData, DBNull.Value))
+			db.AdicionarParametros("@ValorAntecipado", If(myReserva.ValorAntecipado, DBNull.Value))
+			'
+			Dim query = "UPDATE tblReserva SET " +
+					"ReservaData = @ReservaData " +
+					", IDFuncionario = @IDFuncionario " +
+					", IDFilial = @IDFilial " +
+					", IDClienteSimples = @IDClienteSimples " +
+					", ProdutoConhecido = @ProdutoConhecido " +
+					", IDProduto = @IDProduto " +
+					", Produto = @Produto " +
+					", Autor = @Autor " +
+					", IDFornecedor = @IDFornecedor " +
+					", IDFabricante = @IDFabricante " +
+					", IDProdutoTipo = @IDProdutoTipo " +
+					", IDPedido = @IDPedido " +
+					", IDSituacaoReserva = @IDSituacaoReserva " +
+					", ConclusaoData = @ConclusaoData " +
+					", ValorAntecipado = @ValorAntecipado " +
+					"WHERE " +
+					"IDReserva = @IDReserva"
+			'
+			db.ExecutarManipulacao(CommandType.Text, query)
+			'
+			'--- OBSERVACAO
+			Dim oBLL As New ObservacaoBLL
+			oBLL.SaveObservacao(6, myReserva.IDReserva, myReserva.Observacao, db)
+			'
+			db.CommitTransaction()
+			Return myReserva.IDReserva
+			'
+		Catch ex As Exception
+			db.RollBackTransaction()
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' INSERT OR UPDATE CLIENTE SIMPLES RESERVA
+	'==========================================================================================
+	'Private Function ClienteInsertUpdate(reserva As clReserva, dbTran As AcessoDados) As Object
+	'	'
+	'	Try
+	'		'
+	'		Dim query As String = ""
+	'		'
+	'		'--- UPDATE OR INSERT CLIENTE - GET NewID
+	'		'-------------------------------------------------------------------------------------------------
+	'		dbTran.LimparParametros()
+	'		'
+	'		'--- ADICIONA OS PARAMENTROS NECESSARIOS
+	'		dbTran.AdicionarParametros("@IDClienteSimples", reserva.IDClienteSimples)
+	'		dbTran.AdicionarParametros("@ClienteNome", reserva.ClienteNome)
+	'		dbTran.AdicionarParametros("@TelefoneA", If(reserva.TelefoneA, DBNull.Value))
+	'		dbTran.AdicionarParametros("@TelefoneB", If(reserva.TelefoneB, DBNull.Value))
+	'		dbTran.AdicionarParametros("@TemWhatsapp", reserva.TemWhatsapp)
+	'		dbTran.AdicionarParametros("@ClienteEmail", If(reserva.ClienteEmail, DBNull.Value))
+	'		'
+	'		Dim cBLL As New ClienteSimplesBLL
+	'		'
+	'		Dim Cliente As New clClienteSimples With {
+	'			.IDClienteSimples = reserva.IDClienteSimples,
+	'			.ClienteNome = reserva.ClienteNome,
+	'			.TelefoneA = reserva.TelefoneA,
+	'			.TelefoneB = reserva.TelefoneB,
+	'			.ClienteEmail = reserva.ClienteEmail,
+	'			.TemWhatsapp = reserva.TemWhatsapp,
+	'			.ChaveExclusiva = .GetChaveExclusiva
+	'			}
+	'		'
+	'		Dim response As Object = Nothing
+	'		'
+	'		'--- TRY TO GET NEW ID
+	'		If Cliente.IDClienteSimples Is Nothing Then
+	'			response = cBLL.ClienteSimples_Inserir(Cliente, dbTran)
+	'		Else
+	'			response = cBLL.ClienteSimples_Alterar(Cliente, dbTran)
+	'		End If
+	'		'
+	'		'--- CHECK RESPONSE TYPE OF
+	'		If TypeOf response Is Integer Then '--> return ID (new Cliente saved)
+	'			Return response
+	'		ElseIf TypeOf response Is clClienteSimples Then '--> return class Cliente (duplicated)
+	'			Return DirectCast(response, clClienteSimples)
+	'		Else '--> return else (error)
+	'			Throw New Exception(response.ToString)
+	'		End If
+	'		'
+	'	Catch ex As Exception
+	'		Throw ex
+	'	End Try
+	'	'
+	'End Function
+	'
+	'===================================================================================================
+	' ALTERA A SITUCAO DA RESERVA
+	'===================================================================================================
+	Public Function Reserva_AlteraSituacao(IDReserva As Integer, IDSituacao As Byte, dbTran As Object) As Boolean
         '
         Dim db As AcessoDados = dbTran
         '
@@ -299,11 +348,12 @@ Public Class ReservaBLL
         res.ApelidoFuncionario = IIf(IsDBNull(r("ApelidoFuncionario")), String.Empty, r("ApelidoFuncionario"))
         res.IDFilial = IIf(IsDBNull(r("IDFilial")), Nothing, r("IDFilial"))
         res.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
-        res.ClienteNome = IIf(IsDBNull(r("ClienteNome")), String.Empty, r("ClienteNome"))
-        res.TelefoneA = IIf(IsDBNull(r("TelefoneA")), String.Empty, r("TelefoneA"))
+		res.IDClienteSimples = IIf(IsDBNull(r("IDClienteSimples")), Nothing, r("IDClienteSimples"))
+		res.ClienteNome = IIf(IsDBNull(r("ClienteNome")), String.Empty, r("ClienteNome"))
+		res.TelefoneA = IIf(IsDBNull(r("TelefoneA")), String.Empty, r("TelefoneA"))
         res.TelefoneB = IIf(IsDBNull(r("TelefoneB")), String.Empty, r("TelefoneB"))
-        res.TemWathsapp = IIf(IsDBNull(r("TemWathsapp")), Nothing, r("TemWathsapp"))
-        res.ClienteEmail = IIf(IsDBNull(r("ClienteEmail")), String.Empty, r("ClienteEmail"))
+		res.TemWhatsapp = IIf(IsDBNull(r("TemWhatsapp")), Nothing, r("TemWhatsapp"))
+		res.ClienteEmail = IIf(IsDBNull(r("ClienteEmail")), String.Empty, r("ClienteEmail"))
         res.ProdutoConhecido = IIf(IsDBNull(r("ProdutoConhecido")), Nothing, r("ProdutoConhecido"))
         res.IDProduto = IIf(IsDBNull(r("IDProduto")), Nothing, r("IDProduto"))
         res.RGProduto = IIf(IsDBNull(r("RGProduto")), Nothing, r("RGProduto"))
@@ -321,16 +371,18 @@ Public Class ReservaBLL
         res.ConclusaoData = IIf(IsDBNull(r("ConclusaoData")), Nothing, r("ConclusaoData"))
         res.Observacao = IIf(IsDBNull(r("Observacao")), String.Empty, r("Observacao"))
         res.ReservaAtiva = IIf(IsDBNull(r("ReservaAtiva")), Nothing, r("ReservaAtiva"))
-        res.IDPedido = IIf(IsDBNull(r("IDPedido")), Nothing, r("IDPedido"))
-        '
-        Return res
+		res.IDPedido = IIf(IsDBNull(r("IDPedido")), Nothing, r("IDPedido"))
+		res.ValorAntecipado = IIf(IsDBNull(r("ValorAntecipado")), Nothing, r("ValorAntecipado"))
+		'
+		Return res
         '
     End Function
-    '
-    '==========================================================================================
-    ' DELETE RESERVA - BEFORE check PEDIDO
-    '==========================================================================================
-    Public Function DeleteReserva(Reserva As clReserva, Optional SubtraiPedido As Boolean = False) As Boolean
+	'
+	'==========================================================================================
+	' DELETE RESERVA - BEFORE check PEDIDO
+	'==========================================================================================
+	' TODO: NEED TO CHECK IDCLIENTE RESERVA
+	Public Function DeleteReserva(Reserva As clReserva, Optional SubtraiPedido As Boolean = False) As Boolean
         '
         Dim db As AcessoDados
         Dim query As String = ""

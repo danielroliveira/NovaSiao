@@ -401,9 +401,8 @@
     Private Sub txtProduto_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles txtProduto.Validating
         '
         If txtProduto.Text.Trim.Length > 0 Then
-            Dim f As New Utilidades
-            txtProduto.Text = f.removeAcentos(txtProduto.Text).ToUpper
-        End If
+			txtProduto.Text = Utilidades.removeAcentos(txtProduto.Text).ToUpper
+		End If
         '
     End Sub
     '

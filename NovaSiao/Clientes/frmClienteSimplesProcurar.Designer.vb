@@ -19,10 +19,9 @@ Partial Class frmClienteSimplesProcurar
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-		Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Me.components = New System.ComponentModel.Container()
+		Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Me.cmbAtivo = New Controles.ComboBox_OnlyValues()
 		Me.txtProcura = New System.Windows.Forms.TextBox()
 		Me.Label2 = New System.Windows.Forms.Label()
@@ -32,23 +31,30 @@ Partial Class frmClienteSimplesProcurar
 		Me.dgvLista = New System.Windows.Forms.DataGridView()
 		Me.clnID = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.clnNome = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnTelefoneB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnTelefoneA = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.lblProc = New System.Windows.Forms.Label()
 		Me.btnProcurar = New System.Windows.Forms.Button()
 		Me.btnClose = New VIBlend.WinForms.Controls.vFormButton()
+		Me.Label5 = New System.Windows.Forms.Label()
+		Me.MenuDatagrid = New System.Windows.Forms.ContextMenuStrip(Me.components)
+		Me.miAtivar = New System.Windows.Forms.ToolStripMenuItem()
+		Me.miDesativar = New System.Windows.Forms.ToolStripMenuItem()
 		Me.Panel1.SuspendLayout()
 		CType(Me.dgvLista, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.MenuDatagrid.SuspendLayout()
 		Me.SuspendLayout()
 		'
 		'Panel1
 		'
 		Me.Panel1.Controls.Add(Me.btnClose)
-		Me.Panel1.Size = New System.Drawing.Size(427, 50)
+		Me.Panel1.Size = New System.Drawing.Size(648, 50)
 		Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
 		Me.Panel1.Controls.SetChildIndex(Me.btnClose, 0)
 		'
 		'lblTitulo
 		'
-		Me.lblTitulo.Location = New System.Drawing.Point(135, 0)
+		Me.lblTitulo.Location = New System.Drawing.Point(356, 0)
 		Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
 		Me.lblTitulo.Size = New System.Drawing.Size(292, 50)
 		Me.lblTitulo.Text = "Cliente Simples Procurar"
@@ -59,7 +65,7 @@ Partial Class frmClienteSimplesProcurar
 		Me.cmbAtivo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
 		Me.cmbAtivo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
 		Me.cmbAtivo.FormattingEnabled = True
-		Me.cmbAtivo.Location = New System.Drawing.Point(325, 66)
+		Me.cmbAtivo.Location = New System.Drawing.Point(325, 76)
 		Me.cmbAtivo.Name = "cmbAtivo"
 		Me.cmbAtivo.RestrictContentToListItems = True
 		Me.cmbAtivo.Size = New System.Drawing.Size(82, 27)
@@ -67,7 +73,7 @@ Partial Class frmClienteSimplesProcurar
 		'
 		'txtProcura
 		'
-		Me.txtProcura.Location = New System.Drawing.Point(80, 66)
+		Me.txtProcura.Location = New System.Drawing.Point(80, 76)
 		Me.txtProcura.Margin = New System.Windows.Forms.Padding(6)
 		Me.txtProcura.Name = "txtProcura"
 		Me.txtProcura.Size = New System.Drawing.Size(188, 27)
@@ -76,7 +82,7 @@ Partial Class frmClienteSimplesProcurar
 		'Label2
 		'
 		Me.Label2.AutoSize = True
-		Me.Label2.Location = New System.Drawing.Point(277, 69)
+		Me.Label2.Location = New System.Drawing.Point(277, 79)
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(42, 19)
 		Me.Label2.TabIndex = 19
@@ -85,7 +91,7 @@ Partial Class frmClienteSimplesProcurar
 		'Label3
 		'
 		Me.Label3.AutoSize = True
-		Me.Label3.Location = New System.Drawing.Point(16, 69)
+		Me.Label3.Location = New System.Drawing.Point(16, 79)
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(58, 19)
 		Me.Label3.TabIndex = 17
@@ -93,9 +99,9 @@ Partial Class frmClienteSimplesProcurar
 		'
 		'btnAdicionar
 		'
-		Me.btnAdicionar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.btnAdicionar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.btnAdicionar.Image = Global.NovaSiao.My.Resources.Resources.add
-		Me.btnAdicionar.Location = New System.Drawing.Point(286, 437)
+		Me.btnAdicionar.Location = New System.Drawing.Point(508, 448)
 		Me.btnAdicionar.Name = "btnAdicionar"
 		Me.btnAdicionar.Size = New System.Drawing.Size(120, 42)
 		Me.btnAdicionar.TabIndex = 22
@@ -106,9 +112,9 @@ Partial Class frmClienteSimplesProcurar
 		'
 		'btnEditar
 		'
-		Me.btnEditar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.btnEditar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.btnEditar.Image = Global.NovaSiao.My.Resources.Resources.editar
-		Me.btnEditar.Location = New System.Drawing.Point(153, 437)
+		Me.btnEditar.Location = New System.Drawing.Point(382, 448)
 		Me.btnEditar.Name = "btnEditar"
 		Me.btnEditar.Size = New System.Drawing.Size(120, 42)
 		Me.btnEditar.TabIndex = 21
@@ -123,27 +129,29 @@ Partial Class frmClienteSimplesProcurar
 		Me.dgvLista.AllowUserToDeleteRows = False
 		Me.dgvLista.AllowUserToResizeColumns = False
 		Me.dgvLista.AllowUserToResizeRows = False
-		DataGridViewCellStyle9.BackColor = System.Drawing.Color.AntiqueWhite
-		DataGridViewCellStyle9.ForeColor = System.Drawing.Color.Black
-		DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
-		DataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.White
-		Me.dgvLista.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle9
+		DataGridViewCellStyle1.BackColor = System.Drawing.Color.OldLace
+		DataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black
+		DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.White
+		Me.dgvLista.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+		Me.dgvLista.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.dgvLista.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
 		Me.dgvLista.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-		DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-		DataGridViewCellStyle10.BackColor = System.Drawing.Color.LightSteelBlue
-		DataGridViewCellStyle10.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		DataGridViewCellStyle10.ForeColor = System.Drawing.Color.Navy
-		DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
-		DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-		DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-		Me.dgvLista.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
+		DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
+		DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Navy
+		DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+		DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.dgvLista.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
 		Me.dgvLista.ColumnHeadersHeight = 33
 		Me.dgvLista.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-		Me.dgvLista.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnID, Me.clnNome})
+		Me.dgvLista.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnID, Me.clnNome, Me.clnTelefoneB, Me.clnTelefoneA})
 		Me.dgvLista.EnableHeadersVisualStyles = False
 		Me.dgvLista.GridColor = System.Drawing.SystemColors.ActiveCaption
-		Me.dgvLista.Location = New System.Drawing.Point(20, 112)
+		Me.dgvLista.Location = New System.Drawing.Point(20, 123)
 		Me.dgvLista.MultiSelect = False
 		Me.dgvLista.Name = "dgvLista"
 		Me.dgvLista.ReadOnly = True
@@ -152,34 +160,42 @@ Partial Class frmClienteSimplesProcurar
 		Me.dgvLista.RowTemplate.Height = 30
 		Me.dgvLista.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
 		Me.dgvLista.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-		Me.dgvLista.Size = New System.Drawing.Size(387, 311)
+		Me.dgvLista.Size = New System.Drawing.Size(608, 311)
 		Me.dgvLista.TabIndex = 41
 		'
 		'clnID
 		'
-		DataGridViewCellStyle11.BackColor = System.Drawing.Color.PowderBlue
-		DataGridViewCellStyle11.Padding = New System.Windows.Forms.Padding(5, 0, 0, 0)
-		Me.clnID.DefaultCellStyle = DataGridViewCellStyle11
-		Me.clnID.HeaderText = "Reg.:"
+		Me.clnID.HeaderText = "Reg."
 		Me.clnID.Name = "clnID"
 		Me.clnID.ReadOnly = True
-		Me.clnID.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
-		Me.clnID.Width = 60
+		Me.clnID.Width = 80
 		'
 		'clnNome
 		'
-		DataGridViewCellStyle12.BackColor = System.Drawing.Color.PowderBlue
-		Me.clnNome.DefaultCellStyle = DataGridViewCellStyle12
-		Me.clnNome.HeaderText = "Cliente"
+		Me.clnNome.HeaderText = "Nome"
 		Me.clnNome.Name = "clnNome"
 		Me.clnNome.ReadOnly = True
-		Me.clnNome.Width = 270
+		Me.clnNome.Width = 250
+		'
+		'clnTelefoneB
+		'
+		Me.clnTelefoneB.HeaderText = "Celular"
+		Me.clnTelefoneB.Name = "clnTelefoneB"
+		Me.clnTelefoneB.ReadOnly = True
+		Me.clnTelefoneB.Width = 120
+		'
+		'clnTelefoneA
+		'
+		Me.clnTelefoneA.HeaderText = "Telefone"
+		Me.clnTelefoneA.Name = "clnTelefoneA"
+		Me.clnTelefoneA.ReadOnly = True
+		Me.clnTelefoneA.Width = 120
 		'
 		'lblProc
 		'
 		Me.lblProc.BackColor = System.Drawing.Color.White
 		Me.lblProc.Font = New System.Drawing.Font("Calibri Light", 11.25!, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.lblProc.Location = New System.Drawing.Point(92, 70)
+		Me.lblProc.Location = New System.Drawing.Point(92, 80)
 		Me.lblProc.Margin = New System.Windows.Forms.Padding(0)
 		Me.lblProc.Name = "lblProc"
 		Me.lblProc.Size = New System.Drawing.Size(172, 19)
@@ -189,12 +205,14 @@ Partial Class frmClienteSimplesProcurar
 		'
 		'btnProcurar
 		'
+		Me.btnProcurar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.btnProcurar.Enabled = False
 		Me.btnProcurar.Image = Global.NovaSiao.My.Resources.Resources.refresh1
-		Me.btnProcurar.Location = New System.Drawing.Point(20, 437)
+		Me.btnProcurar.Location = New System.Drawing.Point(20, 448)
 		Me.btnProcurar.Name = "btnProcurar"
 		Me.btnProcurar.Size = New System.Drawing.Size(120, 42)
 		Me.btnProcurar.TabIndex = 43
+		Me.btnProcurar.Tag = "Clique aqui para Procurar"
 		Me.btnProcurar.Text = "&Procurar"
 		Me.btnProcurar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		Me.btnProcurar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -208,7 +226,7 @@ Partial Class frmClienteSimplesProcurar
 		Me.btnClose.BorderStyle = VIBlend.WinForms.Controls.ButtonBorderStyle.NONE
 		Me.btnClose.ButtonType = VIBlend.WinForms.Controls.vFormButtonType.CloseButton
 		Me.btnClose.CausesValidation = False
-		Me.btnClose.Location = New System.Drawing.Point(396, 14)
+		Me.btnClose.Location = New System.Drawing.Point(617, 14)
 		Me.btnClose.Name = "btnClose"
 		Me.btnClose.RibbonStyle = False
 		Me.btnClose.RoundedCornersMask = CType(15, Byte)
@@ -219,10 +237,43 @@ Partial Class frmClienteSimplesProcurar
 		Me.btnClose.UseVisualStyleBackColor = False
 		Me.btnClose.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.BLUEBLEND
 		'
+		'Label5
+		'
+		Me.Label5.AutoSize = True
+		Me.Label5.Font = New System.Drawing.Font("Calibri", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.Label5.ForeColor = System.Drawing.Color.DarkBlue
+		Me.Label5.Location = New System.Drawing.Point(337, 59)
+		Me.Label5.Name = "Label5"
+		Me.Label5.Size = New System.Drawing.Size(71, 14)
+		Me.Label5.TabIndex = 44
+		Me.Label5.Text = "PgDn | PgUp"
+		'
+		'MenuDatagrid
+		'
+		Me.MenuDatagrid.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.MenuDatagrid.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAtivar, Me.miDesativar})
+		Me.MenuDatagrid.Name = "MenuFab"
+		Me.MenuDatagrid.Size = New System.Drawing.Size(191, 52)
+		'
+		'miAtivar
+		'
+		Me.miAtivar.Image = Global.NovaSiao.My.Resources.Resources.accept
+		Me.miAtivar.Name = "miAtivar"
+		Me.miAtivar.Size = New System.Drawing.Size(190, 24)
+		Me.miAtivar.Text = "Ativar Cliente"
+		'
+		'miDesativar
+		'
+		Me.miDesativar.Image = Global.NovaSiao.My.Resources.Resources.block
+		Me.miDesativar.Name = "miDesativar"
+		Me.miDesativar.Size = New System.Drawing.Size(190, 24)
+		Me.miDesativar.Text = "Desativar Cliente"
+		'
 		'frmClienteSimplesProcurar
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-		Me.ClientSize = New System.Drawing.Size(427, 491)
+		Me.ClientSize = New System.Drawing.Size(648, 502)
+		Me.Controls.Add(Me.Label5)
 		Me.Controls.Add(Me.btnProcurar)
 		Me.Controls.Add(Me.lblProc)
 		Me.Controls.Add(Me.dgvLista)
@@ -245,8 +296,10 @@ Partial Class frmClienteSimplesProcurar
 		Me.Controls.SetChildIndex(Me.Panel1, 0)
 		Me.Controls.SetChildIndex(Me.lblProc, 0)
 		Me.Controls.SetChildIndex(Me.btnProcurar, 0)
+		Me.Controls.SetChildIndex(Me.Label5, 0)
 		Me.Panel1.ResumeLayout(False)
 		CType(Me.dgvLista, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.MenuDatagrid.ResumeLayout(False)
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
@@ -258,9 +311,15 @@ Partial Class frmClienteSimplesProcurar
     Friend WithEvents btnAdicionar As Button
     Friend WithEvents btnEditar As Button
 	Friend WithEvents dgvLista As DataGridView
-	Friend WithEvents clnID As DataGridViewTextBoxColumn
-	Friend WithEvents clnNome As DataGridViewTextBoxColumn
 	Friend WithEvents lblProc As Label
 	Friend WithEvents btnProcurar As Button
 	Friend WithEvents btnClose As VIBlend.WinForms.Controls.vFormButton
+	Friend WithEvents Label5 As Label
+	Friend WithEvents clnID As DataGridViewTextBoxColumn
+	Friend WithEvents clnNome As DataGridViewTextBoxColumn
+	Friend WithEvents clnTelefoneB As DataGridViewTextBoxColumn
+	Friend WithEvents clnTelefoneA As DataGridViewTextBoxColumn
+	Friend WithEvents MenuDatagrid As ContextMenuStrip
+	Friend WithEvents miAtivar As ToolStripMenuItem
+	Friend WithEvents miDesativar As ToolStripMenuItem
 End Class

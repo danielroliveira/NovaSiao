@@ -52,7 +52,7 @@ Public Class ClienteSimplesBLL
 	'==========================================================================================
 	' GET CLIENTE SIMPLES PELO ID
 	'==========================================================================================
-	Public Function GetReservaPeloID(IDClienteSimples As Integer) As clClienteSimples
+	Public Function GetClientePeloID(IDClienteSimples As Integer) As clClienteSimples
 		'
 		Try
 			Dim db As New AcessoDados
@@ -65,6 +65,44 @@ Public Class ClienteSimplesBLL
 			'
 			If dt.Rows.Count = 0 Then
 				Throw New AppException("Não existe Cliente Simples com o ID informado...")
+			Else
+				If Not IsNumeric(dt.Rows(0).Item(0)) Then
+					Throw New Exception(dt.Rows(0).ToString)
+				End If
+			End If
+			'
+			Return ConvertRowClass(dt.Rows(0))
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' GET CLIENTE SIMPLES PELO NOME OU PELA CHAVE EXCLUSIVA
+	'==========================================================================================
+	Public Function GetClientePeloNome(ClienteNome As String,
+									   Optional IsChaveExclusiva As Boolean = False) As clClienteSimples
+		'
+		Try
+			Dim db As New AcessoDados
+			Dim query As String = ""
+			'
+			db.LimparParametros()
+			'
+			If Not IsChaveExclusiva Then
+				db.AdicionarParametros("@ClienteNome", ClienteNome)
+				query = "SELECT * FROM qryClienteSimples WHERE ClienteNome = @ClienteNome"
+			Else
+				db.AdicionarParametros("@ChaveExclusiva", ClienteNome)
+				query = "SELECT * FROM qryClienteSimples WHERE ChaveExclusiva = @ChaveExclusiva"
+			End If
+			'
+			Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+			'
+			If dt.Rows.Count = 0 Then
+				Throw New AppException("Não existe Cliente Simples com o Nome informado...")
 			Else
 				If Not IsNumeric(dt.Rows(0).Item(0)) Then
 					Throw New Exception(dt.Rows(0).ToString)
@@ -142,6 +180,17 @@ Public Class ClienteSimplesBLL
 			If dbTran Is Nothing Then db.CommitTransaction()
 			Return obj
 			'
+		Catch ex As SqlClient.SqlException
+			'
+			If dbTran Is Nothing Then db.RollBackTransaction()
+			'
+			If ex.Number = 2627 Then
+				Return GetClientePeloNome(ClienteSimples.ChaveExclusiva, True)
+				'Throw New AppException("Nome de Cliente Duplicado...")
+			Else
+				Throw ex
+			End If
+			'
 		Catch ex As Exception
 			If dbTran Is Nothing Then db.RollBackTransaction()
 			Throw ex
@@ -183,7 +232,7 @@ Public Class ClienteSimplesBLL
 					"ClienteNome = @ClienteNome, " &
 					"TelefoneA = @TelefoneA, " &
 					"TelefoneB = @TelefoneB, " &
-					"TemWathsapp = @TemWathsapp, " &
+					"TemWhatsapp = @TemWhatsapp, " &
 					"ClienteEmail = @ClienteEmail, " &
 					"ChaveExclusiva	= @ChaveExclusiva, " &
 					"IDPessoa = @IDPessoa, " &
@@ -204,7 +253,7 @@ Public Class ClienteSimplesBLL
 			db.ExecutarManipulacao(CommandType.Text, query)
 			'
 			'--- INSERT ENDERECO IF NECESSARY
-			If ClienteSimples.Endereco.Trim.Length > 0 Then
+			If ClienteSimples.Endereco IsNot Nothing AndAlso ClienteSimples.Endereco.Trim.Length > 0 Then
 				'
 				db.LimparParametros()
 				db.AdicionarParametros("@IDClienteSimples", ClienteSimples.IDClienteSimples)

@@ -263,7 +263,7 @@ End Sub
 	'
     '-------------------------------------------------------------------------------------------------
     '--- QUANDO PRESSIONA A TECLA ESC FECHA O FORMULARIO
-    '--- QUANDO A TECLA CIMA E BAIXO NAVEGA ENTRE OS ITENS DA LISTAGEM
+    '--- QUANDO A TECLA CIMA E BAIXO NAVEGA ENTRE OS ITENS DO DATAGRID
     '-------------------------------------------------------------------------------------------------
     Private Sub Me_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
         If e.KeyCode = Keys.Escape Then
@@ -326,3 +326,44 @@ End Sub
             '
         End If
     End Sub
+
+	'
+	'----------------------------------------------------------------------------------
+	'--- RESIZE FONT SIZE LABEL TO FIT ALL TEXT
+	'----------------------------------------------------------------------------------
+	Private Sub ResizeFontLabel(myLabel As Label)
+        '
+        Dim lblFont As Font = New Font(myLabel.Font.FontFamily, myLabel.Font.Size, myLabel.Font.Style)
+        '
+        While myLabel.Width < TextRenderer.MeasureText(myLabel.Text, lblFont).Width
+            myLabel.Font = New Font(myLabel.Font.FontFamily, myLabel.Font.Size - 0.5F, myLabel.Font.Style)
+            lblFont = New Font(myLabel.Font.FontFamily, myLabel.Font.Size, myLabel.Font.Style)
+        End While
+        '
+    End Sub
+
+	'
+	'----------------------------------------------------------------------------------
+	'--- CREATE ONE BORDER OUT CHKPRODUTOCONHECIDO ON SELECTED
+	'----------------------------------------------------------------------------------
+	Private ctrlrect As New Rectangle(0, 0, 0, 0)
+
+	Private Sub chkProdutoConhecido_Enter(sender As Object, e As EventArgs) Handles chkProdutoConhecido.Enter
+		Dim ctrl As Control = DirectCast(sender, Control)
+		ctrlrect = New Rectangle(ctrl.Location.X - 3, ctrl.Location.Y - 3, ctrl.Width + 6, ctrl.Height + 6)
+		Panel4.Refresh()
+	End Sub
+
+	Private Sub Panel4_Paint(ByVal sender As Object, ByVal e As PaintEventArgs) Handles Panel4.Paint
+		If ctrlrect.Width > 0 Then
+			Dim transColor As Color = Color.FromArgb(40, 40, 40, 200)
+			e.Graphics.FillRectangle(New SolidBrush(transColor), ctrlrect) 'Draw a filled rectangle with transparent red color
+			e.Graphics.DrawRectangle(Pens.Gainsboro, ctrlrect) 'Draw a solid red rectangle as a border
+		End If
+	End Sub
+
+	Private Sub chkProdutoConhecido_Leave(sender As Object, e As EventArgs) Handles chkProdutoConhecido.Leave
+		ctrlrect = New Rectangle(0, 0, 0, 0)
+		Panel4.Refresh()
+	End Sub
+	'----------------------------------------------------------------------------------

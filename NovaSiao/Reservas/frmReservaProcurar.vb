@@ -710,7 +710,7 @@ Public Class frmReservaProcurar
         '
         '
     End Sub
-    '
+	'
 #End Region '/ MENU RESERVA
-    '
+	'
 End Class

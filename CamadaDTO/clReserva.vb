@@ -14,13 +14,15 @@ Public Class clReserva
         Dim _IDFuncionario As Integer?
         Dim _ApelidoFuncionario As String
         Dim _IDFilial As Integer?
-        Dim _ApelidoFilial As String
-        Dim _ClienteNome As String
-        Dim _TelefoneA As String
-        Dim _TelefoneB As String
-        Dim _TemWathsapp As Boolean
-        Dim _ClienteEmail As String
-        Dim _ProdutoConhecido As Boolean
+		Dim _ApelidoFilial As String
+		Dim _IDClienteSimples As Integer?
+		'--- tblClienteSimples
+		'Dim _ClienteNome As String
+		'Dim _TelefoneA As String
+		'Dim _TelefoneB As String
+		'Dim _TemWhatsapp As Boolean
+		'Dim _ClienteEmail As String
+		Dim _ProdutoConhecido As Boolean
         '--- tblProduto
         Dim _IDProduto As Integer?
         Dim _RGProduto As Integer?
@@ -38,9 +40,10 @@ Public Class clReserva
         Dim _SituacaoReserva As String
         Dim _ConclusaoData As Date?
         Dim _Observacao As String
-        Dim _ReservaAtiva As Boolean
-        '
-        Dim _IDPedido As Integer?
+		Dim _ReservaAtiva As Boolean
+		Dim _ValorAntecipado As Decimal?
+		'
+		Dim _IDPedido As Integer?
         '
     End Structure
 #End Region
@@ -58,11 +61,11 @@ Public Class clReserva
         With RData
             ._IDReserva = Nothing
             ._ProdutoConhecido = True
-            ._IDProduto = Nothing
-            ._RGProduto = Nothing
-            ._TemWathsapp = False
-            ._IDSituacaoReserva = 1
-            ._ReservaData = Today.ToShortDateString
+			._IDProduto = Nothing
+			._IDClienteSimples = Nothing
+			._RGProduto = Nothing
+			._IDSituacaoReserva = 1
+			._ReservaData = Today.ToShortDateString
             ._IDPedido = Nothing
         End With
     End Sub
@@ -169,87 +172,51 @@ Public Class clReserva
             RData._IDFilial = value
         End Set
     End Property
-    '
-    '--- Propriedade ApelidoFilial
-    Public Property ApelidoFilial() As String
-        Get
-            Return RData._ApelidoFilial
-        End Get
-        Set(ByVal value As String)
-            If value <> RData._ApelidoFilial Then
-                RaiseEvent AoAlterar()
-            End If
-            RData._ApelidoFilial = value
-        End Set
-    End Property
-    '
-    '--- Propriedade ClienteNome
-    Public Property ClienteNome() As String
-        Get
-            Return RData._ClienteNome
-        End Get
-        Set(ByVal value As String)
-            If value <> RData._ClienteNome Then
-                RaiseEvent AoAlterar()
-            End If
-            RData._ClienteNome = value
-        End Set
-    End Property
-    '
-    '--- Propriedade TelefoneA
-    Public Property TelefoneA() As String
-        Get
-            Return RData._TelefoneA
-        End Get
-        Set(ByVal value As String)
-            If value <> RData._TelefoneA Then
-                RaiseEvent AoAlterar()
-            End If
-            RData._TelefoneA = value
-        End Set
-    End Property
-    '
-    '--- Propriedade TelefoneB
-    Public Property TelefoneB() As String
-        Get
-            Return RData._TelefoneB
-        End Get
-        Set(ByVal value As String)
-            If value <> RData._TelefoneB Then
-                RaiseEvent AoAlterar()
-            End If
-            RData._TelefoneB = value
-        End Set
-    End Property
-    '
-    '--- Propriedade TemWathsapp
-    Public Property TemWathsapp() As Boolean
-        Get
-            Return RData._TemWathsapp
-        End Get
-        Set(ByVal value As Boolean)
-            If value <> RData._TemWathsapp Then
-                RaiseEvent AoAlterar()
-            End If
-            RData._TemWathsapp = value
-        End Set
-    End Property
-    '
-    '--- Propriedade ClienteEmail
-    Public Property ClienteEmail() As String
-        Get
-            Return RData._ClienteEmail
-        End Get
-        Set(ByVal value As String)
-            If value <> RData._ClienteEmail Then
-                RaiseEvent AoAlterar()
-            End If
-            RData._ClienteEmail = value
-        End Set
-    End Property
-    '
-    '--- Propriedade ProdutoConhecido
-    Public Property ProdutoConhecido() As Boolean
+	'
+	'--- Propriedade ApelidoFilial
+	Public Property ApelidoFilial() As String
+		Get
+			Return RData._ApelidoFilial
+		End Get
+		Set(ByVal value As String)
+			If value <> RData._ApelidoFilial Then
+				RaiseEvent AoAlterar()
+			End If
+			RData._ApelidoFilial = value
+		End Set
+	End Property
+	'
+	'--- Propriedade IDClienteSimples
+	'------------------------------------------------------
+	Public Property IDClienteSimples() As Integer?
+		Get
+			Return RData._IDClienteSimples
+		End Get
+		Set(ByVal value As Integer?)
+			If value <> RData._IDClienteSimples Then
+				RaiseEvent AoAlterar()
+			End If
+			RData._IDClienteSimples = value
+		End Set
+	End Property
+	'
+	'--- Propriedade ClienteNome
+	Public Property ClienteNome() As String
+	'
+	'--- Propriedade TelefoneA
+	Public Property TelefoneA() As String
+	'
+	'--- Propriedade TelefoneB
+	Public Property TelefoneB() As String
+	'
+	'--- Propriedade TemWathsapp
+	Public Property TemWhatsapp() As Boolean
+	'
+	'--- Propriedade ClienteEmail
+	Public Property ClienteEmail() As String
+	'
+	'--- Propriedade ProdutoConhecido
+	Public Property ProdutoConhecido() As Boolean
         Get
             Return RData._ProdutoConhecido
         End Get
@@ -487,9 +454,23 @@ Public Class clReserva
             RData._IDPedido = value
         End Set
     End Property
-    '
+	'
+	'--- Propriedade ValorAntecipado
+	'------------------------------------------------------
+	Public Property ValorAntecipado() As Decimal?
+		Get
+			Return RData._ValorAntecipado
+		End Get
+		Set(ByVal value As Decimal?)
+			If value <> RData._ValorAntecipado Then
+				RaiseEvent AoAlterar()
+			End If
+			RData._ValorAntecipado = value
+		End Set
+	End Property
+	'
 #End Region
-    '
+	'
 End Class
 '
 ' CLASSE RESERVA SITUACAO

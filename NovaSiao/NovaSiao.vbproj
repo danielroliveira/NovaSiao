@@ -1548,6 +1548,7 @@
     <None Include="Resources\upload_button.png" />
     <None Include="Resources\mail.png" />
     <None Include="Resources\cliente_empresa.png" />
+    <None Include="Resources\edit.png" />
     <Content Include="SqlServerTypes\Loader.cs" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">

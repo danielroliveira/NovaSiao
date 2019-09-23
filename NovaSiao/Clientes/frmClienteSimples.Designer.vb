@@ -1,6 +1,6 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmClienteSimples
-	Inherits NovaSiao.frmModNBorder
+	Inherits NovaSiao.frmModFinBorder
 
 	'Form overrides dispose to clean up the component list.
 	<System.Diagnostics.DebuggerNonUserCode()>
@@ -65,7 +65,7 @@ Partial Class frmClienteSimples
 		'
 		Me.Panel1.Controls.Add(Me.lblID)
 		Me.Panel1.Controls.Add(Me.lbl_IdTexto)
-		Me.Panel1.Size = New System.Drawing.Size(597, 50)
+		Me.Panel1.Size = New System.Drawing.Size(608, 50)
 		Me.Panel1.TabIndex = 0
 		Me.Panel1.Controls.SetChildIndex(Me.lblTitulo, 0)
 		Me.Panel1.Controls.SetChildIndex(Me.lbl_IdTexto, 0)
@@ -73,7 +73,7 @@ Partial Class frmClienteSimples
 		'
 		'lblTitulo
 		'
-		Me.lblTitulo.Location = New System.Drawing.Point(408, 0)
+		Me.lblTitulo.Location = New System.Drawing.Point(419, 0)
 		Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
 		Me.lblTitulo.Size = New System.Drawing.Size(189, 50)
 		Me.lblTitulo.TabIndex = 2
@@ -81,7 +81,7 @@ Partial Class frmClienteSimples
 		'
 		'txtTelefoneB
 		'
-		Me.txtTelefoneB.Location = New System.Drawing.Point(166, 120)
+		Me.txtTelefoneB.Location = New System.Drawing.Point(173, 120)
 		Me.txtTelefoneB.Mask = "(99) 99000-0000"
 		Me.txtTelefoneB.Name = "txtTelefoneB"
 		Me.txtTelefoneB.Size = New System.Drawing.Size(144, 27)
@@ -89,7 +89,7 @@ Partial Class frmClienteSimples
 		'
 		'txtTelefoneA
 		'
-		Me.txtTelefoneA.Location = New System.Drawing.Point(166, 153)
+		Me.txtTelefoneA.Location = New System.Drawing.Point(173, 153)
 		Me.txtTelefoneA.Mask = "(99) 99000-0000"
 		Me.txtTelefoneA.Name = "txtTelefoneA"
 		Me.txtTelefoneA.Size = New System.Drawing.Size(144, 27)
@@ -98,7 +98,7 @@ Partial Class frmClienteSimples
 		'txtCidade
 		'
 		Me.txtCidade.BackColor = System.Drawing.Color.White
-		Me.txtCidade.Location = New System.Drawing.Point(166, 318)
+		Me.txtCidade.Location = New System.Drawing.Point(173, 318)
 		Me.txtCidade.MaxLength = 50
 		Me.txtCidade.Name = "txtCidade"
 		Me.txtCidade.Size = New System.Drawing.Size(190, 27)
@@ -108,7 +108,7 @@ Partial Class frmClienteSimples
 		'
 		Me.txtUF.BackColor = System.Drawing.Color.White
 		Me.txtUF.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-		Me.txtUF.Location = New System.Drawing.Point(166, 351)
+		Me.txtUF.Location = New System.Drawing.Point(173, 351)
 		Me.txtUF.MaxLength = 2
 		Me.txtUF.Name = "txtUF"
 		Me.txtUF.Size = New System.Drawing.Size(46, 27)
@@ -117,7 +117,7 @@ Partial Class frmClienteSimples
 		'txtEndereco
 		'
 		Me.txtEndereco.BackColor = System.Drawing.Color.White
-		Me.txtEndereco.Location = New System.Drawing.Point(166, 252)
+		Me.txtEndereco.Location = New System.Drawing.Point(173, 252)
 		Me.txtEndereco.MaxLength = 50
 		Me.txtEndereco.Name = "txtEndereco"
 		Me.txtEndereco.Size = New System.Drawing.Size(357, 27)
@@ -126,7 +126,7 @@ Partial Class frmClienteSimples
 		'txtBairro
 		'
 		Me.txtBairro.BackColor = System.Drawing.Color.White
-		Me.txtBairro.Location = New System.Drawing.Point(166, 285)
+		Me.txtBairro.Location = New System.Drawing.Point(173, 285)
 		Me.txtBairro.MaxLength = 30
 		Me.txtBairro.Name = "txtBairro"
 		Me.txtBairro.Size = New System.Drawing.Size(190, 27)
@@ -137,7 +137,7 @@ Partial Class frmClienteSimples
 		Me.lbl2.AutoSize = True
 		Me.lbl2.BackColor = System.Drawing.Color.Transparent
 		Me.lbl2.ForeColor = System.Drawing.Color.Black
-		Me.lbl2.Location = New System.Drawing.Point(111, 289)
+		Me.lbl2.Location = New System.Drawing.Point(118, 289)
 		Me.lbl2.Name = "lbl2"
 		Me.lbl2.Size = New System.Drawing.Size(48, 19)
 		Me.lbl2.TabIndex = 14
@@ -148,7 +148,7 @@ Partial Class frmClienteSimples
 		Me.lbl1.AutoSize = True
 		Me.lbl1.BackColor = System.Drawing.Color.Transparent
 		Me.lbl1.ForeColor = System.Drawing.Color.Black
-		Me.lbl1.Location = New System.Drawing.Point(90, 256)
+		Me.lbl1.Location = New System.Drawing.Point(97, 256)
 		Me.lbl1.Name = "lbl1"
 		Me.lbl1.Size = New System.Drawing.Size(69, 19)
 		Me.lbl1.TabIndex = 12
@@ -157,7 +157,7 @@ Partial Class frmClienteSimples
 		'txtCEP
 		'
 		Me.txtCEP.BackColor = System.Drawing.Color.White
-		Me.txtCEP.Location = New System.Drawing.Point(262, 351)
+		Me.txtCEP.Location = New System.Drawing.Point(269, 351)
 		Me.txtCEP.Mask = "00000-000"
 		Me.txtCEP.Name = "txtCEP"
 		Me.txtCEP.Size = New System.Drawing.Size(94, 27)
@@ -169,7 +169,7 @@ Partial Class frmClienteSimples
 		Me.Label9.AutoSize = True
 		Me.Label9.BackColor = System.Drawing.Color.Transparent
 		Me.Label9.ForeColor = System.Drawing.Color.Black
-		Me.Label9.Location = New System.Drawing.Point(94, 157)
+		Me.Label9.Location = New System.Drawing.Point(101, 157)
 		Me.Label9.Name = "Label9"
 		Me.Label9.Size = New System.Drawing.Size(65, 19)
 		Me.Label9.TabIndex = 7
@@ -180,7 +180,7 @@ Partial Class frmClienteSimples
 		Me.lbl5.AutoSize = True
 		Me.lbl5.BackColor = System.Drawing.Color.Transparent
 		Me.lbl5.ForeColor = System.Drawing.Color.Black
-		Me.lbl5.Location = New System.Drawing.Point(226, 355)
+		Me.lbl5.Location = New System.Drawing.Point(233, 355)
 		Me.lbl5.Name = "lbl5"
 		Me.lbl5.Size = New System.Drawing.Size(34, 19)
 		Me.lbl5.TabIndex = 20
@@ -191,7 +191,7 @@ Partial Class frmClienteSimples
 		Me.Label10.AutoSize = True
 		Me.Label10.BackColor = System.Drawing.Color.Transparent
 		Me.Label10.ForeColor = System.Drawing.Color.Black
-		Me.Label10.Location = New System.Drawing.Point(104, 124)
+		Me.Label10.Location = New System.Drawing.Point(111, 124)
 		Me.Label10.Name = "Label10"
 		Me.Label10.Size = New System.Drawing.Size(55, 19)
 		Me.Label10.TabIndex = 3
@@ -202,7 +202,7 @@ Partial Class frmClienteSimples
 		Me.lbl4.AutoSize = True
 		Me.lbl4.BackColor = System.Drawing.Color.Transparent
 		Me.lbl4.ForeColor = System.Drawing.Color.Black
-		Me.lbl4.Location = New System.Drawing.Point(133, 355)
+		Me.lbl4.Location = New System.Drawing.Point(140, 355)
 		Me.lbl4.Name = "lbl4"
 		Me.lbl4.Size = New System.Drawing.Size(26, 19)
 		Me.lbl4.TabIndex = 18
@@ -213,7 +213,7 @@ Partial Class frmClienteSimples
 		Me.lbl3.AutoSize = True
 		Me.lbl3.BackColor = System.Drawing.Color.Transparent
 		Me.lbl3.ForeColor = System.Drawing.Color.Black
-		Me.lbl3.Location = New System.Drawing.Point(105, 321)
+		Me.lbl3.Location = New System.Drawing.Point(112, 321)
 		Me.lbl3.Name = "lbl3"
 		Me.lbl3.Size = New System.Drawing.Size(54, 19)
 		Me.lbl3.TabIndex = 16
@@ -222,7 +222,7 @@ Partial Class frmClienteSimples
 		'txtClienteNome
 		'
 		Me.txtClienteNome.BackColor = System.Drawing.Color.White
-		Me.txtClienteNome.Location = New System.Drawing.Point(166, 87)
+		Me.txtClienteNome.Location = New System.Drawing.Point(173, 87)
 		Me.txtClienteNome.MaxLength = 50
 		Me.txtClienteNome.Name = "txtClienteNome"
 		Me.txtClienteNome.Size = New System.Drawing.Size(357, 27)
@@ -233,7 +233,7 @@ Partial Class frmClienteSimples
 		Me.Label2.AutoSize = True
 		Me.Label2.BackColor = System.Drawing.Color.Transparent
 		Me.Label2.ForeColor = System.Drawing.Color.Black
-		Me.Label2.Location = New System.Drawing.Point(62, 90)
+		Me.Label2.Location = New System.Drawing.Point(69, 90)
 		Me.Label2.Name = "Label2"
 		Me.Label2.Size = New System.Drawing.Size(97, 19)
 		Me.Label2.TabIndex = 1
@@ -241,17 +241,19 @@ Partial Class frmClienteSimples
 		'
 		'tsMenu
 		'
+		Me.tsMenu.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.tsMenu.AutoSize = False
 		Me.tsMenu.BackColor = System.Drawing.Color.AntiqueWhite
-		Me.tsMenu.Dock = System.Windows.Forms.DockStyle.Bottom
+		Me.tsMenu.Dock = System.Windows.Forms.DockStyle.None
 		Me.tsMenu.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.tsMenu.ImageScalingSize = New System.Drawing.Size(30, 30)
 		Me.tsMenu.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnProcurar, Me.ToolStripSeparator5, Me.btnNovo, Me.btnSalvar, Me.btnCancelar, Me.ToolStripSeparator1, Me.btnAtivo, Me.btnFechar})
-		Me.tsMenu.Location = New System.Drawing.Point(0, 415)
+		Me.tsMenu.Location = New System.Drawing.Point(2, 413)
 		Me.tsMenu.Name = "tsMenu"
 		Me.tsMenu.Padding = New System.Windows.Forms.Padding(0)
 		Me.tsMenu.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-		Me.tsMenu.Size = New System.Drawing.Size(597, 48)
+		Me.tsMenu.Size = New System.Drawing.Size(604, 48)
 		Me.tsMenu.TabIndex = 0
 		Me.tsMenu.TabStop = True
 		Me.tsMenu.Text = "Menu Cliente PF"
@@ -362,7 +364,7 @@ Partial Class frmClienteSimples
 		'
 		'txtClienteEmail
 		'
-		Me.txtClienteEmail.Location = New System.Drawing.Point(166, 186)
+		Me.txtClienteEmail.Location = New System.Drawing.Point(173, 186)
 		Me.txtClienteEmail.MaxLength = 100
 		Me.txtClienteEmail.Name = "txtClienteEmail"
 		Me.txtClienteEmail.Size = New System.Drawing.Size(357, 27)
@@ -373,7 +375,7 @@ Partial Class frmClienteSimples
 		Me.Label13.AutoSize = True
 		Me.Label13.BackColor = System.Drawing.Color.Transparent
 		Me.Label13.ForeColor = System.Drawing.Color.Black
-		Me.Label13.Location = New System.Drawing.Point(108, 189)
+		Me.Label13.Location = New System.Drawing.Point(115, 189)
 		Me.Label13.Name = "Label13"
 		Me.Label13.Size = New System.Drawing.Size(51, 19)
 		Me.Label13.TabIndex = 9
@@ -401,7 +403,7 @@ Partial Class frmClienteSimples
 		'chkEndereco
 		'
 		Me.chkEndereco.AutoSize = True
-		Me.chkEndereco.Location = New System.Drawing.Point(166, 223)
+		Me.chkEndereco.Location = New System.Drawing.Point(173, 223)
 		Me.chkEndereco.Name = "chkEndereco"
 		Me.chkEndereco.Size = New System.Drawing.Size(170, 23)
 		Me.chkEndereco.TabIndex = 11
@@ -414,7 +416,7 @@ Partial Class frmClienteSimples
 		Me.pnlChk.CausesValidation = False
 		Me.pnlChk.Controls.Add(Me.picWathsapp)
 		Me.pnlChk.Controls.Add(Me.chkTemWhatsapp)
-		Me.pnlChk.Location = New System.Drawing.Point(316, 119)
+		Me.pnlChk.Location = New System.Drawing.Point(323, 119)
 		Me.pnlChk.Name = "pnlChk"
 		Me.pnlChk.Size = New System.Drawing.Size(55, 32)
 		Me.pnlChk.TabIndex = 6
@@ -423,7 +425,7 @@ Partial Class frmClienteSimples
 		'frmClienteSimples
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
-		Me.ClientSize = New System.Drawing.Size(597, 463)
+		Me.ClientSize = New System.Drawing.Size(608, 463)
 		Me.Controls.Add(Me.pnlChk)
 		Me.Controls.Add(Me.chkEndereco)
 		Me.Controls.Add(Me.tsMenu)

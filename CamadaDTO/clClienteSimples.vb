@@ -314,6 +314,43 @@ Public Class clClienteSimples
 	'------------------------------------------------------
 	Public Property ApelidoFilial() As String
 	'
+	'--- Property to Get ChaveExclusiva Cliente
+	'------------------------------------------------------
+	Public ReadOnly Property GetChaveExclusiva As String
+		'
+		Get
+			'--- SPLIT WORD IN ARRAY OF STRING
+			Dim nomes As String() = ClienteNome.Split(" ")
+			'
+			Dim NovoNome As String = ""
+			'
+			'--- REMOVE PEQUENAS PALAVRAS LEN < 3 (A,O,DA,DE,E)
+			For Each nome In nomes
+				If nome.Length >= 3 Then
+					NovoNome += nome
+				End If
+			Next
+			'
+			Dim vPos As Byte
+			'
+			'--- REMOVE ACENTOS
+			Const vComAcento = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜàáâãäåçèéêëìíîïòóôõöùúûü"
+			Const vSemAcento = "AAAAAACEEEEIIIIOOOOOUUUUaaaaaaceeeeiiiiooooouuuu"
+			'
+			For i = 1 To Len(NovoNome)
+				vPos = InStr(1, vComAcento, Mid(NovoNome, i, 1))
+				If vPos > 0 Then
+					Mid(NovoNome, i, 1) = Mid(vSemAcento, vPos, 1)
+				End If
+			Next
+			'
+			'--- RETURN NEW WORD UPPER CASE WITHOUT SPACES
+			Return NovoNome.ToUpper.Replace(" ", "")
+			'
+		End Get
+		'
+	End Property
+	'
 #End Region
 	'
 End Class

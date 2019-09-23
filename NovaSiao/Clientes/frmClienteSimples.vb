@@ -10,16 +10,20 @@ Public Class frmClienteSimples
 	Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
 	Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
 	Private _RegistrarEndereco As Boolean = True
+	Private _WaitResponse As Boolean = False
 	'
 #Region "LOAD E PROPERTIES"
 	'
-	Sub New(ClienteSimples As clClienteSimples, Optional formOrigem As Form = Nothing)
+	Sub New(ClienteSimples As clClienteSimples,
+			Optional formOrigem As Form = Nothing,
+			Optional WaitResponse As Boolean = False)
 		'
 		' This call is required by the designer.
 		InitializeComponent()
 		'
 		' Add any initialization after the InitializeComponent() call.
 		_formOrigem = formOrigem
+		_WaitResponse = WaitResponse
 		propCliente = ClienteSimples
 		PreencheDataBindings()
 		'
@@ -66,11 +70,9 @@ Public Class frmClienteSimples
 			End If
 			'
 			'--- check if FormOrigem is DEFINED
-			If Not IsNothing(_formOrigem) Then
+			If _WaitResponse Then
 				btnProcurar.Enabled = False
 				btnNovo.Enabled = False
-				btnFechar.Text = "OK"
-				btnFechar.Image = My.Resources.accept
 			End If
 			'
 		End Set
@@ -201,10 +203,11 @@ Public Class frmClienteSimples
 	'
 	'--- BTN PROCURAR
 	Private Sub btnProcurar_Click(sender As Object, e As EventArgs) Handles btnProcurar.Click
-		'Close()
-		''
-		'Dim fProc As New frmClienteSimplesProcurar
-		'fProc.Show()
+		'
+		Close()
+		'
+		Dim fProc As New frmClienteSimplesProcurar(False)
+		fProc.Show()
 		'
 	End Sub
 	'
@@ -354,6 +357,19 @@ Public Class frmClienteSimples
 				'
 				If TypeOf response Is Integer Then
 					NewID = response
+				ElseIf TypeOf response Is clClienteSimples Then
+					'
+					Dim cliDup As clClienteSimples = DirectCast(response, clClienteSimples)
+					'
+					AbrirDialog("Nome de Cliente duplicado, um cliente com o mesmo nome já foi inserido:" & vbNewLine &
+								"CLIENTE: " & cliDup.ClienteNome & vbNewLine &
+								"CELULAR: " & cliDup.TelefoneB & vbNewLine &
+								"TELEFONE: " & cliDup.TelefoneA & vbNewLine &
+								"Favor verificar, se não existe duplicação, altere o nome do Cliente.",
+								"Cliente Duplicado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+					txtClienteNome.Focus()
+					txtClienteNome.SelectAll()
+					Exit Sub
 				Else
 					Throw New Exception(response.ToString)
 				End If
@@ -407,7 +423,7 @@ Public Class frmClienteSimples
 			End If
 			'
 		Else
-			MsgBox("Registro NÃO pôde ser salvo!", vbInformation, "Erro ao Salvar")
+			MsgBox("Registro NÃO pode ser salvo!", vbInformation, "Erro ao Salvar")
 		End If
 		'
 	End Sub
@@ -427,8 +443,7 @@ Public Class frmClienteSimples
 			txtClienteNome.Focus()
 			Return False
 		Else
-			_cliente.ChaveExclusiva = f.removeAcentos(txtClienteNome.Text.ToUpper.Replace(" ", ""))
-			MsgBox(_cliente.ChaveExclusiva)
+			_cliente.ChaveExclusiva = GetChaveExclusiva()
 		End If
 		'
 		If chkEndereco.Checked Then
@@ -457,8 +472,34 @@ Public Class frmClienteSimples
 			Return False
 		End If
 		'
+		'--- check Email valido
+		If txtClienteEmail.Text.Trim <> "" Then
+			If Not Utilidades.EmailCheck(txtClienteEmail.Text) Then
+				MessageBox.Show("O endereço de Email não é um endereço válido...",
+								"Email Inválido", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+				EProvider.SetError(txtClienteEmail, "Email inválido")
+				Return False
+			End If
+		End If
+		'
 		'Se nenhuma das condições acima forem verdadeira retorna TRUE
 		Return True
+		'
+	End Function
+	'
+	Private Function GetChaveExclusiva() As String
+		'
+		Dim nomes As String() = txtClienteNome.Text.Split(" ")
+		'
+		Dim NovoNome As String = ""
+		'
+		For Each nome In nomes
+			If nome.Length >= 3 Then
+				NovoNome += nome
+			End If
+		Next
+		'
+		Return Utilidades.removeAcentos(NovoNome.ToUpper.Replace(" ", ""))
 		'
 	End Function
 	'
@@ -536,6 +577,35 @@ Public Class frmClienteSimples
 	'
 #End Region
 	'
+
+#Region "EFEITO VISUAL"
+	'
+	'-------------------------------------------------------------------------------------------------
+	' CRIAR EFEITO VISUAL DE FORM SELECIONADO
+	'-------------------------------------------------------------------------------------------------
+	Private Sub frmAReceberItem_Activated(sender As Object, e As EventArgs) Handles Me.Activated
+		If IsNothing(_formOrigem) Then Exit Sub
+		'
+		For Each c As Control In _formOrigem.Controls
+			If c.Name = "Panel1" Then
+				c.BackColor = Color.Silver
+			End If
+		Next
+		'
+	End Sub
+	'
+	Private Sub frmAReceberItem_Deactivate(sender As Object, e As EventArgs) Handles Me.Deactivate
+		If IsNothing(_formOrigem) Then Exit Sub
+		'
+		For Each c As Control In _formOrigem.Controls
+			If c.Name = "Panel1" Then
+				c.BackColor = Color.SlateGray
+			End If
+		Next
+		'
+	End Sub
+	'
+#End Region '/ EFEITO VISUAL
 
 
 	'

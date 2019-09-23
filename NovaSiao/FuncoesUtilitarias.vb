@@ -101,30 +101,33 @@ Public Class Utilidades
         End If
         '
     End Function
-    '
-    '--------------------------------------------------------------------------------------------------------------
-    '--- FUNÇÃO PARA REMOVER OS ACENTOS DE UMA STRING
-    '--------------------------------------------------------------------------------------------------------------
-    Function removeAcentos(ByVal myTexto As String) As String
-        Dim vPos As Byte
+	'
+	'--------------------------------------------------------------------------------------------------------------
+	'--- FUNÇÃO PARA REMOVER OS ACENTOS DE UMA STRING
+	'--------------------------------------------------------------------------------------------------------------
+	Shared Function removeAcentos(ByVal myTexto As String) As String
+		'
+		Dim vPos As Byte
+		'
+		Const vComAcento = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜàáâãäåçèéêëìíîïòóôõöùúûü"
+		Const vSemAcento = "AAAAAACEEEEIIIIOOOOOUUUUaaaaaaceeeeiiiiooooouuuu"
+		'
+		For i = 1 To Len(myTexto)
+			vPos = InStr(1, vComAcento, Mid(myTexto, i, 1))
+			If vPos > 0 Then
+				Mid(myTexto, i, 1) = Mid(vSemAcento, vPos, 1)
+			End If
+		Next
+		'
+		removeAcentos = myTexto
+		'
+	End Function
 
-        Const vComAcento = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜàáâãäåçèéêëìíîïòóôõöùúûü"
-        Const vSemAcento = "AAAAAACEEEEIIIIOOOOOUUUUaaaaaaceeeeiiiiooooouuuu"
-
-        For i = 1 To Len(myTexto)
-            vPos = InStr(1, vComAcento, Mid(myTexto, i, 1))
-            If vPos > 0 Then
-                Mid(myTexto, i, 1) = Mid(vSemAcento, vPos, 1)
-            End If
-        Next
-        removeAcentos = myTexto
-    End Function
-
-    '--------------------------------------------------------------------------------------------------------------
-    ' FUNÇÃO QUE CONVERTE UMA LIST NUMA DATATABLE
-    ' ### ALTERADA VERSÃO 2017/03
-    '--------------------------------------------------------------------------------------------------------------
-    Shared Function ConverterListParaDataTable(Of T)(items As List(Of T)) As DataTable
+	'--------------------------------------------------------------------------------------------------------------
+	' FUNÇÃO QUE CONVERTE UMA LIST NUMA DATATABLE
+	' ### ALTERADA VERSÃO 2017/03
+	'--------------------------------------------------------------------------------------------------------------
+	Shared Function ConverterListParaDataTable(Of T)(items As List(Of T)) As DataTable
         Try
             Dim dataTable As New DataTable(GetType(T).Name)
             'Pega todas as propriedades
@@ -172,11 +175,11 @@ Public Class Utilidades
         '
         '--- Get chars quantity
         If Nome.Length = 0 Then Return ""
-        '
-        '--- CONVERT TO LOWER FIRST
-        Nome = Nome.ToLower
+		'
+		'--- CONVERT TO LOWER FIRST
+		Nome = Nome.Trim.ToLower
 
-        Dim palavrasExcluidas As String() = {
+		Dim palavrasExcluidas As String() = {
             "de", "da", "do", "e"
         }
 

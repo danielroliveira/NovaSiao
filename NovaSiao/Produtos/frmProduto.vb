@@ -656,9 +656,8 @@ Public Class frmProduto
     Private Sub txtProduto_Validating(sender As Object, e As CancelEventArgs) Handles txtProduto.Validating
         '
         If txtProduto.Text.Trim.Length > 0 Then
-            Dim f As New Utilidades
-            txtProduto.Text = f.removeAcentos(txtProduto.Text)
-        End If
+			txtProduto.Text = Utilidades.removeAcentos(txtProduto.Text)
+		End If
         '
     End Sub
     '

@@ -587,7 +587,7 @@ Public Class frmPrincipal
 			Cursor = Cursors.WaitCursor
 			OcultaMenuPrincipal()
 			'
-			Using frm As New frmClienteSimplesProcurar()
+			Using frm As New frmClienteSimplesProcurar(False)
 				'
 				frm.ShowDialog()
 				If My.Application.OpenForms.Count = 1 Then MostraMenuPrincipal()
