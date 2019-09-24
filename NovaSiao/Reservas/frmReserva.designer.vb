@@ -35,6 +35,7 @@ Partial Class frmReserva
 		Me.btnSalvar = New System.Windows.Forms.ToolStripButton()
 		Me.btnCancelar = New System.Windows.Forms.ToolStripButton()
 		Me.btnFechar = New System.Windows.Forms.ToolStripButton()
+		Me.btnAdiantamento = New System.Windows.Forms.ToolStripButton()
 		Me.Label11 = New System.Windows.Forms.Label()
 		Me.txtFornecedor = New System.Windows.Forms.TextBox()
 		Me.lblIDReserva = New System.Windows.Forms.Label()
@@ -71,15 +72,14 @@ Partial Class frmReserva
 		Me.Panel4 = New System.Windows.Forms.Panel()
 		Me.txtRGProduto = New System.Windows.Forms.TextBox()
 		Me.lblProdConhecido = New System.Windows.Forms.Label()
+		Me.Label8 = New System.Windows.Forms.Label()
 		Me.chkProdutoConhecido = New CheckedButton_OnOff.CheckedButton_OnOff()
+		Me.Label7 = New System.Windows.Forms.Label()
 		Me.Label4 = New System.Windows.Forms.Label()
 		Me.Label5 = New System.Windows.Forms.Label()
 		Me.Panel5 = New System.Windows.Forms.Panel()
 		Me.Label6 = New System.Windows.Forms.Label()
 		Me.lblFilial = New System.Windows.Forms.Label()
-		Me.Label7 = New System.Windows.Forms.Label()
-		Me.Label8 = New System.Windows.Forms.Label()
-		Me.btnAdiantamento = New System.Windows.Forms.ToolStripButton()
 		Me.Panel1.SuspendLayout()
 		Me.tsMenu.SuspendLayout()
 		CType(Me.EProvider, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -255,6 +255,14 @@ Partial Class frmReserva
 		Me.btnFechar.Name = "btnFechar"
 		Me.btnFechar.Size = New System.Drawing.Size(86, 45)
 		Me.btnFechar.Text = "&Fechar"
+		'
+		'btnAdiantamento
+		'
+		Me.btnAdiantamento.Image = Global.NovaSiao.My.Resources.Resources.dollar_currency_sign
+		Me.btnAdiantamento.ImageTransparentColor = System.Drawing.Color.Magenta
+		Me.btnAdiantamento.Name = "btnAdiantamento"
+		Me.btnAdiantamento.Size = New System.Drawing.Size(134, 45)
+		Me.btnAdiantamento.Text = "Adiantamento"
 		'
 		'Label11
 		'
@@ -694,6 +702,17 @@ Partial Class frmReserva
 		Me.lblProdConhecido.TabIndex = 1
 		Me.lblProdConhecido.Text = "Produto Conhecido"
 		'
+		'Label8
+		'
+		Me.Label8.BackColor = System.Drawing.Color.WhiteSmoke
+		Me.Label8.ForeColor = System.Drawing.Color.Black
+		Me.Label8.Location = New System.Drawing.Point(434, 178)
+		Me.Label8.Name = "Label8"
+		Me.Label8.Size = New System.Drawing.Size(116, 27)
+		Me.Label8.TabIndex = 4
+		Me.Label8.Text = "R$ 0,00"
+		Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
 		'chkProdutoConhecido
 		'
 		Me.chkProdutoConhecido.Appearance = System.Windows.Forms.Appearance.Button
@@ -713,6 +732,15 @@ Partial Class frmReserva
 		Me.chkProdutoConhecido.Size = New System.Drawing.Size(50, 23)
 		Me.chkProdutoConhecido.TabIndex = 0
 		Me.chkProdutoConhecido.UseVisualStyleBackColor = False
+		'
+		'Label7
+		'
+		Me.Label7.AutoSize = True
+		Me.Label7.Location = New System.Drawing.Point(291, 181)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(137, 19)
+		Me.Label7.TabIndex = 15
+		Me.Label7.Text = "Valor Adiantamento"
 		'
 		'Label4
 		'
@@ -772,34 +800,6 @@ Partial Class frmReserva
 		Me.lblFilial.TabIndex = 2
 		Me.lblFilial.Text = "Filial"
 		Me.lblFilial.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-		'
-		'Label7
-		'
-		Me.Label7.AutoSize = True
-		Me.Label7.Location = New System.Drawing.Point(291, 181)
-		Me.Label7.Name = "Label7"
-		Me.Label7.Size = New System.Drawing.Size(137, 19)
-		Me.Label7.TabIndex = 15
-		Me.Label7.Text = "Valor Adiantamento"
-		'
-		'Label8
-		'
-		Me.Label8.BackColor = System.Drawing.Color.WhiteSmoke
-		Me.Label8.ForeColor = System.Drawing.Color.Black
-		Me.Label8.Location = New System.Drawing.Point(434, 178)
-		Me.Label8.Name = "Label8"
-		Me.Label8.Size = New System.Drawing.Size(116, 27)
-		Me.Label8.TabIndex = 4
-		Me.Label8.Text = "R$ 0,00"
-		Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-		'
-		'btnAdiantamento
-		'
-		Me.btnAdiantamento.Image = Global.NovaSiao.My.Resources.Resources.dollar_currency_sign
-		Me.btnAdiantamento.ImageTransparentColor = System.Drawing.Color.Magenta
-		Me.btnAdiantamento.Name = "btnAdiantamento"
-		Me.btnAdiantamento.Size = New System.Drawing.Size(134, 45)
-		Me.btnAdiantamento.Text = "Adiantamento"
 		'
 		'frmReserva
 		'

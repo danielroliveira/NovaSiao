@@ -8,7 +8,7 @@ Public Class frmReserva
 	Private _formOrigem As Form
 	Private bindReserva As New BindingSource
 	Private _RegistroBloqueado As Boolean = False
-	Private ctrlrect As New Rectangle(0, 0, 0, 0)
+	Private ctrlrect As New Rectangle(0, 0, 0, 0) '--- rectangle created on chkProdutoConhecido.focus
 	'
 #Region "LOAD E PROPERTIES"
 	'
@@ -45,9 +45,12 @@ Public Class frmReserva
         Get
             Return _Sit
         End Get
-        Set(value As EnumFlagEstado)
-            _Sit = value
+		Set(value As EnumFlagEstado)
+			'
+			_Sit = value
+			'
 			If _Sit = EnumFlagEstado.RegistroSalvo Then
+				'
 				btnSalvar.Enabled = False
 				btnNovo.Enabled = True
 				btnCancelar.Enabled = False
@@ -55,11 +58,14 @@ Public Class frmReserva
 				lblIDReserva.Text = Format(_Reserva.IDReserva, "0000")
 				'
 			ElseIf _Sit = EnumFlagEstado.Alterado Then
+				'
 				btnSalvar.Enabled = True
 				btnNovo.Enabled = False
 				btnCancelar.Enabled = True
 				btnProcurar.Enabled = False
+				'
 			ElseIf _Sit = EnumFlagEstado.NovoRegistro Then
+				'
 				txtFuncionario.Select()
 				btnSalvar.Enabled = True
 				btnNovo.Enabled = False
@@ -72,27 +78,34 @@ Public Class frmReserva
 			End If
 			'
 		End Set
+		'
 	End Property
 	'
 	Public Property propReserva() As clReserva
+		'
 		Get
 			Return _Reserva
 		End Get
+		'
 		Set(ByVal value As clReserva)
 			'
 			_Reserva = value
 			bindReserva.DataSource = _Reserva
 			'
+			'--- check if Is New
 			If Not IsNothing(_Reserva.IDReserva) Then
 				Sit = EnumFlagEstado.RegistroSalvo
 			Else
 				Sit = EnumFlagEstado.NovoRegistro
 			End If
 			'
-			'
+			'--- check ProdutoConhecido
 			VerificaProdutoConhecido()
+			'
+			'--- define MaxDate
 			dtpReservaData.MaxDate = Today
 			'
+			'--- check if Is Conected with PEDIDO and Block Reserva
 			If Not IsNothing(_Reserva.IDPedido) OrElse _Reserva.IDSituacaoReserva > 1 Then
 				RegistroBloqueado = True
 				AddHandlerCancelUpdate()
@@ -101,6 +114,7 @@ Public Class frmReserva
 				RemoveHandlerCancelUpdate()
 			End If
 			'
+			'--- Disable btnProcura if source form is ReservaProcurar
 			If Not IsNothing(_formOrigem) AndAlso TypeOf _formOrigem IsNot frmReservaProcurar Then
 				btnProcurar.Enabled = False
 			End If
@@ -114,6 +128,7 @@ Public Class frmReserva
 #Region "REGISTRO BLOQUEADO"
 	'
 	Private Property RegistroBloqueado As Boolean
+		'
 		Get
 			If _RegistroBloqueado Then
 				AbrirDialog("Esse registro está bloqueado para alterações..." +
@@ -123,9 +138,11 @@ Public Class frmReserva
 			End If
 			Return _RegistroBloqueado
 		End Get
+		'
 		Set(value As Boolean)
 			_RegistroBloqueado = value
 		End Set
+		'
 	End Property
 	'
 	Private Sub CancelUpdateHandler(sender As Object, e As KeyPressEventArgs)
@@ -319,6 +336,43 @@ Public Class frmReserva
 			End If
 			'
 		End If
+		'
+	End Sub
+	'
+	'--- INSERT ADD ADIANTAMENTO
+	'----------------------------------------------------------------------------------
+	Private Sub btnAdiantamento_Click(sender As Object, e As EventArgs) Handles btnAdiantamento.Click
+		'
+		'--- check if reserva is Saved
+		If _Reserva.IDReserva Is Nothing OrElse Sit <> EnumFlagEstado.RegistroSalvo Then
+			AbrirDialog("É necessário salvar a reserva para inserir um adiantemento...",
+						"Criar Adiantamento", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+			Exit Sub
+		End If
+		'
+		'--- check if there is PrecoVenda Esperado
+		If _Reserva.PVenda Is Nothing OrElse _Reserva.PVenda = 0 Then
+			AbrirDialog("É necessário indicar o valor esperado do produto para inserir um adiantamento...",
+						"Criar Adiantamento", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+			txtPVenda.Focus()
+			Exit Sub
+		End If
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Using frmA As New frmAdiantamentoEntrada(_Reserva.IDReserva, _Reserva.PVenda, Me)
+				frmA.ShowDialog()
+			End Using
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao Abrir registro de Adiantamento..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
 		'
 	End Sub
 	'
@@ -886,16 +940,16 @@ Public Class frmReserva
             '--- RGProduto
             txtRGProduto.Visible = False
             lblRG.Visible = False
-            '
-            '--- Fornecedor
-            'txtFornecedor.Enabled = False
-            'btnProcFornecedores.Enabled = False
-            '
-            '--- Preco Venda
-            txtPVenda.Enabled = False
-            '
-            '--- btn Tipo, Autor, Fabricante
-            btnProcProdutoTipo.Enabled = True
+			'
+			'--- Fornecedor
+			'txtFornecedor.Enabled = False
+			'btnProcFornecedores.Enabled = False
+			'
+			'--- Preco Venda
+			'txtPVenda.Enabled = False
+			'
+			'--- btn Tipo, Autor, Fabricante
+			btnProcProdutoTipo.Enabled = True
             btnProcAutores.Enabled = True
             btnProcFabricantes.Enabled = True
             '

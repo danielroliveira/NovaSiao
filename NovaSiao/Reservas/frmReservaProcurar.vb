@@ -104,32 +104,38 @@ Public Class frmReservaProcurar
         clnProduto.Width = 250
         '
         clnAutor.DisplayMember = "Autor"
-        clnAutor.Width = 150
-        '
-        clnFornecedor.DisplayMember = "Fornecedor"
+		clnAutor.Width = 120
+		'
+		clnFornecedor.DisplayMember = "Fornecedor"
         clnFornecedor.Width = 100
         '
         clnFabricante.DisplayMember = "Fabricante"
         clnFabricante.Width = 100
         '
         clnProdutoTipo.DisplayMember = "ProdutoTipo"
-        clnProdutoTipo.Width = 100
-        '
-        ' setup the list
-        With lstListagem
-            '
-            .BeginUpdate()
-            '
-            .CheckBoxes = BetterListViewCheckBoxes.TwoState
-            .FullRowSelect = True
-            .SortedColumnsRowsHighlight = BetterListViewSortedColumnsRowsHighlight.ShowAlways
-            .View = BetterListViewView.Details
-            '
-            .EndUpdate()
-            '
-        End With
-        '
-    End Sub
+		clnProdutoTipo.Width = 90
+		'
+		clnValorAntecipado.DisplayMember = "ValorAntecipado"
+		clnValorAntecipado.ValueMember = "IDPedido"
+		clnValorAntecipado.Width = 90
+		clnValorAntecipado.AlignHorizontal = TextAlignmentHorizontal.Right
+		'
+		' setup the list
+		With lstListagem
+			'
+			.BeginUpdate()
+			'
+			.CheckBoxes = BetterListViewCheckBoxes.TwoState
+			.FullRowSelect = True
+			.SortedColumnsRowsHighlight = BetterListViewSortedColumnsRowsHighlight.ShowAlways
+			.View = BetterListViewView.Details
+			'
+			.EndUpdate()
+			'
+		End With
+		'
+
+	End Sub
     '
     '--- DESIGN DA LISTAGEM HEADER
     Private Sub lstListagem_DrawColumnHeader(sender As Object, eventArgs As BetterListViewDrawColumnHeaderEventArgs) Handles lstListagem.DrawColumnHeader
@@ -156,19 +162,24 @@ Public Class frmReservaProcurar
     '
     '--- QUANDO DESENHA ITEM
     Private Sub lstListagem_DrawItem(sender As Object, eventArgs As BetterListViewDrawItemEventArgs) Handles lstListagem.DrawItem
-        '
-        If IsNumeric(eventArgs.Item.Text) Then
-            eventArgs.Item.Text = Format(CInt(eventArgs.Item.Text), "0000")
-            '
-            Dim reserva As clReserva = resLista.First(Function(x) x.IDReserva = eventArgs.Item.Value)
-            '
-            If Not IsNothing(reserva.IDPedido) Then
-                eventArgs.Item.BackColor = Color.PeachPuff
-            End If
-            '
-        End If
-        '
-    End Sub
+		'
+		If IsNumeric(eventArgs.Item.Text) Then
+			'
+			'--- formata o IDReserva
+			eventArgs.Item.Text = Format(CInt(eventArgs.Item.Text), "0000")
+			'
+			'--- formata o valor antecipado
+			Dim vlAnt As Double = 0
+			Double.TryParse(eventArgs.Item.SubItems(10).Text, vlAnt)
+			eventArgs.Item.SubItems(10).Text = Format(vlAnt, "#,##0.00")
+			'
+			If Not IsNothing(eventArgs.Item.SubItems(10).Value) Then
+				eventArgs.Item.BackColor = Color.PeachPuff
+			End If
+			'
+		End If
+		'
+	End Sub
     '
     '--- QUANDO ATIVA O ITEM EDITA A RESERVA
     Private Sub lstListagem_ItemActivate(sender As Object, eventArgs As BetterListViewItemActivateEventArgs) Handles lstListagem.ItemActivate

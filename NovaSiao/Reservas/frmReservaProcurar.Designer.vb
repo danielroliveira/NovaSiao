@@ -46,6 +46,7 @@ Partial Class frmReservaProcurar
 		Me.clnFornecedor = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
 		Me.clnFabricante = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
 		Me.clnProdutoTipo = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
+		Me.clnValorAntecipado = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
 		Me.mnuReserva = New System.Windows.Forms.ContextMenuStrip(Me.components)
 		Me.miEditarReserva = New System.Windows.Forms.ToolStripMenuItem()
 		Me.miExcluirReserva = New System.Windows.Forms.ToolStripMenuItem()
@@ -288,6 +289,7 @@ Partial Class frmReservaProcurar
 		Me.lstListagem.Columns.Add(Me.clnFornecedor)
 		Me.lstListagem.Columns.Add(Me.clnFabricante)
 		Me.lstListagem.Columns.Add(Me.clnProdutoTipo)
+		Me.lstListagem.Columns.Add(Me.clnValorAntecipado)
 		Me.lstListagem.ContextMenuStrip = Me.mnuReserva
 		Me.lstListagem.Font = New System.Drawing.Font("Pathway Gothic One", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.lstListagem.ForeColorColumns = System.Drawing.Color.Black
@@ -337,28 +339,41 @@ Partial Class frmReservaProcurar
 		'
 		'clnProduto
 		'
+		Me.clnProduto.AllowResize = False
 		Me.clnProduto.Name = "clnProduto"
 		Me.clnProduto.Text = "Produto"
 		'
 		'clnAutor
 		'
+		Me.clnAutor.AllowResize = False
 		Me.clnAutor.Name = "clnAutor"
 		Me.clnAutor.Text = "Autor"
 		'
 		'clnFornecedor
 		'
+		Me.clnFornecedor.AllowResize = False
 		Me.clnFornecedor.Name = "clnFornecedor"
 		Me.clnFornecedor.Text = "Fornecedor"
 		'
 		'clnFabricante
 		'
+		Me.clnFabricante.AllowResize = False
 		Me.clnFabricante.Name = "clnFabricante"
 		Me.clnFabricante.Text = "Fabricante"
 		'
 		'clnProdutoTipo
 		'
+		Me.clnProdutoTipo.AllowResize = False
 		Me.clnProdutoTipo.Name = "clnProdutoTipo"
 		Me.clnProdutoTipo.Text = "Tipo de Produto"
+		'
+		'clnValorAntecipado
+		'
+		Me.clnValorAntecipado.AlignHorizontal = ComponentOwl.BetterListView.TextAlignmentHorizontal.Right
+		Me.clnValorAntecipado.AllowResize = False
+		Me.clnValorAntecipado.Name = "clnValorAntecipado"
+		Me.clnValorAntecipado.Text = "Entrada"
+		Me.clnValorAntecipado.Width = 80
 		'
 		'mnuReserva
 		'
@@ -539,11 +554,11 @@ Partial Class frmReservaProcurar
 		Me.Controls.SetChildIndex(Me.txtProdutoTipo, 0)
 		Me.Controls.SetChildIndex(Me.btnTipo, 0)
 		Me.Controls.SetChildIndex(Me.txtProduto, 0)
-		Me.Controls.SetChildIndex(Me.Panel1, 0)
 		Me.Controls.SetChildIndex(Me.lstListagem, 0)
 		Me.Controls.SetChildIndex(Me.pnlAtivas, 0)
 		Me.Controls.SetChildIndex(Me.PictureBox4, 0)
 		Me.Controls.SetChildIndex(Me.Label15, 0)
+		Me.Controls.SetChildIndex(Me.Panel1, 0)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
 		CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).EndInit()
@@ -593,4 +608,5 @@ Partial Class frmReservaProcurar
 	Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
 	Friend WithEvents miAbrirPedido As ToolStripMenuItem
 	Friend WithEvents miDesassociarDoPedido As ToolStripMenuItem
+	Friend WithEvents clnValorAntecipado As ComponentOwl.BetterListView.BetterListViewColumnHeader
 End Class
