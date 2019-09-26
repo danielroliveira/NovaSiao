@@ -2,57 +2,63 @@
 Imports CamadaDTO
 
 Public Class ReservaBLL
-    '
-    '===================================================================================================
-    ' OBTER LISTA COMPLETA DE RESERVA PELA SITUACAO
-    '===================================================================================================
-    Public Function Reserva_GET_List(_IDFilial As Integer,
-                                     Optional _IDSituacaoReserva As Byte? = Nothing,
-                                     Optional _ReservaAtiva As Boolean? = Nothing) As List(Of clReserva)
-        Dim bd As New AcessoDados
-        Dim lst As New List(Of clReserva)
-        '
-        bd.LimparParametros()
-        '
-        '--- ADD FILIAL
-        bd.AdicionarParametros("@IDFilial", _IDFilial)
-        Dim query As String = "SELECT * FROM qryReserva WHERE IDFilial = @IDFilial "
-        '
-        '--- ADD RESERVAATIVA
-        If Not IsNothing(_ReservaAtiva) Then
-            bd.AdicionarParametros("@ReservaAtiva", _ReservaAtiva)
-            query += "AND ReservaAtiva = @ReservaAtiva "
-        End If
-        '
-        '--- ADD SITUACAO RESERVA
-        If Not IsNothing(_IDSituacaoReserva) Then
-            bd.AdicionarParametros("@IDSituacaoReserva", _IDSituacaoReserva)
-            query += "AND IDSituacaoReserva = @IDSituacaoReserva "
-        End If
-        '
-        '--- ORDER BY
-        query += "ORDER BY ReservaData"
-        '
-        '--- EXECUTE
-        Try
-            Dim dt As DataTable = bd.ExecutarConsulta(CommandType.Text, query)
-            '
-            For Each r As DataRow In dt.Rows
-                lst.Add(ConvertRowClass(r))
-            Next
-            '
-            Return lst
-            '
-        Catch ex As Exception
-            Throw ex
-        End Try
-        '
-    End Function
-    '
-    '==========================================================================================
-    ' GET RESERVA PELO ID
-    '==========================================================================================
-    Public Function GetReservaPeloID(IDReserva As Integer) As clReserva
+	'
+	'===================================================================================================
+	' OBTER LISTA COMPLETA DE RESERVA PELA SITUACAO
+	'===================================================================================================
+	Public Function Reserva_GET_List(_IDFilial As Integer,
+									 IsReservaPrioritaria As Boolean,
+									 Optional _IDSituacaoReserva As Byte? = Nothing,
+									 Optional _ReservaAtiva As Boolean? = Nothing) As List(Of clReserva)
+		Dim bd As New AcessoDados
+		Dim lst As New List(Of clReserva)
+		'
+		bd.LimparParametros()
+		'
+		'--- ADD FILIAL
+		bd.AdicionarParametros("@IDFilial", _IDFilial)
+		Dim query As String = "SELECT * FROM qryReserva WHERE IDFilial = @IDFilial "
+		'
+		'--- ADD RESERVA PRIORITARIA
+		If IsReservaPrioritaria Then
+			query += "AND ValorAntecipado IS NOT NULL "
+		End If
+		'
+		'--- ADD RESERVAATIVA
+		If Not IsNothing(_ReservaAtiva) Then
+			bd.AdicionarParametros("@ReservaAtiva", _ReservaAtiva)
+			query += "AND ReservaAtiva = @ReservaAtiva "
+		End If
+		'
+		'--- ADD SITUACAO RESERVA
+		If Not IsNothing(_IDSituacaoReserva) Then
+			bd.AdicionarParametros("@IDSituacaoReserva", _IDSituacaoReserva)
+			query += "AND IDSituacaoReserva = @IDSituacaoReserva "
+		End If
+		'
+		'--- ORDER BY
+		query += "ORDER BY ReservaData"
+		'
+		'--- EXECUTE
+		Try
+			Dim dt As DataTable = bd.ExecutarConsulta(CommandType.Text, query)
+			'
+			For Each r As DataRow In dt.Rows
+				lst.Add(ConvertRowClass(r))
+			Next
+			'
+			Return lst
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' GET RESERVA PELO ID
+	'==========================================================================================
+	Public Function GetReservaPeloID(IDReserva As Integer) As clReserva
         '
         Try
             Dim db As New AcessoDados

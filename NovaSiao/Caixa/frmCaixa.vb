@@ -9,8 +9,9 @@ Public Class frmCaixa
     Private _Caixa As clCaixa
     Private _TEntradas As Double
     Private _TSaidas As Double
-    Private _TTransf As Double
-    Private _myOrdem As Integer '--- Control order/sorting of LIST MOVS
+	Private _TTransf As Double
+	Private _TAutoTransf As Double = 0 '--- Control auto transf value to calcuate the Final Total
+	Private _myOrdem As Integer '--- Control order/sorting of LIST MOVS
     Private WithEvents bindCaixa As New BindingSource
 
 #Region "SUB NEW | PROPERTIES"
@@ -488,16 +489,20 @@ Public Class frmCaixa
             If dtSaldoAnterior.Rows.Count > 0 Then
                 '
                 For Each r As DataRow In dtSaldoAnterior.Rows
-                    dtSaldo.Rows.Add({r("IDMeio"),
-                                      r("Meio"),
-                                      r("IDConta"),
-                                      r("Conta"),
-                                      r("SaldoFinal"),
-                                      r("SaldoFinal"),
-                                      0})
-                Next
-                '
-            End If
+					dtSaldo.Rows.Add({r("IDMeio"),
+									  r("Meio"),
+									  r("IDConta"),
+									  r("Conta"),
+									  r("SaldoFinal"),
+									  r("SaldoFinal"),
+									  0})
+					'
+					_Caixa.SaldoAnterior += r("SaldoFinal")
+					'
+				Next
+				'
+				'
+			End If
             '
             '--- Calcula os DADOS do SALDOATUAL
             For Each c As clMovimentacao In lstMov
@@ -539,8 +544,9 @@ Public Class frmCaixa
                     If IsDBNull(saldoFind("ATransferir")) Then saldoFind("ATransferir") = 0
                     '
                     If Not IsNothing(c.IDContaPadrao) Then
-                        saldoFind("ATransferir") += MovValor
-                    End If
+						saldoFind("ATransferir") += MovValor
+						_TAutoTransf += MovValor
+					End If
                     '
                     saldoFind("SaldoFinal") += MovValor
                     saldoFind.AcceptChanges()
@@ -1033,59 +1039,67 @@ Public Class frmCaixa
         End Try
         '
     End Function
-    '
+	'
 #End Region
-    '
+	'
 #Region "FUNCOES IMPORTANTES"
-    '
-    Private Sub CalculaTotais()
-        '
-        Dim E As Double = 0
-        Dim S As Double = 0
-        Dim Transf As Double = 0
-        '
-        For Each cl As clMovimentacao In lstMov
-            '
-            If cl.Mov = "E" Then
-                E = E + cl.MovValorReal
-            ElseIf cl.Mov = "S" Then
-                S = S + cl.MovValorReal
-            ElseIf cl.Mov = "TE" Then
-                Transf = Transf + cl.MovValorReal
-            ElseIf cl.Mov = "TS" Then
-                Transf = Transf - cl.MovValorReal
-            End If
-            '
-            _TEntradas = E
-            lblTEntradas.Text = Format(E, "C")
-            _TSaidas = S
-            lblTSaidas.Text = Format(S, "C")
-            _TTransf = Transf
-            lblTTransf.Text = Format(Math.Abs(Transf), "C")
-            '
-            '--- Calcula SALDOS
-            _Caixa.SaldoFinal = _TEntradas + _TTransf - _TSaidas
-            lblSaldoFinal.Text = Format(_Caixa.SaldoFinal, "C")
-            '
-            '--- Define as CORES
-            If _Caixa.SaldoFinal >= 0 Then
-                lblSaldoFinal.ForeColor = Color.DarkBlue
-            Else
-                lblSaldoFinal.ForeColor = Color.DarkRed
-            End If
-            '
-            If _TTransf >= 0 Then
-                lblTTransf.ForeColor = Color.DarkBlue
-            Else
-                lblTTransf.ForeColor = Color.DarkRed
-            End If
-            '
-        Next
-        '
-    End Sub
-    '
-    '--- TROCAR A COR DO CAMPO QUANDO FOCUS
-    Private Sub txtObservacao_GotFocus(sender As Object, e As EventArgs) Handles txtObservacao.GotFocus
+	'
+	Private Sub CalculaTotais()
+		'
+		Dim E As Double = 0
+		Dim S As Double = 0
+		Dim Transf As Double = 0
+		'
+		For Each cl As clMovimentacao In lstMov
+			'
+			If cl.Mov = "E" Then
+				E = E + cl.MovValorReal
+			ElseIf cl.Mov = "S" Then
+				S = S + cl.MovValorReal
+			ElseIf cl.Mov = "TE" Then
+				Transf = Transf + cl.MovValorReal
+			ElseIf cl.Mov = "TS" Then
+				Transf = Transf - cl.MovValorReal
+			End If
+			'
+		Next
+		'
+		_TEntradas = E
+		lblTEntradas.Text = Format(E, "C")
+		_TSaidas = S
+		lblTSaidas.Text = Format(S, "C")
+		'
+		'--- se nao finalizado entao considera a AUTO-TRANSFERENCIA
+		If _Caixa.IDSituacao = 1 Then '---> NAO FINALIZADO
+			Transf -= _TAutoTransf
+		End If
+		'
+		_TTransf = Transf
+		lblTTransf.Text = Format(Math.Abs(Transf), "C")
+		'
+		'--- Calcula SALDOS
+		'--------------------------------------------------------------------------------------------
+		_Caixa.SaldoFinal = _Caixa.SaldoAnterior + _TEntradas + _TTransf - _TSaidas
+		lblSaldoFinal.Text = Format(_Caixa.SaldoFinal, "C")
+		'
+		'--- Define as CORES
+		If _Caixa.SaldoFinal >= 0 Then
+			lblSaldoFinal.ForeColor = Color.DarkBlue
+		Else
+			lblSaldoFinal.ForeColor = Color.DarkRed
+		End If
+		'
+		If _TTransf >= 0 Then
+			lblTTransf.ForeColor = Color.DarkBlue
+		Else
+			lblTTransf.ForeColor = Color.DarkRed
+		End If
+		'
+		'
+	End Sub
+	'
+	'--- TROCAR A COR DO CAMPO QUANDO FOCUS
+	Private Sub txtObservacao_GotFocus(sender As Object, e As EventArgs) Handles txtObservacao.GotFocus
         txtObservacao.BackColor = Color.White
     End Sub
     '

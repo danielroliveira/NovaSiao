@@ -80,29 +80,53 @@ Public Class ClienteSimplesBLL
 	End Function
 	'
 	'==========================================================================================
-	' GET CLIENTE SIMPLES PELO NOME OU PELA CHAVE EXCLUSIVA
+	' GET CLIENTE SIMPLES PELO NOME
 	'==========================================================================================
-	Public Function GetClientePeloNome(ClienteNome As String,
-									   Optional IsChaveExclusiva As Boolean = False) As clClienteSimples
+	Public Function GetClientePeloNome(ClienteNome As String) As clClienteSimples
 		'
 		Try
 			Dim db As New AcessoDados
 			Dim query As String = ""
 			'
 			db.LimparParametros()
-			'
-			If Not IsChaveExclusiva Then
-				db.AdicionarParametros("@ClienteNome", ClienteNome)
-				query = "SELECT * FROM qryClienteSimples WHERE ClienteNome = @ClienteNome"
-			Else
-				db.AdicionarParametros("@ChaveExclusiva", ClienteNome)
-				query = "SELECT * FROM qryClienteSimples WHERE ChaveExclusiva = @ChaveExclusiva"
-			End If
+			db.AdicionarParametros("@ClienteNome", ClienteNome)
+			query = "SELECT * FROM qryClienteSimples WHERE ClienteNome = @ClienteNome"
 			'
 			Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
 			'
 			If dt.Rows.Count = 0 Then
 				Throw New AppException("Não existe Cliente Simples com o Nome informado...")
+			Else
+				If Not IsNumeric(dt.Rows(0).Item(0)) Then
+					Throw New Exception(dt.Rows(0).ToString)
+				End If
+			End If
+			'
+			Return ConvertRowClass(dt.Rows(0))
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' GET CLIENTE SIMPLES PELA CHAVE EXCLUSIVA
+	'==========================================================================================
+	Public Function GetClientePelaChaveExclusiva(ChaveExclusiva As String) As clClienteSimples
+		'
+		Try
+			Dim db As New AcessoDados
+			Dim query As String = ""
+			'
+			db.LimparParametros()
+			db.AdicionarParametros("@ChaveExclusiva", ChaveExclusiva)
+			query = "SELECT * FROM qryClienteSimples WHERE ChaveExclusiva = @ChaveExclusiva"
+			'
+			Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+			'
+			If dt.Rows.Count = 0 Then
+				Throw New AppException("Não existe Cliente Simples com a Chave informada...")
 			Else
 				If Not IsNumeric(dt.Rows(0).Item(0)) Then
 					Throw New Exception(dt.Rows(0).ToString)
@@ -185,8 +209,7 @@ Public Class ClienteSimplesBLL
 			If dbTran Is Nothing Then db.RollBackTransaction()
 			'
 			If ex.Number = 2627 Then
-				Return GetClientePeloNome(ClienteSimples.ChaveExclusiva, True)
-				'Throw New AppException("Nome de Cliente Duplicado...")
+				Return GetClientePelaChaveExclusiva(ClienteSimples.ChaveExclusiva)
 			Else
 				Throw ex
 			End If

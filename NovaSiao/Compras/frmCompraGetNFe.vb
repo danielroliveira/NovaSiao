@@ -602,14 +602,15 @@ Public Class frmCompraGetNFe
 			End If
 			'
 			_APagarList.Clear()
-			Dim dupsXML = NotaNFe.NFe.infNFe.cobr.dup
 			'
 			'--- CHECK IF EXIST DUPS
-			If IsNothing(dupsXML) Then
+			If IsNothing(NotaNFe.NFe.infNFe) OrElse IsNothing(NotaNFe.NFe.infNFe.cobr) OrElse IsNothing(NotaNFe.NFe.infNFe.cobr.dup) Then
 				AbrirDialog("Não há informação de Duplicatas a Pagar nessa NFe...",
 							"Sem A Pagar", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
 				Exit Sub
 			End If
+			'
+			Dim dupsXML = NotaNFe.NFe.infNFe.cobr.dup
 			'
 			For Each d In dupsXML
 				Dim clp As New clAPagar
@@ -1149,7 +1150,7 @@ Public Class frmCompraGetNFe
 				If TypeOf PessoaRelacionada Is clTransportadora Then '---> TRANSPORTADORA RELACIONADA ENCONTRADA
 					'
 					If AbrirDialog("O CNPJ da Tranportadora na NFe está relacionado com o CNPJ de:" & vbNewLine &
-								   pessoa.Cadastro & vbNewLine &
+								   PessoaRelacionada.Cadastro & vbNewLine &
 								   "Deseja usar a relação existente e substituir o transporte para o CNPJ relacionado?",
 								   "CNPJ Relacionado",
 								   frmDialog.DialogType.SIM_NAO,

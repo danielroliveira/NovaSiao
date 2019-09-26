@@ -1,5 +1,6 @@
 ﻿Imports CamadaDTO
 Imports CamadaBLL
+Imports System.Text.RegularExpressions
 '
 Public Class frmClienteSimples
 	'
@@ -361,11 +362,11 @@ Public Class frmClienteSimples
 					'
 					Dim cliDup As clClienteSimples = DirectCast(response, clClienteSimples)
 					'
-					AbrirDialog("Nome de Cliente duplicado, um cliente com o mesmo nome já foi inserido:" & vbNewLine &
+					AbrirDialog("Um cliente com o mesmo TELEFONE já foi inserido:" & vbNewLine &
 								"CLIENTE: " & cliDup.ClienteNome & vbNewLine &
 								"CELULAR: " & cliDup.TelefoneB & vbNewLine &
 								"TELEFONE: " & cliDup.TelefoneA & vbNewLine &
-								"Favor verificar, se não existe duplicação, altere o nome do Cliente.",
+								"Favor verificar. Se não existe duplicação, altere o telefone do Cliente.",
 								"Cliente Duplicado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
 					txtClienteNome.Focus()
 					txtClienteNome.SelectAll()
@@ -442,9 +443,9 @@ Public Class frmClienteSimples
 						frmDialog.DialogIcon.Exclamation)
 			txtClienteNome.Focus()
 			Return False
-		Else
-			_cliente.ChaveExclusiva = GetChaveExclusiva()
 		End If
+		'
+		_cliente.ChaveExclusiva = _cliente.GetChaveExclusiva
 		'
 		If chkEndereco.Checked Then
 			'
@@ -464,7 +465,7 @@ Public Class frmClienteSimples
 		Dim telA As Boolean = False
 		'
 		If _cliente.TelefoneA IsNot Nothing Then
-			Dim TelA_Number As String = _cliente.TelefoneA.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "")
+			Dim TelA_Number As String = Regex.Replace(_cliente.TelefoneA, "[^.0-9]", "")
 			If TelA_Number.Trim.Length > 0 Then
 				telA = True
 			Else
@@ -475,7 +476,7 @@ Public Class frmClienteSimples
 		Dim telB As Boolean = False
 		'
 		If _cliente.TelefoneB IsNot Nothing Then
-			Dim TelB_Number As String = _cliente.TelefoneB.Replace("(", "").Replace(")", "").Replace("-", "").Replace(" ", "")
+			Dim TelB_Number As String = Regex.Replace(_cliente.TelefoneB, "[^.0-9]", "")
 			If TelB_Number.Trim.Length > 0 Then
 				telB = True
 			Else
@@ -483,7 +484,7 @@ Public Class frmClienteSimples
 			End If
 		End If
 		'
-		If telA And telB Then
+		If Not telA And Not telB Then
 			AbrirDialog("Deve haver pelo menos um telefone cadastrado nos dados do Cliente...",
 						"Telefone de Contato", frmDialog.DialogType.OK,
 						frmDialog.DialogIcon.Exclamation)
@@ -503,22 +504,6 @@ Public Class frmClienteSimples
 		'
 		'Se nenhuma das condições acima forem verdadeira retorna TRUE
 		Return True
-		'
-	End Function
-	'
-	Private Function GetChaveExclusiva() As String
-		'
-		Dim nomes As String() = txtClienteNome.Text.Split(" ")
-		'
-		Dim NovoNome As String = ""
-		'
-		For Each nome In nomes
-			If nome.Length >= 3 Then
-				NovoNome += nome
-			End If
-		Next
-		'
-		Return Utilidades.removeAcentos(NovoNome.ToUpper.Replace(" ", ""))
 		'
 	End Function
 	'

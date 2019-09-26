@@ -20,6 +20,12 @@ Partial Class frmReservaProcurar
 	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
+		Dim DataGridViewCellStyle67 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle68 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle70 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle71 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle72 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle69 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Me.txtNomeCliente = New System.Windows.Forms.TextBox()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.btnFechar = New System.Windows.Forms.Button()
@@ -35,18 +41,6 @@ Partial Class frmReservaProcurar
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.lblFilial = New System.Windows.Forms.Label()
 		Me.Label6 = New System.Windows.Forms.Label()
-		Me.lstListagem = New ComponentOwl.BetterListView.BetterListView()
-		Me.clnIDReserva = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-		Me.clnReservaData = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-		Me.clnClienteNome = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-		Me.clnTelefoneA = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-		Me.clnTelefoneB = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-		Me.clnProduto = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-		Me.clnAutor = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-		Me.clnFornecedor = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-		Me.clnFabricante = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-		Me.clnProdutoTipo = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
-		Me.clnValorAntecipado = New ComponentOwl.BetterListView.BetterListViewColumnHeader()
 		Me.mnuReserva = New System.Windows.Forms.ContextMenuStrip(Me.components)
 		Me.miEditarReserva = New System.Windows.Forms.ToolStripMenuItem()
 		Me.miExcluirReserva = New System.Windows.Forms.ToolStripMenuItem()
@@ -59,12 +53,28 @@ Partial Class frmReservaProcurar
 		Me.pnlAtivas = New VIBlend.WinForms.Controls.vPanel()
 		Me.Label15 = New System.Windows.Forms.Label()
 		Me.PictureBox4 = New System.Windows.Forms.PictureBox()
+		Me.dgvItens = New Controles.ctrlDataGridView()
+		Me.clnSelect = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+		Me.clnIDReserva = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnReservaData = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnClienteNome = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnTelefoneB = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnTelefoneA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnAutor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnProdutoTipo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnFabricante = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnFornecedor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnValorAntecipado = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.lblSelecionados = New System.Windows.Forms.Label()
+		Me.lblSelTitulo = New System.Windows.Forms.Label()
+		Me.chkPrioritaria = New System.Windows.Forms.CheckBox()
 		Me.Panel1.SuspendLayout()
-		CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.mnuReserva.SuspendLayout()
 		Me.pnlAtivas.Content.SuspendLayout()
 		Me.pnlAtivas.SuspendLayout()
 		CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
+		CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SuspendLayout()
 		'
 		'Panel1
@@ -81,12 +91,12 @@ Partial Class frmReservaProcurar
 		'
 		'lblTitulo
 		'
-		Me.lblTitulo.Location = New System.Drawing.Point(1059, 0)
+		Me.lblTitulo.Location = New System.Drawing.Point(899, 0)
+		Me.lblTitulo.Padding = New System.Windows.Forms.Padding(0, 0, 32, 6)
 		Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
-		Me.lblTitulo.Size = New System.Drawing.Size(241, 50)
+		Me.lblTitulo.Size = New System.Drawing.Size(401, 50)
 		Me.lblTitulo.TabIndex = 2
 		Me.lblTitulo.Text = "Reservas - Procurar"
-		Me.lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
 		'
 		'txtNomeCliente
 		'
@@ -114,7 +124,7 @@ Partial Class frmReservaProcurar
 		Me.btnFechar.Location = New System.Drawing.Point(1145, 628)
 		Me.btnFechar.Name = "btnFechar"
 		Me.btnFechar.Size = New System.Drawing.Size(143, 41)
-		Me.btnFechar.TabIndex = 17
+		Me.btnFechar.TabIndex = 15
 		Me.btnFechar.Text = "&Fechar"
 		Me.btnFechar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
 		Me.btnFechar.UseVisualStyleBackColor = True
@@ -128,7 +138,7 @@ Partial Class frmReservaProcurar
 		Me.btnEditar.Location = New System.Drawing.Point(847, 628)
 		Me.btnEditar.Name = "btnEditar"
 		Me.btnEditar.Size = New System.Drawing.Size(143, 41)
-		Me.btnEditar.TabIndex = 15
+		Me.btnEditar.TabIndex = 13
 		Me.btnEditar.Text = "&Editar"
 		Me.btnEditar.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		Me.btnEditar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -197,7 +207,7 @@ Partial Class frmReservaProcurar
 		Me.btnNova.Location = New System.Drawing.Point(996, 628)
 		Me.btnNova.Name = "btnNova"
 		Me.btnNova.Size = New System.Drawing.Size(143, 41)
-		Me.btnNova.TabIndex = 16
+		Me.btnNova.TabIndex = 14
 		Me.btnNova.Text = "&Nova"
 		Me.btnNova.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		Me.btnNova.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -211,7 +221,7 @@ Partial Class frmReservaProcurar
 		Me.lblReservaAtiva.Location = New System.Drawing.Point(0, 0)
 		Me.lblReservaAtiva.Name = "lblReservaAtiva"
 		Me.lblReservaAtiva.Size = New System.Drawing.Size(312, 30)
-		Me.lblReservaAtiva.TabIndex = 18
+		Me.lblReservaAtiva.TabIndex = 0
 		Me.lblReservaAtiva.Text = "Reservas Ativas"
 		Me.lblReservaAtiva.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
 		'
@@ -223,7 +233,7 @@ Partial Class frmReservaProcurar
 		Me.lblSituacao.Location = New System.Drawing.Point(0, 31)
 		Me.lblSituacao.Name = "lblSituacao"
 		Me.lblSituacao.Size = New System.Drawing.Size(312, 28)
-		Me.lblSituacao.TabIndex = 18
+		Me.lblSituacao.TabIndex = 1
 		Me.lblSituacao.Text = "Aguardando Pedido"
 		Me.lblSituacao.TextAlign = System.Drawing.ContentAlignment.TopCenter
 		'
@@ -271,109 +281,6 @@ Partial Class frmReservaProcurar
 		Me.Label6.TabIndex = 1
 		Me.Label6.Text = "Filial"
 		Me.Label6.TextAlign = System.Drawing.ContentAlignment.TopCenter
-		'
-		'lstListagem
-		'
-		Me.lstListagem.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-			Or System.Windows.Forms.AnchorStyles.Left) _
-			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.lstListagem.BackColor = System.Drawing.Color.White
-		Me.lstListagem.CheckBoxes = ComponentOwl.BetterListView.BetterListViewCheckBoxes.TwoState
-		Me.lstListagem.Columns.Add(Me.clnIDReserva)
-		Me.lstListagem.Columns.Add(Me.clnReservaData)
-		Me.lstListagem.Columns.Add(Me.clnClienteNome)
-		Me.lstListagem.Columns.Add(Me.clnTelefoneA)
-		Me.lstListagem.Columns.Add(Me.clnTelefoneB)
-		Me.lstListagem.Columns.Add(Me.clnProduto)
-		Me.lstListagem.Columns.Add(Me.clnAutor)
-		Me.lstListagem.Columns.Add(Me.clnFornecedor)
-		Me.lstListagem.Columns.Add(Me.clnFabricante)
-		Me.lstListagem.Columns.Add(Me.clnProdutoTipo)
-		Me.lstListagem.Columns.Add(Me.clnValorAntecipado)
-		Me.lstListagem.ContextMenuStrip = Me.mnuReserva
-		Me.lstListagem.Font = New System.Drawing.Font("Pathway Gothic One", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.lstListagem.ForeColorColumns = System.Drawing.Color.Black
-		Me.lstListagem.HeaderStyle = ComponentOwl.BetterListView.BetterListViewHeaderStyle.Sortable
-		Me.lstListagem.HideSelectionMode = ComponentOwl.BetterListView.BetterListViewHideSelectionMode.KeepSelection
-		Me.lstListagem.Location = New System.Drawing.Point(12, 171)
-		Me.lstListagem.MultiSelect = False
-		Me.lstListagem.Name = "lstListagem"
-		Me.lstListagem.Size = New System.Drawing.Size(1275, 444)
-		Me.lstListagem.TabIndex = 11
-		'
-		'clnIDReserva
-		'
-		Me.clnIDReserva.AllowResize = False
-		Me.clnIDReserva.ForeColor = System.Drawing.Color.Black
-		Me.clnIDReserva.Name = "clnIDReserva"
-		Me.clnIDReserva.Text = "ID"
-		Me.clnIDReserva.Width = 70
-		'
-		'clnReservaData
-		'
-		Me.clnReservaData.AllowResize = False
-		Me.clnReservaData.Name = "clnReservaData"
-		Me.clnReservaData.Text = "Data"
-		Me.clnReservaData.Width = 80
-		'
-		'clnClienteNome
-		'
-		Me.clnClienteNome.AllowResize = False
-		Me.clnClienteNome.Name = "clnClienteNome"
-		Me.clnClienteNome.Text = "Nome do Cliente"
-		Me.clnClienteNome.Width = 150
-		'
-		'clnTelefoneA
-		'
-		Me.clnTelefoneA.AllowResize = False
-		Me.clnTelefoneA.Name = "clnTelefoneA"
-		Me.clnTelefoneA.Text = "Telefone"
-		Me.clnTelefoneA.Width = 110
-		'
-		'clnTelefoneB
-		'
-		Me.clnTelefoneB.AllowResize = False
-		Me.clnTelefoneB.Name = "clnTelefoneB"
-		Me.clnTelefoneB.Text = "Celular"
-		Me.clnTelefoneB.Width = 110
-		'
-		'clnProduto
-		'
-		Me.clnProduto.AllowResize = False
-		Me.clnProduto.Name = "clnProduto"
-		Me.clnProduto.Text = "Produto"
-		'
-		'clnAutor
-		'
-		Me.clnAutor.AllowResize = False
-		Me.clnAutor.Name = "clnAutor"
-		Me.clnAutor.Text = "Autor"
-		'
-		'clnFornecedor
-		'
-		Me.clnFornecedor.AllowResize = False
-		Me.clnFornecedor.Name = "clnFornecedor"
-		Me.clnFornecedor.Text = "Fornecedor"
-		'
-		'clnFabricante
-		'
-		Me.clnFabricante.AllowResize = False
-		Me.clnFabricante.Name = "clnFabricante"
-		Me.clnFabricante.Text = "Fabricante"
-		'
-		'clnProdutoTipo
-		'
-		Me.clnProdutoTipo.AllowResize = False
-		Me.clnProdutoTipo.Name = "clnProdutoTipo"
-		Me.clnProdutoTipo.Text = "Tipo de Produto"
-		'
-		'clnValorAntecipado
-		'
-		Me.clnValorAntecipado.AlignHorizontal = ComponentOwl.BetterListView.TextAlignmentHorizontal.Right
-		Me.clnValorAntecipado.AllowResize = False
-		Me.clnValorAntecipado.Name = "clnValorAntecipado"
-		Me.clnValorAntecipado.Text = "Entrada"
-		Me.clnValorAntecipado.Width = 80
 		'
 		'mnuReserva
 		'
@@ -426,7 +333,7 @@ Partial Class frmReservaProcurar
 		Me.btnPrintEtiquetas.Location = New System.Drawing.Point(185, 628)
 		Me.btnPrintEtiquetas.Name = "btnPrintEtiquetas"
 		Me.btnPrintEtiquetas.Size = New System.Drawing.Size(121, 41)
-		Me.btnPrintEtiquetas.TabIndex = 13
+		Me.btnPrintEtiquetas.TabIndex = 10
 		Me.btnPrintEtiquetas.Text = "Etiquetas"
 		Me.btnPrintEtiquetas.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		Me.btnPrintEtiquetas.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -442,7 +349,7 @@ Partial Class frmReservaProcurar
 		Me.btnPrintListagem.Location = New System.Drawing.Point(312, 628)
 		Me.btnPrintListagem.Name = "btnPrintListagem"
 		Me.btnPrintListagem.Size = New System.Drawing.Size(121, 41)
-		Me.btnPrintListagem.TabIndex = 14
+		Me.btnPrintListagem.TabIndex = 11
 		Me.btnPrintListagem.Text = "Listagem"
 		Me.btnPrintListagem.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		Me.btnPrintListagem.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -461,7 +368,7 @@ Partial Class frmReservaProcurar
 		Me.btnAlterarSituacao.Location = New System.Drawing.Point(12, 628)
 		Me.btnAlterarSituacao.Name = "btnAlterarSituacao"
 		Me.btnAlterarSituacao.Size = New System.Drawing.Size(167, 41)
-		Me.btnAlterarSituacao.TabIndex = 13
+		Me.btnAlterarSituacao.TabIndex = 9
 		Me.btnAlterarSituacao.Text = "&Alterar Situação"
 		Me.btnAlterarSituacao.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		Me.btnAlterarSituacao.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
@@ -503,7 +410,7 @@ Partial Class frmReservaProcurar
 		Me.Label15.Location = New System.Drawing.Point(510, 642)
 		Me.Label15.Name = "Label15"
 		Me.Label15.Size = New System.Drawing.Size(121, 15)
-		Me.Label15.TabIndex = 20
+		Me.Label15.TabIndex = 12
 		Me.Label15.Text = "Vinculada ao Pedido"
 		'
 		'PictureBox4
@@ -517,14 +424,203 @@ Partial Class frmReservaProcurar
 		Me.PictureBox4.TabIndex = 19
 		Me.PictureBox4.TabStop = False
 		'
+		'dgvItens
+		'
+		Me.dgvItens.AllowUserToAddRows = False
+		Me.dgvItens.AllowUserToDeleteRows = False
+		Me.dgvItens.AllowUserToResizeColumns = False
+		Me.dgvItens.AllowUserToResizeRows = False
+		DataGridViewCellStyle67.BackColor = System.Drawing.Color.Azure
+		Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle67
+		Me.dgvItens.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+			Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.dgvItens.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
+		Me.dgvItens.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+		Me.dgvItens.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
+		Me.dgvItens.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable
+		Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+		DataGridViewCellStyle68.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle68.BackColor = System.Drawing.Color.LightSteelBlue
+		DataGridViewCellStyle68.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle68.ForeColor = System.Drawing.Color.Black
+		DataGridViewCellStyle68.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle68.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+		DataGridViewCellStyle68.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle68
+		Me.dgvItens.ColumnHeadersHeight = 30
+		Me.dgvItens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+		Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnSelect, Me.clnIDReserva, Me.clnReservaData, Me.clnClienteNome, Me.clnTelefoneB, Me.clnTelefoneA, Me.clnProduto, Me.clnAutor, Me.clnProdutoTipo, Me.clnFabricante, Me.clnFornecedor, Me.clnValorAntecipado})
+		DataGridViewCellStyle70.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle70.BackColor = System.Drawing.SystemColors.Window
+		DataGridViewCellStyle70.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle70.ForeColor = System.Drawing.Color.Black
+		DataGridViewCellStyle70.SelectionBackColor = System.Drawing.Color.SteelBlue
+		DataGridViewCellStyle70.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
+		DataGridViewCellStyle70.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+		Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle70
+		Me.dgvItens.EnableHeadersVisualStyles = False
+		Me.dgvItens.GridColor = System.Drawing.SystemColors.ActiveCaption
+		Me.dgvItens.Location = New System.Drawing.Point(12, 160)
+		Me.dgvItens.MultiSelect = False
+		Me.dgvItens.Name = "dgvItens"
+		DataGridViewCellStyle71.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle71.BackColor = System.Drawing.SystemColors.Control
+		DataGridViewCellStyle71.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle71.ForeColor = System.Drawing.SystemColors.WindowText
+		DataGridViewCellStyle71.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
+		DataGridViewCellStyle71.SelectionForeColor = System.Drawing.SystemColors.ControlText
+		DataGridViewCellStyle71.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.dgvItens.RowHeadersDefaultCellStyle = DataGridViewCellStyle71
+		Me.dgvItens.RowHeadersVisible = False
+		Me.dgvItens.RowHeadersWidth = 35
+		DataGridViewCellStyle72.BackColor = System.Drawing.Color.White
+		DataGridViewCellStyle72.Font = New System.Drawing.Font("Pathway Gothic One", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle72.ForeColor = System.Drawing.Color.Black
+		Me.dgvItens.RowsDefaultCellStyle = DataGridViewCellStyle72
+		Me.dgvItens.RowTemplate.DefaultCellStyle.Font = New System.Drawing.Font("Pathway Gothic One", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.dgvItens.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black
+		Me.dgvItens.RowTemplate.Height = 33
+		Me.dgvItens.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.[False]
+		Me.dgvItens.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+		Me.dgvItens.Size = New System.Drawing.Size(1276, 462)
+		Me.dgvItens.TabIndex = 8
+		'
+		'clnSelect
+		'
+		Me.clnSelect.HeaderText = "S"
+		Me.clnSelect.Name = "clnSelect"
+		Me.clnSelect.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.clnSelect.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+		Me.clnSelect.Width = 30
+		'
+		'clnIDReserva
+		'
+		DataGridViewCellStyle69.Format = "N0"
+		DataGridViewCellStyle69.NullValue = Nothing
+		Me.clnIDReserva.DefaultCellStyle = DataGridViewCellStyle69
+		Me.clnIDReserva.HeaderText = "Reg."
+		Me.clnIDReserva.MaxInputLength = 20
+		Me.clnIDReserva.Name = "clnIDReserva"
+		Me.clnIDReserva.Width = 40
+		'
+		'clnReservaData
+		'
+		Me.clnReservaData.HeaderText = "Data"
+		Me.clnReservaData.Name = "clnReservaData"
+		Me.clnReservaData.Width = 80
+		'
+		'clnClienteNome
+		'
+		Me.clnClienteNome.HeaderText = "Nome do Cliente"
+		Me.clnClienteNome.Name = "clnClienteNome"
+		Me.clnClienteNome.Width = 150
+		'
+		'clnTelefoneB
+		'
+		Me.clnTelefoneB.HeaderText = "Celular"
+		Me.clnTelefoneB.MaxInputLength = 10
+		Me.clnTelefoneB.Name = "clnTelefoneB"
+		Me.clnTelefoneB.Width = 110
+		'
+		'clnTelefoneA
+		'
+		Me.clnTelefoneA.HeaderText = "Telefone"
+		Me.clnTelefoneA.MaxInputLength = 10
+		Me.clnTelefoneA.Name = "clnTelefoneA"
+		Me.clnTelefoneA.Width = 110
+		'
+		'clnProduto
+		'
+		Me.clnProduto.HeaderText = "Produto"
+		Me.clnProduto.MaxInputLength = 50
+		Me.clnProduto.Name = "clnProduto"
+		Me.clnProduto.Width = 235
+		'
+		'clnAutor
+		'
+		Me.clnAutor.HeaderText = "Autor/Artista"
+		Me.clnAutor.MaxInputLength = 50
+		Me.clnAutor.Name = "clnAutor"
+		Me.clnAutor.Width = 120
+		'
+		'clnProdutoTipo
+		'
+		Me.clnProdutoTipo.HeaderText = "Tipo"
+		Me.clnProdutoTipo.Name = "clnProdutoTipo"
+		Me.clnProdutoTipo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.clnProdutoTipo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+		Me.clnProdutoTipo.Width = 90
+		'
+		'clnFabricante
+		'
+		Me.clnFabricante.HeaderText = "Fabricante"
+		Me.clnFabricante.Name = "clnFabricante"
+		'
+		'clnFornecedor
+		'
+		Me.clnFornecedor.HeaderText = "Fornecedor"
+		Me.clnFornecedor.Name = "clnFornecedor"
+		'
+		'clnValorAntecipado
+		'
+		Me.clnValorAntecipado.HeaderText = "Entrada"
+		Me.clnValorAntecipado.MaxInputLength = 20
+		Me.clnValorAntecipado.Name = "clnValorAntecipado"
+		Me.clnValorAntecipado.Width = 80
+		'
+		'lblSelecionados
+		'
+		Me.lblSelecionados.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.lblSelecionados.Location = New System.Drawing.Point(1146, 132)
+		Me.lblSelecionados.Name = "lblSelecionados"
+		Me.lblSelecionados.Size = New System.Drawing.Size(138, 19)
+		Me.lblSelecionados.TabIndex = 17
+		Me.lblSelecionados.Text = "00 Reservas"
+		Me.lblSelecionados.Visible = False
+		'
+		'lblSelTitulo
+		'
+		Me.lblSelTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+		Me.lblSelTitulo.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.lblSelTitulo.Location = New System.Drawing.Point(1031, 132)
+		Me.lblSelTitulo.Name = "lblSelTitulo"
+		Me.lblSelTitulo.Size = New System.Drawing.Size(121, 19)
+		Me.lblSelTitulo.TabIndex = 16
+		Me.lblSelTitulo.Text = "SELECIONADAS:"
+		Me.lblSelTitulo.Visible = False
+		'
+		'chkPrioritaria
+		'
+		Me.chkPrioritaria.Appearance = System.Windows.Forms.Appearance.Button
+		Me.chkPrioritaria.BackColor = System.Drawing.SystemColors.Control
+		Me.chkPrioritaria.Checked = True
+		Me.chkPrioritaria.CheckState = System.Windows.Forms.CheckState.Checked
+		Me.chkPrioritaria.FlatAppearance.BorderSize = 0
+		Me.chkPrioritaria.FlatAppearance.CheckedBackColor = System.Drawing.SystemColors.Control
+		Me.chkPrioritaria.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+		Me.chkPrioritaria.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.chkPrioritaria.Image = Global.NovaSiao.My.Resources.Resources.Enable
+		Me.chkPrioritaria.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+		Me.chkPrioritaria.Location = New System.Drawing.Point(595, 86)
+		Me.chkPrioritaria.Name = "chkPrioritaria"
+		Me.chkPrioritaria.Size = New System.Drawing.Size(251, 38)
+		Me.chkPrioritaria.TabIndex = 20
+		Me.chkPrioritaria.TabStop = False
+		Me.chkPrioritaria.Text = "Reservas Prioritárias"
+		Me.chkPrioritaria.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		Me.chkPrioritaria.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+		Me.chkPrioritaria.UseVisualStyleBackColor = False
+		'
 		'frmReservaProcurar
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
 		Me.ClientSize = New System.Drawing.Size(1300, 680)
+		Me.Controls.Add(Me.chkPrioritaria)
+		Me.Controls.Add(Me.lblSelecionados)
+		Me.Controls.Add(Me.dgvItens)
 		Me.Controls.Add(Me.Label15)
 		Me.Controls.Add(Me.PictureBox4)
 		Me.Controls.Add(Me.pnlAtivas)
-		Me.Controls.Add(Me.lstListagem)
 		Me.Controls.Add(Me.txtProduto)
 		Me.Controls.Add(Me.btnTipo)
 		Me.Controls.Add(Me.txtProdutoTipo)
@@ -538,9 +634,11 @@ Partial Class frmReservaProcurar
 		Me.Controls.Add(Me.btnFechar)
 		Me.Controls.Add(Me.Label2)
 		Me.Controls.Add(Me.txtNomeCliente)
+		Me.Controls.Add(Me.lblSelTitulo)
 		Me.KeyPreview = True
 		Me.Name = "frmReservaProcurar"
 		Me.Text = "Procurar Saída de Produto"
+		Me.Controls.SetChildIndex(Me.lblSelTitulo, 0)
 		Me.Controls.SetChildIndex(Me.txtNomeCliente, 0)
 		Me.Controls.SetChildIndex(Me.Label2, 0)
 		Me.Controls.SetChildIndex(Me.btnFechar, 0)
@@ -554,18 +652,20 @@ Partial Class frmReservaProcurar
 		Me.Controls.SetChildIndex(Me.txtProdutoTipo, 0)
 		Me.Controls.SetChildIndex(Me.btnTipo, 0)
 		Me.Controls.SetChildIndex(Me.txtProduto, 0)
-		Me.Controls.SetChildIndex(Me.lstListagem, 0)
 		Me.Controls.SetChildIndex(Me.pnlAtivas, 0)
 		Me.Controls.SetChildIndex(Me.PictureBox4, 0)
 		Me.Controls.SetChildIndex(Me.Label15, 0)
 		Me.Controls.SetChildIndex(Me.Panel1, 0)
+		Me.Controls.SetChildIndex(Me.dgvItens, 0)
+		Me.Controls.SetChildIndex(Me.lblSelecionados, 0)
+		Me.Controls.SetChildIndex(Me.chkPrioritaria, 0)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
-		CType(Me.lstListagem, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.mnuReserva.ResumeLayout(False)
 		Me.pnlAtivas.Content.ResumeLayout(False)
 		Me.pnlAtivas.ResumeLayout(False)
 		CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
+		CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
@@ -583,17 +683,6 @@ Partial Class frmReservaProcurar
 	Friend WithEvents Label3 As Label
 	Friend WithEvents lblFilial As Label
 	Friend WithEvents Label6 As Label
-	Friend WithEvents lstListagem As ComponentOwl.BetterListView.BetterListView
-	Friend WithEvents clnIDReserva As ComponentOwl.BetterListView.BetterListViewColumnHeader
-	Friend WithEvents clnReservaData As ComponentOwl.BetterListView.BetterListViewColumnHeader
-	Friend WithEvents clnClienteNome As ComponentOwl.BetterListView.BetterListViewColumnHeader
-	Friend WithEvents clnTelefoneA As ComponentOwl.BetterListView.BetterListViewColumnHeader
-	Friend WithEvents clnTelefoneB As ComponentOwl.BetterListView.BetterListViewColumnHeader
-	Friend WithEvents clnProduto As ComponentOwl.BetterListView.BetterListViewColumnHeader
-	Friend WithEvents clnAutor As ComponentOwl.BetterListView.BetterListViewColumnHeader
-	Friend WithEvents clnFornecedor As ComponentOwl.BetterListView.BetterListViewColumnHeader
-	Friend WithEvents clnFabricante As ComponentOwl.BetterListView.BetterListViewColumnHeader
-	Friend WithEvents clnProdutoTipo As ComponentOwl.BetterListView.BetterListViewColumnHeader
 	Friend WithEvents btnPrintEtiquetas As Button
 	Friend WithEvents btnPrintListagem As Button
 	Friend WithEvents btnAlterarSituacao As Button
@@ -608,5 +697,20 @@ Partial Class frmReservaProcurar
 	Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
 	Friend WithEvents miAbrirPedido As ToolStripMenuItem
 	Friend WithEvents miDesassociarDoPedido As ToolStripMenuItem
-	Friend WithEvents clnValorAntecipado As ComponentOwl.BetterListView.BetterListViewColumnHeader
+	Friend WithEvents dgvItens As Controles.ctrlDataGridView
+	Friend WithEvents lblSelecionados As Label
+	Friend WithEvents lblSelTitulo As Label
+	Friend WithEvents clnSelect As DataGridViewCheckBoxColumn
+	Friend WithEvents clnIDReserva As DataGridViewTextBoxColumn
+	Friend WithEvents clnReservaData As DataGridViewTextBoxColumn
+	Friend WithEvents clnClienteNome As DataGridViewTextBoxColumn
+	Friend WithEvents clnTelefoneB As DataGridViewTextBoxColumn
+	Friend WithEvents clnTelefoneA As DataGridViewTextBoxColumn
+	Friend WithEvents clnProduto As DataGridViewTextBoxColumn
+	Friend WithEvents clnAutor As DataGridViewTextBoxColumn
+	Friend WithEvents clnProdutoTipo As DataGridViewTextBoxColumn
+	Friend WithEvents clnFabricante As DataGridViewTextBoxColumn
+	Friend WithEvents clnFornecedor As DataGridViewTextBoxColumn
+	Friend WithEvents clnValorAntecipado As DataGridViewTextBoxColumn
+	Friend WithEvents chkPrioritaria As CheckBox
 End Class

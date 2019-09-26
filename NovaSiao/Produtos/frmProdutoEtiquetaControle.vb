@@ -543,14 +543,15 @@ Public Class frmProdutoEtiquetaControle
         fPrint.ShowDialog()
         '
     End Sub
-    '
+	'
 #End Region
-    '
+	'
 #Region "OUTRAS FUNCOES"
-    '===================================================================================
-    ' FORMATA A LISTAGEM DE ETIQUETAS PARA IMPRIMIR NA HORIZONTAL
-    '===================================================================================
-    Private Function FillPages(myList As List(Of clProdutoEtiqueta), myColNum As Integer, myRowNum As Integer) As List(Of clProdutoEtiqueta)
+	'
+	'===================================================================================
+	' FORMATA A LISTAGEM DE ETIQUETAS PARA IMPRIMIR NA HORIZONTAL
+	'===================================================================================
+	Private Function FillPages(myList As List(Of clProdutoEtiqueta), myColNum As Integer, myRowNum As Integer) As List(Of clProdutoEtiqueta)
         '
         '--- define a quantidade de etiquetas
         Dim etqPorCol As Integer = EtqPorPag / myColNum '--- etiquetas por coluna

@@ -462,10 +462,14 @@ Public Class clReserva
 			Return RData._ValorAntecipado
 		End Get
 		Set(ByVal value As Decimal?)
+			'
+			If value = 0 Then value = Nothing
+			'
 			If value <> RData._ValorAntecipado Then
 				RaiseEvent AoAlterar()
 			End If
 			RData._ValorAntecipado = value
+			'
 		End Set
 	End Property
 	'

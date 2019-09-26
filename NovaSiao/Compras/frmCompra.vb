@@ -2223,17 +2223,28 @@ Public Class frmCompra
     ' IMPRIMIR ETIQUETAS COMPRA
     '-----------------------------------------------------------------------------------------------------
     Private Sub miImprimirEtiquetas_Click(sender As Object, e As EventArgs) Handles miImprimirEtiquetas.Click
-        '
-        If Sit <> EnumFlagEstado.RegistroSalvo OrElse IsNothing(_Compra.IDCompra) OrElse _Compra.IDCompra = 0 Then
-            '
-            AbrirDialog("A Compra ainda não efetuada..." & vbNewLine &
-                        "Favor efetuar a compra para imprimir as Etiquetas.",
-                        "Efetue a Compra", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
-            Exit Sub
-            '
-        End If
-        '
-        Try
+		'
+		'--- CHECK IDCOMPRA
+		If IsNothing(_Compra.IDCompra) OrElse _Compra.IDCompra = 0 Then
+			'
+			AbrirDialog("A Compra ainda não efetuada..." & vbNewLine &
+						"Favor efetuar a compra para imprimir as Etiquetas.",
+						"Efetue a Compra", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+			Exit Sub
+			'
+		End If
+		'
+		'--- CHECK LIST PRODUTOS COUNT
+		If _ItensList.Count = 0 Then
+			'
+			AbrirDialog("Essa Compra ainda não tem algum produto..." & vbNewLine &
+						"Favor efetuar inserir produtos para imprimir as Etiquetas.",
+						"Inserir Items", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+			Exit Sub
+			'
+		End If
+		'
+		Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
             '

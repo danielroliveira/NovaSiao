@@ -1,4 +1,5 @@
 ﻿Imports System.ComponentModel
+Imports System.Text.RegularExpressions
 
 Public Class clClienteSimples
 	Implements IEditableObject
@@ -319,33 +320,23 @@ Public Class clClienteSimples
 	Public ReadOnly Property GetChaveExclusiva As String
 		'
 		Get
-			'--- SPLIT WORD IN ARRAY OF STRING
-			Dim nomes As String() = ClienteNome.Split(" ")
+			'--- TRY WITH TELEFONE B
+			Dim newChave As String = Regex.Replace(TelefoneB, "[^.0-9]", "")
+			newChave = newChave.Replace(" ", "")
 			'
-			Dim NovoNome As String = ""
+			If newChave.Length > 0 Then
+				Return "B" & newChave
+			End If
 			'
-			'--- REMOVE PEQUENAS PALAVRAS LEN < 3 (A,O,DA,DE,E)
-			For Each nome In nomes
-				If nome.Length >= 3 Then
-					NovoNome += nome
-				End If
-			Next
+			'--- TRY WITH TELEFONE A
+			newChave = Regex.Replace(TelefoneA, "[^.0-9]", "")
+			newChave = newChave.Replace(" ", "")
 			'
-			Dim vPos As Byte
-			'
-			'--- REMOVE ACENTOS
-			Const vComAcento = "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜàáâãäåçèéêëìíîïòóôõöùúûü"
-			Const vSemAcento = "AAAAAACEEEEIIIIOOOOOUUUUaaaaaaceeeeiiiiooooouuuu"
-			'
-			For i = 1 To Len(NovoNome)
-				vPos = InStr(1, vComAcento, Mid(NovoNome, i, 1))
-				If vPos > 0 Then
-					Mid(NovoNome, i, 1) = Mid(vSemAcento, vPos, 1)
-				End If
-			Next
-			'
-			'--- RETURN NEW WORD UPPER CASE WITHOUT SPACES
-			Return NovoNome.ToUpper.Replace(" ", "")
+			If newChave.Length > 0 Then
+				Return "A" & newChave
+			Else
+				Return String.Empty
+			End If
 			'
 		End Get
 		'

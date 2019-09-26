@@ -535,45 +535,45 @@ Public Class frmProdutoListagem
         PaginaAtual = 1
         '
     End Sub
-    '
-    Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click, miEditarProduto.Click
-
-        If dgvItens.SelectedRows.Count = 0 Then
-            MessageBox.Show("Não existe nenhum PRODUTO selecionado na listagem", "Escolher",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information)
-            Exit Sub
-        End If
-        '
-        Dim clProd As clProduto = dgvItens.SelectedRows(0).DataBoundItem
-        '
-        '--- Verifica se o form Produto ja esta aberto
-        Dim frm As Form = Nothing
-        '
-        For Each f As Form In Application.OpenForms
-            If f.Name = "frmProduto" Then
-                frm = f
-            End If
-        Next
-        '
-        If IsNothing(frm) Then '--- o frmProduto não esta aberto
-            frm = New frmProduto(EnumFlagAcao.EDITAR, clProd, Me)
-            frm.MdiParent = frmPrincipal
-            frm.StartPosition = FormStartPosition.CenterScreen
-            Me.Visible = False
-            frm.Show()
-        Else '--- o frmProduto já esta aberto
-            DirectCast(frm, frmProduto).propProduto = clProd
-            frm.Focus()
-            Close()
-        End If
-        ''
-    End Sub
-    '
-    Private Sub dgvItens_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
-        btnEditar_Click(New Object, New EventArgs)
-    End Sub
-    '
-    Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click, btnClose.Click
+	'
+	Private Sub btnEditar_Click(sender As Object, e As EventArgs) Handles btnEditar.Click, miEditarProduto.Click
+		'
+		If dgvItens.SelectedRows.Count = 0 Then
+			MessageBox.Show("Não existe nenhum PRODUTO selecionado na listagem", "Escolher",
+							MessageBoxButtons.OK, MessageBoxIcon.Information)
+			Exit Sub
+		End If
+		'
+		Dim clProd As clProduto = dgvItens.SelectedRows(0).DataBoundItem
+		'
+		'--- Verifica se o form Produto ja esta aberto
+		Dim frm As Form = Nothing
+		'
+		For Each f As Form In Application.OpenForms
+			If f.Name = "frmProduto" Then
+				frm = f
+			End If
+		Next
+		'
+		If IsNothing(frm) Then '--- o frmProduto não esta aberto
+			frm = New frmProduto(EnumFlagAcao.EDITAR, clProd, Me)
+			frm.MdiParent = frmPrincipal
+			frm.StartPosition = FormStartPosition.CenterScreen
+			Me.Visible = False
+			frm.Show()
+		Else '--- o frmProduto já esta aberto
+			DirectCast(frm, frmProduto).propProduto = clProd
+			frm.Focus()
+			Close()
+		End If
+		''
+	End Sub
+	'
+	Private Sub dgvItens_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
+		btnEditar_Click(New Object, New EventArgs)
+	End Sub
+	'
+	Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click, btnClose.Click
         Close()
         MostraMenuPrincipal()
     End Sub
