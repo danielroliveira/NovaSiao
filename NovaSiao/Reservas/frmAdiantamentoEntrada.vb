@@ -15,6 +15,7 @@ Public Class frmAdiantamentoEntrada
 #Region "SUB NEW | GET DADOS"
 	'
 	Public Sub New(IDReserva As Integer,
+				   ClienteNome As String,
 				   vlMax As Decimal,
 				   formOrigem As Form)
 		'
@@ -26,17 +27,18 @@ Public Class frmAdiantamentoEntrada
 		_vlMax = vlMax
 		'
 		'--- cria uma nova movimentacao
-		propMovEntrada = New clMovimentacao(EnumMovimentacaoOrigem.Creditos, EnumMovimento.Entrada)
+		propMovEntrada = New clMovimentacao(EnumMovimentacaoOrigem.Reserva, EnumMovimento.Entrada)
 		'
 		'--- define os valores da movimentacao
 		propMovEntrada.MovData = Obter_DataPadrao()
 		propMovEntrada.IDConta = Obter_ContaPadrao()
 		propMovEntrada.IDFilial = Obter_FilialPadrao()
-		propMovEntrada.Origem = 3 '--- ORIGEM CREDITO
+		propMovEntrada.Origem = 5 '--- ORIGEM RESERVA
 		propMovEntrada.IDOrigem = IDReserva
 		propMovEntrada.Creditar = False
-		propMovEntrada.Movimento = 1 '--- ORIGEM ENTRADA
+		propMovEntrada.Movimento = 1 '--- ENTRADA
 		propMovEntrada.Conta = ObterDefault("ContaDescricao")
+		propMovEntrada.Descricao = "Reserva: " & Format(IDReserva, "0000") & " - " & ClienteNome
 		'
 		'--- preenche o databind
 		bindEntrada.DataSource = propMovEntrada
@@ -167,11 +169,7 @@ Public Class frmAdiantamentoEntrada
 				Return
 			End If
 			'
-			'--- Insere a Entrada
-			Dim eBLL As New MovimentacaoBLL
-			'
-			propMovEntrada = eBLL.Movimentacao_Inserir(propMovEntrada)
-			'
+			'--- Retorna a Movimentacao
 			DialogResult = DialogResult.OK
 			'
 		Catch ex As Exception
@@ -480,9 +478,9 @@ Public Class frmAdiantamentoEntrada
 			'
 			If DoValor > _vlMax Then
 				MessageBox.Show("O valor da Entrada não pode ser maior que R$ " &
-									Format(_vlMax, "#,##0.00"),
-									"Valor do Pagamento", MessageBoxButtons.OK,
-									MessageBoxIcon.Information)
+								Format(_vlMax, "#,##0.00"),
+								"Valor do Pagamento", MessageBoxButtons.OK,
+								MessageBoxIcon.Information)
 				DoValor = _vlMax
 				txtValorAdiantamento.Text = FormatCurrency(_vlMax, 2) '
 				'

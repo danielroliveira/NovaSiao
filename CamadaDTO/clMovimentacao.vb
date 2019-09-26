@@ -4,8 +4,9 @@ Public Enum EnumMovimentacaoOrigem
     Venda = 1           ' IDOrigem  :   tblVenda
     AReceberParcela = 2 ' IDOrigem  :   tblAReceberParcela
     Creditos = 3        ' IDOrigem  :   tblCreditos
-    Devolucao = 4       ' IDOrigem  :   tblDevolucao
-    APagar = 10         ' IDOrigem  :   tblAPagar
+	Devolucao = 4       ' IDOrigem  :   tblDevolucao
+	Reserva = 5         ' IDOrigem  :   tblReserva
+	APagar = 10         ' IDOrigem  :   tblAPagar
     Transferencia = 11  ' IDOrigem  :   tblTransferenciaCaixa
 End Enum
 '
@@ -311,8 +312,8 @@ Public Class clMovimentacao : Implements IEditableObject
             If value <> MData._Descricao Then
                 RaiseEvent AoAlterar()
             End If
-            MData._Descricao = value
-        End Set
+			MData._Descricao = Left(value, 100)
+		End Set
     End Property
     '
     '--- Propriedade Movimento

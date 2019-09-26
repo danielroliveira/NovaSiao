@@ -66,52 +66,52 @@ Public Class MovimentacaoBLL
         End Try
         '
     End Function
-    '
-    '===================================================================================================
-    ' SALVA NOVA ENTRADA/PAGAMENTO NO BD
-    '===================================================================================================
-    Public Function Movimentacao_Inserir(Movimentacao As clMovimentacao,
-                                         Optional myDB As Object = Nothing) As clMovimentacao
-        '
-        Dim db As AcessoDados = If(myDB, New AcessoDados)
-        '
-        '--- limpa os parametros
-        db.LimparParametros()
-        '
-        '--- adiciona o parametros
-        db.AdicionarParametros("@Origem", Movimentacao.Origem)
-        db.AdicionarParametros("@IDOrigem", Movimentacao.IDOrigem)
-        db.AdicionarParametros("@IDConta", Movimentacao.IDConta)
-        db.AdicionarParametros("@IDMeio", Movimentacao.IDMeio)
-        db.AdicionarParametros("@MovData", Movimentacao.MovData)
-        db.AdicionarParametros("@MovValor", Movimentacao.MovValor)
-        db.AdicionarParametros("@IDMovForma", If(Movimentacao.IDMovForma, DBNull.Value))
-        db.AdicionarParametros("@Creditar", Movimentacao.Creditar)
-        db.AdicionarParametros("@Descricao", If(IsNothing(Movimentacao.Descricao) OrElse Movimentacao.Descricao.Length = 0, DBNull.Value, Movimentacao.Descricao))
-        db.AdicionarParametros("@Movimento", Movimentacao.Movimento)
-        db.AdicionarParametros("@IDCaixa", If(Movimentacao.IDCaixa, DBNull.Value))
-        db.AdicionarParametros("@Observacao", Movimentacao.Observacao)
-        '
-        Try
-            '
-            Dim dt As DataTable = db.ExecutarConsulta(CommandType.StoredProcedure, "uspMovimentacao_Inserir")
-            '
-            If dt.Rows.Count = 0 Then
-                Throw New Exception("Não foi retornado registro de movimentação...")
-            End If
-            '
-            Return Convert_DT_ListOF_Movimentacao(dt).Item(0)
-            '
-        Catch ex As Exception
-            Throw ex
-        End Try
-        '
-    End Function
-    '
-    '===================================================================================================
-    ' UPDATE MOVIMENTACAO NO BD
-    '===================================================================================================
-    Public Function Movimentacao_Update(_mov As clMovimentacao,
+	'
+	'===================================================================================================
+	' SALVA NOVA ENTRADA/PAGAMENTO NO BD
+	'===================================================================================================
+	Public Function Movimentacao_Inserir(Movimentacao As clMovimentacao,
+										 Optional dbTran As Object = Nothing) As clMovimentacao
+		'
+		Dim db As AcessoDados = If(dbTran, New AcessoDados)
+		'
+		'--- limpa os parametros
+		db.LimparParametros()
+		'
+		'--- adiciona o parametros
+		db.AdicionarParametros("@Origem", Movimentacao.Origem)
+		db.AdicionarParametros("@IDOrigem", Movimentacao.IDOrigem)
+		db.AdicionarParametros("@IDConta", Movimentacao.IDConta)
+		db.AdicionarParametros("@IDMeio", Movimentacao.IDMeio)
+		db.AdicionarParametros("@MovData", Movimentacao.MovData)
+		db.AdicionarParametros("@MovValor", Movimentacao.MovValor)
+		db.AdicionarParametros("@IDMovForma", If(Movimentacao.IDMovForma, DBNull.Value))
+		db.AdicionarParametros("@Creditar", Movimentacao.Creditar)
+		db.AdicionarParametros("@Descricao", If(IsNothing(Movimentacao.Descricao) OrElse Movimentacao.Descricao.Length = 0, DBNull.Value, Movimentacao.Descricao))
+		db.AdicionarParametros("@Movimento", Movimentacao.Movimento)
+		db.AdicionarParametros("@IDCaixa", If(Movimentacao.IDCaixa, DBNull.Value))
+		db.AdicionarParametros("@Observacao", Movimentacao.Observacao)
+		'
+		Try
+			'
+			Dim dt As DataTable = db.ExecutarConsulta(CommandType.StoredProcedure, "uspMovimentacao_Inserir")
+			'
+			If dt.Rows.Count = 0 Then
+				Throw New Exception("Não foi retornado registro de movimentação...")
+			End If
+			'
+			Return Convert_DT_ListOF_Movimentacao(dt).Item(0)
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'===================================================================================================
+	' UPDATE MOVIMENTACAO NO BD
+	'===================================================================================================
+	Public Function Movimentacao_Update(_mov As clMovimentacao,
                                         Optional myDB As Object = Nothing) As Boolean
         '
         Dim db As AcessoDados = If(myDB, New AcessoDados)

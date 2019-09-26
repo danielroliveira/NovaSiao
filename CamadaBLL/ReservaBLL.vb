@@ -221,61 +221,41 @@ Public Class ReservaBLL
 	End Function
 	'
 	'==========================================================================================
-	' INSERT OR UPDATE CLIENTE SIMPLES RESERVA
+	' INSERT ADIANTAMENTO DE RESERVA : CREATE MOVIMENTACAO AND UPDATE RESERVA
 	'==========================================================================================
-	'Private Function ClienteInsertUpdate(reserva As clReserva, dbTran As AcessoDados) As Object
-	'	'
-	'	Try
-	'		'
-	'		Dim query As String = ""
-	'		'
-	'		'--- UPDATE OR INSERT CLIENTE - GET NewID
-	'		'-------------------------------------------------------------------------------------------------
-	'		dbTran.LimparParametros()
-	'		'
-	'		'--- ADICIONA OS PARAMENTROS NECESSARIOS
-	'		dbTran.AdicionarParametros("@IDClienteSimples", reserva.IDClienteSimples)
-	'		dbTran.AdicionarParametros("@ClienteNome", reserva.ClienteNome)
-	'		dbTran.AdicionarParametros("@TelefoneA", If(reserva.TelefoneA, DBNull.Value))
-	'		dbTran.AdicionarParametros("@TelefoneB", If(reserva.TelefoneB, DBNull.Value))
-	'		dbTran.AdicionarParametros("@TemWhatsapp", reserva.TemWhatsapp)
-	'		dbTran.AdicionarParametros("@ClienteEmail", If(reserva.ClienteEmail, DBNull.Value))
-	'		'
-	'		Dim cBLL As New ClienteSimplesBLL
-	'		'
-	'		Dim Cliente As New clClienteSimples With {
-	'			.IDClienteSimples = reserva.IDClienteSimples,
-	'			.ClienteNome = reserva.ClienteNome,
-	'			.TelefoneA = reserva.TelefoneA,
-	'			.TelefoneB = reserva.TelefoneB,
-	'			.ClienteEmail = reserva.ClienteEmail,
-	'			.TemWhatsapp = reserva.TemWhatsapp,
-	'			.ChaveExclusiva = .GetChaveExclusiva
-	'			}
-	'		'
-	'		Dim response As Object = Nothing
-	'		'
-	'		'--- TRY TO GET NEW ID
-	'		If Cliente.IDClienteSimples Is Nothing Then
-	'			response = cBLL.ClienteSimples_Inserir(Cliente, dbTran)
-	'		Else
-	'			response = cBLL.ClienteSimples_Alterar(Cliente, dbTran)
-	'		End If
-	'		'
-	'		'--- CHECK RESPONSE TYPE OF
-	'		If TypeOf response Is Integer Then '--> return ID (new Cliente saved)
-	'			Return response
-	'		ElseIf TypeOf response Is clClienteSimples Then '--> return class Cliente (duplicated)
-	'			Return DirectCast(response, clClienteSimples)
-	'		Else '--> return else (error)
-	'			Throw New Exception(response.ToString)
-	'		End If
-	'		'
-	'	Catch ex As Exception
-	'		Throw ex
-	'	End Try
-	'	'
-	'End Function
+	Public Function Adiantamento_Insert(Reserva As clReserva, Movimentacao As clMovimentacao) As Boolean
+		'
+		Dim dbTran As AcessoDados = Nothing
+		'
+		Try
+			dbTran = New AcessoDados
+			dbTran.BeginTransaction()
+			'
+			'--- INSERT MOVIMENTACAO
+			'-------------------------------------------------------------------------------------------------
+			Dim eBLL As New MovimentacaoBLL
+			Movimentacao = eBLL.Movimentacao_Inserir(Movimentacao, dbTran)
+			'
+			'--- UPDATE RESERVA
+			'-------------------------------------------------------------------------------------------------
+			dbTran.LimparParametros()
+			dbTran.AdicionarParametros("@IDReserva", Reserva.IDReserva)
+			dbTran.AdicionarParametros("@ValorAntecipado", Movimentacao.MovValor)
+			'
+			Dim query As String = "UPDATE tblReserva SET ValorAntecipado = @ValorAntecipado WHERE IDReserva = @IDReserva"
+			'
+			dbTran.ExecutarManipulacao(CommandType.Text, query)
+			'
+			'--- COMMIT AND RETURN
+			dbTran.CommitTransaction()
+			Return True
+			'
+		Catch ex As Exception
+			dbTran.RollBackTransaction()
+			Throw ex
+		End Try
+		'
+	End Function
 	'
 	'===================================================================================================
 	' ALTERA A SITUCAO DA RESERVA

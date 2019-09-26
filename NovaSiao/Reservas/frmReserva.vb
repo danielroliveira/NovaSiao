@@ -3,8 +3,9 @@ Imports CamadaBLL
 Imports System.ComponentModel
 '
 Public Class frmReserva
-    Private _Reserva As clReserva
-    Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
+	Private _Reserva As clReserva
+	Private resBLL As New ReservaBLL
+	Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
 	Private _formOrigem As Form
 	Private bindReserva As New BindingSource
 	Private _RegistroBloqueado As Boolean = False
@@ -361,10 +362,20 @@ Public Class frmReserva
 		Try
 			'--- Ampulheta ON
 			Cursor = Cursors.WaitCursor
+			Dim propMovEntrada As clMovimentacao = Nothing
 			'
-			Using frmA As New frmAdiantamentoEntrada(_Reserva.IDReserva, _Reserva.PVenda, Me)
+			Using frmA As New frmAdiantamentoEntrada(_Reserva.IDReserva,
+													 _Reserva.ClienteNome,
+													 _Reserva.PVenda, Me)
 				frmA.ShowDialog()
+				If frmA.DialogResult <> DialogResult.OK Then Exit Sub
+				'
+				propMovEntrada = frmA.propMovEntrada
+				'
 			End Using
+			'
+			'--- EXECUTE
+			resBLL.Adiantamento_Insert(_Reserva, propMovEntrada)
 			'
 		Catch ex As Exception
 			MessageBox.Show("Uma exceção ocorreu ao Abrir registro de Adiantamento..." & vbNewLine &
@@ -656,7 +667,6 @@ Public Class frmReserva
 		'
 		'--- define os dados da classe
 		Dim NewReservaID As Long
-		Dim reservaBLL As New ReservaBLL
 		'
 		Try
 			'
@@ -665,9 +675,9 @@ Public Class frmReserva
 			'
 			'--- Salva mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
 			If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
-				NewReservaID = reservaBLL.Reserva_Inserir(_Reserva)
+				NewReservaID = resBLL.Reserva_Inserir(_Reserva)
 			ElseIf Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
-				NewReservaID = reservaBLL.Reserva_Alterar(_Reserva)
+				NewReservaID = resBLL.Reserva_Alterar(_Reserva)
 			End If
 			'
 		Catch ex As Exception
