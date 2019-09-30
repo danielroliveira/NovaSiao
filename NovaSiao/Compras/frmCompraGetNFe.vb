@@ -2395,16 +2395,6 @@ Public Class frmCompraGetNFe
 	'----------------------------------------------------------------------------------
 	Private Sub btnInserirFornecedor_Click(sender As Object, e As EventArgs) Handles btnInserirFornecedor.Click
 		'
-		'--- ASK USER
-		If AbrirDialog("Não foi encontrado um fornecedor correspondente cadastrado com o mesmo CNPJ." & vbCrLf &
-					   "Deseja inserir um novo fornecedor?" & vbCrLf &
-					   FornecedorNFe.Cadastro,
-					   "Inserir Fornecedor",
-					   frmDialog.DialogType.SIM_NAO,
-					   frmDialog.DialogIcon.Question) = DialogResult.No Then
-			Return
-		End If
-		'
 		Try
 			'
 			'--- OPEN FRM FORNECEDOR
@@ -2414,9 +2404,12 @@ Public Class frmCompraGetNFe
 			'
 			'--- FORNECEDOR DEFINIDO
 			FornecedorNFe.IDPessoa = newForn.IDPessoa
+			tspMenuFornecedor.Visible = False
 			'
 			AbrirDialog("Fornecedor encontrado:" & vbCrLf & vbCrLf & newForn.Cadastro,
-							"Fornecedor", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+						"Fornecedor",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
 			'
 			'--- TRY MAKE CORRELACAO AGAIN
 			btnCorrelacao_Click(sender, e)
@@ -2507,6 +2500,7 @@ Public Class frmCompraGetNFe
 			'
 			'--- TRANSPORTADORA DEFINIDO
 			TranspNFe.IDPessoa = newTransp.IDPessoa
+			tspMenuTransp.Visible = False
 			'
 			AbrirDialog("Transportadora encontrada:" & vbCrLf & vbCrLf & newTransp.Cadastro,
 						"Transportadora", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)

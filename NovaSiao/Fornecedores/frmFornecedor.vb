@@ -15,10 +15,10 @@ Public Class frmFornecedor
         '
         ' This call is required by the designer.
         InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        _formOrigem = formOrigem
-        propForn = objForn
+		'
+		' Add any initialization after the InitializeComponent() call.
+		_formOrigem = formOrigem
+		propForn = objForn
         PreencheDataBindings()
         '
         If Not IsNothing(_forn.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
@@ -63,9 +63,14 @@ Public Class frmFornecedor
             If Not IsNothing(_formOrigem) Then
                 btnProcurar.Enabled = False
                 btnProdutos.Enabled = False
-                btnNovo.Enabled = False
-                btnFechar.Text = "OK"
-            End If
+				btnNovo.Enabled = False
+				If _Sit = EnumFlagEstado.RegistroSalvo Then
+					btnFechar.Text = "Concluir"
+				Else
+					btnFechar.Text = "&Fechar"
+				End If
+
+			End If
             '
         End Set
         '
@@ -78,27 +83,28 @@ Public Class frmFornecedor
         Get
             Return _forn
         End Get
-        '
-        Set(ByVal value As clFornecedor)
-            _forn = value
-            BindForn.DataSource = _forn
-            AddHandler DirectCast(BindForn.CurrencyManager.Current, clFornecedor).AoAlterar, AddressOf HandlerAoAlterar
-            '
-            If Not IsNothing(_forn.IDPessoa) Then
-                Sit = EnumFlagEstado.RegistroSalvo
-            Else
-                Sit = EnumFlagEstado.NovoRegistro
-            End If
-            '
-            AtivoButtonImage()
-            '
-            If Not IsNothing(_forn.IDPessoa) Then
-                lblID.Text = Format(_forn.IDPessoa, "0000")
-            End If
-            '
-        End Set
-        '
-    End Property
+		'
+		Set(ByVal value As clFornecedor)
+			'
+			_forn = value
+			BindForn.DataSource = _forn
+			AddHandler DirectCast(BindForn.CurrencyManager.Current, clFornecedor).AoAlterar, AddressOf HandlerAoAlterar
+			'
+			If Not IsNothing(_forn.IDPessoa) Then
+				Sit = EnumFlagEstado.RegistroSalvo
+			Else
+				Sit = EnumFlagEstado.NovoRegistro
+			End If
+			'
+			AtivoButtonImage()
+			'
+			If Not IsNothing(_forn.IDPessoa) Then
+				lblID.Text = Format(_forn.IDPessoa, "0000")
+			End If
+			'
+		End Set
+		'
+	End Property
     '
     '--- GET CNPJ OF NEW FORNECEDOR
     '----------------------------------------------------------------------------------
@@ -378,13 +384,14 @@ Public Class frmFornecedor
         End If
         '
     End Sub
-    '
+	'
 #End Region
 
 #Region "SALVAR REGISTRO"
-    ' SALVAR O REGISTRO
-    '---------------------------------------------------------------------------------------------------
-    Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
+	'
+	' SALVAR O REGISTRO
+	'---------------------------------------------------------------------------------------------------
+	Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
         '
         '--- verifica os dados se os campos estão preechidos
         If VerificaDados() = False Then Exit Sub
@@ -392,40 +399,41 @@ Public Class frmFornecedor
         '--- define os dados da classe
         Dim NewFornID As Integer
         Dim pBLL As New PessoaBLL
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            '--- Define o tipo de Pessoa
-            _forn.PessoaTipo = 2 '---> PJ
-            '
-            '--- Salva mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
-            If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
-                '
-                Dim response = pBLL.InsertNewPessoa(_forn, PessoaBLL.EnumPessoaGrupo.FORNECEDOR)
-                '
-                If TypeOf response Is Integer Then
-                    NewFornID = response
-                Else
-                    Throw New Exception("Já existe FORNECEDOR com mesmo CNPJ...")
-                End If
-                '
-            ElseIf Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
-                '
-                If pBLL.UpdatePessoa(_forn, PessoaBLL.EnumPessoaGrupo.FORNECEDOR) Then
-                    NewFornID = _forn.IDPessoa
-                End If
-                '
-            End If
-        Catch ex As Exception
-            MessageBox.Show("Um erro ocorreu ao salvar o registro!" & vbCrLf &
-                            ex.Message, "Erro ao Salvar Registro",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
+		'
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			'--- Define o tipo de Pessoa
+			_forn.PessoaTipo = 2 '---> PJ
+			'
+			'--- Salva mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
+			If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
+				'
+				Dim response = pBLL.InsertNewPessoa(_forn, PessoaBLL.EnumPessoaGrupo.FORNECEDOR)
+				'
+				If TypeOf response Is Integer Then
+					NewFornID = response
+				Else
+					Throw New Exception("Já existe FORNECEDOR com mesmo CNPJ...")
+				End If
+				'
+			ElseIf Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
+				'
+				If pBLL.UpdatePessoa(_forn, PessoaBLL.EnumPessoaGrupo.FORNECEDOR) Then
+					NewFornID = _forn.IDPessoa
+				End If
+				'
+			End If
+		Catch ex As Exception
+			MessageBox.Show("Um erro ocorreu ao salvar o registro!" & vbCrLf &
+							ex.Message, "Erro ao Salvar Registro",
+							MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
             '
         End Try
         '
@@ -437,17 +445,20 @@ Public Class frmFornecedor
                 _forn.IDPessoa = NewFornID
                 lblID.DataBindings("Tag").ReadValue()
             End If
-
-            '--- Altera a Situação
-            Sit = EnumFlagEstado.RegistroSalvo
+			'
+			'--- Altera a Situação
+			Sit = EnumFlagEstado.RegistroSalvo
             BindForn.EndEdit()
             BindForn.CurrencyManager.Refresh()
-            '
-            '--- Mensagem de Sucesso:
-            MsgBox("Registro Salvo com sucesso!", vbInformation, "Registro Salvo")
-            '
-            '--- check if exists formOrigem and close
-            If Not IsNothing(_formOrigem) Then
+			'
+			'--- Mensagem de Sucesso:
+			AbrirDialog("Registro Salvo com sucesso!",
+						"Registro Salvo",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
+			'
+			'--- check if exists formOrigem and close
+			If Not IsNothing(_formOrigem) Then
                 '
                 DialogResult = DialogResult.OK
                 Close()
@@ -456,8 +467,11 @@ Public Class frmFornecedor
             End If
             '
         Else
-            MsgBox("Registro NÃO pôde ser salvo!", vbInformation, "Erro ao Salvar")
-        End If
+			MessageBox.Show("Registro NÃO pôde ser salvo!",
+							"Erro ao Salvar",
+							MessageBoxButtons.OK,
+							MessageBoxIcon.Error)
+		End If
         '
     End Sub
     '

@@ -1,20 +1,46 @@
 ﻿Imports CamadaBLL
 '
 Public Class frmProdutoTipo
-    Private dtTipo, dtSubTipo, dtCat As DataTable
-    Private ImgInativo As Image = My.Resources.block
-    Private ImgAtivo As Image = My.Resources.accept
-    Private ImgNew As Image = My.Resources.Adicionar1
-    Private Abrindo As Boolean = True
+	'Private dtTipo, dtSubTipo, dtCat As DataTable
+	Private listTipo, listSubTipo, listCat As List(Of ClassTipo)
+	Private bindTipo, bindSubTipo, bindCat As New BindingSource
+	'
+	Private ImgInativo As Image = My.Resources.block
+	Private ImgAtivo As Image = My.Resources.accept
+	Private ImgNew As Image = My.Resources.Adicionar1
+	'
+	Private Abrindo As Boolean = True
     Private _formProcura As ProcurarPor
     Property ItemEscolhido() As Integer? '--- quando o form fechar informa o Tipo, SubTipo ou Categoria
     Private _tipoPadrao As Integer?
     Private pTipoBLL As New TipoSubTipoCategoriaBLL
     Dim _Sit As Byte
-    '
+	'
+#Region "CLASS TIPO"
+	'
+	Private Class ClassTipo
+		'
+		Sub New()
+			ID = Nothing
+			IsNew = True
+			IsUpdated = False
+			Ativo = True
+		End Sub
+		'
+		Property ID As Integer?
+		Property IDOrigem As Integer
+		Property Descricao As String
+		Property Ativo As Boolean
+		Property IsNew As Boolean
+		Property IsUpdated As Boolean
+		'
+	End Class
+	'
+#End Region '/ CLASS TIPO
+	'
 #Region "LOAD"
-    '
-    Sub New(formProcura As ProcurarPor, Optional tipoPadrao As Integer? = Nothing)
+	'
+	Sub New(formProcura As ProcurarPor, Optional tipoPadrao As Integer? = Nothing)
         '
         ' This call is required by the designer.
         InitializeComponent()
@@ -136,97 +162,115 @@ Public Class frmProdutoTipo
         SubTipo = 2
         Categoria = 3
     End Enum
-    '
+	'
 #End Region
-    '
+	'
 #Region "CONTROLE DOS DATAGRID"
-    '
-    ' PREENCHE LISTAGEM TIPOS
-    Private Sub GetListaTipo()
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            dtTipo = pTipoBLL.ProdutoTipo_GET_WithWhere()
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao Evento: Obter Lista de Tipos de Produto..." & vbNewLine &
-            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Return
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
-        '
-        dgvTipos.Columns.Clear()
-        dgvTipos.AutoGenerateColumns = False
-        '
-        dgvTipos.DataSource = dtTipo
-        '
-    End Sub
-    '
-    '--- FORMATA LISTA TIPO
-    Private Sub FormataListaTipo()
-        '
-        ' (1) COLUNA REG
-        dgvTipos.Columns.Add("clnIDProdutoTipo", "Reg.")
-        With dgvTipos.Columns("clnIDProdutoTipo")
-            .DataPropertyName = "IDProdutoTipo"
-            .Width = 50
-            .Visible = True
-            .ReadOnly = True
-            .Resizable = False
-            .DefaultCellStyle.Format = "00"
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
+	'
+	' PREENCHE LISTAGEM TIPOS
+	Private Sub GetListaTipo()
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim dtTipo As DataTable = pTipoBLL.ProdutoTipo_GET_WithWhere()
+			'
+			listTipo = New List(Of ClassTipo)
+			'
+			For Each r As DataRow In dtTipo.Rows
+				Dim item As New ClassTipo With {
+					.ID = r("IDProdutoTipo"),
+					.IDOrigem = r("IDProdutoTipo"),
+					.Descricao = r("ProdutoTipo"),
+					.Ativo = r("Ativo"),
+					.IsUpdated = False,
+					.IsNew = False
+				}
+				listTipo.Add(item)
+			Next
+			'
+			bindTipo.DataSource = listTipo
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao Evento: Obter Lista de Tipos de Produto..." & vbNewLine &
+			ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+			Return
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
+	'--- FORMATA LISTA TIPO
+	Private Sub FormataListaTipo()
+		'
+		dgvTipos.Columns.Clear()
+		dgvTipos.AutoGenerateColumns = False
+		'
+		dgvTipos.DataSource = bindTipo
+		'
+		' (1) COLUNA REG
+		dgvTipos.Columns.Add("clnIDProdutoTipo", "Reg.")
+		With dgvTipos.Columns("clnIDProdutoTipo")
+			.DataPropertyName = "ID"
+			.Width = 50
+			.Visible = True
+			.ReadOnly = True
+			.Resizable = False
+			.DefaultCellStyle.Format = "00"
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+		End With
 
-        ' (2) COLUNA TIPOS
-        dgvTipos.Columns.Add("clnProdutoTipo", "Tipo")
-        With dgvTipos.Columns("clnProdutoTipo")
-            .DataPropertyName = "ProdutoTipo"
-            .Width = 200
-            .Visible = True
-            .ReadOnly = False
-            .Resizable = False
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
+		' (2) COLUNA TIPOS
+		dgvTipos.Columns.Add("clnProdutoTipo", "Tipo")
+		With dgvTipos.Columns("clnProdutoTipo")
+			.DataPropertyName = "Descricao"
+			.Width = 200
+			.Visible = True
+			.ReadOnly = False
+			.Resizable = False
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+		End With
 
-        ' (3) Coluna da imagem
-        Dim colImage As New DataGridViewImageColumn
-        With colImage
-            .Name = "clnTipoAtivoImagem"
-            .HeaderText = "Ativo"
-            .Resizable = False
-            .Width = 60
-            .ImageLayout = DataGridViewImageCellLayout.Zoom
-        End With
-        dgvTipos.Columns.Add(colImage)
+		' (3) Coluna da imagem
+		Dim colImage As New DataGridViewImageColumn
+		With colImage
+			.Name = "clnTipoAtivoImagem"
+			.HeaderText = "Ativo"
+			.Resizable = False
+			.Width = 60
+			.ImageLayout = DataGridViewImageCellLayout.Zoom
+		End With
+		dgvTipos.Columns.Add(colImage)
 
-        ' (4) COLUNA ATIVO
-        dgvTipos.Columns.Add("clnTipoAtivo", "Ativo")
-        With dgvTipos.Columns("clnTipoAtivo")
-            .DataPropertyName = "Ativo"
-            .Width = 50
-            .Visible = False
-            .ReadOnly = True
-            .Resizable = False
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
-        '
-    End Sub
-    '
-    '--- FORMATA LISTA SUBTIPO
-    Private Sub FormataListaSubTipo()
+		' (4) COLUNA ATIVO
+		dgvTipos.Columns.Add("clnTipoAtivo", "Ativo")
+		With dgvTipos.Columns("clnTipoAtivo")
+			.DataPropertyName = "Ativo"
+			.Width = 50
+			.Visible = False
+			.ReadOnly = True
+			.Resizable = False
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+		End With
+		'
+	End Sub
+	'
+	'--- FORMATA LISTA SUBTIPO
+	Private Sub FormataListaSubTipo()
         '
         dgvSubTipo.Columns.Clear()
-        dgvSubTipo.AutoGenerateColumns = False
-        '
-        ' (1) COLUNA REG
-        dgvSubTipo.Columns.Add("clnIDProdutoSubTipo", "Reg.")
+		dgvSubTipo.AutoGenerateColumns = False
+		'
+		dgvSubTipo.DataSource = bindSubTipo
+		'
+		' (1) COLUNA REG
+		dgvSubTipo.Columns.Add("clnIDProdutoSubTipo", "Reg.")
         With dgvSubTipo.Columns("clnIDProdutoSubTipo")
-            .DataPropertyName = "IDProdutoSubTipo"
-            .Width = 50
+			.DataPropertyName = "ID"
+			.Width = 50
             .Visible = True
             .ReadOnly = True
             .Resizable = False
@@ -237,8 +281,8 @@ Public Class frmProdutoTipo
         ' (2) COLUNA SUB TIPOS
         dgvSubTipo.Columns.Add("clnProdutoSubTipo", "Classificação")
         With dgvSubTipo.Columns("clnProdutoSubTipo")
-            .DataPropertyName = "ProdutoSubTipo"
-            .Width = 200
+			.DataPropertyName = "Descricao"
+			.Width = 200
             .Visible = True
             .ReadOnly = False
             .Resizable = False
@@ -278,12 +322,27 @@ Public Class frmProdutoTipo
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
-            '
-            '
-            Dim query As String = "IDProdutoTipo = " & propTipoPadrao
-            dtSubTipo = pTipoBLL.ProdutoSubTipo_GET_WithWhere(query, "ProdutoSubTipo")
-            '
-        Catch ex As Exception
+			'
+			Dim query As String = "IDProdutoTipo = " & propTipoPadrao
+			Dim dtSubTipo As DataTable = pTipoBLL.ProdutoSubTipo_GET_WithWhere(query, "ProdutoSubTipo")
+			'
+			listSubTipo = New List(Of ClassTipo)
+			'
+			For Each r As DataRow In dtSubTipo.Rows
+				Dim item As New ClassTipo With {
+					.ID = r("IDProdutoSubTipo"),
+					.IDOrigem = r("IDProdutoTipo"),
+					.Descricao = r("ProdutoSubTipo"),
+					.Ativo = r("Ativo"),
+					.IsUpdated = False,
+					.IsNew = False
+				}
+				listSubTipo.Add(item)
+			Next
+			'
+			bindSubTipo.DataSource = listSubTipo
+			'
+		Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Obter SubTipos de Produtos..." & vbNewLine &
             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
@@ -291,22 +350,21 @@ Public Class frmProdutoTipo
             '--- Ampulheta OFF
             Cursor = Cursors.Default
         End Try
-        '
-        dgvSubTipo.DataSource = dtSubTipo
-        '
-    End Sub
+		'
+	End Sub
     '
     '--- FORMATA LISTA CATEGORIA
     Private Sub FormataListaCategoria()
         '
         dgvCategoria.Columns.Clear()
-        dgvCategoria.AutoGenerateColumns = False
-        '
-        ' (1) COLUNA REG
-        dgvCategoria.Columns.Add("clnIDCategoria", "Reg.")
+		dgvCategoria.AutoGenerateColumns = False
+		dgvCategoria.DataSource = bindCat
+		'
+		' (1) COLUNA REG
+		dgvCategoria.Columns.Add("clnIDCategoria", "Reg.")
         With dgvCategoria.Columns("clnIDCategoria")
-            .DataPropertyName = "IDCategoria"
-            .Width = 50
+			.DataPropertyName = "ID"
+			.Width = 50
             .Visible = True
             .ReadOnly = True
             .Resizable = False
@@ -317,8 +375,8 @@ Public Class frmProdutoTipo
         ' (2) COLUNA CATEGORIA
         dgvCategoria.Columns.Add("clnProdutoCategoria", "Categoria")
         With dgvCategoria.Columns("clnProdutoCategoria")
-            .DataPropertyName = "ProdutoCategoria"
-            .Width = 200
+			.DataPropertyName = "Descricao"
+			.Width = 200
             .Visible = True
             .ReadOnly = False
             .Resizable = False
@@ -360,9 +418,25 @@ Public Class frmProdutoTipo
             Cursor = Cursors.WaitCursor
             '
             Dim query As String = "IDProdutoTipo = " & propTipoPadrao
-            dtCat = pTipoBLL.ProdutoCategoria_GET_WithWhere(query, "ProdutoCategoria")
-            '
-        Catch ex As Exception
+			Dim dtCat As DataTable = pTipoBLL.ProdutoCategoria_GET_WithWhere(query, "ProdutoCategoria")
+			'
+			listCat = New List(Of ClassTipo)
+			'
+			For Each r As DataRow In dtCat.Rows
+				Dim item As New ClassTipo With {
+					.ID = r("IDCategoria"),
+					.IDOrigem = r("IDProdutoTipo"),
+					.Descricao = r("ProdutoCategoria"),
+					.Ativo = r("Ativo"),
+					.IsUpdated = False,
+					.IsNew = False
+				}
+				listCat.Add(item)
+			Next
+			'
+			bindCat.DataSource = listCat
+			'
+		Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Obter Lista de Categorias de Produto..." & vbNewLine &
             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Return
@@ -370,10 +444,8 @@ Public Class frmProdutoTipo
             '--- Ampulheta OFF
             Cursor = Cursors.Default
         End Try
-        '
-        dgvCategoria.DataSource = dtCat
-        '
-    End Sub
+		'
+	End Sub
     '
     ' PREENCHE AS IMAGENS DA LISTA
     '
@@ -384,14 +456,12 @@ Public Class frmProdutoTipo
 
         If e.ColumnIndex = 2 Then
             Dim myLista As DataGridView = DirectCast(sender, DataGridView)
-            Dim r As DataRowView = myLista.Rows(e.RowIndex).DataBoundItem
-            '
-            If IsDBNull(r("Ativo")) Then
-
-            ElseIf r("Ativo") = True Then
-                e.Value = ImgAtivo
-            ElseIf r("Ativo") = False Then
-                e.Value = ImgInativo
+			Dim r As ClassTipo = myLista.Rows(e.RowIndex).DataBoundItem
+			'
+			If r.Ativo = True Then
+				e.Value = ImgAtivo
+			ElseIf r.Ativo = False Then
+				e.Value = ImgInativo
             End If
             '
         End If
@@ -427,38 +497,53 @@ Public Class frmProdutoTipo
     '
     ' BOTAO NOVO
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
-        '
-        Select Case tabPrincipal.SelectedIndex
-            Case 0 ' Adicionar TIPO
-                '---adiciona novo ROW no datatable 
-                dtTipo.Rows.Add()
-                ' seleciona a cell
-                dgvTipos.Focus()
-                dgvTipos.CurrentCell = dgvTipos.Rows(dgvTipos.Rows.Count - 1).Cells(1)
-                dgvTipos.BeginEdit(True)
-                '---adiciona a imagem no NOVO ROW
-                dgvTipos.CurrentRow.Cells(2).Value = ImgNew
-            Case 1 ' Adicionar SubTipo
-                '---adiciona novo ROW no datatable 
-                dtSubTipo.Rows.Add()
-                ' seleciona a cell
-                dgvSubTipo.Focus()
-                dgvSubTipo.CurrentCell = dgvSubTipo.Rows(dgvSubTipo.Rows.Count - 1).Cells(1)
-                dgvSubTipo.BeginEdit(True)
-                '---adiciona a imagem no NOVO ROW
-                dgvSubTipo.CurrentRow.Cells(2).Value = ImgNew
-            Case 2 ' Adicionar Categoria
-                '---adiciona novo ROW no datatable 
-                dtCat.Rows.Add()
-                ' seleciona a cell
-                dgvCategoria.Focus()
-                dgvCategoria.CurrentCell = dgvCategoria.Rows(dgvCategoria.Rows.Count - 1).Cells(1)
-                dgvCategoria.BeginEdit(True)
-                '---adiciona a imagem no NOVO ROW
-                dgvCategoria.CurrentRow.Cells(2).Value = ImgNew
-        End Select
-        Sit = EnumFlagEstado.NovoRegistro
-    End Sub
+		'
+		Select Case tabPrincipal.SelectedIndex
+			'
+			Case 0 ' Adicionar TIPO
+				'
+				'---adiciona novo ROW no datatable 
+				bindTipo.AddNew()
+				'
+				' seleciona a cell
+				dgvTipos.Focus()
+				dgvTipos.CurrentCell = dgvTipos.Rows(dgvTipos.Rows.Count - 1).Cells(1)
+				dgvTipos.BeginEdit(True)
+				'
+				'---adiciona a imagem no NOVO ROW
+				dgvTipos.CurrentRow.Cells(2).Value = ImgNew
+				'
+			Case 1 ' Adicionar SubTipo
+				'
+				'---adiciona novo ROW no datatable 
+				bindSubTipo.AddNew()
+				'
+				' seleciona a cell
+				dgvSubTipo.Focus()
+				dgvSubTipo.CurrentCell = dgvSubTipo.Rows(dgvSubTipo.Rows.Count - 1).Cells(1)
+				dgvSubTipo.BeginEdit(True)
+				'
+				'---adiciona a imagem no NOVO ROW
+				dgvSubTipo.CurrentRow.Cells(2).Value = ImgNew
+				'
+			Case 2 ' Adicionar Categoria
+				'
+				'---adiciona novo ROW no datatable 
+				bindCat.AddNew()
+				'
+				' seleciona a cell
+				dgvCategoria.Focus()
+				dgvCategoria.CurrentCell = dgvCategoria.Rows(dgvCategoria.Rows.Count - 1).Cells(1)
+				dgvCategoria.BeginEdit(True)
+				'
+				'---adiciona a imagem no NOVO ROW
+				dgvCategoria.CurrentRow.Cells(2).Value = ImgNew
+				'
+		End Select
+		'
+		Sit = EnumFlagEstado.NovoRegistro
+		'
+	End Sub
     '
     ' BOTAO FECHAR
     Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
@@ -529,47 +614,52 @@ Public Class frmProdutoTipo
     End Sub
     '
     Private Sub SalvarTipo()
-        '
-        '-- variavel para informar o número de registros salvos
-        Dim regSalvos As Integer = 0
-        '
-        For Each r As DataGridViewRow In dgvTipos.Rows
-            '
-            ' verfica se já existe valor igual
-            If dtTipo.Rows(r.Index).RowState <> DataRowState.Unchanged Then
-                If VerificaDuplicado(r.Index, r.Cells(1).Value, dtTipo) = True Then
-                    MessageBox.Show("Já existe um Tipo de Produto com a mesma descrição:" & vbNewLine &
-                                    CStr(r.Cells(1).Value).ToUpper,
-                                    "Valor Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    Continue For
-                End If
-            End If
-            '
-            '---salva os registros
-            Try
-                '
-                '--- Ampulheta ON
-                Cursor = Cursors.WaitCursor
-                '
-                If dtTipo.Rows(r.Index).RowState = DataRowState.Modified Then ' registro ALTERADO
-                    '
-                    pTipoBLL.ProdutoTipo_Update(r.Cells(0).Value,
-                                                r.Cells(1).Value,
-                                                r.Cells(3).Value)
-                    regSalvos += 1
-                    '
-                ElseIf dtTipo.Rows(r.Index).RowState = DataRowState.Added Then ' registro NOVO
-                    '
-                    pTipoBLL.ProdutoTipo_Insert(r.Cells(1).Value)
-                    regSalvos += 1
-                    '
-                End If
-                '
-            Catch ex As Exception
-                MessageBox.Show("O seguinte registro não pôde ser salvo:" & vbNewLine &
-                                    CStr(r.Cells(1).Value).ToUpper, "Erro ao Salvar",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Error)
-                regSalvos -= 1
+		'
+		Dim regSalvos As Integer = 0 '--> variavel para informar o número de registros salvos
+		'
+		For Each r As DataGridViewRow In dgvTipos.Rows
+			'
+			' verfica se já existe valor igual
+			If listTipo.Exists(Function(x) x.Descricao = r.Cells(1).Value And x.ID <> r.Cells(0).Value) Then
+				AbrirDialog("Já existe um Tipo de Produto com a mesma descrição:" & vbNewLine &
+							CStr(r.Cells(1).Value).ToUpper,
+							"Valor Duplicado",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				Continue For
+			End If
+			'
+			'---salva os registros
+			Try
+				'
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				Dim item As ClassTipo = DirectCast(r.DataBoundItem, ClassTipo)
+				'
+				If item.IsUpdated Then
+					'
+					pTipoBLL.ProdutoTipo_Update(r.Cells(0).Value,
+												r.Cells(1).Value,
+												r.Cells(3).Value)
+					regSalvos += 1
+					item.IsUpdated = False
+					'
+				ElseIf item.IsNew Then
+					'
+					pTipoBLL.ProdutoTipo_Insert(r.Cells(1).Value)
+					regSalvos += 1
+					item.IsNew = False
+					'
+				End If
+				'
+			Catch ex As Exception
+				AbrirDialog("O seguinte registro não pôde ser salvo:" & vbNewLine &
+							CStr(r.Cells(1).Value).ToUpper,
+							"Erro ao Salvar",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				regSalvos -= 1
             Finally
                 '
                 '--- Ampulheta OFF
@@ -578,17 +668,19 @@ Public Class frmProdutoTipo
             End Try
             '
         Next
-        '
-        '--- mensagem de sucesso---
-        If regSalvos > 0 Then
-            MessageBox.Show("Sucesso ao salvar registro(s) de Tipo de Produto" & vbNewLine &
-                            "Foram salvo(s) com sucesso " & Format(regSalvos, "00") &
-                            IIf(regSalvos > 1, " registros", " registro"),
-                            "Registro(s) Salvo(s)", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End If
-        '
-        '---preencher a listagem com os novos valores
-        GetListaTipo()
+		'
+		'--- mensagem de sucesso---
+		If regSalvos > 0 Then
+			AbrirDialog("Sucesso ao salvar registro(s) de Tipo de Produto" & vbNewLine &
+						"Foram salvo(s) com sucesso " & Format(regSalvos, "00") &
+						IIf(regSalvos > 1, " registros", " registro"),
+						"Registro(s) Salvo(s)",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
+		End If
+		'
+		'---preencher a listagem com os novos valores
+		GetListaTipo()
         Sit = EnumFlagEstado.RegistroSalvo
         '
     End Sub
@@ -597,234 +689,276 @@ Public Class frmProdutoTipo
         '
         '-- variavel para informar o número de registros salvos
         Dim regSalvos As Integer = 0
-        '
-        For Each r As DataGridViewRow In dgvSubTipo.Rows
-            ' verfica se já existe valor igual
-            If dtSubTipo.Rows(r.Index).RowState <> DataRowState.Unchanged Then
-                If VerificaDuplicado(r.Index, r.Cells(1).Value, dtSubTipo) = True Then
-                    MessageBox.Show("Já existe uma Classificação de Produto com a mesma descrição:" & vbNewLine &
-                                        CStr(r.Cells(1).Value).ToUpper,
-                                        "Valor Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    Continue For
-                End If
-            End If
-            '
-            '---salva os registros
-            Try
-                '
-                '--- Ampulheta ON
-                Cursor = Cursors.WaitCursor
-                '
-                If dtSubTipo.Rows(r.Index).RowState = DataRowState.Modified Then ' registro ALTERADO
-                    '
-                    pTipoBLL.ProdutoSubTipo_Update(r.Cells(0).Value, r.Cells(1).Value, r.Cells(3).Value)
-                    regSalvos += 1
-                    '
-                ElseIf dtSubTipo.Rows(r.Index).RowState = DataRowState.Added Then ' registro NOVO
-                    '
-                    pTipoBLL.ProdutoSubTipo_Insert(r.Cells(1).Value, propTipoPadrao)
-                    regSalvos += 1
-                    '
-                End If
-                '
-            Catch ex As Exception
-                MessageBox.Show("O seguinte registro não pôde ser salvo:" & vbNewLine &
-                                CStr(r.Cells(1).Value).ToUpper, "Erro ao Salvar",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error)
-                regSalvos -= 1
-            Finally
-                '
-                '--- Ampulheta OFF
-                Cursor = Cursors.Default
-                '
-            End Try
-        Next
-        '
-        '--- mensagem de sucesso---
-        If regSalvos > 0 Then
-            MessageBox.Show("Sucesso ao salvar registro(s) de Classificação de Produto" & vbNewLine &
-                            "Foram salvo(s) com sucesso " & Format(regSalvos, "00") &
-                            IIf(regSalvos > 1, " registros", " registro"),
-                            "Registro(s) Salvo(s)", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End If
-        '
-        '---preencher a listagem com os novos valores
-        GetListaSubTipo()
+		'
+		For Each r As DataGridViewRow In dgvSubTipo.Rows
+			'
+			' verfica se já existe valor igual
+			If listSubTipo.Exists(Function(x) x.Descricao = r.Cells(1).Value And x.ID <> r.Cells(0).Value) Then
+				AbrirDialog("Já existe uma Classificação de Produto com a mesma descrição:" & vbNewLine &
+								CStr(r.Cells(1).Value).ToUpper,
+								"Valor Duplicado",
+								frmDialog.DialogType.OK,
+								frmDialog.DialogIcon.Exclamation)
+				Continue For
+			End If
+			'
+			'---salva os registros
+			Try
+				'
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				Dim item As ClassTipo = DirectCast(r.DataBoundItem, ClassTipo)
+				'
+				If item.IsUpdated Then
+					'
+					pTipoBLL.ProdutoSubTipo_Update(r.Cells(0).Value, r.Cells(1).Value, r.Cells(3).Value)
+					regSalvos += 1
+					item.IsUpdated = False
+					'
+				ElseIf item.IsNew Then
+					'
+					pTipoBLL.ProdutoSubTipo_Insert(r.Cells(1).Value, propTipoPadrao)
+					regSalvos += 1
+					item.IsNew = False
+					'
+				End If
+				'
+			Catch ex As Exception
+				AbrirDialog("O seguinte registro não pôde ser salvo:" & vbNewLine &
+							CStr(r.Cells(1).Value).ToUpper,
+							"Erro ao Salvar",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				regSalvos -= 1
+			Finally
+				'
+				'--- Ampulheta OFF
+				Cursor = Cursors.Default
+				'
+			End Try
+		Next
+		'
+		'--- mensagem de sucesso---
+		If regSalvos > 0 Then
+			AbrirDialog("Sucesso ao salvar registro(s) de Classificação de Produto" & vbNewLine &
+						"Foram salvo(s) com sucesso " & Format(regSalvos, "00") &
+						IIf(regSalvos > 1, " registros", " registro"),
+						"Registro(s) Salvo(s)",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
+		End If
+		'
+		'---preencher a listagem com os novos valores
+		GetListaSubTipo()
         Sit = EnumFlagEstado.RegistroSalvo
         '
     End Sub
-    '
-    Private Sub SalvarCategoria()
-        '-- variavel para informar o número de registros salvos
-        Dim regSalvos As Integer = 0
-        '
-        For Each r As DataGridViewRow In dgvCategoria.Rows
-            ' verfica se já existe valor igual
-            If dtCat.Rows(r.Index).RowState <> DataRowState.Unchanged Then
-                If VerificaDuplicado(r.Index, r.Cells(1).Value, dtCat) = True Then
-                    MessageBox.Show("Já existe uma Categoria de Produto com a mesma descrição:" & vbNewLine &
-                                    CStr(r.Cells(1).Value).ToUpper,
-                                    "Valor Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    Continue For
-                End If
-            End If
-            '
-            '---salva os registros
-            Try
-                '
-                '--- Ampulheta ON
-                Cursor = Cursors.WaitCursor
-                '
-                If dtCat.Rows(r.Index).RowState = DataRowState.Modified Then ' registro ALTERADO
-                    '
-                    pTipoBLL.ProdutoCategoria_Update(r.Cells(0).Value, r.Cells(1).Value, r.Cells(3).Value)
-                    regSalvos += 1
-                    '
-                ElseIf dtCat.Rows(r.Index).RowState = DataRowState.Added Then ' registro NOVO
-                    '
-                    pTipoBLL.ProdutoCategoria_Insert(r.Cells(1).Value, propTipoPadrao)
-                    regSalvos += 1
-                    '
-                End If
-                '
-            Catch ex As Exception
-                '
-                MessageBox.Show("O seguinte registro não pôde ser salvo:" & vbNewLine &
-                            CStr(r.Cells(1).Value).ToUpper, "Erro ao Salvar",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error)
-                regSalvos -= 1
-                '
-            Finally
-                '
-                '--- Ampulheta OFF
-                Cursor = Cursors.Default
-                '
-            End Try
-        Next
-        '
-        '--- mensagem de sucesso---
-        If regSalvos > 0 Then
-            MessageBox.Show("Sucesso ao salvar registro(s) de Categoria de Produto" & vbNewLine &
-                            "Foram salvo(s) com sucesso " & Format(regSalvos, "00") &
-                            IIf(regSalvos > 1, " registros", " registro"),
-                            "Registro(s) Salvo(s)", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End If
-        '
-        '---preencher a listagem com os novos valores
-        GetListaCategoria()
-        Sit = EnumFlagEstado.RegistroSalvo
-    End Sub
-    '
+	'
+	Private Sub SalvarCategoria()
+		'
+		'-- variavel para informar o número de registros salvos
+		Dim regSalvos As Integer = 0
+		'
+		For Each r As DataGridViewRow In dgvCategoria.Rows
+			'
+			' verfica se já existe valor igual
+			If listCat.Exists(Function(x) x.Descricao = r.Cells(1).Value And x.ID <> r.Cells(0).Value) Then
+				AbrirDialog("Já existe uma Categoria de Produto com a mesma descrição:" & vbNewLine &
+							CStr(r.Cells(1).Value).ToUpper,
+							"Valor Duplicado",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				Continue For
+			End If
+			'
+			'---salva os registros
+			Try
+				'
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				Dim item As ClassTipo = DirectCast(r.DataBoundItem, ClassTipo)
+				'
+				If item.IsUpdated Then
+					'
+					pTipoBLL.ProdutoCategoria_Update(r.Cells(0).Value, r.Cells(1).Value, r.Cells(3).Value)
+					regSalvos += 1
+					item.IsUpdated = False
+					'
+				ElseIf item.IsNew Then
+					'
+					pTipoBLL.ProdutoCategoria_Insert(r.Cells(1).Value, propTipoPadrao)
+					regSalvos += 1
+					item.IsNew = False
+					'
+				End If
+				'
+			Catch ex As Exception
+				'
+				AbrirDialog("O seguinte registro não pôde ser salvo:" & vbNewLine &
+							CStr(r.Cells(1).Value).ToUpper,
+							"Erro ao Salvar",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				regSalvos -= 1
+				'
+			Finally
+				'
+				'--- Ampulheta OFF
+				Cursor = Cursors.Default
+				'
+			End Try
+		Next
+		'
+		'--- mensagem de sucesso---
+		If regSalvos > 0 Then
+			AbrirDialog("Sucesso ao salvar registro(s) de Categoria de Produto" & vbNewLine &
+						"Foram salvo(s) com sucesso " & Format(regSalvos, "00") &
+						IIf(regSalvos > 1, " registros", " registro"),
+						"Registro(s) Salvo(s)",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
+		End If
+		'
+		'---preencher a listagem com os novos valores
+		GetListaCategoria()
+		Sit = EnumFlagEstado.RegistroSalvo
+		'
+	End Sub
+	'
 #End Region
-    '
+	'
 #Region "VALIDAÇÃO"
-    '
-    ' VERIFICAR SE EXISTE UM REGISTRO COM A MESMA DESCRIÇÃO
-    Public Function VerificaDuplicado(myRow As Integer, myNewValor As String, myTable As DataTable) As Boolean
-        '---se não houver nenhum registro, Exit
-        If myTable.Rows.Count = 0 Then
-            VerificaDuplicado = False
-            Exit Function
-        End If
-        '---verifica todos os ROWS procurando registro igual
-        For i = 0 To myTable.Rows.Count - 1
-            If i = myRow Then Continue For '---se for a mesma ROW não verifica
-            If myTable.Rows(i).Item(1).ToString.ToUpper = myNewValor Then
-                VerificaDuplicado = True
-                Exit Function
-            End If
-        Next i
-        '---se não encontrar retorna FALSE
-        VerificaDuplicado = False
-    End Function
-    '
-    Private Sub ValidaDescricao_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvTipos.CellValidating,
+	'
+	' VERIFICAR SE EXISTE UM REGISTRO COM A MESMA DESCRIÇÃO
+	Private Function VerificaDuplicado(newDescricao As String, clTipo As ClassTipo, myList As List(Of ClassTipo)) As Boolean
+		'
+		'---se não houver nenhum registro, return FALSE
+		If myList Is Nothing OrElse myList.Count = 0 Then
+			Return False
+		End If
+		'
+		'---verifica todos os ITENS procurando registro igual
+		If IsNothing(clTipo.ID) Then
+			If myList.Exists(Function(x) x.Descricao.ToUpper = newDescricao) Then
+				Return True
+			End If
+		Else
+			If myList.Exists(Function(x) x.Descricao.ToUpper = newDescricao And x.ID <> clTipo.ID) Then
+				Return True
+			End If
+		End If
+		'
+		'---se não encontrar retorna FALSE
+		Return False
+		'
+	End Function
+	'
+	Private Sub ValidaDescricao_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvTipos.CellValidating,
             dgvSubTipo.CellValidating, dgvCategoria.CellValidating
         '
         If Abrindo = True Then Exit Sub
-        '
-        Dim myList As DataGridView = DirectCast(sender, DataGridView)
-        '
-        ' Valida o entrada para a descrição não permitindo valores em branco
-        If e.ColumnIndex = 1 Then
-            If String.IsNullOrEmpty(e.FormattedValue.ToString()) Then
-                myList.Rows(e.RowIndex).ErrorText = "A DESCRIÇÃO da Conta não pode ficar vazia..."
-                e.Cancel = True
-                Exit Sub
-            End If
-        End If
-        '---procura por valores duplicados da descrição 
-        Dim verDup As Boolean
+		If e.ColumnIndex <> 1 Then Exit Sub
+		'
+		' Valida o entrada para a descrição não permitindo valores em branco
+		Dim myList As DataGridView = DirectCast(sender, DataGridView)
+		'
+		If String.IsNullOrEmpty(e.FormattedValue.ToString()) Then
+			myList.Rows(e.RowIndex).ErrorText = "A DESCRIÇÃO da Conta não pode ficar vazia..."
+			e.Cancel = True
+			Exit Sub
+		End If
+		'
+		'---procura por valores duplicados da descrição 
+		Dim verDup As Boolean
         Dim strTab As String = ""
         '
         Select Case myList.Name
-            Case "dgvTipo"
-                verDup = VerificaDuplicado(e.RowIndex, e.FormattedValue.ToString.ToUpper, dtTipo)
-                strTab = "Tipo de Produto"
+			Case "dgvTipos"
+				verDup = VerificaDuplicado(e.FormattedValue.ToString.ToUpper, dgvTipos.Rows(e.RowIndex).DataBoundItem, listTipo)
+				strTab = "Tipo de Produto"
             Case "dgvSubTipo"
-                verDup = VerificaDuplicado(e.RowIndex, e.FormattedValue.ToString.ToUpper, dtSubTipo)
-                strTab = "Classificação de Produto"
+				verDup = VerificaDuplicado(e.FormattedValue.ToString.ToUpper, dgvSubTipo.Rows(e.RowIndex).DataBoundItem, listSubTipo)
+				strTab = "Classificação de Produto"
             Case "dgvCategoria"
-                verDup = VerificaDuplicado(e.RowIndex, e.FormattedValue.ToString.ToUpper, dtCat)
-                strTab = "Categoria de Produto"
+				verDup = VerificaDuplicado(e.FormattedValue.ToString.ToUpper, dgvCategoria.Rows(e.RowIndex).DataBoundItem, listCat)
+				strTab = "Categoria de Produto"
         End Select
-        '
-        If verDup Then
-            MessageBox.Show("Já existe um Registro de " & strTab & " com a mesma descrição:" & vbNewLine &
-                            e.FormattedValue.ToString.ToUpper,
-                            "Valor Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            myList.Rows(e.RowIndex).ErrorText = "A DESCRIÇÃO de " & strTab & " precisa ser EXCLUSIVA..."
-            e.Cancel = True
-            Exit Sub
-        End If
-    End Sub
+		'
+		If verDup Then
+			'
+			AbrirDialog("Já existe um Registro de " & strTab & " com a mesma descrição:" & vbNewLine & vbNewLine &
+						e.FormattedValue.ToString.ToUpper,
+						"Valor Duplicado",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			'
+			myList.Rows(e.RowIndex).ErrorText = "A DESCRIÇÃO de " & strTab & " precisa ser EXCLUSIVA..."
+			e.Cancel = True
+			Exit Sub
+			'
+		End If
+		'
+	End Sub
     '
     Private Sub EndEdit_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvTipos.CellEndEdit,
             dgvSubTipo.CellEndEdit, dgvCategoria.CellEndEdit
-        '
-        Dim myList As DataGridView = DirectCast(sender, DataGridView)
-        ' Limpa o erro da linha no caso do usuário pressionar ESC
-        myList.Rows(e.RowIndex).ErrorText = String.Empty
-    End Sub
+		'
+		Dim myList As DataGridView = DirectCast(sender, DataGridView)
+		'
+		' Limpa o erro da linha no caso do usuário pressionar ESC
+		myList.Rows(e.RowIndex).ErrorText = String.Empty
+		'
+	End Sub
 
     Private Sub AoEditar_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvTipos.EditingControlShowing,
             dgvSubTipo.EditingControlShowing, dgvCategoria.EditingControlShowing
-        '
-        '---restringe a entrada de dados para a coluna 'Forma de Cobrança'
-        Dim myList As DataGridView = DirectCast(sender, DataGridView)
-        If myList.CurrentCell.ColumnIndex = 1 And Not e.Control Is Nothing Then
-            Dim tb As TextBox = CType(e.Control, TextBox)
-            '---inclui um tratamento de evento para o controle TextBox---
-            AddHandler tb.KeyPress, AddressOf TextBox_KeyPress
-        End If
-    End Sub
+		'
+		'--- GET DATAGRID
+		Dim myList As DataGridView = DirectCast(sender, DataGridView)
+		'
+		If myList.CurrentCell.ColumnIndex = 1 And Not e.Control Is Nothing Then
+			'
+			'--- marca IsUpdated
+			If myList.CurrentRow.DataBoundItem.ID IsNot Nothing Then myList.CurrentRow.DataBoundItem.IsUpdated = True
+			'
+			'---inclui um tratamento de evento para o controle TextBox---
+			Dim tb As TextBox = CType(e.Control, TextBox)
+			AddHandler tb.KeyPress, AddressOf TextBox_KeyPress
+			'
+		End If
+		'
+	End Sub
     '
     Private Sub TextBox_KeyPress(ByVal sender As System.Object, ByVal e As KeyPressEventArgs)
-        '
-        '---Se o usuario pressionou a tecla ESC na edição ---
-        If e.KeyChar = Convert.ToChar(27) Then
-            If Sit <> EnumFlagEstado.RegistroSalvo Then
-                e.Handled = True
-                '
-                '---cancela a adição do registro
-                Select Case tabPrincipal.SelectedIndex
-                    Case 0 ' cancela TIPO
-                        If Sit = EnumFlagEstado.NovoRegistro Then dgvTipos.Rows.Remove(dgvTipos.CurrentRow)
-                        GetListaTipo()
-                    Case 1 ' cancela SubTipo
-                        If Sit = EnumFlagEstado.NovoRegistro Then dgvSubTipo.Rows.Remove(dgvSubTipo.CurrentRow)
-                        GetListaSubTipo()
-                    Case 2 ' cancela Categoria
-                        If Sit = EnumFlagEstado.NovoRegistro Then dgvCategoria.Rows.Remove(dgvCategoria.CurrentRow)
-                        GetListaCategoria()
-                End Select
-                '
-                Sit = EnumFlagEstado.RegistroSalvo
-            End If
-            '
-        End If
-        '
-    End Sub
+		'
+		'---Se o usuario pressionou a tecla ESC na edição ---
+		If e.KeyChar = Convert.ToChar(27) Then
+			'
+			If Sit <> EnumFlagEstado.RegistroSalvo Then
+				e.Handled = True
+				'
+				'---cancela a adição do registro
+				Select Case tabPrincipal.SelectedIndex
+					Case 0 ' cancela TIPO
+						If Sit = EnumFlagEstado.NovoRegistro Then dgvTipos.Rows.Remove(dgvTipos.CurrentRow)
+						GetListaTipo()
+					Case 1 ' cancela SubTipo
+						If Sit = EnumFlagEstado.NovoRegistro Then dgvSubTipo.Rows.Remove(dgvSubTipo.CurrentRow)
+						GetListaSubTipo()
+					Case 2 ' cancela Categoria
+						If Sit = EnumFlagEstado.NovoRegistro Then dgvCategoria.Rows.Remove(dgvCategoria.CurrentRow)
+						GetListaCategoria()
+				End Select
+				'
+				Sit = EnumFlagEstado.RegistroSalvo
+				'
+			End If
+			'
+		End If
+		'
+	End Sub
     '
 #End Region
     '
@@ -914,33 +1048,37 @@ Public Class frmProdutoTipo
             '
             ' mostra o MENU ativar e desativar
             If hit.ColumnIndex = 2 Then
-                If myList.Rows(hit.RowIndex).Cells(3).Value = True Then
-                    AtivarToolStripMenuItem.Enabled = False
-                    DesativarToolStripMenuItem.Enabled = True
-                Else
-                    AtivarToolStripMenuItem.Enabled = True
-                    DesativarToolStripMenuItem.Enabled = False
-                End If
-                ' revela menu
-                MenuSuspenso.Show(c.PointToScreen(e.Location))
-            End If
+				If myList.Rows(hit.RowIndex).Cells(3).Value = True Then
+					AtivarToolStripMenuItem.Enabled = False
+					DesativarToolStripMenuItem.Enabled = True
+				Else
+					AtivarToolStripMenuItem.Enabled = True
+					DesativarToolStripMenuItem.Enabled = False
+				End If
+				'
+				' revela menu
+				MenuSuspenso.Show(c.PointToScreen(e.Location))
+				'
+			End If
         End If
     End Sub
-    '
-    Private Sub AtivarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AtivarToolStripMenuItem.Click
-        Select Case tabPrincipal.SelectedIndex
-            Case 0
-                AlterarAtivo(dgvTipos, True)
-            Case 1
-                AlterarAtivo(dgvSubTipo, True)
-            Case 2
-                AlterarAtivo(dgvCategoria, True)
-        End Select
-        '
-        Sit = EnumFlagEstado.Alterado
-    End Sub
-    '
-    Private Sub DesativarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DesativarToolStripMenuItem.Click
+	'
+	Private Sub AtivarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AtivarToolStripMenuItem.Click
+		'
+		Select Case tabPrincipal.SelectedIndex
+			Case 0
+				AlterarAtivo(dgvTipos, True)
+			Case 1
+				AlterarAtivo(dgvSubTipo, True)
+			Case 2
+				AlterarAtivo(dgvCategoria, True)
+		End Select
+		'
+		Sit = EnumFlagEstado.Alterado
+		'
+	End Sub
+	'
+	Private Sub DesativarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DesativarToolStripMenuItem.Click
         Select Case tabPrincipal.SelectedIndex
             Case 0
                 AlterarAtivo(dgvTipos, False)
@@ -949,45 +1087,42 @@ Public Class frmProdutoTipo
             Case 2
                 AlterarAtivo(dgvCategoria, False)
         End Select
-        '
-        Sit = EnumFlagEstado.Alterado
-    End Sub
-    '
-    Private Sub AlterarAtivo(myList As DataGridView, myAtivo As Boolean)
-        '--- verifica se existe alguma cell 
-        If IsDBNull(myList.CurrentRow.Cells(0).Value) Then Exit Sub
-        '
-        '--- altera o valor
-        Dim r As DataRow = Nothing
-        '
-        Select Case myList.Name
-            Case "dgvTipos"
-                r = dtTipo.Select("ProdutoTipo = '" & dgvTipos.CurrentRow.Cells(1).Value & "'").First
-                r("Ativo") = myAtivo
-            Case "dgvSubTipo"
-                r = dtSubTipo.Select("ProdutoSubTipo = '" & dgvSubTipo.CurrentRow.Cells(1).Value & "'").First
-                r("Ativo") = myAtivo
-            Case "dgvCategoria"
-                r = dtCat.Select("ProdutoCategoria = '" & dgvCategoria.CurrentRow.Cells(1).Value & "'").First
-                r("Ativo") = myAtivo
-        End Select
-        '
-        If r.RowState = DataRowState.Unchanged Then
-            r.SetModified()
-        End If
-        '
-        '--- atualiza os botoes
-        Sit = EnumFlagEstado.Alterado
-    End Sub
-    '
+		'
+		Sit = EnumFlagEstado.Alterado
+		'
+	End Sub
+	'
+	Private Sub AlterarAtivo(myList As DataGridView, myAtivo As Boolean)
+		'
+		'--- verifica se existe alguma cell 
+		If IsDBNull(myList.CurrentRow.Cells(0).Value) Then Exit Sub
+		'
+		'--- altera o valor
+		Select Case myList.Name
+			Case "dgvTipos"
+				dgvTipos.CurrentRow.DataBoundItem.Ativo = myAtivo
+				dgvTipos.CurrentRow.DataBoundItem.IsUpdated = True
+			Case "dgvSubTipo"
+				dgvSubTipo.CurrentRow.DataBoundItem.Ativo = myAtivo
+				dgvSubTipo.CurrentRow.DataBoundItem.IsUpdated = True
+			Case "dgvCategoria"
+				dgvCategoria.CurrentRow.DataBoundItem.Ativo = myAtivo
+				dgvCategoria.CurrentRow.DataBoundItem.IsUpdated = True
+		End Select
+		'
+		'--- atualiza os botoes
+		Sit = EnumFlagEstado.Alterado
+		'
+	End Sub
+	'
 #End Region
-    '
+	'
 #Region "EFEITOS SUB-FORMULARIO PADRAO"
-    '
-    '------------------------------------------------------------------------------------------
-    '-- CONVERTE A TECLA ESC EM CANCELAR
-    '------------------------------------------------------------------------------------------
-    Private Sub frm_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+	'
+	'------------------------------------------------------------------------------------------
+	'-- CONVERTE A TECLA ESC EM CANCELAR
+	'------------------------------------------------------------------------------------------
+	Private Sub frm_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
         If e.KeyCode = Keys.Escape Then
             e.Handled = True
             '

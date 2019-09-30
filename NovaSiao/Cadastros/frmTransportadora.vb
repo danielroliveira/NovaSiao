@@ -8,14 +8,14 @@ Public Class frmTransportadora
     Private BindTransp As New BindingSource
     Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
-    '
-    Private _formOrigem As Form = Nothing
-    '
+	'
+	Private _formOrigem As Form = Nothing
+	'
 #Region "LOAD E PROPERTIES"
-    '
-    '--- SUB NEW
-    '----------------------------------------------------------------------------------
-    Sub New(objTransp As clTransportadora, Optional formOrigem As Form = Nothing)
+	'
+	'--- SUB NEW
+	'----------------------------------------------------------------------------------
+	Sub New(objTransp As clTransportadora, Optional formOrigem As Form = Nothing)
         '
         ' This call is required by the designer.
         InitializeComponent()
@@ -47,11 +47,17 @@ Public Class frmTransportadora
             '
             _Transp = value
             BindTransp.DataSource = _Transp
-            AddHandler DirectCast(BindTransp.CurrencyManager.Current, clTransportadora).AoAlterar, AddressOf HandlerAoAlterar
-            If Not IsNothing(_Transp.IDPessoa) Then Sit = EnumFlagEstado.RegistroSalvo
-            AtivoButtonImage()
-            '
-            If Not IsNothing(_Transp.IDPessoa) Then
+			AddHandler DirectCast(BindTransp.CurrencyManager.Current, clTransportadora).AoAlterar, AddressOf HandlerAoAlterar
+			'
+			If Not IsNothing(_Transp.IDPessoa) Then
+				Sit = EnumFlagEstado.RegistroSalvo
+			Else
+				Sit = EnumFlagEstado.NovoRegistro
+			End If
+			'
+			AtivoButtonImage()
+			'
+			If Not IsNothing(_Transp.IDPessoa) Then
                 lblIDTransportadora.Text = Format(_Transp.IDPessoa, "0000")
             End If
             '
@@ -370,25 +376,25 @@ Public Class frmTransportadora
             '
             '--- Define Pessoa Tipo
             _Transp.PessoaTipo = 2 '---> PJ
-            '
-            '--- Salva mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
-            If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
-                '
-                Dim response = pBLL.InsertNewPessoa(_Transp, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA)
-                '
-                If TypeOf response Is Integer Then
-                    NewTranspID = response
-                Else
-                    Throw New Exception("Já existe TRANSPORTADORA com mesmo CNPJ...")
-                End If
-                '
-            ElseIf Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
-                If pBLL.UpdatePessoa(_Transp, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA) Then
-                    '
-                    NewTranspID = _Transp.IDPessoa
-                    '
-                End If
-            End If
+			'
+			'--- Salva mas antes define se é ATUALIZAR OU UM NOVO REGISTRO
+			If Sit = EnumFlagEstado.NovoRegistro Then 'Nesse caso é um NOVO REGISTRO
+				'
+				Dim response = pBLL.InsertNewPessoa(_Transp, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA)
+				'
+				If TypeOf response Is Integer Then
+					NewTranspID = response
+				Else
+					Throw New Exception("Já existe TRANSPORTADORA com mesmo CNPJ...")
+				End If
+				'
+			ElseIf Sit = EnumFlagEstado.Alterado Then 'Nesse caso é um REGISTRO EDITADO
+				'
+				If pBLL.UpdatePessoa(_Transp, PessoaBLL.EnumPessoaGrupo.TRANSPORTADORA) Then
+					NewTranspID = _Transp.IDPessoa
+				End If
+				'
+			End If
         Catch ex As Exception
             MessageBox.Show("Um erro ocorreu ao salvar o registro!" & vbCrLf &
                             ex.Message, "Erro ao Salvar Registro",
@@ -399,31 +405,42 @@ Public Class frmTransportadora
             Cursor = Cursors.Default
             '
         End Try
-        '
-        '--- Verifica se houve Retorno da Função de Salvar
-        If IsNumeric(NewTranspID) AndAlso NewTranspID <> 0 Then
-            '--- Retorna o número de Registro do Novo Cliente Cadastrado
-            If Sit = EnumFlagEstado.NovoRegistro Then
-                _Transp.IDPessoa = NewTranspID
-                lblIDTransportadora.DataBindings("Tag").ReadValue()
-            End If
-
-            '--- Altera a Situação
-            Sit = EnumFlagEstado.RegistroSalvo
-            BindTransp.EndEdit()
-            BindTransp.CurrencyManager.Refresh()
-            '
-            '--- Mensagem de Sucesso:
-            MsgBox("Registro Salvo com sucesso!", vbInformation, "Registro Salvo")
-            '
-            If Not IsNothing(_formOrigem) Then
-                DialogResult = DialogResult.OK
-                'btnFechar_Click(sender, e)
-            End If
-            '
-        Else
-            MsgBox("Registro NÃO pôde ser salvo!", vbInformation, "Erro ao Salvar")
-        End If
+		'
+		'--- Verifica se houve Retorno da Função de Salvar
+		If IsNumeric(NewTranspID) AndAlso NewTranspID <> 0 Then
+			'
+			'--- Retorna o número de Registro do Novo Cliente Cadastrado
+			If Sit = EnumFlagEstado.NovoRegistro Then
+				_Transp.IDPessoa = NewTranspID
+				lblIDTransportadora.DataBindings("Tag").ReadValue()
+			End If
+			'
+			'--- Altera a Situação
+			Sit = EnumFlagEstado.RegistroSalvo
+			BindTransp.EndEdit()
+			BindTransp.CurrencyManager.Refresh()
+			'
+			'--- Mensagem de Sucesso:
+			AbrirDialog("Registro Salvo com sucesso!",
+						"Registro Salvo",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
+			'
+			'--- check if exists formOrigem and close
+			If Not IsNothing(_formOrigem) Then
+				'
+				DialogResult = DialogResult.OK
+				Close()
+				_formOrigem.Visible = True
+				'
+			End If
+			'
+		Else
+			MessageBox.Show("Registro NÃO pôde ser salvo!",
+							"Erro ao Salvar",
+							MessageBoxButtons.OK,
+							MessageBoxIcon.Error)
+		End If
         '
     End Sub
     '

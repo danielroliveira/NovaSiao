@@ -2251,22 +2251,22 @@ Public Class frmCompra
             Dim eBLL As New ProdutoEtiquetaBLL
             '
             eBLL.Insert_EtiquetasTransacao(_Compra.IDCompra)
-            '
-            If AbrirDialog("Etiquetas inseridas na listagem com sucesso..." &
-                           "Deseja abrir o formulário de Impressão de Etiquetas?",
-                           "Etiquetas", frmDialog.DialogType.SIM_NAO, frmDialog.DialogIcon.Question) = DialogResult.Yes Then
-                '
-                Using frmE As Form = New frmProdutoEtiquetaControle(Me)
-                    '
-                    Visible = False
-                    frmE.ShowDialog()
-                    Visible = True
-                    '
-                End Using
-                '
-            End If
-            '
-        Catch ex As Exception
+			'
+			If AbrirDialog("Etiquetas inseridas na listagem com sucesso..." & vbNewLine &
+						   "Deseja abrir o formulário de Impressão de Etiquetas?",
+						   "Etiquetas", frmDialog.DialogType.SIM_NAO, frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+				'
+				Using frmE As Form = New frmProdutoEtiquetaControle(Me)
+					'
+					Visible = False
+					frmE.ShowDialog()
+					Visible = True
+					'
+				End Using
+				'
+			End If
+			'
+		Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Inserir Etiquetas na Lista de Impressão..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally
