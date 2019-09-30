@@ -130,13 +130,16 @@ Public Class frmPrincipal
                 propDataPadrao = dtPadrao.ToShortDateString
                 '
             Else
-                '
-                MessageBox.Show("A CONTA PADRÃO escolhida: " & contaInicial.Conta.ToUpper & vbNewLine &
-                                "ainda não tem data de bloqueio definida..." & vbNewLine &
-                                "Logo a DATA PADRÃO do sistema será escolhida como" & vbNewLine &
-                                "DATA ATUAL: " & Now.ToLongDateString, "Data Padrão", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                '
-                propDataPadrao = Today.ToShortDateString
+				'
+				AbrirDialog("A CONTA PADRÃO escolhida: " & contaInicial.Conta.ToUpper & vbNewLine &
+							"ainda não tem data de bloqueio definida..." & vbNewLine &
+							"Logo a DATA PADRÃO do sistema será escolhida para " &
+							"DATA ATUAL: " & Format(Now, "dd \d\e MMMM \d\e yyyy"),
+							"Data Padrão",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				'
+				propDataPadrao = Today.ToShortDateString
                 '
             End If
             '
@@ -181,27 +184,32 @@ Public Class frmPrincipal
         If File.Exists(Application.StartupPath & "\ConfigFiles\Config.xml") = False Then
             '
             If UsuarioAtual.UsuarioAcesso > 1 Then ' não é administrador do sistema
-                MessageBox.Show("Arquivo de Configuração não foi encontrado!" & vbNewLine &
-                                "Seu LOGIN não tem acesso ao arquivo de Configuração..." & vbNewLine &
-                                "Comunique-se com o administrador do sistema.",
-                                "Erro de Arquivo", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                Return False
+				AbrirDialog("Arquivo de Configuração não foi encontrado!" & vbNewLine &
+							"Seu LOGIN não tem acesso ao arquivo de Configuração..." & vbNewLine &
+							"Comunique-se com o administrador do sistema.",
+							"Erro de Arquivo",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Warning)
+				Return False
             End If
-            '
-            MessageBox.Show("Arquivo de Configuração não foi encontrado!", "Erro de Arquivo", MessageBoxButtons.OK,
-                             MessageBoxIcon.Exclamation)
-            '
-            ' abre o form de config
-            Dim frmC As New frmConfig
+			'
+			AbrirDialog("Arquivo de Configuração não foi encontrado!",
+						"Erro de Arquivo",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Warning)
+			'
+			' abre o form de config
+			Dim frmC As New frmConfig
             frmC.ShowDialog()
             '
             ' se não existe o config, então fecha a aplicação
             If File.Exists(Application.StartupPath & "\ConfigFiles\Config.xml") = False Then
-                MessageBox.Show("Arquivo de Configuração ainda não foi encontrado!" & vbNewLine &
-                                "A aplicação será fechada...",
-                                "Erro de Arquivo", MessageBoxButtons.OK,
-                                MessageBoxIcon.Exclamation)
-                Return False
+				AbrirDialog("Arquivo de Configuração ainda não foi encontrado!" & vbNewLine &
+							"A aplicação será fechada...",
+							"Erro de Arquivo",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Warning)
+				Return False
             Else
                 Return True
             End If

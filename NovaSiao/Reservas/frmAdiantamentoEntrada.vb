@@ -234,22 +234,29 @@ Public Class frmAdiantamentoEntrada
 		'
 		'--- Abre o frmContas
 		'---------------------------------------------------------------------------------------
-		'--- Ampulheta ON
-		Cursor = Cursors.WaitCursor
 		'
-		Using frmConta As New frmContaProcurar(Me, propMovEntrada.IDFilial, propMovEntrada.IDConta, True)
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
 			'
-			frmConta.ShowDialog()
+			Using frmConta As New frmContaProcurar(Me, propMovEntrada.IDFilial, propMovEntrada.IDConta, True)
+				'
+				frmConta.ShowDialog()
+				'
+				If frmConta.DialogResult <> DialogResult.OK Then Exit Sub
+				'
+				txtConta.Text = frmConta.propConta_Escolha.Conta
+				propMovEntrada.IDConta = frmConta.propConta_Escolha.IDConta
+				'
+			End Using
 			'
-			If frmConta.DialogResult <> DialogResult.OK Then Exit Sub
-			'
-			txtConta.Text = frmConta.propConta_Escolha.Conta
-			propMovEntrada.IDConta = frmConta.propConta_Escolha.IDConta
-			'
-		End Using
-		'
-		'--- Ampulheta OFF
-		Cursor = Cursors.Default
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao abrir Formulário de Contas..." & vbNewLine &
+			ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
 		'
 	End Sub
 	'

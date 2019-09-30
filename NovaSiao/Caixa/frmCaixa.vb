@@ -753,27 +753,28 @@ Public Class frmCaixa
         '--- verifica se a quantidade de movimentacoes confere com a listagem
         '----------------------------------------------------------------------------------
         If Not VerificaMovs() Then Exit Sub
-        '
-        '--- ask the user
-        '----------------------------------------------------------------------------------
-        If MessageBox.Show("Deseja realmente finalizar esse Caixa?",
-                           "Finalizar Caixa",
-                           MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
-        '
-        '--- verifica se caixa final do dia
-        '----------------------------------------------------------------------------------
-        If MessageBox.Show("Esse caixa é o ultimo caixa da conta " & _Caixa.Conta & " no dia?" &
-                           vbNewLine & vbNewLine &
-                           "Se SIM, a data de: " & _Caixa.DataFinal.ToShortDateString &
-                           " será bloqueada para realizar novas operações..." & vbNewLine & vbNewLine &
-                           "Se NÃO, essa data continuará em aberto.",
-                           "Finalizar Caixa",
-                           MessageBoxButtons.YesNo,
-                           MessageBoxIcon.Question,
-                           MessageBoxDefaultButton.Button2) = DialogResult.Yes Then
-            _Caixa.CaixaFinalDia = True
-        Else
-            _Caixa.CaixaFinalDia = False
+		'
+		'--- ask the user
+		'----------------------------------------------------------------------------------
+		If AbrirDialog("Deseja realmente finalizar esse Caixa?",
+					   "Finalizar Caixa",
+					   frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question) = DialogResult.No Then Exit Sub
+		'
+		'--- verifica se caixa final do dia
+		'----------------------------------------------------------------------------------
+		If AbrirDialog("Esse caixa é o ultimo caixa da conta " & _Caixa.Conta & " no dia?" &
+					   vbNewLine & vbNewLine &
+					   "Se SIM, a data de: " & _Caixa.DataFinal.ToShortDateString &
+					   " será bloqueada para realizar novas operações..." & vbNewLine & vbNewLine &
+					   "Se NÃO, essa data continuará em aberto.",
+					   "Finalizar Caixa",
+					   frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question,
+					   frmDialog.DialogDefaultButton.Second) = DialogResult.Yes Then
+			_Caixa.CaixaFinalDia = True
+		Else
+			_Caixa.CaixaFinalDia = False
         End If
         '
         '--- Inicia AcessoDados
@@ -818,22 +819,24 @@ Public Class frmCaixa
                 SetarDefault("DataPadrao", myDate)
                 '
             End If
-            '
-            '--- SUCCESS USER MESSAGE
-            MessageBox.Show("Caixa Finalizado com sucesso...", "Finalizar Caixa",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information)
-            '
-            '--- CLOSE FORM
-            Close()
+			'
+			'--- SUCCESS USER MESSAGE
+			AbrirDialog("Caixa Finalizado com sucesso...",
+						"Finalizar Caixa",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
+			'
+			'--- CLOSE FORM
+			Close()
             MostraMenuPrincipal()
             '
         Catch ex As Exception
             '
             tranBLL.RollbackAcessoWithTransaction(dbTran)
-            '
-            MessageBox.Show("Uma exceção ocorreu ao Finalizar o Caixa..." & vbNewLine &
-            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
+			'
+			MessageBox.Show("Uma exceção ocorreu ao Finalizar o Caixa..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
             '--- Ampulheta OFF
             Cursor = Cursors.Default
         End Try
@@ -852,14 +855,15 @@ Public Class frmCaixa
             Dim total As Integer = cxBLL.CountMovsCaixa(_Caixa)
             '
             If lstMov.Count <> total Then
-                MessageBox.Show("A quantidade de movimentações é diferente da quantidade existente na listagem..." &
-                                vbNewLine &
-                                "Alguma movimentação foi incluída na conta depois de iniciar o caixa atual." &
-                                vbNewLine &
-                                "Favor fechar e abrir novamente para obter todas a movimentações.",
-                                "Movimentações",
-                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                Return False
+				AbrirDialog("A quantidade de movimentações é diferente da quantidade existente na listagem..." &
+							vbNewLine &
+							"Alguma movimentação foi incluída na conta depois de iniciar o caixa atual." &
+							vbNewLine &
+							"Favor fechar e abrir novamente para obter todas a movimentações.",
+							"Movimentações",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				Return False
             End If
             '
             Return True
@@ -877,18 +881,21 @@ Public Class frmCaixa
     '
     '--- FUNCAO DE DESBLOQUEAR O CAIXA
     Private Sub DesbloquearCaixa()
-        '
-        If MessageBox.Show("Deseja realmente DESBLOQUEAR esse Caixa?",
-                           "Desbloquear Caixa",
-                           MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
-        '
-        '--- verifica se existe outro caixa na mesma conta depois desse
-        '-----------------------------------------------------------------------------------------------
-        If VerificaUltimoCaixa() = False Then
-            MessageBox.Show("Esse caixa NÃO poderá ser DESBLOQUEADO já que existe um ou mais outros caixas " &
-                            "na mesma conta que foram efetuados após esse caixa...", "Desbloqueio",
-                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            Exit Sub
+		'
+		If AbrirDialog("Deseja realmente DESBLOQUEAR esse Caixa?",
+					   "Desbloquear Caixa",
+					   frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question) = DialogResult.No Then Exit Sub
+		'
+		'--- verifica se existe outro caixa na mesma conta depois desse
+		'-----------------------------------------------------------------------------------------------
+		If VerificaUltimoCaixa() = False Then
+			AbrirDialog("Esse caixa NÃO poderá ser DESBLOQUEADO já que existe um ou mais outros caixas " &
+						"na mesma conta que foram efetuados após esse caixa...",
+						"Desbloqueio",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			Exit Sub
         End If
         '
         '--- verifica se existe caixa fechado nas contas de transferencias padrao
@@ -904,9 +911,12 @@ Public Class frmCaixa
             End If
             '
         Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao verificar bloqueio de conta transferencia padrao..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Exit Sub
+			MessageBox.Show("Uma exceção ocorreu ao verificar bloqueio de conta transferencia padrao..." & vbNewLine &
+							ex.Message,
+							"Exceção",
+							MessageBoxButtons.OK,
+							MessageBoxIcon.Error)
+			Exit Sub
         Finally
             '--- Ampulheta OFF
             Cursor = Cursors.Default
@@ -939,16 +949,17 @@ Public Class frmCaixa
     End Sub
     '
     Private Sub btnExcluirCaixa_Click(sender As Object, e As EventArgs) Handles btnExcluirCaixa.Click
-        '
-        If MessageBox.Show("Deseja realmente EXCLUIR esse Caixa?" & vbNewLine & vbNewLine &
-                           "Essa operação não tem como VOLTAR atrás...",
-                           "Excluir Caixa",
-                           MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                           MessageBoxDefaultButton.Button2) = DialogResult.No Then Exit Sub
-        '
-        '--- verifica se existe outro caixa na mesma conta depois desse
-        '-----------------------------------------------------------------------------------------------
-        If VerificaUltimoCaixa() = False Then
+		'
+		If AbrirDialog("Deseja realmente EXCLUIR esse Caixa?" & vbNewLine & vbNewLine &
+					   "Essa operação não tem como VOLTAR atrás...",
+					   "Excluir Caixa",
+					   frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question,
+					   frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Exit Sub
+		'
+		'--- verifica se existe outro caixa na mesma conta depois desse
+		'-----------------------------------------------------------------------------------------------
+		If VerificaUltimoCaixa() = False Then
             MessageBox.Show("Esse caixa NÃO poderá ser EXCLUÍDO já que existe um ou mais caixas " &
                             "após esse caixa, dessa mesma conta...", "Desbloqueio",
                             MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -971,9 +982,10 @@ Public Class frmCaixa
         Try
             '
             If SalvarCaixa() Then
-                MessageBox.Show("Observação salva com sucesso!", "Caixa",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information)
-                txtObservacao.Focus()
+				AbrirDialog("Observação salva com sucesso!", "Caixa",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Information)
+				txtObservacao.Focus()
                 btnSalvarObservacao.Visible = False
             End If
             '
@@ -1007,9 +1019,11 @@ Public Class frmCaixa
             lblApelidoFuncionario.Text = fFunc.NomeEscolhido
             '
             If SalvarCaixa() Then
-                MessageBox.Show("Operador de Caixa salvo com sucesso!", "Caixa",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information)
-            End If
+				AbrirDialog("Operador de Caixa salvo com sucesso!",
+							"Caixa",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Information)
+			End If
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao atualizar o Operador de Caixa..." & vbNewLine &
@@ -1219,10 +1233,12 @@ Public Class frmCaixa
         Dim ValorAtual As Double = r("SaldoFinal") - If(IsDBNull(r("ATransferir")), 0, r("ATransferir"))
         '
         If ValorAtual = 0 Then
-            AbrirDialog("Todo o valor do saldo desse item será transferido para outra Conta..." & vbNewLine &
-                        "Não é possível realizar Nivelamento, porque o saldo restante será Nulo.",
-                        "Saldo Transferido", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
-            Return
+			AbrirDialog("Todo o valor do saldo desse item será transferido para outra Conta..." & vbNewLine &
+						"Não é possível realizar Nivelamento, porque o saldo restante será Nulo.",
+						"Saldo Transferido",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
+			Return
         End If
         '
         '--- Verifica se já houve um nivelamento efetuado com o mesmo IDMeio
@@ -1232,12 +1248,14 @@ Public Class frmCaixa
             For Each c As clMovimentacao In lstMov
                 If c.Descricao.ToString.Contains("Nivelamento") Then
                     If c.IDMovTipo = r("IDMeio") Then
-                        AbrirDialog("Já existe um Nivelamento efetuado nesse mesmo Meio de Movimentação." & vbNewLine &
-                                    "Se deseja realizar Novo Nivelamento, exclua todos os outros anteriores...",
-                                    "Nivelamento Duplicado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
-                        '
-                        '--- selçeciona a row com o nivelamento duplicado
-                        Dim i As Integer = lstMov.IndexOf(c)
+						AbrirDialog("Já existe um Nivelamento efetuado nesse mesmo Meio de Movimentação." & vbNewLine &
+									"Se deseja realizar Novo Nivelamento, exclua todos os outros anteriores...",
+									"Nivelamento Duplicado",
+									frmDialog.DialogType.OK,
+									frmDialog.DialogIcon.Exclamation)
+						'
+						'--- selçeciona a row com o nivelamento duplicado
+						Dim i As Integer = lstMov.IndexOf(c)
                         '
                         dgvListagem.CurrentCell = dgvListagem.Rows(i).Cells(0)
                         '
@@ -1301,14 +1319,16 @@ Public Class frmCaixa
         '--- pergunta ao usuário
         '
         Dim r As DataRowView = dgvSaldos.CurrentRow.DataBoundItem
-        '
-        If MessageBox.Show("Você deseja excluir todos os nivelamentos desse caixa?" & vbNewLine &
-                           r("Meio").ToString.ToUpper, "Excluir Nivelamentos",
-                           MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                           MessageBoxDefaultButton.Button2) = vbNo Then Exit Sub
-        '
-        '--- DELETE NIVELAMENTO
-        Try
+		'
+		If AbrirDialog("Você deseja excluir todos os nivelamentos desse caixa?" & vbNewLine &
+					   r("Meio").ToString.ToUpper,
+					   "Excluir Nivelamentos",
+					   frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question,
+					   frmDialog.DialogDefaultButton.Second) = vbNo Then Exit Sub
+		'
+		'--- DELETE NIVELAMENTO
+		Try
             '
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
@@ -1322,11 +1342,13 @@ Public Class frmCaixa
             bindMovs.ResetBindings(False)
             CalculaTotais()
             ObterSaldos()
-            '
-            MessageBox.Show("Nivelamentos removidos com sucesso...",
-                            "Nivelamentos", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            '
-        Catch ex As Exception
+			'
+			AbrirDialog("Nivelamentos removidos com sucesso...",
+						"Nivelamentos",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
+			'
+		Catch ex As Exception
             MessageBox.Show("Uma execeção ocorreu ao Excluir Nivelamentos..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally

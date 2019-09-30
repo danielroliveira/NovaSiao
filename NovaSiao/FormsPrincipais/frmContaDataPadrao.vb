@@ -240,12 +240,15 @@ Public Class frmContaDataPadrao
             Return True
             '
         Else '-- Se não houver DataBloqueio definida escolhe o dia de HOJE
-            MessageBox.Show("A CONTA PADRÃO escolhida: " & _Conta.Conta.ToUpper & vbNewLine &
-                            "ainda não tem data de bloqueio definida..." & vbNewLine &
-                            "A DATA PADRÃO do sistema será escolhida como" & vbNewLine &
-                            "DATA ATUAL: " & Now.ToLongDateString, "Data Padrão", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            '
-            calDataPadrao.MinDate = Today.AddYears(-10)
+			AbrirDialog("A CONTA PADRÃO escolhida: " & _Conta.Conta.ToUpper & vbNewLine &
+						"ainda não tem data de bloqueio definida..." & vbNewLine &
+						"A DATA PADRÃO do sistema será definida para " &
+						"DATA ATUAL: " & Format(Now, "dd \d\e MMMM \d\e yyyy"),
+						"Data Padrão",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			'
+			calDataPadrao.MinDate = Today.AddYears(-10)
             calDataPadrao.MaxDate = Today
             '
             '-- Verify if DataPadrao is before to DataBloqueio

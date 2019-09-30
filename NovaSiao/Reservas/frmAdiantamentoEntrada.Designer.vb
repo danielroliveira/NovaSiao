@@ -131,7 +131,6 @@ Partial Class frmAdiantamentoEntrada
 		'btnQuitar
 		'
 		Me.btnQuitar.Anchor = System.Windows.Forms.AnchorStyles.Bottom
-		Me.btnQuitar.Enabled = False
 		Me.btnQuitar.Image = Global.NovaSiao.My.Resources.Resources.dollar_currency_sign
 		Me.btnQuitar.Location = New System.Drawing.Point(81, 292)
 		Me.btnQuitar.Name = "btnQuitar"

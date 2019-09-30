@@ -89,13 +89,14 @@ Public Module GlobalPrincipal
                         Else
                             myConta = ContaDescricao & " - " & FilialDescricao
                         End If
-                        '
-                        MessageBox.Show("A Conta Selecionada: " & myConta.ToUpper & vbNewLine &
-                                        "já está bloqueada nessa DATA, pelo sistema..." & vbNewLine & vbNewLine &
-                                        "Já existe caixa efetuado posterior a essa data." & vbNewLine & vbNewLine &
-                                        "Favor utilizar outra data ou altere a Conta.", "Data Bloqueada",
-                                        MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    End If
+						'
+						AbrirDialog("A Conta Selecionada: " & myConta.ToUpper & vbNewLine &
+									"já está bloqueada nessa DATA, pelo sistema..." & vbNewLine & vbNewLine &
+									"Já existe caixa efetuado posterior a essa data." & vbNewLine & vbNewLine &
+									"Favor utilizar outra data ou altere a Conta.", "Data Bloqueada",
+									frmDialog.DialogType.OK,
+									frmDialog.DialogIcon.Exclamation)
+					End If
                     '
                     Return True
                 Else

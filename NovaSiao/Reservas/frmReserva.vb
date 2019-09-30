@@ -43,9 +43,11 @@ Public Class frmReserva
 	End Sub
 	'
 	Private Property Sit As EnumFlagEstado
-        Get
-            Return _Sit
-        End Get
+		'
+		Get
+			Return _Sit
+		End Get
+		'
 		Set(value As EnumFlagEstado)
 			'
 			_Sit = value
@@ -114,6 +116,9 @@ Public Class frmReserva
 				RegistroBloqueado = False
 				RemoveHandlerCancelUpdate()
 			End If
+			'
+			'--- Disabled btnAdiantamento
+			If If(_Reserva.ValorAntecipado, 0) > 0 Then btnAdiantamento.Enabled = False
 			'
 			'--- Disable btnProcura if source form is ReservaProcurar
 			If Not IsNothing(_formOrigem) AndAlso TypeOf _formOrigem IsNot frmReservaProcurar Then
@@ -218,11 +223,13 @@ Public Class frmReserva
 		txtProdutoTipo.DataBindings.Add("Text", bindReserva, "ProdutoTipo")
 		txtObservacao.DataBindings.Add("Text", bindReserva, "Observacao", True, DataSourceUpdateMode.OnPropertyChanged)
 		chkProdutoConhecido.DataBindings.Add("Checked", bindReserva, "ProdutoConhecido", True, DataSourceUpdateMode.OnPropertyChanged)
+		lblValorAntecipado.DataBindings.Add("Text", bindReserva, "ValorAntecipado")
 		'
 		' FORMATA OS VALORES DO DATABINDING
 		AddHandler lblIDReserva.DataBindings("Tag").Format, AddressOf idFormatRG
 		AddHandler txtRGProduto.DataBindings("Text").Format, AddressOf idFormatRG
 		AddHandler txtPVenda.DataBindings("Text").Format, AddressOf FormatCUR
+		AddHandler lblValorAntecipado.DataBindings("Text").Format, AddressOf FormatCUR
 		'
 		' ADD HANDLER PARA DATABINGS
 		AddHandler DirectCast(bindReserva.CurrencyManager.Current, clReserva).AoAlterar, AddressOf HandlerAoAlterar
@@ -375,7 +382,15 @@ Public Class frmReserva
 			End Using
 			'
 			'--- EXECUTE
-			resBLL.Adiantamento_Insert(_Reserva, propMovEntrada)
+			If resBLL.Adiantamento_Insert(_Reserva, propMovEntrada) Then
+				AbrirDialog("Adiantamento de reserva efetuado com sucesso!",
+							"Entrada de Reserva",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Information)
+				_Reserva.ValorAntecipado = propMovEntrada.MovValor
+				lblValorAntecipado.DataBindings.Item("Text").ReadValue()
+				btnAdiantamento.Enabled = False
+			End If
 			'
 		Catch ex As Exception
 			MessageBox.Show("Uma exceção ocorreu ao Abrir registro de Adiantamento..." & vbNewLine &
@@ -693,22 +708,54 @@ Public Class frmReserva
 		'
 		'--- Verifica se houve Retorno da Função de Salvar
 		If IsNumeric(NewReservaID) AndAlso NewReservaID <> 0 Then
-			'--- Retorna o número de Registro
-			If Sit = EnumFlagEstado.NovoRegistro Then
-				_Reserva.IDReserva = NewReservaID
-				lblIDReserva.DataBindings("Tag").ReadValue()
-			End If
-
-			'--- Altera a Situação
+			'
+			'--- insert NEW ID
+			_Reserva.IDReserva = NewReservaID
+			lblIDReserva.DataBindings("Tag").ReadValue()
 			bindReserva.EndEdit()
 			bindReserva.CurrencyManager.Refresh()
-			Sit = EnumFlagEstado.RegistroSalvo
 			'
-			'--- Mensagem de Sucesso:
-			AbrirDialog("Registro Salvo com sucesso!",
-						"Registro Salvo",
-						frmDialog.DialogType.OK,
-						frmDialog.DialogIcon.Information)
+			'--- Retorna o número de Registro
+			If Sit = EnumFlagEstado.NovoRegistro Then '---> NOVO
+				'
+				'--- Altera a Situação
+				Sit = EnumFlagEstado.RegistroSalvo
+				'
+				Dim tryInsertValor As Boolean = False
+				'
+				'--- INSERT VALOR ? ask user Add Adiantamento
+				If propReserva.ProdutoConhecido And If(propReserva.PVenda, 0) > 0 Then
+					'
+					If AbrirDialog("Registro Salvo com sucesso!" & vbNewLine &
+								   "Deseja inserir um adiantamento de valor a essa reserva?",
+								   "Inserir Adiantamento",
+								   frmDialog.DialogType.SIM_NAO,
+								   frmDialog.DialogIcon.Question) = DialogResult.Yes Then
+						'
+						tryInsertValor = True
+						'
+					End If
+					'
+				End If
+				'
+				'--- INSERT ADIANTAMENTO
+				If tryInsertValor Then
+					btnAdiantamento_Click(sender, e)
+				End If
+				'
+			Else
+				'
+				'--- Altera a Situação
+				Sit = EnumFlagEstado.RegistroSalvo
+				'
+				'--- Mensagem de Sucesso:
+				AbrirDialog("Registro Salvo com sucesso!",
+							"Registro Salvo",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Information)
+				'
+			End If
+			'
 		Else
 			MsgBox("Registro NÃO pôde ser salvo!", vbInformation, "Erro ao Salvar")
 		End If
@@ -934,8 +981,11 @@ Public Class frmReserva
             btnProcProdutoTipo.Enabled = False
             btnProcAutores.Enabled = False
             btnProcFabricantes.Enabled = False
-            '
-        Else '--- PRODUTO DESCONHECIDO
+			'
+			'--- btnAdiantamento
+			If If(_Reserva.ValorAntecipado, 0) = 0 Then btnAdiantamento.Enabled = True
+			'
+		Else '--- PRODUTO DESCONHECIDO
             '
             If Sit <> EnumFlagEstado.RegistroSalvo Then
                 _Reserva.IDProduto = Nothing
@@ -962,10 +1012,13 @@ Public Class frmReserva
 			btnProcProdutoTipo.Enabled = True
             btnProcAutores.Enabled = True
             btnProcFabricantes.Enabled = True
-            '
-        End If
-        '
-    End Sub
+			'
+			'--- btnAdiantamento
+			btnAdiantamento.Enabled = False
+			'
+		End If
+		'
+	End Sub
     '
     ' CONTROLA O KEYPRESS DO RGPRODUTO (PERMITE SOMENTE NUMERO)
     Private Sub txtRGProduto_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtRGProduto.KeyPress

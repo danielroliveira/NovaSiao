@@ -247,10 +247,18 @@ Public Class frmReservaProcurar
 	'
 	Private Sub dgvItens_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvItens.CellFormatting
 		'
-		If e.ColumnIndex = clnIDReserva.Index Then '--- coluna Imagem Situação
+		If e.ColumnIndex = clnIDReserva.Index Then '--- coluna ID
 			'
 			If dgvItens.Rows(e.RowIndex).DataBoundItem.IDPedido IsNot Nothing Then
 				dgvItens.Rows(e.RowIndex).DefaultCellStyle.BackColor = Color.PeachPuff
+			End If
+			'
+		ElseIf e.ColumnIndex = clnValorAntecipado.Index Then '--- coluna ValorAntecipado
+			'
+			Dim Antecipado As Decimal? = dgvItens.Rows(e.RowIndex).DataBoundItem.ValorAntecipado
+			'
+			If Antecipado IsNot Nothing AndAlso Antecipado > 0 Then
+				dgvItens.Rows(e.RowIndex).Cells(e.ColumnIndex).Style.BackColor = pctBoxPrioritarias.BackColor
 			End If
 			'
 		End If
@@ -466,6 +474,13 @@ Public Class frmReservaProcurar
 	'--- ALTERAR SITUACAO DAS RESERVAS SELECIONADAS
 	Private Sub btnAlterarSituacao_Click(sender As Object, e As EventArgs) Handles btnAlterarSituacao.Click
 		'
+		'--- verifica a situacao atual if IS RESERVA ATIVA
+		If ReservaSituacao.ReservaAtiva = False Then
+			AbrirDialog("Não é possível alterar a Situação de Reservas que não estão Ativas",
+						"Alterar Situação", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+			Exit Sub
+		End If
+		'
 		'--- verifica a quantidade de itens selecionados
 		If ItensSelecionadosCount() = 0 Then
 			AbrirDialog("Necessário selecionar as reservas para alterar a situação...",
@@ -473,34 +488,45 @@ Public Class frmReservaProcurar
 			Exit Sub
 		End If
 		'
-		'--- obtem a nova situacao
-		Dim newSit As clReservaSituacao = Nothing
-		'
-		Try
-			'--- Ampulheta ON
-			Cursor = Cursors.WaitCursor
+		'--- verifica se as Reservar selecionadas são simples ou prioritarias
+		If chkPrioritaria.Checked Then
+			AbrirDialog("As reservas prioritárias devem ser alteradas individualmente.",
+						"Selecionar", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+			'--- remove checked selection
+			For Each r In dgvItens.Rows
+				r.Cells(0).Value = False
+			Next
 			'
-			Dim frm As New frmReservaSituacaoProcurar(True, ReservaSituacao, Me)
-			'
-			frm.ShowDialog()
-			If frm.DialogResult <> vbOK Then Exit Sub
-			'
-			newSit = frm.ReservaSituacaoEscolhida
-			'
-		Catch ex As Exception
-			MessageBox.Show("Uma exceção ocorreu ao abrir o formulário de Procura de Situações..." & vbNewLine &
-							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
 			Exit Sub
-		Finally
-			'--- Ampulheta OFF
-			Cursor = Cursors.Default
-		End Try
+		Else
+			For Each row As DataGridViewRow In dgvItens.Rows
+				If row.Cells(0).Value = True Then
+					If If(DirectCast(row.DataBoundItem, clReserva).ValorAntecipado, 0) > 0 Then
+						AbrirDialog("Existem reservas prioritárias selecionadas..." & vbNewLine &
+									"As reservas prioritárias devem ser alteradas individualmente.",
+									"Selecionar", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+						Exit Sub
+					End If
+				End If
+			Next
+		End If
+		'
+		'--- obtem a nova situacao
+		Dim newSit As clReservaSituacao = GetNewSituacao()
+		If newSit Is Nothing Then Exit Sub
 		'
 		'--- pergunta ao usuário se deseja realmente realizar alterações
-		If MessageBox.Show("Você deseja realmente alterar as Reservas escolhidas para" & vbNewLine &
-						   newSit.SituacaoReserva.ToUpper & "?", "Alterar Situação",
-						   MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-						   MessageBoxDefaultButton.Button2) = DialogResult.No Then Return
+		Dim msn As String = "Você deseja realmente alterar as Reservas escolhidas para" & vbNewLine &
+							newSit.SituacaoReserva.ToUpper & "?"
+		'
+		If newSit.ReservaAtiva = False Then
+			msn += vbNewLine & "Essa alteração irá DESATIVAR definitavamente as reservas selecionadas."
+		End If
+		'
+		If AbrirDialog(msn, "Alterar Situação",
+					   frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question,
+					   frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Return
 		'
 		'--- atualiza os registros
 		Dim accessBLL As New AcessoControlBLL
@@ -786,6 +812,13 @@ Public Class frmReservaProcurar
 			miDesassociarDoPedido.Enabled = inPedido
 			miExcluirReserva.Enabled = Not inPedido And reserva.IDSituacaoReserva = 1
 			'
+			'--- enable disable Estorno e Devolucao Adiantamento
+			If If(reserva.ValorAntecipado, 0) > 0 Then '---> Is Reserva Prioritaria
+				miEstornoDoValorAntecipado.Enabled = True
+			Else
+				miEstornoDoValorAntecipado.Enabled = False
+			End If
+			'
 			' revela menu
 			mnuReserva.Show(c.PointToScreen(e.Location))
 			'
@@ -808,6 +841,13 @@ Public Class frmReservaProcurar
 		End If
 		'
 		Dim clR As clReserva = dgvItens.SelectedRows(0).DataBoundItem
+		'
+		If If(clR.ValorAntecipado, 0) > 0 Then
+			AbrirDialog("Não é possível excluir uma Reserva que possua um valor antecipado..." & vbNewLine &
+						"Faça o estorno do valor antecipado para depois excluir a reserva.",
+						"Excluir Reserva", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+			Exit Sub
+		End If
 		'
 		If AbrirDialog("Deseja realmente excluir a Reserva: " & vbCrLf &
 					   clR.Produto & vbCrLf &
@@ -879,6 +919,224 @@ Public Class frmReservaProcurar
 		'
 	End Sub
 	'
+	'--- ESTORNO VL ANTECIPADO
+	'----------------------------------------------------------------------------------
+	Private Sub miEstornoDoValorAntecipado_Click(sender As Object, e As EventArgs) Handles miEstornoDoValorAntecipado.Click
+		'
+		'--- verifica a situacao atual IS RESERVA ATIVA
+		If ReservaSituacao.ReservaAtiva = False Then
+			AbrirDialog("Não é possível ESTORNAR o valor do adiantamento de uma Reserva que não esta Ativa",
+						"Estornar Adiantamento", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+			Exit Sub
+		End If
+		'
+		'--- verifica a quantidade de itens selecionados
+		If dgvItens.SelectedRows.Count = 0 Then
+			AbrirDialog("Necessário selecionar a reserva para ESTORNAR o VALOR DO ADIANTAMENTO...",
+						"Selecionar", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+			Exit Sub
+		End If
+		'
+		'--- pergunta ao usuário se deseja realmente realizar alterações
+		Dim message As String = "Você deseja realmente ESTORNAR o VALOR DO ADIANTAMENTO da Reserva selecionada?" &
+			vbNewLine & vbNewLine &
+			"ATENÇÃO: a reserva não será mais prioritária..."
+		'
+		If AbrirDialog(message, "Estornar Adiantamento",
+					   frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question,
+					   frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Return
+		'
+		Try
+			Dim selReserva As clReserva = dgvItens.SelectedRows(0).DataBoundItem
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			rBLL.Adiantamento_Estornar(selReserva)
+			'
+		Catch ex As AppException
+			'
+			'--- ERROR MESSAGE
+			AbrirDialog("Não foi possível estornar o valor de adiantamento da reserva:" & vbNewLine &
+						ex.Message,
+						"Operação Cancelada",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			Exit Sub
+			'
+		Catch ex As Exception
+			'
+			'--- ERROR MESSAGE
+			MessageBox.Show("Houve uma exceção inesperada ao Alterar a situação da reserva no BD" & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+			Exit Sub
+			'
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
+		'
+		'--- atualiza a listagem
+		Get_Dados()
+		FiltrarListagem()
+		AtualizaLabelSelecionados()
+		'
+	End Sub
+	'
+	'--- ALTERAR SITUACAO DA RESERVA INDIVIDUAL
+	'----------------------------------------------------------------------------------
+	Private Sub miAlterarSituacaoReserva_Click(sender As Object, e As EventArgs) Handles miAlterarSituacaoReserva.Click
+		'
+		'--- verifica a situacao atual if IS RESERVA ATIVA
+		If ReservaSituacao.ReservaAtiva = False Then
+			AbrirDialog("Não é possível alterar a Situação de Reservas que não estão Ativas",
+						"Alterar Situação", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+			Exit Sub
+		End If
+		'
+		'--- verifica a quantidade de itens selecionados
+		If dgvItens.SelectedRows.Count = 0 Then
+			AbrirDialog("Necessário selecionar a reserva para alterar a situação...",
+						"Selecionar", frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+			Exit Sub
+		End If
+		'
+		'--- obtem a nova situacao
+		Dim newSit As clReservaSituacao = GetNewSituacao()
+		If newSit Is Nothing Then Exit Sub
+		'
+		'--- pergunta ao usuário se deseja realmente realizar alterações
+		Dim message As String = "Você deseja realmente alterar a Reserva selecionada para" &
+								vbNewLine &
+								newSit.SituacaoReserva.ToUpper & "?"
+		'
+		If newSit.ReservaAtiva = False Then
+			message += vbNewLine & "Essa alteração irá DESATIVAR definitavamente a reserva selecionada."
+		End If
+		'
+		If AbrirDialog(message, "Alterar Situação",
+					   frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question,
+					   frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Return
+		'
+		'--- check if exists ADIANTAMENTO on RESERVA ALTERADA
+		'-----------------------------------------------------------------------------------------
+		Dim selReserva As clReserva = dgvItens.SelectedRows(0).DataBoundItem
+		Dim gerarDevolucao As Boolean = False
+		Dim DevolucaoData As Date? = Nothing
+		'
+		If newSit.ReservaAtiva = False And If(selReserva.ValorAntecipado, 0) > 0 Then
+			'
+			message = "A reserva selecionada possui um valor de adiantamento. " &
+				"Para que essa reserva seja desativada é necessário fazer a DEVOLUÇÃO do adiantamento para o cliente." &
+				vbNewLine &
+				"Tem certeza que deseja realizar a Devolução do Adiantamento?"
+			'
+			If AbrirDialog(message, "Alterar Situação",
+						   frmDialog.DialogType.SIM_NAO,
+						   frmDialog.DialogIcon.Question,
+						   frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Return
+			'
+			'--- GET DEVOLUCAO DATA
+			Dim frm As New frmDataInformar("Informe a Data do Caixa que a Devolução foi efetuada...",
+										   EnumDataTipo.PassadoPresente, Obter_DataPadrao, Me)
+			frm.ShowDialog()
+			If frm.DialogResult = DialogResult.Cancel Then Exit Sub
+			'
+			DevolucaoData = frm.propDataInfo
+			gerarDevolucao = True
+			'
+		End If
+		'
+		'--- atualiza os registros
+		Dim accessBLL As New AcessoControlBLL
+		Dim db As Object = accessBLL.GetNewAcessoWithTransaction()
+		'
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			rBLL.Reserva_AlteraSituacao(selReserva.IDReserva, newSit.IDSituacaoReserva, db)
+			'
+			'--- CHECK DEVOLUCAO
+			If gerarDevolucao Then
+				rBLL.Adiantamento_Devolucao(selReserva, DevolucaoData)
+			End If
+			'
+			'--- COMMIT CHANGES
+			accessBLL.CommitAcessoWithTransaction(db)
+			'
+		Catch ex As AppException
+			'
+			'--- ROOLBACK ALL CHANGES
+			accessBLL.RollbackAcessoWithTransaction(db)
+			'
+			'--- ERROR MESSAGE
+			AbrirDialog("Não foi possível alterar a situação:" & vbNewLine &
+						ex.Message,
+						"Operação Cancelada",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			Exit Sub
+			'
+		Catch ex As Exception
+			'
+			'--- ROOLBACK ALL CHANGES
+			accessBLL.RollbackAcessoWithTransaction(db)
+			'
+			'--- ERROR MESSAGE
+			MessageBox.Show("Houve uma exceção inesperada ao Alterar a situação da reserva no BD" & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+			Exit Sub
+			'
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
+		'
+		'--- atualiza a listagem
+		Get_Dados()
+		FiltrarListagem()
+		AtualizaLabelSelecionados()
+		'
+	End Sub
+
+	Private Sub DevolucaoDoValorAntecipado()
+		'
+
+		'
+	End Sub
+	'
 #End Region '/ MENU RESERVA
+	'
+#Region "OUTRAS FUNCOES"
+	'
+	Private Function GetNewSituacao() As clReservaSituacao
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim frm As New frmReservaSituacaoProcurar(True, ReservaSituacao, Me)
+			'
+			frm.ShowDialog()
+			If frm.DialogResult <> vbOK Then Return Nothing
+			'
+			Return frm.ReservaSituacaoEscolhida
+			'
+		Catch ex As Exception
+			Throw ex
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Function
+	'
+#End Region '/ OUTRAS FUNCOES
 	'
 End Class

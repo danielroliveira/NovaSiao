@@ -216,12 +216,12 @@ Public Class frmDevolucaoCredito
         '
         '--- Verifica se existe uma filial definida
         If IsNothing(_Mov.IDFilial) Then
-            MessageBox.Show("É necessário definir a Filial para escolher a conta a partir dela..." & vbNewLine &
-                            "Favor escolher uma Filial Padrão...",
-                            "Escolher Filial",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information)
-            Return
+			AbrirDialog("É necessário definir a Filial para escolher a conta a partir dela..." & vbNewLine &
+						"Favor escolher uma Filial Padrão...",
+						"Escolher Filial",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
+			Return
         End If
         '
         '--- Ampulheta ON
@@ -270,12 +270,15 @@ Public Class frmDevolucaoCredito
             Return True
             '
         Else '-- Se não houver DataBloqueio definida escolhe o dia de HOJE
-            MessageBox.Show("A CONTA PADRÃO escolhida: " & _Conta.Conta.ToUpper & vbNewLine &
-                            "ainda não tem data de bloqueio definida..." & vbNewLine &
-                            "A DATA PADRÃO do sistema será escolhida como" & vbNewLine &
-                            "DATA ATUAL: " & Now.ToLongDateString, "Data Padrão", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            '
-            dtpMovData.MinDate = Today.AddYears(-10)
+			AbrirDialog("A CONTA PADRÃO escolhida: " & _Conta.Conta.ToUpper & vbNewLine &
+						"ainda não tem data de bloqueio definida..." & vbNewLine &
+						"A DATA PADRÃO do sistema será definida para " &
+						"DATA ATUAL: " & Format(Now, "dd \d\e MMMM \d\e yyyy"),
+						"Data Padrão",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			'
+			dtpMovData.MinDate = Today.AddYears(-10)
             dtpMovData.MaxDate = Today
             '
             '-- Verify if DataPadrao is before to DataBloqueio

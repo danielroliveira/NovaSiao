@@ -20,12 +20,12 @@ Partial Class frmReservaProcurar
 	<System.Diagnostics.DebuggerStepThrough()>
 	Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
-		Dim DataGridViewCellStyle67 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle68 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle70 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle71 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle72 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle69 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Me.txtNomeCliente = New System.Windows.Forms.TextBox()
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.btnFechar = New System.Windows.Forms.Button()
@@ -47,6 +47,9 @@ Partial Class frmReservaProcurar
 		Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
 		Me.miAbrirPedido = New System.Windows.Forms.ToolStripMenuItem()
 		Me.miDesassociarDoPedido = New System.Windows.Forms.ToolStripMenuItem()
+		Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+		Me.miAlterarSituacaoReserva = New System.Windows.Forms.ToolStripMenuItem()
+		Me.miEstornoDoValorAntecipado = New System.Windows.Forms.ToolStripMenuItem()
 		Me.btnPrintEtiquetas = New System.Windows.Forms.Button()
 		Me.btnPrintListagem = New System.Windows.Forms.Button()
 		Me.btnAlterarSituacao = New System.Windows.Forms.Button()
@@ -69,12 +72,15 @@ Partial Class frmReservaProcurar
 		Me.lblSelecionados = New System.Windows.Forms.Label()
 		Me.lblSelTitulo = New System.Windows.Forms.Label()
 		Me.chkPrioritaria = New System.Windows.Forms.CheckBox()
+		Me.pctBoxPrioritarias = New System.Windows.Forms.PictureBox()
+		Me.Label1 = New System.Windows.Forms.Label()
 		Me.Panel1.SuspendLayout()
 		Me.mnuReserva.SuspendLayout()
 		Me.pnlAtivas.Content.SuspendLayout()
 		Me.pnlAtivas.SuspendLayout()
 		CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
 		CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
+		CType(Me.pctBoxPrioritarias, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SuspendLayout()
 		'
 		'Panel1
@@ -239,6 +245,7 @@ Partial Class frmReservaProcurar
 		'
 		'txtProduto
 		'
+		Me.txtProduto.BackColor = System.Drawing.SystemColors.Window
 		Me.txtProduto.Location = New System.Drawing.Point(144, 94)
 		Me.txtProduto.Name = "txtProduto"
 		Me.txtProduto.Size = New System.Drawing.Size(355, 27)
@@ -285,42 +292,61 @@ Partial Class frmReservaProcurar
 		'mnuReserva
 		'
 		Me.mnuReserva.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.mnuReserva.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miEditarReserva, Me.miExcluirReserva, Me.ToolStripSeparator1, Me.miAbrirPedido, Me.miDesassociarDoPedido})
+		Me.mnuReserva.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miEditarReserva, Me.miExcluirReserva, Me.ToolStripSeparator1, Me.miAbrirPedido, Me.miDesassociarDoPedido, Me.ToolStripSeparator2, Me.miAlterarSituacaoReserva, Me.miEstornoDoValorAntecipado})
 		Me.mnuReserva.Name = "mnuReserva"
-		Me.mnuReserva.Size = New System.Drawing.Size(215, 98)
+		Me.mnuReserva.Size = New System.Drawing.Size(252, 148)
 		'
 		'miEditarReserva
 		'
 		Me.miEditarReserva.Image = Global.NovaSiao.My.Resources.Resources.editar
 		Me.miEditarReserva.Name = "miEditarReserva"
-		Me.miEditarReserva.Size = New System.Drawing.Size(214, 22)
+		Me.miEditarReserva.Size = New System.Drawing.Size(251, 22)
 		Me.miEditarReserva.Text = "Editar Reserva"
 		'
 		'miExcluirReserva
 		'
 		Me.miExcluirReserva.Image = Global.NovaSiao.My.Resources.Resources.delete
 		Me.miExcluirReserva.Name = "miExcluirReserva"
-		Me.miExcluirReserva.Size = New System.Drawing.Size(214, 22)
+		Me.miExcluirReserva.Size = New System.Drawing.Size(251, 22)
 		Me.miExcluirReserva.Text = "Excluir Reserva"
 		'
 		'ToolStripSeparator1
 		'
 		Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-		Me.ToolStripSeparator1.Size = New System.Drawing.Size(211, 6)
+		Me.ToolStripSeparator1.Size = New System.Drawing.Size(248, 6)
 		'
 		'miAbrirPedido
 		'
 		Me.miAbrirPedido.Image = Global.NovaSiao.My.Resources.Resources.full_page
 		Me.miAbrirPedido.Name = "miAbrirPedido"
-		Me.miAbrirPedido.Size = New System.Drawing.Size(214, 22)
+		Me.miAbrirPedido.Size = New System.Drawing.Size(251, 22)
 		Me.miAbrirPedido.Text = "Abrir Pedido"
 		'
 		'miDesassociarDoPedido
 		'
 		Me.miDesassociarDoPedido.Image = Global.NovaSiao.My.Resources.Resources.delete_page_24px
 		Me.miDesassociarDoPedido.Name = "miDesassociarDoPedido"
-		Me.miDesassociarDoPedido.Size = New System.Drawing.Size(214, 22)
+		Me.miDesassociarDoPedido.Size = New System.Drawing.Size(251, 22)
 		Me.miDesassociarDoPedido.Text = "Desassociar do Pedido"
+		'
+		'ToolStripSeparator2
+		'
+		Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+		Me.ToolStripSeparator2.Size = New System.Drawing.Size(248, 6)
+		'
+		'miAlterarSituacaoReserva
+		'
+		Me.miAlterarSituacaoReserva.Image = Global.NovaSiao.My.Resources.Resources.refresh
+		Me.miAlterarSituacaoReserva.Name = "miAlterarSituacaoReserva"
+		Me.miAlterarSituacaoReserva.Size = New System.Drawing.Size(251, 22)
+		Me.miAlterarSituacaoReserva.Text = "Alterar Situação da Reserva"
+		'
+		'miEstornoDoValorAntecipado
+		'
+		Me.miEstornoDoValorAntecipado.Image = Global.NovaSiao.My.Resources.Resources.APagar_30px
+		Me.miEstornoDoValorAntecipado.Name = "miEstornoDoValorAntecipado"
+		Me.miEstornoDoValorAntecipado.Size = New System.Drawing.Size(251, 22)
+		Me.miEstornoDoValorAntecipado.Text = "Estorno do Valor Antecipado"
 		'
 		'btnPrintEtiquetas
 		'
@@ -430,8 +456,8 @@ Partial Class frmReservaProcurar
 		Me.dgvItens.AllowUserToDeleteRows = False
 		Me.dgvItens.AllowUserToResizeColumns = False
 		Me.dgvItens.AllowUserToResizeRows = False
-		DataGridViewCellStyle67.BackColor = System.Drawing.Color.Azure
-		Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle67
+		DataGridViewCellStyle1.BackColor = System.Drawing.Color.Azure
+		Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
 		Me.dgvItens.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
 		Me.dgvItens.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
@@ -439,44 +465,44 @@ Partial Class frmReservaProcurar
 		Me.dgvItens.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
 		Me.dgvItens.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable
 		Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-		DataGridViewCellStyle68.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-		DataGridViewCellStyle68.BackColor = System.Drawing.Color.LightSteelBlue
-		DataGridViewCellStyle68.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		DataGridViewCellStyle68.ForeColor = System.Drawing.Color.Black
-		DataGridViewCellStyle68.SelectionBackColor = System.Drawing.SystemColors.Highlight
-		DataGridViewCellStyle68.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-		DataGridViewCellStyle68.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-		Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle68
+		DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
+		DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black
+		DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+		DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
 		Me.dgvItens.ColumnHeadersHeight = 30
 		Me.dgvItens.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
 		Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnSelect, Me.clnIDReserva, Me.clnReservaData, Me.clnClienteNome, Me.clnTelefoneB, Me.clnTelefoneA, Me.clnProduto, Me.clnAutor, Me.clnProdutoTipo, Me.clnFabricante, Me.clnFornecedor, Me.clnValorAntecipado})
-		DataGridViewCellStyle70.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-		DataGridViewCellStyle70.BackColor = System.Drawing.SystemColors.Window
-		DataGridViewCellStyle70.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		DataGridViewCellStyle70.ForeColor = System.Drawing.Color.Black
-		DataGridViewCellStyle70.SelectionBackColor = System.Drawing.Color.SteelBlue
-		DataGridViewCellStyle70.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
-		DataGridViewCellStyle70.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-		Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle70
+		DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+		DataGridViewCellStyle4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle4.ForeColor = System.Drawing.Color.Black
+		DataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.SteelBlue
+		DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
+		DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+		Me.dgvItens.DefaultCellStyle = DataGridViewCellStyle4
 		Me.dgvItens.EnableHeadersVisualStyles = False
 		Me.dgvItens.GridColor = System.Drawing.SystemColors.ActiveCaption
 		Me.dgvItens.Location = New System.Drawing.Point(12, 160)
 		Me.dgvItens.MultiSelect = False
 		Me.dgvItens.Name = "dgvItens"
-		DataGridViewCellStyle71.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-		DataGridViewCellStyle71.BackColor = System.Drawing.SystemColors.Control
-		DataGridViewCellStyle71.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		DataGridViewCellStyle71.ForeColor = System.Drawing.SystemColors.WindowText
-		DataGridViewCellStyle71.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
-		DataGridViewCellStyle71.SelectionForeColor = System.Drawing.SystemColors.ControlText
-		DataGridViewCellStyle71.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-		Me.dgvItens.RowHeadersDefaultCellStyle = DataGridViewCellStyle71
+		DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+		DataGridViewCellStyle5.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
+		DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
+		DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
+		DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.dgvItens.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
 		Me.dgvItens.RowHeadersVisible = False
 		Me.dgvItens.RowHeadersWidth = 35
-		DataGridViewCellStyle72.BackColor = System.Drawing.Color.White
-		DataGridViewCellStyle72.Font = New System.Drawing.Font("Pathway Gothic One", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		DataGridViewCellStyle72.ForeColor = System.Drawing.Color.Black
-		Me.dgvItens.RowsDefaultCellStyle = DataGridViewCellStyle72
+		DataGridViewCellStyle6.BackColor = System.Drawing.Color.White
+		DataGridViewCellStyle6.Font = New System.Drawing.Font("Pathway Gothic One", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle6.ForeColor = System.Drawing.Color.Black
+		Me.dgvItens.RowsDefaultCellStyle = DataGridViewCellStyle6
 		Me.dgvItens.RowTemplate.DefaultCellStyle.Font = New System.Drawing.Font("Pathway Gothic One", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.dgvItens.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black
 		Me.dgvItens.RowTemplate.Height = 33
@@ -495,9 +521,9 @@ Partial Class frmReservaProcurar
 		'
 		'clnIDReserva
 		'
-		DataGridViewCellStyle69.Format = "N0"
-		DataGridViewCellStyle69.NullValue = Nothing
-		Me.clnIDReserva.DefaultCellStyle = DataGridViewCellStyle69
+		DataGridViewCellStyle3.Format = "N0"
+		DataGridViewCellStyle3.NullValue = Nothing
+		Me.clnIDReserva.DefaultCellStyle = DataGridViewCellStyle3
 		Me.clnIDReserva.HeaderText = "Reg."
 		Me.clnIDReserva.MaxInputLength = 20
 		Me.clnIDReserva.Name = "clnIDReserva"
@@ -611,6 +637,29 @@ Partial Class frmReservaProcurar
 		Me.chkPrioritaria.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
 		Me.chkPrioritaria.UseVisualStyleBackColor = False
 		'
+		'pctBoxPrioritarias
+		'
+		Me.pctBoxPrioritarias.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.pctBoxPrioritarias.BackColor = System.Drawing.Color.Linen
+		Me.pctBoxPrioritarias.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+		Me.pctBoxPrioritarias.Location = New System.Drawing.Point(655, 639)
+		Me.pctBoxPrioritarias.Name = "pctBoxPrioritarias"
+		Me.pctBoxPrioritarias.Size = New System.Drawing.Size(20, 20)
+		Me.pctBoxPrioritarias.TabIndex = 19
+		Me.pctBoxPrioritarias.TabStop = False
+		'
+		'Label1
+		'
+		Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+		Me.Label1.AutoSize = True
+		Me.Label1.BackColor = System.Drawing.Color.Transparent
+		Me.Label1.Font = New System.Drawing.Font("Calibri", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.Label1.Location = New System.Drawing.Point(681, 642)
+		Me.Label1.Name = "Label1"
+		Me.Label1.Size = New System.Drawing.Size(124, 15)
+		Me.Label1.TabIndex = 12
+		Me.Label1.Text = "Reservas Prioritárias"
+		'
 		'frmReservaProcurar
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
@@ -618,6 +667,8 @@ Partial Class frmReservaProcurar
 		Me.Controls.Add(Me.chkPrioritaria)
 		Me.Controls.Add(Me.lblSelecionados)
 		Me.Controls.Add(Me.dgvItens)
+		Me.Controls.Add(Me.Label1)
+		Me.Controls.Add(Me.pctBoxPrioritarias)
 		Me.Controls.Add(Me.Label15)
 		Me.Controls.Add(Me.PictureBox4)
 		Me.Controls.Add(Me.pnlAtivas)
@@ -655,10 +706,12 @@ Partial Class frmReservaProcurar
 		Me.Controls.SetChildIndex(Me.pnlAtivas, 0)
 		Me.Controls.SetChildIndex(Me.PictureBox4, 0)
 		Me.Controls.SetChildIndex(Me.Label15, 0)
-		Me.Controls.SetChildIndex(Me.Panel1, 0)
+		Me.Controls.SetChildIndex(Me.pctBoxPrioritarias, 0)
+		Me.Controls.SetChildIndex(Me.Label1, 0)
 		Me.Controls.SetChildIndex(Me.dgvItens, 0)
 		Me.Controls.SetChildIndex(Me.lblSelecionados, 0)
 		Me.Controls.SetChildIndex(Me.chkPrioritaria, 0)
+		Me.Controls.SetChildIndex(Me.Panel1, 0)
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
 		Me.mnuReserva.ResumeLayout(False)
@@ -666,6 +719,7 @@ Partial Class frmReservaProcurar
 		Me.pnlAtivas.ResumeLayout(False)
 		CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
 		CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
+		CType(Me.pctBoxPrioritarias, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
@@ -713,4 +767,9 @@ Partial Class frmReservaProcurar
 	Friend WithEvents clnFornecedor As DataGridViewTextBoxColumn
 	Friend WithEvents clnValorAntecipado As DataGridViewTextBoxColumn
 	Friend WithEvents chkPrioritaria As CheckBox
+	Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
+	Friend WithEvents miEstornoDoValorAntecipado As ToolStripMenuItem
+	Friend WithEvents miAlterarSituacaoReserva As ToolStripMenuItem
+	Friend WithEvents pctBoxPrioritarias As PictureBox
+	Friend WithEvents Label1 As Label
 End Class

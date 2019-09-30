@@ -220,43 +220,6 @@ Public Class ReservaBLL
 		'
 	End Function
 	'
-	'==========================================================================================
-	' INSERT ADIANTAMENTO DE RESERVA : CREATE MOVIMENTACAO AND UPDATE RESERVA
-	'==========================================================================================
-	Public Function Adiantamento_Insert(Reserva As clReserva, Movimentacao As clMovimentacao) As Boolean
-		'
-		Dim dbTran As AcessoDados = Nothing
-		'
-		Try
-			dbTran = New AcessoDados
-			dbTran.BeginTransaction()
-			'
-			'--- INSERT MOVIMENTACAO
-			'-------------------------------------------------------------------------------------------------
-			Dim eBLL As New MovimentacaoBLL
-			Movimentacao = eBLL.Movimentacao_Inserir(Movimentacao, dbTran)
-			'
-			'--- UPDATE RESERVA
-			'-------------------------------------------------------------------------------------------------
-			dbTran.LimparParametros()
-			dbTran.AdicionarParametros("@IDReserva", Reserva.IDReserva)
-			dbTran.AdicionarParametros("@ValorAntecipado", Movimentacao.MovValor)
-			'
-			Dim query As String = "UPDATE tblReserva SET ValorAntecipado = @ValorAntecipado WHERE IDReserva = @IDReserva"
-			'
-			dbTran.ExecutarManipulacao(CommandType.Text, query)
-			'
-			'--- COMMIT AND RETURN
-			dbTran.CommitTransaction()
-			Return True
-			'
-		Catch ex As Exception
-			dbTran.RollBackTransaction()
-			Throw ex
-		End Try
-		'
-	End Function
-	'
 	'===================================================================================================
 	' ALTERA A SITUCAO DA RESERVA
 	'===================================================================================================
@@ -478,5 +441,203 @@ Public Class ReservaBLL
         End Try
         '
     End Sub
-    '
+	'
+	'
+#Region "ANTECIPACAO DA RESERVA INSERT | REMOVE | DOVOLUCAO"
+	'
+	'==========================================================================================
+	' INSERT ADIANTAMENTO DE RESERVA : CREATE MOVIMENTACAO AND UPDATE RESERVA
+	'==========================================================================================
+	Public Function Adiantamento_Insert(Reserva As clReserva, Movimentacao As clMovimentacao) As Boolean
+		'
+		Dim dbTran As AcessoDados = Nothing
+		'
+		Try
+			dbTran = New AcessoDados
+			dbTran.BeginTransaction()
+			'
+			'--- INSERT MOVIMENTACAO
+			'-------------------------------------------------------------------------------------------------
+			Dim eBLL As New MovimentacaoBLL
+			Movimentacao = eBLL.Movimentacao_Inserir(Movimentacao, dbTran)
+			'
+			'--- UPDATE RESERVA
+			'-------------------------------------------------------------------------------------------------
+			dbTran.LimparParametros()
+			dbTran.AdicionarParametros("@IDReserva", Reserva.IDReserva)
+			dbTran.AdicionarParametros("@ValorAntecipado", Movimentacao.MovValor)
+			'
+			Dim query As String = "UPDATE tblReserva SET ValorAntecipado = @ValorAntecipado WHERE IDReserva = @IDReserva"
+			'
+			dbTran.ExecutarManipulacao(CommandType.Text, query)
+			'
+			'--- COMMIT AND RETURN
+			dbTran.CommitTransaction()
+			Return True
+			'
+		Catch ex As Exception
+			dbTran.RollBackTransaction()
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' ESTORNO VALOR ANTECIPADO
+	'==========================================================================================
+	Public Function Adiantamento_Estornar(_reserva As clReserva) As Boolean
+		'
+		Dim db As AcessoDados = Nothing
+		Dim query As String = ""
+		'
+		Try
+			db = New AcessoDados
+			'
+			'--- 1. CHECK IF MOVIMENTACAO IS INSERTED IN CAIXA
+			db.LimparParametros()
+			db.AdicionarParametros("@IDOrigem", _reserva.IDReserva)
+			'
+			query = "SELECT * FROM tblCaixaMovimentacao WHERE Origem = 5 AND IDOrigem = @IDOrigem"
+			'
+			Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+			'
+			If dt.Rows.Count = 0 Then
+				Throw New AppException("Não há nenhum adiantamento inserido na reserva...")
+				Return False
+			ElseIf Not IsNumeric(dt.Rows(0)(0)) Then
+				Throw New Exception(dt.Rows(0)(0).ToString)
+				Return False
+			End If
+			'
+			'--- check IDCaixa
+			If Not IsDBNull(dt.Rows(0)("IDCaixa")) Then
+				Throw New AppException("Não é possível estornar o Adiantamento porque já foi inserido no Caixa.")
+				Return False
+			End If
+			'
+			'--- CREATE NEW TRANSACTION
+			db.BeginTransaction()
+			'
+			'--- 2. DELETE MOVIMENTACAO
+			db.LimparParametros()
+			db.AdicionarParametros("@IDOrigem", _reserva.IDReserva)
+			'
+			query = "DELETE tblCaixaMovimentacao WHERE Origem = 5 AND IDOrigem = @IDOrigem"
+			'
+			db.ExecutarManipulacao(CommandType.Text, query)
+			'
+			'--- 3. UPDATE RESERVA
+			db.LimparParametros()
+			db.AdicionarParametros("@IDReserva", _reserva.IDReserva)
+			'
+			query = "UPDATE tblReserva SET ValorAntecipado = NULL WHERE IDReserva = @IDReserva"
+			'
+			db.ExecutarManipulacao(CommandType.Text, query)
+			_reserva.ValorAntecipado = Nothing
+			'
+			'--- 4. COMMIT TRANSACTION
+			db.CommitTransaction()
+			Return True
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' DEVOLUCAO VALOR ANTECIPADO
+	'==========================================================================================
+	Public Function Adiantamento_Devolucao(_reserva As clReserva,
+										   DevolucaoData As Date,
+										   Optional dbTran As Object = Nothing) As Boolean
+		'
+		Dim db As AcessoDados = If(dbTran, New AcessoDados)
+		Dim query As String = ""
+		'
+		Try
+			db = New AcessoDados
+			'
+			'--- 1. CHECK IF MOVIMENTACAO IS INSERTED IN CAIXA
+			'------------------------------------------------------------------------------
+			db.LimparParametros()
+			db.AdicionarParametros("@IDOrigem", _reserva.IDReserva)
+			'
+			query = "SELECT * FROM tblCaixaMovimentacao WHERE Origem = 5 AND IDOrigem = @IDOrigem"
+			'
+			Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+			'
+			If dt.Rows.Count = 0 Then
+				Throw New AppException("Não há nenhum adiantamento inserido na reserva...")
+				Return False
+			ElseIf Not IsNumeric(dt.Rows(0)(0)) Then
+				Throw New Exception(dt.Rows(0)(0).ToString)
+				Return False
+			End If
+			'
+			'--- check IDCaixa
+			If IsDBNull(dt.Rows(0)("IDCaixa")) Then
+				Throw New AppException("O Adiantamento ainda não foi inserido no caixa..." & vbNewLine &
+									   "Nesse caso, favor realizar o ESTORNO do adiantamento.")
+				Return False
+			End If
+			'
+			'--- check DevolucaoData
+			Dim mBLL As New MovimentacaoBLL
+			Dim OldMov As clMovimentacao = mBLL.Convert_DT_ListOF_Movimentacao(dt).Item(0)
+			'
+			Dim dtBloq As Date? = mBLL.Conta_GetDataBloqueio(OldMov.IDConta)
+			'
+			If dtBloq IsNot Nothing AndAlso dtBloq >= DevolucaoData Then
+				Throw New AppException("A data informada está bloqueada pelo sistema" & vbNewLine &
+					   "Favor verificar a Data da Devolução.")
+				Return False
+			End If
+			'
+			'--- CREATE NEW TRANSACTION
+			If dbTran Is Nothing Then db.BeginTransaction()
+			'
+			'--- 2. CREATE AND INSERT NEW MOVIMENTACAO
+			'------------------------------------------------------------------------------
+			Dim newMov As New clMovimentacao(EnumMovimentacaoOrigem.Reserva, EnumMovimento.Saida) With {
+				.Descricao = "Devolução de Adiantamento de Reserva: " & Format(_reserva.IDReserva, "0000") - _reserva.ClienteNome,
+				.IDConta = OldMov.IDConta,
+				.IDFilial = OldMov.IDFilial,
+				.IDMeio = 1,
+				.IDMovForma = 1,
+				.IDMovTipo = 1,
+				.IDOrigem = _reserva.IDReserva,
+				.Origem = 5,
+				.MovData = DevolucaoData,
+				.MovValor = _reserva.ValorAntecipado
+				}
+			'
+			'--- insert
+			mBLL.Movimentacao_Inserir(newMov, db)
+			'
+			'--- 3. UPDATE RESERVA
+			'------------------------------------------------------------------------------
+			db.LimparParametros()
+			db.AdicionarParametros("@IDReserva", _reserva.IDReserva)
+			db.AdicionarParametros("@ValorAntecipado", _reserva.ValorAntecipado * (-1))
+			'
+			query = "UPDATE tblReserva SET ValorAntecipado = @ValorAntecipado WHERE IDReserva = @IDReserva"
+			'
+			db.ExecutarManipulacao(CommandType.Text, query)
+			_reserva.ValorAntecipado *= -1
+			'
+			'--- 4. COMMIT TRANSACTION
+			'------------------------------------------------------------------------------
+			If dbTran Is Nothing Then db.CommitTransaction()
+			Return True
+			'
+		Catch ex As Exception
+			If dbTran Is Nothing Then db.RollBackTransaction()
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+#End Region '/ ANTECIPACAO DA RESERVA INSERT | REMOVE | DOVOLUCAO
+	'
 End Class

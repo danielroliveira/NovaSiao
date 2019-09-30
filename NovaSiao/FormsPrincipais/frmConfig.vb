@@ -734,12 +734,15 @@ Error_Handler:
             Return True
             '
         Else '-- Se não houver DataBloqueio definida escolhe o dia de HOJE
-            MessageBox.Show("A CONTA PADRÃO escolhida: " & txtContaPadrao.Text.ToUpper & vbNewLine &
-                            "ainda não tem data de bloqueio definida..." & vbNewLine &
-                            "A DATA PADRÃO do sistema será escolhida como" & vbNewLine &
-                            "DATA ATUAL: " & Now.ToLongDateString, "Data Padrão", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-            '
-            dtpDataPadrao.MinDate = Today.AddYears(-10)
+			AbrirDialog("A CONTA PADRÃO escolhida: " & txtContaPadrao.Text.ToUpper & vbNewLine &
+						"ainda não tem data de bloqueio definida..." & vbNewLine &
+						"A DATA PADRÃO do sistema será definida para " &
+						"DATA ATUAL: " & Format(Now, "dd \d\e MMMM \d\e yyyy"),
+						"Data Padrão",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			'
+			dtpDataPadrao.MinDate = Today.AddYears(-10)
             dtpDataPadrao.Value = Today.ToShortDateString
             dtpDataPadrao.MaxDate = Today
             '

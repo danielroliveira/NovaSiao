@@ -66,22 +66,24 @@ Public Class frmContaProcurar
     Private Sub ObterContas(myFilial As Integer?, OnlyContaCaixa As Boolean)
         '
         Dim mBLL As New MovimentacaoBLL
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            '--- GET
-            listContas = mBLL.Contas_GET_PorIDFilial(myFilial, OnlyContaCaixa)
-            '
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao obter lista de Contas da Filial" & vbNewLine &
-                            ex.Message, "Exceção",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			'--- GET
+			listContas = mBLL.Contas_GET_PorIDFilial(myFilial, OnlyContaCaixa)
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao obter lista de Contas da Filial" & vbNewLine &
+							ex.Message, "Exceção",
+							MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
         '
     End Sub
     '

@@ -72,7 +72,7 @@ Partial Class frmReserva
 		Me.Panel4 = New System.Windows.Forms.Panel()
 		Me.txtRGProduto = New System.Windows.Forms.TextBox()
 		Me.lblProdConhecido = New System.Windows.Forms.Label()
-		Me.Label8 = New System.Windows.Forms.Label()
+		Me.lblValorAntecipado = New System.Windows.Forms.Label()
 		Me.chkProdutoConhecido = New CheckedButton_OnOff.CheckedButton_OnOff()
 		Me.Label7 = New System.Windows.Forms.Label()
 		Me.Label4 = New System.Windows.Forms.Label()
@@ -661,7 +661,7 @@ Partial Class frmReserva
 		Me.Panel4.BackColor = System.Drawing.Color.FromArgb(CType(CType(219, Byte), Integer), CType(CType(228, Byte), Integer), CType(CType(240, Byte), Integer))
 		Me.Panel4.Controls.Add(Me.txtRGProduto)
 		Me.Panel4.Controls.Add(Me.lblProdConhecido)
-		Me.Panel4.Controls.Add(Me.Label8)
+		Me.Panel4.Controls.Add(Me.lblValorAntecipado)
 		Me.Panel4.Controls.Add(Me.chkProdutoConhecido)
 		Me.Panel4.Controls.Add(Me.btnProcFabricantes)
 		Me.Panel4.Controls.Add(Me.Label18)
@@ -702,16 +702,16 @@ Partial Class frmReserva
 		Me.lblProdConhecido.TabIndex = 1
 		Me.lblProdConhecido.Text = "Produto Conhecido"
 		'
-		'Label8
+		'lblValorAntecipado
 		'
-		Me.Label8.BackColor = System.Drawing.Color.WhiteSmoke
-		Me.Label8.ForeColor = System.Drawing.Color.Black
-		Me.Label8.Location = New System.Drawing.Point(434, 178)
-		Me.Label8.Name = "Label8"
-		Me.Label8.Size = New System.Drawing.Size(116, 27)
-		Me.Label8.TabIndex = 4
-		Me.Label8.Text = "R$ 0,00"
-		Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		Me.lblValorAntecipado.BackColor = System.Drawing.Color.WhiteSmoke
+		Me.lblValorAntecipado.ForeColor = System.Drawing.Color.Black
+		Me.lblValorAntecipado.Location = New System.Drawing.Point(434, 178)
+		Me.lblValorAntecipado.Name = "lblValorAntecipado"
+		Me.lblValorAntecipado.Size = New System.Drawing.Size(116, 27)
+		Me.lblValorAntecipado.TabIndex = 4
+		Me.lblValorAntecipado.Text = "R$ 0,00"
+		Me.lblValorAntecipado.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		'
 		'chkProdutoConhecido
 		'
@@ -896,7 +896,7 @@ Partial Class frmReserva
 	Friend WithEvents lblClienteEmail As Label
 	Friend WithEvents lblTelefoneA As Label
 	Friend WithEvents btnClienteSimples As VIBlend.WinForms.Controls.vButton
-	Friend WithEvents Label8 As Label
+	Friend WithEvents lblValorAntecipado As Label
 	Friend WithEvents Label7 As Label
 	Friend WithEvents btnAdiantamento As ToolStripButton
 End Class
