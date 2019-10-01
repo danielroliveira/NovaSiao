@@ -31,8 +31,6 @@ Partial Class frmPrincipal
 		Me.miClientePJInserir = New System.Windows.Forms.ToolStripMenuItem()
 		Me.miClienteProcurar = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-		Me.miClienteAtividades = New System.Windows.Forms.ToolStripMenuItem()
-		Me.ToolStripSeparator22 = New System.Windows.Forms.ToolStripSeparator()
 		Me.miClientesSimples = New System.Windows.Forms.ToolStripMenuItem()
 		Me.miCartasClientes = New System.Windows.Forms.ToolStripMenuItem()
 		Me.miGerarParaAniversariantes = New System.Windows.Forms.ToolStripMenuItem()
@@ -134,6 +132,9 @@ Partial Class frmPrincipal
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.lblHora = New System.Windows.Forms.Label()
 		Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+		Me.miOutrasConfigurações = New System.Windows.Forms.ToolStripMenuItem()
+		Me.miAtividadesDosClientes = New System.Windows.Forms.ToolStripMenuItem()
+		Me.miPlanosDeParcelamento = New System.Windows.Forms.ToolStripMenuItem()
 		Me.tsPrincipal.SuspendLayout()
 		Me.Panel1.SuspendLayout()
 		CType(Me.SContainerPrincipal, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -163,7 +164,7 @@ Partial Class frmPrincipal
 		'
 		Me.tsbClientes.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
 		Me.tsbClientes.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-		Me.tsbClientes.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miClienteNovo, Me.miClienteProcurar, Me.ToolStripSeparator1, Me.miClienteAtividades, Me.ToolStripSeparator22, Me.miClientesSimples, Me.miCartasClientes})
+		Me.tsbClientes.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miClienteNovo, Me.miClienteProcurar, Me.ToolStripSeparator1, Me.miClientesSimples, Me.miCartasClientes})
 		Me.tsbClientes.Image = Global.NovaSiao.My.Resources.Resources.Clientes
 		Me.tsbClientes.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.tsbClientes.Name = "tsbClientes"
@@ -213,20 +214,6 @@ Partial Class frmPrincipal
 		'
 		Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
 		Me.ToolStripSeparator1.Size = New System.Drawing.Size(210, 6)
-		'
-		'miClienteAtividades
-		'
-		Me.miClienteAtividades.Image = Global.NovaSiao.My.Resources.Resources.editar
-		Me.miClienteAtividades.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-		Me.miClienteAtividades.Name = "miClienteAtividades"
-		Me.miClienteAtividades.Size = New System.Drawing.Size(213, 38)
-		Me.miClienteAtividades.Tag = "1"
-		Me.miClienteAtividades.Text = "Atividadades"
-		'
-		'ToolStripSeparator22
-		'
-		Me.ToolStripSeparator22.Name = "ToolStripSeparator22"
-		Me.ToolStripSeparator22.Size = New System.Drawing.Size(210, 6)
 		'
 		'miClientesSimples
 		'
@@ -807,7 +794,7 @@ Partial Class frmPrincipal
 		'tsbConfig
 		'
 		Me.tsbConfig.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-		Me.tsbConfig.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miConfiguracaoDataPadrao, Me.ToolStripSeparator7, Me.miConfiguracaoSistema, Me.miCFOP, Me.miEmailServer, Me.ToolStripSeparator2, Me.miConfiguracaoUsuarios, Me.ToolStripSeparator15, Me.miFazerBackup})
+		Me.tsbConfig.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miConfiguracaoDataPadrao, Me.ToolStripSeparator7, Me.miConfiguracaoSistema, Me.miCFOP, Me.miEmailServer, Me.miOutrasConfigurações, Me.ToolStripSeparator2, Me.miConfiguracaoUsuarios, Me.ToolStripSeparator15, Me.miFazerBackup})
 		Me.tsbConfig.Image = Global.NovaSiao.My.Resources.Resources.Controles
 		Me.tsbConfig.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.tsbConfig.Name = "tsbConfig"
@@ -1092,6 +1079,31 @@ Partial Class frmPrincipal
 		Me.Timer1.Enabled = True
 		Me.Timer1.Interval = 600
 		'
+		'miOutrasConfigurações
+		'
+		Me.miOutrasConfigurações.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAtividadesDosClientes, Me.miPlanosDeParcelamento})
+		Me.miOutrasConfigurações.Image = Global.NovaSiao.My.Resources.Resources.Controles_24x24
+		Me.miOutrasConfigurações.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+		Me.miOutrasConfigurações.Name = "miOutrasConfigurações"
+		Me.miOutrasConfigurações.Size = New System.Drawing.Size(246, 30)
+		Me.miOutrasConfigurações.Text = "Outras Configurações"
+		'
+		'miAtividadesDosClientes
+		'
+		Me.miAtividadesDosClientes.Image = Global.NovaSiao.My.Resources.Resources.editar
+		Me.miAtividadesDosClientes.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+		Me.miAtividadesDosClientes.Name = "miAtividadesDosClientes"
+		Me.miAtividadesDosClientes.Size = New System.Drawing.Size(242, 30)
+		Me.miAtividadesDosClientes.Text = "Atividades dos Clientes"
+		'
+		'miPlanosDeParcelamento
+		'
+		Me.miPlanosDeParcelamento.Image = Global.NovaSiao.My.Resources.Resources.editar
+		Me.miPlanosDeParcelamento.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+		Me.miPlanosDeParcelamento.Name = "miPlanosDeParcelamento"
+		Me.miPlanosDeParcelamento.Size = New System.Drawing.Size(242, 30)
+		Me.miPlanosDeParcelamento.Text = "Planos de Parcelamento"
+		'
 		'frmPrincipal
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(96.0!, 96.0!)
@@ -1136,102 +1148,103 @@ Partial Class frmPrincipal
     Friend WithEvents tsbCompras As ToolStripSplitButton
     Friend WithEvents tsbClientes As ToolStripSplitButton
     Friend WithEvents tsbAPagar As ToolStripSplitButton
-    Friend WithEvents miClienteAtividades As ToolStripMenuItem
-    Friend WithEvents SContainerPrincipal As SplitContainer
-    Friend WithEvents Panel1 As Panel
-    Friend WithEvents PainelInferior As Panel
-    Friend WithEvents Timer1 As Timer
-    Friend WithEvents lblHora As Label
-    Friend WithEvents btnMinimizer As Button
-    Friend WithEvents tsbConfig As ToolStripSplitButton
-    Friend WithEvents miConfiguracaoDataPadrao As ToolStripMenuItem
-    Friend WithEvents miConfiguracaoSistema As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
-    Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
-    Friend WithEvents miConfiguracaoUsuarios As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
-    Friend WithEvents miProdutoTipos As ToolStripMenuItem
-    Friend WithEvents miEditarProduto As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
-    Friend WithEvents miNovaVendaVista As ToolStripMenuItem
-    Friend WithEvents miNovaVendaPrazo As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
-    Friend WithEvents miProcurarOperacaoSaida As ToolStripMenuItem
-    Friend WithEvents tsbCadastros As ToolStripSplitButton
-    Friend WithEvents miFuncionarios As ToolStripMenuItem
-    Friend WithEvents miFornecedores As ToolStripMenuItem
-    Friend WithEvents miTransportadoras As ToolStripMenuItem
-    Friend WithEvents Label2 As Label
-    Friend WithEvents lblDataSis As Label
-    Friend WithEvents lblFilial As Label
-    Friend WithEvents Label3 As Label
-    Friend WithEvents miNovaCompra As ToolStripMenuItem
-    Friend WithEvents miProcurarOperacaoEntrada As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
-    Friend WithEvents miAReceberCliente As ToolStripMenuItem
-    Friend WithEvents miFabricantesMarcas As ToolStripMenuItem
-    Friend WithEvents miCredores As ToolStripMenuItem
-    Friend WithEvents miTipoDeDespesa As ToolStripMenuItem
-    Friend WithEvents miNovaDespesa As ToolStripMenuItem
-    Friend WithEvents miProcurarDespesa As ToolStripMenuItem
-    Friend WithEvents miAPagarProcurar As ToolStripMenuItem
-    Friend WithEvents miDespesasPeriodicas As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator8 As ToolStripSeparator
-    Friend WithEvents tsbCaixa As ToolStripSplitButton
-    Friend WithEvents miFinalizarCaixa As ToolStripMenuItem
-    Friend WithEvents miContas As ToolStripMenuItem
-    Friend WithEvents miFormasDeMovimentacao As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator9 As ToolStripSeparator
-    Friend WithEvents miControlesMovimentacao As ToolStripMenuItem
-    Friend WithEvents miTiposDeMovimentacao As ToolStripMenuItem
-    Friend WithEvents miTiposDeCartao As ToolStripMenuItem
-    Friend WithEvents miNovaDespesaQuitada As ToolStripMenuItem
-    Friend WithEvents miProcurarCaixa As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator10 As ToolStripSeparator
-    Friend WithEvents lblConta As Label
-    Friend WithEvents Label4 As Label
-    Friend WithEvents ToolStripSeparator11 As ToolStripSeparator
-    Friend WithEvents miProdutoEtiquetaVenda As ToolStripMenuItem
-    Friend WithEvents tsbProdutos As ToolStripSplitButton
-    Friend WithEvents ToolStripSeparator12 As ToolStripSeparator
-    Friend WithEvents ToolStripSeparator13 As ToolStripSeparator
-    Friend WithEvents ToolStripSeparator14 As ToolStripSeparator
-    Friend WithEvents ToolStripSeparator15 As ToolStripSeparator
-    Friend WithEvents miFazerBackup As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator16 As ToolStripSeparator
-    Friend WithEvents miNovaReserva As ToolStripMenuItem
-    Friend WithEvents miProcurarReserva As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator17 As ToolStripSeparator
-    Friend WithEvents miControleDePedidos As ToolStripMenuItem
-    Friend WithEvents miProcurarTroca As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator18 As ToolStripSeparator
-    Friend WithEvents miNovaSimplesSaida As ToolStripMenuItem
-    Friend WithEvents miSimplesEntrada As ToolStripMenuItem
-    Friend WithEvents miAReceberMovInterna As ToolStripMenuItem
-    Friend WithEvents miAPagarMovInterna As ToolStripMenuItem
-    Friend WithEvents miNovaDevolucaoSaida As ToolStripMenuItem
-    Friend WithEvents miCFOP As ToolStripMenuItem
-    Friend WithEvents miTransferencias As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator19 As ToolStripSeparator
-    Friend WithEvents miControleDeEstoque As ToolStripMenuItem
-    Friend WithEvents miEstoqueInicial As ToolStripMenuItem
-    Friend WithEvents miAjusteEstoque As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator20 As ToolStripSeparator
-    Friend WithEvents miProcurarAjusteDeEstoque As ToolStripMenuItem
-    Friend WithEvents lblVersao As Label
-    Friend WithEvents Label1 As Label
-    Friend WithEvents ToolStripSeparator21 As ToolStripSeparator
-    Friend WithEvents miFretes As ToolStripMenuItem
-    Friend WithEvents miEmailServer As ToolStripMenuItem
-    Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
-    Friend WithEvents miNovaCompraNormal As ToolStripMenuItem
-    Friend WithEvents miNovaCompraNFeXML As ToolStripMenuItem
-    Friend WithEvents lblInfoMessage As Label
-    Friend WithEvents miCartasClientes As ToolStripMenuItem
-    Friend WithEvents miGerarParaAniversariantes As ToolStripMenuItem
-    Friend WithEvents miEnvioMalaDiretaImpressão As ToolStripMenuItem
-    Friend WithEvents miClientePFInserir As ToolStripMenuItem
-    Friend WithEvents miClientePJInserir As ToolStripMenuItem
+	Friend WithEvents SContainerPrincipal As SplitContainer
+	Friend WithEvents Panel1 As Panel
+	Friend WithEvents PainelInferior As Panel
+	Friend WithEvents Timer1 As Timer
+	Friend WithEvents lblHora As Label
+	Friend WithEvents btnMinimizer As Button
+	Friend WithEvents tsbConfig As ToolStripSplitButton
+	Friend WithEvents miConfiguracaoDataPadrao As ToolStripMenuItem
+	Friend WithEvents miConfiguracaoSistema As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+	Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
+	Friend WithEvents miConfiguracaoUsuarios As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
+	Friend WithEvents miProdutoTipos As ToolStripMenuItem
+	Friend WithEvents miEditarProduto As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator4 As ToolStripSeparator
+	Friend WithEvents miNovaVendaVista As ToolStripMenuItem
+	Friend WithEvents miNovaVendaPrazo As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator5 As ToolStripSeparator
+	Friend WithEvents miProcurarOperacaoSaida As ToolStripMenuItem
+	Friend WithEvents tsbCadastros As ToolStripSplitButton
+	Friend WithEvents miFuncionarios As ToolStripMenuItem
+	Friend WithEvents miFornecedores As ToolStripMenuItem
+	Friend WithEvents miTransportadoras As ToolStripMenuItem
+	Friend WithEvents Label2 As Label
+	Friend WithEvents lblDataSis As Label
+	Friend WithEvents lblFilial As Label
+	Friend WithEvents Label3 As Label
+	Friend WithEvents miNovaCompra As ToolStripMenuItem
+	Friend WithEvents miProcurarOperacaoEntrada As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
+	Friend WithEvents miAReceberCliente As ToolStripMenuItem
+	Friend WithEvents miFabricantesMarcas As ToolStripMenuItem
+	Friend WithEvents miCredores As ToolStripMenuItem
+	Friend WithEvents miTipoDeDespesa As ToolStripMenuItem
+	Friend WithEvents miNovaDespesa As ToolStripMenuItem
+	Friend WithEvents miProcurarDespesa As ToolStripMenuItem
+	Friend WithEvents miAPagarProcurar As ToolStripMenuItem
+	Friend WithEvents miDespesasPeriodicas As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator8 As ToolStripSeparator
+	Friend WithEvents tsbCaixa As ToolStripSplitButton
+	Friend WithEvents miFinalizarCaixa As ToolStripMenuItem
+	Friend WithEvents miContas As ToolStripMenuItem
+	Friend WithEvents miFormasDeMovimentacao As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator9 As ToolStripSeparator
+	Friend WithEvents miControlesMovimentacao As ToolStripMenuItem
+	Friend WithEvents miTiposDeMovimentacao As ToolStripMenuItem
+	Friend WithEvents miTiposDeCartao As ToolStripMenuItem
+	Friend WithEvents miNovaDespesaQuitada As ToolStripMenuItem
+	Friend WithEvents miProcurarCaixa As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator10 As ToolStripSeparator
+	Friend WithEvents lblConta As Label
+	Friend WithEvents Label4 As Label
+	Friend WithEvents ToolStripSeparator11 As ToolStripSeparator
+	Friend WithEvents miProdutoEtiquetaVenda As ToolStripMenuItem
+	Friend WithEvents tsbProdutos As ToolStripSplitButton
+	Friend WithEvents ToolStripSeparator12 As ToolStripSeparator
+	Friend WithEvents ToolStripSeparator13 As ToolStripSeparator
+	Friend WithEvents ToolStripSeparator14 As ToolStripSeparator
+	Friend WithEvents ToolStripSeparator15 As ToolStripSeparator
+	Friend WithEvents miFazerBackup As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator16 As ToolStripSeparator
+	Friend WithEvents miNovaReserva As ToolStripMenuItem
+	Friend WithEvents miProcurarReserva As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator17 As ToolStripSeparator
+	Friend WithEvents miControleDePedidos As ToolStripMenuItem
+	Friend WithEvents miProcurarTroca As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator18 As ToolStripSeparator
+	Friend WithEvents miNovaSimplesSaida As ToolStripMenuItem
+	Friend WithEvents miSimplesEntrada As ToolStripMenuItem
+	Friend WithEvents miAReceberMovInterna As ToolStripMenuItem
+	Friend WithEvents miAPagarMovInterna As ToolStripMenuItem
+	Friend WithEvents miNovaDevolucaoSaida As ToolStripMenuItem
+	Friend WithEvents miCFOP As ToolStripMenuItem
+	Friend WithEvents miTransferencias As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator19 As ToolStripSeparator
+	Friend WithEvents miControleDeEstoque As ToolStripMenuItem
+	Friend WithEvents miEstoqueInicial As ToolStripMenuItem
+	Friend WithEvents miAjusteEstoque As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator20 As ToolStripSeparator
+	Friend WithEvents miProcurarAjusteDeEstoque As ToolStripMenuItem
+	Friend WithEvents lblVersao As Label
+	Friend WithEvents Label1 As Label
+	Friend WithEvents ToolStripSeparator21 As ToolStripSeparator
+	Friend WithEvents miFretes As ToolStripMenuItem
+	Friend WithEvents miEmailServer As ToolStripMenuItem
+	Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
+	Friend WithEvents miNovaCompraNormal As ToolStripMenuItem
+	Friend WithEvents miNovaCompraNFeXML As ToolStripMenuItem
+	Friend WithEvents lblInfoMessage As Label
+	Friend WithEvents miCartasClientes As ToolStripMenuItem
+	Friend WithEvents miGerarParaAniversariantes As ToolStripMenuItem
+	Friend WithEvents miEnvioMalaDiretaImpressão As ToolStripMenuItem
+	Friend WithEvents miClientePFInserir As ToolStripMenuItem
+	Friend WithEvents miClientePJInserir As ToolStripMenuItem
 	Friend WithEvents miClientesSimples As ToolStripMenuItem
-	Friend WithEvents ToolStripSeparator22 As ToolStripSeparator
+	Friend WithEvents miOutrasConfigurações As ToolStripMenuItem
+	Friend WithEvents miAtividadesDosClientes As ToolStripMenuItem
+	Friend WithEvents miPlanosDeParcelamento As ToolStripMenuItem
 End Class

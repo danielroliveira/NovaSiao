@@ -498,8 +498,20 @@ Public Class frmMovFormas
     '
     ' VERIFICA OS DADOS ANTES DE SALVAR
     Private Function VerificaDados() As Boolean
-        '
-        Dim f As New Utilidades
+		'
+		If _MovForma.IDMovForma IsNot Nothing AndAlso _MovForma.IDMovForma = 1 Then
+			AbrirDialog("Não é possível alterar a Forma de Movimentação: DINHEIRO." & vbNewLine &
+						"Essa forma de movimentação é inserida autmaticamente pelo sistema.",
+						"Forma de Movimentação Padrão",
+						frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+			bindMovForma.CancelEdit()
+			txtMovForma.Focus()
+			VerificaCartaoTipo()
+			Sit = EnumFlagEstado.RegistroSalvo
+			Return False
+		End If
+		'
+		Dim f As New Utilidades
         '
         If Not f.VerificaDadosClasse(txtMovForma, "Descrição da Forma de Movimento", _MovForma, epValida) Then
             Return False

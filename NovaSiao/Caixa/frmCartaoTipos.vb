@@ -1,9 +1,11 @@
 ﻿Imports CamadaBLL
 '
 Public Class frmCartaoTipos
-    '
-    Private dtOrigem As DataTable
-    Private _procura As Boolean = False
+	'
+	Private list As List(Of ClassCartaoTipo)
+	Private bindList As New BindingSource
+	'
+	Private _procura As Boolean = False
     Private _formOrigem As Form
     '
     Private ImgInativo As Image = My.Resources.block
@@ -14,11 +16,67 @@ Public Class frmCartaoTipos
     Property OrigemDesc_Escolhido As String
     '
     Dim _Sit As Byte
-    '
+	'
+	Private Class ClassCartaoTipo
+		'
+		Sub New()
+			IDCartaoTipo = Nothing
+			IsNew = True
+			IsUpdated = False
+			Ativo = True
+		End Sub
+		'
+		Property IDCartaoTipo As Short?
+		Property Cartao As String
+		Property Ativo As Boolean
+		Property IsNew As Boolean
+		Property IsUpdated As Boolean
+		'
+	End Class
+	'
 #Region "NEW | PROPERTY"
-    '
-    ' PROPRIEDADE SIT
-    Private Property Sit As EnumFlagEstado
+	'
+	'--- SUB NEW
+	'----------------------------------------------------------------------------------
+	Sub New(Optional procura As Boolean = False,
+			Optional formOrigem As Form = Nothing,
+			Optional IDPadrao As Int16? = Nothing)
+		'
+		' This call is required by the designer.
+		InitializeComponent()
+		'
+		' Add any initialization after the InitializeComponent() call.
+		_procura = procura
+		_formOrigem = formOrigem
+		'
+		lblTitulo.Text = "Tipos de Cartao"
+		AtivarToolStripMenuItem.Text = "Ativar Cartão"
+		DesativarToolStripMenuItem.Text = "Desativar Cartão"
+		'
+		FormataListagem()
+		'
+		If dgvListagem.RowCount > 0 Then
+			Sit = EnumFlagEstado.RegistroSalvo
+			'
+			'--- Seleciona o IDPadrao caso houver
+			If Not IsNothing(IDPadrao) Then
+				For i = 0 To dgvListagem.Rows.Count - 1
+					If dgvListagem.Rows(i).Cells(0).Value = IDPadrao Then
+						dgvListagem.CurrentCell = dgvListagem.Rows(i).Cells(0)
+						dgvListagem.Rows(i).Selected = True
+						Exit For
+					End If
+				Next i
+			End If
+			'
+		Else
+			Sit = EnumFlagEstado.NovoRegistro
+		End If
+		'
+	End Sub
+	'
+	' PROPRIEDADE SIT
+	Private Property Sit As EnumFlagEstado
         Get
             Sit = _Sit
         End Get
@@ -52,50 +110,34 @@ Public Class frmCartaoTipos
             End Select
         End Set
     End Property
-    '
-    Sub New(Optional procura As Boolean = False,
-            Optional formOrigem As Form = Nothing,
-            Optional IDPadrao As Int16? = Nothing)
-        '
-        ' This call is required by the designer.
-        InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        '
-        _procura = procura
-        _formOrigem = formOrigem
-        '
-        lblTitulo.Text = "Tipos de Cartao"
-        AtivarToolStripMenuItem.Text = "Ativar Cartão"
-        DesativarToolStripMenuItem.Text = "Desativar Cartão"
-        '
-        FormataListagem()
-        '
-        If dgvListagem.RowCount > 0 Then
-            Sit = EnumFlagEstado.RegistroSalvo
-            '
-            '--- Seleciona o IDPadrao caso houver
-            If Not IsNothing(IDPadrao) Then
-                For i = 0 To dgvListagem.Rows.Count - 1
-                    If dgvListagem.Rows(i).Cells(0).Value = IDPadrao Then
-                        dgvListagem.CurrentCell = dgvListagem.Rows(i).Cells(0)
-                        dgvListagem.Rows(i).Selected = True
-                        Exit For
-                    End If
-                Next i
-            End If
-            '
-        Else
-            Sit = EnumFlagEstado.NovoRegistro
-        End If
-        '
-    End Sub
-    '
+	'
 #End Region
-    '
+	'
 #Region "LISTAGEM"
-    '
-    Private Sub FormataListagem()
+	'
+	Private Sub Get_Dados()
+		'
+		Dim mbll As New MovimentacaoBLL
+		Dim dtOrigem As DataTable = mbll.MovCartao_GET_Dt
+		'
+		list = New List(Of ClassCartaoTipo)
+		'
+		For Each r As DataRow In dtOrigem.Rows
+			Dim item As New ClassCartaoTipo With {
+				.IDCartaoTipo = CShort(r("IDCartaoTipo")),
+				.Cartao = r("Cartao"),
+				.Ativo = r("Ativo"),
+				.IsNew = False,
+				.IsUpdated = False
+			}
+			list.Add(item)
+		Next
+		'
+		bindList.DataSource = list
+		'
+	End Sub
+	'
+	Private Sub FormataListagem()
         '
         '--- limpa as colunas do datagrid
         dgvListagem.Columns.Clear()
@@ -112,21 +154,15 @@ Public Class frmCartaoTipos
         dgvListagem.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
         dgvListagem.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         dgvListagem.StandardTab = True
-        '
-        Get_Dados()
-        PreencheListagem()
-        '
-    End Sub
-    '
-    Private Sub Get_Dados()
-        '
-        Dim mbll As New MovimentacaoBLL
-        dtOrigem = mbll.MovCartao_GET_Dt
+		'
+		Get_Dados()
+		dgvListagem.DataSource = bindList
+		PreencheListagem()
         '
     End Sub
-    '
-    ' PREENCHE LISTAGEM
-    Private Sub PreencheListagem()
+	'
+	' PREENCHE LISTAGEM
+	Private Sub PreencheListagem()
         '
         ' (1) COLUNA REG
         dgvListagem.Columns.Add("ID", "Reg.")
@@ -161,23 +197,21 @@ Public Class frmCartaoTipos
         End With
         '
         dgvListagem.Columns.Add(colImage)
-        '
-        dgvListagem.DataSource = dtOrigem
-        '
-    End Sub
+		'
+	End Sub
     '
     Private Sub dgvListagem_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvListagem.CellFormatting
         '
         If e.ColumnIndex = 2 Then
-            Dim r As DataRowView = dgvListagem.Rows(e.RowIndex).DataBoundItem
-            '
-            If IsDBNull(r("Ativo")) Then
-                e.Value = ImgNew
-            Else
-                If r("Ativo") = True Then
-                    e.Value = ImgAtivo
-                Else
-                    e.Value = ImgInativo
+			Dim r As ClassCartaoTipo = dgvListagem.Rows(e.RowIndex).DataBoundItem
+			'
+			If IsDBNull(r.Ativo) Then
+				e.Value = ImgNew
+			Else
+				If r.Ativo = True Then
+					e.Value = ImgAtivo
+				Else
+					e.Value = ImgInativo
                 End If
             End If
         End If
@@ -238,18 +272,16 @@ Public Class frmCartaoTipos
         '
         '--- verifica se existe alguma cell 
         If IsDBNull(dgvListagem.CurrentRow.Cells(0).Value) Then Exit Sub
-        '
-        '--- altera o valor
-        Dim r As DataRow = DirectCast(dgvListagem.Rows(dgvListagem.CurrentCell.RowIndex).DataBoundItem, DataRowView).Row
-        '
-        r("Ativo") = True
-        dgvListagem.Rows(dgvListagem.CurrentCell.RowIndex).Cells(2).Value = ImgAtivo
-        If r.RowState = DataRowState.Unchanged Then
-            r.SetModified()
-        End If
-        '
-        '--- atualiza os botoes
-        Sit = EnumFlagEstado.Alterado
+		'
+		'--- altera o valor
+		Dim r As ClassCartaoTipo = dgvListagem.Rows(dgvListagem.CurrentCell.RowIndex).DataBoundItem
+		'
+		dgvListagem.Rows(dgvListagem.CurrentCell.RowIndex).Cells(2).Value = ImgAtivo
+		r.Ativo = True
+		r.IsUpdated = True
+		'
+		'--- atualiza os botoes
+		Sit = EnumFlagEstado.Alterado
         '
     End Sub
     '
@@ -257,19 +289,16 @@ Public Class frmCartaoTipos
         '
         '--- verifica se existe alguma cell 
         If IsDBNull(dgvListagem.CurrentRow.Cells(0).Value) Then Exit Sub
-        '
-        '--- altera o valor
-        Dim r As DataRow = DirectCast(dgvListagem.Rows(dgvListagem.CurrentCell.RowIndex).DataBoundItem, DataRowView).Row
-        '
-        dgvListagem.Rows(dgvListagem.CurrentCell.RowIndex).Cells(2).Value = ImgInativo
-        r("Ativo") = False
-        '
-        If r.RowState = DataRowState.Unchanged Then
-            r.SetModified()
-        End If
-        '
-        '--- atualiza os botoes
-        Sit = EnumFlagEstado.Alterado
+		'
+		'--- altera o valor
+		Dim r As ClassCartaoTipo = dgvListagem.Rows(dgvListagem.CurrentCell.RowIndex).DataBoundItem
+		'
+		dgvListagem.Rows(dgvListagem.CurrentCell.RowIndex).Cells(2).Value = ImgInativo
+		r.Ativo = False
+		r.IsUpdated = True
+		'
+		'--- atualiza os botoes
+		Sit = EnumFlagEstado.Alterado
         '
     End Sub
     '
@@ -279,9 +308,9 @@ Public Class frmCartaoTipos
 
     ' BOTOES DO FORMULARIO
     Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
-        '
-        dtOrigem.Rows.Add()
-        Sit = EnumFlagEstado.NovoRegistro
+		'
+		bindList.AddNew()
+		Sit = EnumFlagEstado.NovoRegistro
         '
         ' seleciona a cell
         dgvListagem.Focus()
@@ -306,17 +335,17 @@ Public Class frmCartaoTipos
         ElseIf Sit = EnumFlagEstado.NovoRegistro Then
             If MessageBox.Show("Deseja cancelar todas as alterações realizadas?",
                                "Cancelar Alterações", MessageBoxButtons.YesNo,
-                               MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
-            dgvListagem.Rows.Remove(dgvListagem.CurrentRow)
-            Get_Dados()
-            Sit = EnumFlagEstado.RegistroSalvo
+							   MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
+			bindList.CancelEdit()
+			Get_Dados()
+			Sit = EnumFlagEstado.RegistroSalvo
         ElseIf Sit = EnumFlagEstado.Alterado Then
             If MessageBox.Show("Deseja cancelar todas as alterações realizadas?",
                                "Cancelar Alterações", MessageBoxButtons.YesNo,
-                               MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
-            dgvListagem.CancelEdit()
-            Get_Dados()
-            Sit = EnumFlagEstado.RegistroSalvo
+							   MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
+			bindList.CancelEdit()
+			Get_Dados()
+			Sit = EnumFlagEstado.RegistroSalvo
         End If
         '
     End Sub
@@ -339,11 +368,11 @@ Public Class frmCartaoTipos
                 dgvListagem.Focus()
                 Exit Sub
             End If
-            '
-            IDOrigem_Escolhido = CShort(dgvListagem.Rows(dgvListagem.SelectedCells(0).RowIndex).DataBoundItem(0))
-            OrigemDesc_Escolhido = dgvListagem.Rows(dgvListagem.SelectedCells(0).RowIndex).DataBoundItem(1)
-            '
-            DialogResult = DialogResult.OK
+			'
+			IDOrigem_Escolhido = dgvListagem.SelectedRows(0).DataBoundItem.IDCartaoTipo
+			OrigemDesc_Escolhido = dgvListagem.SelectedRows(0).DataBoundItem.Cartao
+			'
+			DialogResult = DialogResult.OK
             Close()
             '
         End If
@@ -352,38 +381,58 @@ Public Class frmCartaoTipos
     '
     ' SALVAR O REGISTRO CARTAO (INSERIDO | ALTERADO)
     Private Sub SalvarRegistro_Cartao()
-        '
-        '-- variavel para informar o número de registros salvos
-        Dim regSalvos As Integer = 0
-        '
-        For Each r As DataGridViewRow In dgvListagem.Rows
-            '
-            ' verfica se já existe valor igual
-            If DirectCast(r.DataBoundItem, DataRowView).Row.RowState <> DataRowState.Unchanged Then
-                If VerificaDuplicado(r.Index, dgvListagem.Rows(r.Index).Cells(1).Value) = True Then
-                    Continue For
-                End If
-            End If
-            '
-            '---salva os registros
-            If dtOrigem.Rows(r.Index).RowState = DataRowState.Modified Then ' registro ALTERADO
-                '
-                If Salva_Cartao(r.Index, False) = True Then
-                    regSalvos += 1
-                End If
-                '
-            ElseIf dtOrigem.Rows(r.Index).RowState = DataRowState.Added Then ' registro NOVO
-                '
-                If Salva_Cartao(r.Index, True) = True Then
-                    regSalvos += 1
-                End If
-                '
-            End If
-            '
-        Next
-        '
-        '--- mensagem de sucesso---
-        If regSalvos > 0 Then
+		'
+		Dim mBLL As New MovimentacaoBLL
+		Dim regSalvos As Integer = 0 '-- variavel para informar o número de registros salvos
+		'
+		For Each r As DataGridViewRow In dgvListagem.Rows
+			'
+			' verfica se já existe valor igual
+			If list.Exists(Function(x) x.Cartao = r.Cells(1).Value And x.IDCartaoTipo <> r.Cells(0).Value) Then
+				AbrirDialog("Já existe um Tipo de Produto com a mesma descrição:" & vbNewLine &
+							CStr(r.Cells(1).Value).ToUpper,
+							"Valor Duplicado",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				Continue For
+			End If
+			'
+			Try
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				Dim item As ClassCartaoTipo = DirectCast(r.DataBoundItem, ClassCartaoTipo)
+				'
+				'---salva os registros
+				If item.IsUpdated Then ' registro ALTERADO
+					'
+					mBLL.Cartao_Update(item.IDCartaoTipo, item.Cartao, item.Ativo)
+					regSalvos += 1
+					'
+				ElseIf item.IsNew Then ' registro NOVO
+					'
+					Dim newID As Integer = mBLL.Cartao_Inserir(item.Cartao)
+					item.IDCartaoTipo = newID
+					regSalvos += 1
+					'
+				End If
+				'
+			Catch ex As Exception
+				AbrirDialog("O seguinte registro não pôde ser salvo:" & vbNewLine &
+							CStr(r.Cells(1).Value).ToUpper,
+							"Erro ao Salvar",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				regSalvos -= 1
+			Finally
+				'--- Ampulheta OFF
+				Cursor = Cursors.Default
+			End Try
+			'
+		Next
+		'
+		'--- mensagem de sucesso---
+		If regSalvos > 0 Then
             MessageBox.Show("Sucesso ao salvar registro(s) de Tipo de Cartao" & vbNewLine &
                             "Foram salvo(s) com sucesso " & Format(regSalvos, "00") &
                             IIf(regSalvos > 1, " registros", " registro"),
@@ -395,101 +444,75 @@ Public Class frmCartaoTipos
         Sit = EnumFlagEstado.RegistroSalvo
         '
     End Sub
-    '
-    Private Function Salva_Cartao(myRowIndex As Integer, Inserir As Boolean) As Boolean
-        '
-        Dim mBLL As New MovimentacaoBLL
-        Dim IDMovTipo As Integer? = If(IsDBNull(dgvListagem.Rows(myRowIndex).Cells(0).Value), Nothing, dgvListagem.Rows(myRowIndex).Cells(0).Value)
-        Dim MovTipo As String = dgvListagem.Rows(myRowIndex).Cells(1).Value
-        Dim Ativo As Boolean? = If(IsDBNull(dgvListagem.Rows(myRowIndex).DataBoundItem("Ativo")), Nothing, dgvListagem.Rows(myRowIndex).DataBoundItem("Ativo"))
-        '
-        If Inserir = True Then
-            Try
-                mBLL.Cartao_Inserir(MovTipo)
-                Return True
-            Catch ex As Exception
-                MessageBox.Show("Uma exceção ocorreu ao inserir registro..." & vbNewLine &
-                                ex.Message & vbNewLine &
-                                "O seguinte registro não pôde ser salvo: " & MovTipo.ToUpper,
-                                "Erro ao Salvar",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Return False
-            End Try
-        Else
-            Try
-                mBLL.Cartao_Update(IDMovTipo, MovTipo, Ativo)
-                Return True
-            Catch ex As Exception
-                MessageBox.Show("Uma exceção ocorreu ao alterar registro..." & vbNewLine &
-                                ex.Message & vbNewLine &
-                                "O seguinte registro não pôde ser salvo: " & MovTipo.ToUpper,
-                                "Erro ao Salvar",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Return False
-            End Try
-        End If
-        '
-    End Function
-    '
-    '
-    ' VERIFICAR SE EXISTE UM REGISTRO COM A MESMA DESCRIÇÃO
-    Public Function VerificaDuplicado(myRow As Integer, myNewValor As String) As Boolean
-        '
-        '---se não houver nenhum registro, Exit
-        If dtOrigem.Rows.Count = 0 Then
-            VerificaDuplicado = False
-            Exit Function
-        End If
-        '---verifica todos os ROWS procurando registro igual
-        For i = 0 To dtOrigem.Rows.Count - 1
-            If i <> myRow Then
-                If dtOrigem.Rows(i).Item(1).ToString.ToUpper = myNewValor Then
-                    VerificaDuplicado = True
-                    '
-                    '--- Emite a mensagem de valor duplicado
-                    MessageBox.Show("Já existe um Tipo de Cartão com a mesma descrição:" & vbNewLine &
-                                    myNewValor.ToUpper,
-                                    "Valor Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    '
-                End If
-            End If
-        Next i
-        '
-        '---se não encontrar retorna FALSE
-        VerificaDuplicado = False
-        '
-    End Function
-    '
+	'
+	'
+	' VERIFICAR SE EXISTE UM REGISTRO COM A MESMA DESCRIÇÃO
+	Private Function VerificaDuplicado(clCartao As ClassCartaoTipo, newCartao As String) As Boolean
+		'
+		'---se não houver nenhum registro, Exit
+		If list.Count = 0 Then
+			Return False
+		End If
+		'
+		'---verifica todos os ROWS procurando registro igual
+		If IsNothing(clCartao.IDCartaoTipo) Then
+			Dim item As ClassCartaoTipo = list.FirstOrDefault(Function(x) If(x.Cartao, "").ToUpper = newCartao.ToUpper)
+			If item IsNot Nothing AndAlso Not item.Equals(clCartao) Then
+				Return True
+			End If
+		Else
+			If list.Exists(Function(x) x.Cartao.ToUpper = newCartao.ToUpper And x.IDCartaoTipo <> clCartao.IDCartaoTipo) Then
+				Return True
+			End If
+		End If
+		'
+		'---se não encontrar retorna FALSE
+		VerificaDuplicado = False
+		'
+	End Function
+	'
 #End Region
-    '
+	'
 #Region "LISTAGEM VALIDATION"
-    '
-    ' VALIDAÇÃO E MANUTENÇAO DA LISTAGEM
-    Private Sub dgvListagem_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvListagem.CellBeginEdit
-        If Sit <> EnumFlagEstado.NovoRegistro Then
-            Sit = EnumFlagEstado.Alterado
-        End If
-    End Sub
-    '
-    Private Sub dgvListagem_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvListagem.CellValidating
-        '
-        ' Valida o entrada para a descrição não permitindo valores em branco
-        If e.ColumnIndex = 1 Then
-            If String.IsNullOrEmpty(e.FormattedValue.ToString()) Then
-                dgvListagem.Rows(e.RowIndex).ErrorText = "A DESCRIÇÃO não pode ficar vazia..."
-                e.Cancel = True
-                Exit Sub
-            End If
-        End If
-        '
-        '---procura por valores duplicados da descrição 
-        If VerificaDuplicado(e.RowIndex, e.FormattedValue.ToString.ToUpper) Then
-            dgvListagem.Rows(e.RowIndex).ErrorText = "A DESCRIÇÃO precisa ser EXCLUSIVA..."
-            e.Cancel = True
-            Exit Sub
-        End If
-        '
-    End Sub
+	'
+	' VALIDAÇÃO E MANUTENÇAO DA LISTAGEM
+	Private Sub dgvListagem_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvListagem.CellBeginEdit
+		'
+		If Sit <> EnumFlagEstado.NovoRegistro Then
+			Sit = EnumFlagEstado.Alterado
+			dgvListagem.Rows(e.RowIndex).DataBoundItem.IsUpdated = True
+		End If
+		'
+	End Sub
+	'
+	Private Sub dgvListagem_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles dgvListagem.CellValidating
+		'
+		If e.ColumnIndex = 1 Then
+			'--- Valida o entrada para a descrição não permitindo valores em branco
+			If String.IsNullOrEmpty(e.FormattedValue.ToString()) Then
+				dgvListagem.Rows(e.RowIndex).ErrorText = "A DESCRIÇÃO não pode ficar vazia..."
+				e.Cancel = True
+				Exit Sub
+			End If
+			'
+			'--- procura por valores duplicados da descrição 
+			If VerificaDuplicado(dgvListagem.Rows(e.RowIndex).DataBoundItem, e.FormattedValue.ToString) Then
+				'
+				AbrirDialog("Já existe um Tipo de Cartão com a mesma descrição:" & vbNewLine &
+							e.FormattedValue.ToString,
+							"Valor Duplicado",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				'
+				dgvListagem.Rows(e.RowIndex).ErrorText = "A DESCRIÇÃO precisa ser EXCLUSIVA..."
+				e.Cancel = True
+				Exit Sub
+				'
+			End If
+			'
+		End If
+		'
+	End Sub
     '
     Private Sub dgvListagem_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListagem.CellEndEdit
         '

@@ -841,11 +841,14 @@ Public Class frmProdutoTipo
 		'
 		'---verifica todos os ITENS procurando registro igual
 		If IsNothing(clTipo.ID) Then
-			If myList.Exists(Function(x) x.Descricao.ToUpper = newDescricao) Then
+			'
+			Dim item As ClassTipo = myList.FirstOrDefault(Function(x) If(x.Descricao, "").ToUpper = newDescricao.ToUpper)
+			If item IsNot Nothing AndAlso Not item.Equals(clTipo) Then
 				Return True
 			End If
+			'
 		Else
-			If myList.Exists(Function(x) x.Descricao.ToUpper = newDescricao And x.ID <> clTipo.ID) Then
+			If myList.Exists(Function(x) x.Descricao.ToUpper = newDescricao.ToUpper And x.ID <> clTipo.ID) Then
 				Return True
 			End If
 		End If

@@ -101,11 +101,10 @@ Partial Class frmProdutoListagem
 		'
 		'lblTitulo
 		'
-		Me.lblTitulo.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.lblTitulo.Dock = System.Windows.Forms.DockStyle.None
-		Me.lblTitulo.Location = New System.Drawing.Point(16816, 9)
+		Me.lblTitulo.Location = New System.Drawing.Point(986, 0)
+		Me.lblTitulo.Padding = New System.Windows.Forms.Padding(0, 0, 40, 6)
 		Me.lblTitulo.RightToLeft = System.Windows.Forms.RightToLeft.No
-		Me.lblTitulo.Size = New System.Drawing.Size(330, 34)
+		Me.lblTitulo.Size = New System.Drawing.Size(364, 50)
 		Me.lblTitulo.TabIndex = 2
 		Me.lblTitulo.Text = "Produtos -  Procura Avançada"
 		'
