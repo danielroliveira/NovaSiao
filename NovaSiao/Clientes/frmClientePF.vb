@@ -6,26 +6,30 @@ Public Class frmClientePF
     '
     Private WithEvents _ClientePF As clClientePF
     Private WithEvents BindingCliente As New BindingSource
-    Private dtRef As DataTable
-    Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
-    '
-    Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
+	Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
+	'
+	Private RefList As List(Of clClienteReferencia)
+	Private BindRef As New BindingSource
+	'
+	Private AtivarImage As Image = My.Resources.Switch_ON_PEQ
     Private DesativarImage As Image = My.Resources.Switch_OFF_PEQ
-    '
+	'
 #Region "FORM LOAD" ' FORM NEW e LOAD
-    '
-    '--- SUB NEW
-    '----------------------------------------------------------------------------------
-    Public Sub New(myClientePF As clClientePF)
+	'
+	'--- SUB NEW
+	'----------------------------------------------------------------------------------
+	Public Sub New(myClientePF As clClientePF)
         '
         ' This call is required by the designer.
         InitializeComponent()
         '
         ' Add any initialization after the InitializeComponent() call.
         propClientePF = myClientePF
-        PreencheDataBindings()
-        '
-        HandlerKeyDownControl()
+		PreencheDataBindings()
+		'
+		FormataReferencias()
+		'
+		HandlerKeyDownControl()
         '
     End Sub
     '
@@ -60,18 +64,19 @@ Public Class frmClientePF
             '
             '--- VERIFICA O ESTADO CIVIL PARA HABILITAR O CONJUGE
             cmbEstadoCivil_SelectedIndexChanged(New Object, New EventArgs)
-            '
-            ' GET e formatar o dgvReferencias pessoais
-            If Not IsNothing(value.IDPessoa) Then
-                Dim dbRef As New ClienteReferenciaBLL
-                '
-                dtRef = dbRef.ClienteReferencia_GET_PorID(value.IDPessoa)
-                PreencheReferencias()
-            Else
-                FormataReferencias()
-            End If
-            '
-        End Set
+			'
+			' GET e formatar o dgvReferencias pessoais
+			RefList = New List(Of clClienteReferencia)
+			'
+			If Not IsNothing(_ClientePF.IDPessoa) Then
+				Dim RefBLL As New ClienteReferenciaBLL
+				RefList = RefBLL.ClienteReferencia_GET_PorID(_ClientePF.IDPessoa)
+			End If
+			'
+			BindRef.DataSource = RefList
+			PreencheReferencias()
+			'
+		End Set
         '
     End Property
     '
@@ -91,14 +96,14 @@ Public Class frmClientePF
             propClientePF = frmCNP.propPessoa
             '
             If IsNothing(propClientePF.IDPessoa) Then
-                '
-                '--- SET VALORES DEFAULT DOS CAMPOS
-                If _ClientePF.Cidade.Trim.Length = 0 Then _ClientePF.Cidade = ObterDefault("CidadePadrao")
-                If _ClientePF.UF.Trim.Length = 0 Then _ClientePF.UF = ObterDefault("UFPadrao")
-                If _ClientePF.Naturalidade.Trim.Length = 0 Then txtNaturalidade.Text = ObterDefault("NaturalidadePadrao")
-                '
-                '--- SET NEW
-                Sit = EnumFlagEstado.NovoRegistro
+				'
+				'--- SET VALORES DEFAULT DOS CAMPOS
+				If If(_ClientePF.Cidade, "").Trim.Length = 0 Then _ClientePF.Cidade = ObterDefault("CidadePadrao")
+				If If(_ClientePF.UF, "").Trim.Length = 0 Then _ClientePF.UF = ObterDefault("UFPadrao")
+				If If(_ClientePF.Naturalidade, "").Trim.Length = 0 Then txtNaturalidade.Text = ObterDefault("NaturalidadePadrao")
+				'
+				'--- SET NEW
+				Sit = EnumFlagEstado.NovoRegistro
             Else
                 AbrirDialog("Já existe um CLIENTE com esse mesmo CPF." & vbNewLine &
                             "O registro do CLIENTE encontrado será aberto...",
@@ -374,31 +379,35 @@ Public Class frmClientePF
             '
         End Try
 
-        'Verifica se houve Retorno da Função de Salvar
-        If NewCliID <> 0 Then
-            'Retorna o número de Registro do Novo Cliente Cadastrado
-            If _Sit = EnumFlagEstado.NovoRegistro Then
-                _ClientePF.IDPessoa = NewCliID
-                lblIDCliente.Tag = NewCliID
-                lblIDCliente.Text = Format(lblIDCliente.Tag, "D4")
-            End If
-            '
-            'Altera a Situação
-            Sit = EnumFlagEstado.RegistroSalvo
-            BindingCliente.EndEdit()
-            '
-            'Salva as referências do Cliente
-            SalvaReferencias(NewCliID)
-            '
-            'Mensagem
-            MsgBox("Registro Salvo com sucesso!", vbInformation, "Registro Salvo")
-            '
-            '--- Abre o formuário de ações após salvar
-            Dim frmAcao As New frmClienteAcoesDialog(Me)
-            frmAcao.ShowDialog()
-            '
-        Else
-            MsgBox("Registro NÃO pode ser salvo!", vbInformation, "Erro ao Salvar")
+		'Verifica se houve Retorno da Função de Salvar
+		If NewCliID <> 0 Then
+			'
+			'Retorna o número de Registro do Novo Cliente Cadastrado
+			If _Sit = EnumFlagEstado.NovoRegistro Then
+				_ClientePF.IDPessoa = NewCliID
+				lblIDCliente.Tag = NewCliID
+				lblIDCliente.Text = Format(lblIDCliente.Tag, "D4")
+			End If
+			'
+			'Altera a Situação
+			Sit = EnumFlagEstado.RegistroSalvo
+			BindingCliente.EndEdit()
+			'
+			'Salva as referências do Cliente
+			SalvaReferencias(NewCliID)
+			'
+			'Mensagem
+			AbrirDialog("Registro Salvo com sucesso!",
+						"Registro Salvo",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Information)
+			'
+			'--- Abre o formuário de ações após salvar
+			Dim frmAcao As New frmClienteAcoesDialog(Me)
+			frmAcao.ShowDialog()
+			'
+		Else
+			MsgBox("Registro NÃO pode ser salvo!", vbInformation, "Erro ao Salvar")
         End If
         '
     End Sub
@@ -694,17 +703,17 @@ Public Class frmClientePF
         '
         '--- para cada TabPage no tabPrincipal
         For Each t As vTabPage In tabPrincipal.TabPages
-            '
-            '--- para cada Controle no TabPage
-            For Each c As Control In t.Controls '--- se o controle for textbox então
-                '
-                If myTypes.Contains(c.GetType) Then
-                    AddHandler c.KeyDown, AddressOf txtControl_KeyDown
-                End If
-                '
-            Next
-            '
-        Next
+			'
+			'--- para cada Controle no TabPage
+			For Each c As Control In t.Controls
+				'
+				If myTypes.Contains(c.GetType) Then
+					AddHandler c.KeyDown, AddressOf txtControl_KeyDown
+				End If
+				'
+			Next
+			'
+		Next
         '
     End Sub
     '
@@ -717,12 +726,14 @@ Public Class frmClientePF
             '
             '--- in case to be the last control in a TAB
             If DirectCast(sender, Control).Tag = "nexttab" Then
-                '
-                If tabPrincipal.SelectedIndex = 0 Then
-                    tabPrincipal.SelectedTab = vtab2
-                    tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
-                ElseIf tabPrincipal.SelectedIndex = 1 Then
-                    tabPrincipal.SelectedTab = vtab3
+				'
+				If tabPrincipal.SelectedIndex = 0 Then
+					e.SuppressKeyPress = True
+					tabPrincipal.SelectedTab = vtab2
+					tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
+				ElseIf tabPrincipal.SelectedIndex = 1 Then
+					e.SuppressKeyPress = True
+					tabPrincipal.SelectedTab = vtab3
                     tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
                 End If
                 '
@@ -917,40 +928,53 @@ Public Class frmClientePF
         End Try
         '
     End Sub
-    '
+	'
 #End Region
-    '
+	'
 #Region "OUTRAS FUNÇÕES"
-    '
-    '-------------------------------------------------------------------------------------------------------
-    ' BTN PROCURAR RGCLIENTE
-    '-------------------------------------------------------------------------------------------------------
-    Private Sub btnProcuraRG_Click(sender As Object, e As EventArgs) Handles btnProcuraRG.Click
-        If txtRGCliente.Text.Length > 0 Then
-            If MessageBox.Show("Deseja substituir o Reg. Anterior desse Cliente" & vbNewLine &
-                               "por um novo validado pelo sistema?", "Novo Reg. Anterior",
-                               MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                               MessageBoxDefaultButton.Button2) = DialogResult.No Then
-                txtRGCliente.Focus()
-                Exit Sub
-            End If
-        End If
-        '
-        Dim db As New PessoaBLL
-        Dim NextRG As Integer? = db.ProcurarNextRG()
-        '
-        If Not IsNothing(NextRG) Then
-            txtRGCliente.Text = Format(NextRG, "0000")
-        End If
-        '
-        txtRGCliente.Focus()
-        '
-    End Sub
-    '
-    '-------------------------------------------------------------------------------------------------------
-    ' ESTADOCIVIL AO ALTERAR DESABILITAR O NOME E A RENDA DO CONJUGE
-    '-------------------------------------------------------------------------------------------------------
-    Private Sub cmbEstadoCivil_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbEstadoCivil.SelectedIndexChanged
+	'
+	'-------------------------------------------------------------------------------------------------------
+	' BTN PROCURAR RGCLIENTE
+	'-------------------------------------------------------------------------------------------------------
+	Private Sub btnProcuraRG_Click(sender As Object, e As EventArgs) Handles btnProcuraRG.Click
+		'
+		If txtRGCliente.Text.Length > 0 Then
+			If MessageBox.Show("Deseja substituir o Reg. Anterior desse Cliente" & vbNewLine &
+							   "por um novo validado pelo sistema?", "Novo Reg. Anterior",
+							   MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+							   MessageBoxDefaultButton.Button2) = DialogResult.No Then
+				txtRGCliente.Focus()
+				Exit Sub
+			End If
+		End If
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim db As New PessoaBLL
+			Dim NextRG As Integer? = db.ProcurarNextRG()
+			'
+			If Not IsNothing(NextRG) Then
+				txtRGCliente.Text = Format(NextRG, "0000")
+			End If
+			'
+			txtRGCliente.Focus()
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao Obter o Novo Reg do Cliente..." & vbNewLine &
+			ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
+	'-------------------------------------------------------------------------------------------------------
+	' ESTADOCIVIL AO ALTERAR DESABILITAR O NOME E A RENDA DO CONJUGE
+	'-------------------------------------------------------------------------------------------------------
+	Private Sub cmbEstadoCivil_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbEstadoCivil.SelectedIndexChanged
         If Not IsNumeric(cmbEstadoCivil.SelectedValue) Then Exit Sub
         ' 
         If cmbEstadoCivil.SelectedValue = 2 Or cmbEstadoCivil.SelectedValue = 5 Then '--- Nesse caso essa pessoa tem CONJUGE
@@ -999,44 +1023,44 @@ Public Class frmClientePF
     Private Sub btnCEPProcura_Click(sender As Object, e As EventArgs) Handles btnCEPProcura.Click
         Process.Start("http://www.buscacep.correios.com.br/sistemas/buscacep/buscaCepEndereco.cfm") 'Aqui você poderá alterar o site'
     End Sub
-    '
+	'
 #End Region
-    '
+	'
 #Region "REFERENCIAS"
-    '
-    Private Sub PreencheReferencias()
-        dgvReferencias.AutoGenerateColumns = False
-        dgvReferencias.DataSource = dtRef
-        '
-        FormataReferencias()
-        '
-    End Sub
-    '
-    Private Sub FormataReferencias()
-        Dim index As Integer
-        ' find the location of the column
-        index = dgvReferencias.Columns.IndexOf(dgvReferencias.Columns("ReferenciaTelefone"))
-
-        ' remove the existing column
-        dgvReferencias.Columns.RemoveAt(index)
-
-        ' create a new custom column
-        Dim dgvMaskedCol As New Controles.DataGridViewMaskedEditColumn
-        With dgvMaskedCol
-            .Mask = "(00) 90000-0000"
-            .ValidatingType = GetType(String)
-            .Name = "ReferenciaTelefone"
-            .DataPropertyName = "ReferenciaTelefone"
-            .HeaderText = "Telefone"
-            .Width = 130
-            .SortMode = DataGridViewColumnSortMode.Automatic  ' some more tweaking
-        End With
-
-        ' insert the new column at the same location
-        dgvReferencias.Columns.Insert(index, dgvMaskedCol)
-    End Sub
-    '
-    Private Sub SalvaReferencias(myID As Long)
+	'
+	Private Sub PreencheReferencias()
+		'
+		dgvReferencias.AutoGenerateColumns = False
+		dgvReferencias.DataSource = BindRef
+		'
+	End Sub
+	'
+	Private Sub FormataReferencias()
+		'
+		' find the location of the column
+		Dim index As Integer = dgvReferencias.Columns.IndexOf(dgvReferencias.Columns("ReferenciaTelefone"))
+		'
+		' remove the existing column
+		dgvReferencias.Columns.RemoveAt(index)
+		'
+		' create a new custom column
+		Dim dgvMaskedCol As New Controles.DataGridViewMaskedEditColumn
+		With dgvMaskedCol
+			.Mask = "(00) 90000-0000"
+			.ValidatingType = GetType(String)
+			.Name = "ReferenciaTelefone"
+			.DataPropertyName = "ReferenciaTelefone"
+			.HeaderText = "Telefone"
+			.Width = 130
+			.SortMode = DataGridViewColumnSortMode.Automatic  ' some more tweaking
+		End With
+		'
+		' insert the new column at the same location
+		dgvReferencias.Columns.Insert(index, dgvMaskedCol)
+		'
+	End Sub
+	'
+	Private Sub SalvaReferencias(myID As Long)
         '
         ' Verifica se as referências estão com campos completos
         If VerificaReferencias() = False Then
@@ -1048,11 +1072,13 @@ Public Class frmClientePF
         Try
             '--- Ampulheta ON
             Cursor = Cursors.WaitCursor
-            '
-            '--- Salva registro
-            dbRef.ClienteReferencia_INSERT(myID, dtRef)
-            '
-        Catch ex As Exception
+			'
+			'--- Salva registro
+			dbRef.ClienteReferencia_INSERT(myID, RefList.Where(
+										   Function(x) x.ReferenciaNome IsNot Nothing _
+										   AndAlso x.ReferenciaNome.Trim.Length > 0).ToList)
+			'
+		Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao salvar as Referências..." & vbNewLine &
                             ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
         Finally

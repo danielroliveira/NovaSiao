@@ -81,10 +81,10 @@ Public Class frmTransportadora
             propTransp = frmCNP.propPessoa
             '
             If IsNothing(propTransp.IDPessoa) Then
-                '
-                '--- SET VALORES DEFAULT DOS CAMPOS
-                _Transp.Cidade = ObterDefault("CidadePadrao")
-                _Transp.UF = ObterDefault("UFPadrao")
+				'
+				'--- SET VALORES DEFAULT DOS CAMPOS
+				_Transp.Cidade = ObterDefault("CidadePadrao")
+				_Transp.UF = ObterDefault("UFPadrao")
                 '
                 '--- SET NEW
                 Sit = EnumFlagEstado.NovoRegistro

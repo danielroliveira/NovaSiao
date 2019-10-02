@@ -77,13 +77,13 @@ Public Class frmClientePJ
             propClientePJ = frmCNP.propPessoa
             '
             If IsNothing(propClientePJ.IDPessoa) Then
-                '
-                '--- SET VALORES DEFAULT DOS CAMPOS
-                If _ClientePJ.Cidade.Trim.Length = 0 Then _ClientePJ.Cidade = ObterDefault("CidadePadrao")
-                If _ClientePJ.UF.Trim.Length = 0 Then _ClientePJ.UF = ObterDefault("UFPadrao")
-                '
-                '--- SET NEW
-                Sit = EnumFlagEstado.NovoRegistro
+				'
+				'--- SET VALORES DEFAULT DOS CAMPOS
+				If If(_ClientePJ.Cidade, "").Trim.Length = 0 Then _ClientePJ.Cidade = ObterDefault("CidadePadrao")
+				If If(_ClientePJ.UF, "").Trim.Length = 0 Then _ClientePJ.UF = ObterDefault("UFPadrao")
+				'
+				'--- SET NEW
+				Sit = EnumFlagEstado.NovoRegistro
             Else
                 AbrirDialog("Já existe um CLIENTE com esse mesmo CNPJ." & vbNewLine &
                             "O registro do CLIENTE encontrado será aberto...",

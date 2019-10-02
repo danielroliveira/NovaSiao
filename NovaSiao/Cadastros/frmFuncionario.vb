@@ -115,13 +115,13 @@ Public Class frmFuncionario
             propFunc = frmCNP.propPessoa
             '
             If IsNothing(propFunc.IDPessoa) Then
-                '
-                '--- SET VALORES DEFAULT DOS CAMPOS
-                If _Func.Cidade.Trim.Length = 0 Then _Func.Cidade = ObterDefault("CidadePadrao")
-                If _Func.UF.Trim.Length = 0 Then _Func.UF = ObterDefault("UFPadrao")
-                '
-                '--- SET NEW
-                Sit = EnumFlagEstado.NovoRegistro
+				'
+				'--- SET VALORES DEFAULT DOS CAMPOS
+				If If(_Func.Cidade, "").Trim.Length = 0 Then _Func.Cidade = ObterDefault("CidadePadrao")
+				If If(_Func.UF, "").Trim.Length = 0 Then _Func.UF = ObterDefault("UFPadrao")
+				'
+				'--- SET NEW
+				Sit = EnumFlagEstado.NovoRegistro
             Else
                 AbrirDialog("Já existe um FUNCIONÁRIO com esse mesmo CPF." & vbNewLine &
                             "O registro do FUNCIONÁRIO encontrado será aberto...",

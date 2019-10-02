@@ -284,32 +284,34 @@ Public Class PessoaBLL
             Throw ex
         End Try
     End Function
-    '
-    '------------------------------------------------------------------------------------------------------------------------------------------------
-    ' VERIFICA QUAL É O MAIOR RGCliente CADASTRADO E O RETORNA ACRESCIDO DE 1
-    '------------------------------------------------------------------------------------------------------------------------------------------------
-    Public Function ProcurarNextRG() As Integer?
-        Dim SQL As New SQLControl
+	'
+	'------------------------------------------------------------------------------------------------------------------------------------------------
+	' VERIFICA QUAL É O MAIOR RGCliente CADASTRADO E O RETORNA ACRESCIDO DE 1
+	'------------------------------------------------------------------------------------------------------------------------------------------------
+	Public Function ProcurarNextRG() As Integer?
+		'
+		Try
+			Dim SQL As New SQLControl
 
-        SQL.ExecQuery("SELECT MAX(tblPessoaCliente.RGCliente) FROM tblPessoaCliente")
+			SQL.ExecQuery("SELECT MAX(tblPessoaCliente.RGCliente) FROM tblPessoaCliente")
 
-        If SQL.HasException(True) Then
-            Return Nothing
-            Exit Function
-        End If
+			If SQL.HasException(True) Then Return Nothing
 
-        If SQL.RecordCount > 0 Then
-            Dim r As DataRow = SQL.DBDT.Rows(0)
-            Return CInt(r(0)) + 1
-        Else
-            Return 1
-        End If
-    End Function
-    '
-    '----------------------------------------------------------------------------------
-    '--- CHECK CPF / CNPJ DUPLICATION IN TBLPESSOAFISICA / JURIDICA
-    '----------------------------------------------------------------------------------
-    Private Function CheckCPFDuplication(CPF As String, notIDPessoa As Integer) As Boolean
+			If SQL.RecordCount > 0 AndAlso IsNumeric(SQL.DBDT.Rows(0)(0)) Then
+				Return CInt(SQL.DBDT.Rows(0)(0)) + 1
+			Else
+				Return 1
+			End If
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'----------------------------------------------------------------------------------
+	'--- CHECK CPF / CNPJ DUPLICATION IN TBLPESSOAFISICA / JURIDICA
+	'----------------------------------------------------------------------------------
+	Private Function CheckCPFDuplication(CPF As String, notIDPessoa As Integer) As Boolean
         '
         '--- CHECK DUPLICATION OF CPF
         '----------------------------------------------------------------------------------

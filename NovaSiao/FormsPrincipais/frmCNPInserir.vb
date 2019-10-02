@@ -95,12 +95,21 @@ Public Class frmCNPInserir
     ' FORMATAR A MÁSCARA DO CPF OU CNPJ
     '----------------------------------------------------------------------------------
     Private Sub txtCNPJ_Leave(sender As Object, e As EventArgs) Handles txtCNPJ.Leave
-        '
-        If IsNumeric(txtCNPJ.Text) Then
-            txtCNPJ.Text = Utilidades.CNPConvert(txtCNPJ.Text)
-        End If
-        '
-    End Sub
+		'
+		If txtCNPJ.Text.Trim.Length > 0 AndAlso IsNumeric(txtCNPJ.Text) Then
+			Try
+				txtCNPJ.Text = Utilidades.CNPConvert(txtCNPJ.Text)
+			Catch ex As AppException
+				AbrirDialog(ex.Message, "Valor Inválido", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+			Catch ex As Exception
+				'
+				MessageBox.Show("Uma exceção ocorreu ao formatar CNP..." & vbNewLine &
+								ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+				'
+			End Try
+		End If
+		'
+	End Sub
     '
     '--- ON ENTER RETIRA A FORMATACAO
     '----------------------------------------------------------------------------------

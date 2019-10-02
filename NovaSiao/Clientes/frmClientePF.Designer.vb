@@ -71,8 +71,8 @@ Partial Class frmClientePF
         Me.Label42 = New System.Windows.Forms.Label()
         Me.Label41 = New System.Windows.Forms.Label()
         Me.Label39 = New System.Windows.Forms.Label()
-        Me.dgvReferencias = New System.Windows.Forms.DataGridView()
-        Me.ReferenciaNome = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.dgvReferencias = New Controles.ctrlDataGridView()
+		Me.ReferenciaNome = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Afinidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ReferenciaTelefone = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.txtObservacao = New System.Windows.Forms.TextBox()
@@ -1709,8 +1709,8 @@ Partial Class frmClientePF
     Friend WithEvents Label36 As Label
     Friend WithEvents txtObservacao As TextBox
     Friend WithEvents Label37 As Label
-    Friend WithEvents dgvReferencias As DataGridView
-    Friend WithEvents Label38 As Label
+	Friend WithEvents dgvReferencias As Controles.ctrlDataGridView
+	Friend WithEvents Label38 As Label
     Friend WithEvents lbl_IdTexto As Label
     Friend WithEvents tsMenuCliente As ToolStrip
     Friend WithEvents tsbProcurar As ToolStripButton

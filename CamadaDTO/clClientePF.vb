@@ -1,5 +1,5 @@
 ﻿Imports System.ComponentModel
-
+'
 Public Class clClientePF
     Inherits clPessoaFisica
     Implements IEditableObject
@@ -357,4 +357,13 @@ Public Class clClientePF
     '
 #End Region
     '
+End Class
+'
+Public Class clClienteReferencia
+	'
+	Property IDCliente As Integer?
+	Property ReferenciaNome As String
+	Property Afinidade As String
+	Property ReferenciaTelefone As String
+	'
 End Class
