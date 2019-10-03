@@ -253,7 +253,7 @@ Partial Class frmClienteSimplesProcurar
 		Me.MenuDatagrid.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.MenuDatagrid.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAtivar, Me.miDesativar})
 		Me.MenuDatagrid.Name = "MenuFab"
-		Me.MenuDatagrid.Size = New System.Drawing.Size(191, 52)
+		Me.MenuDatagrid.Size = New System.Drawing.Size(191, 74)
 		'
 		'miAtivar
 		'

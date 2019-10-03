@@ -249,9 +249,9 @@ Public Class frmFornecedor
     '--- BTN PROCURAR
     Private Sub btnProcurar_Click(sender As Object, e As EventArgs) Handles btnProcurar.Click
         Close()
-        '
-        Dim fProc As New frmFornecedorProcurar
-        fProc.Show()
+		'
+		Dim fProc As New frmFornecedorProcurar(False)
+		fProc.Show()
         '
     End Sub
     '

@@ -1478,47 +1478,64 @@ Public Class frmPedido
     End Sub
     '
     Private Sub btnProcFornecedores_Click(sender As Object, e As EventArgs) Handles btnProcFornecedores.Click
-        '
-        Dim frmF As New frmFornecedorProcurar(True, Me)
-        Dim oldIDFornecedor As Integer? = _pedido.IDFornecedor
-        '
-        frmF.ShowDialog()
-        If frmF.DialogResult = DialogResult.Cancel Then
-            _pedido.Fornecedor = String.Empty
-            _pedido.IDFornecedor = Nothing
-            _pedido.TelefoneContato = String.Empty
-            _pedido.VendedorNome = String.Empty
-            _pedido.EmailVendas = String.Empty
-        Else
-            _pedido.Fornecedor = frmF.propFornecedor_Escolha.Cadastro
-            _pedido.IDFornecedor = frmF.propFornecedor_Escolha.IDPessoa
-            _pedido.TelefoneContato = frmF.propFornecedor_Escolha.TelefoneA
-            _pedido.VendedorNome = frmF.propFornecedor_Escolha.Vendedor
-            _pedido.EmailVendas = frmF.propFornecedor_Escolha.EmailVendas
-        End If
-        '
-        txtFornecedor.DataBindings("text").ReadValue()
-        txtEmailVendas.DataBindings("text").ReadValue()
-        txtVendedorNome.DataBindings("text").ReadValue()
-        txtTelefoneContato.DataBindings("text").ReadValue()
-        '
-        If Sit = EnumFlagEstado.RegistroSalvo Then
-            If IIf(IsNothing(oldIDFornecedor), 0, oldIDFornecedor) <> IIf(IsNothing(_pedido.IDFornecedor), 0, _pedido.IDFornecedor) Then
-                Sit = EnumFlagEstado.Alterado
-            End If
-        End If
-        '
-        txtFornecedor.Focus()
-        '
-    End Sub
-    '
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim oldIDFornecedor As Integer? = Nothing
+			'
+			Using frmF As New frmFornecedorProcurar(True, Me)
+				'
+				oldIDFornecedor = _pedido.IDFornecedor
+				'
+				frmF.ShowDialog()
+				If frmF.DialogResult = DialogResult.Cancel Then
+					_pedido.Fornecedor = String.Empty
+					_pedido.IDFornecedor = Nothing
+					_pedido.TelefoneContato = String.Empty
+					_pedido.VendedorNome = String.Empty
+					_pedido.EmailVendas = String.Empty
+				Else
+					_pedido.Fornecedor = frmF.propFornecedor_Escolha.Cadastro
+					_pedido.IDFornecedor = frmF.propFornecedor_Escolha.IDPessoa
+					_pedido.TelefoneContato = frmF.propFornecedor_Escolha.TelefoneA
+					_pedido.VendedorNome = frmF.propFornecedor_Escolha.Vendedor
+					_pedido.EmailVendas = frmF.propFornecedor_Escolha.EmailVendas
+				End If
+				'
+			End Using
+			'
+			txtFornecedor.DataBindings("text").ReadValue()
+			txtEmailVendas.DataBindings("text").ReadValue()
+			txtVendedorNome.DataBindings("text").ReadValue()
+			txtTelefoneContato.DataBindings("text").ReadValue()
+			'
+			If Sit = EnumFlagEstado.RegistroSalvo Then
+				If IIf(IsNothing(oldIDFornecedor), 0, oldIDFornecedor) <> IIf(IsNothing(_pedido.IDFornecedor), 0, _pedido.IDFornecedor) Then
+					Sit = EnumFlagEstado.Alterado
+				End If
+			End If
+			'
+			txtFornecedor.Focus()
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao Abrir formulário de Fornecedor..." & vbNewLine &
+			ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
 #End Region
-    '
+	'
 #Region "SALVAR REGISTRO"
-    '
-    ' SALVAR O REGISTRO
-    '---------------------------------------------------------------------------------------------------
-    Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
+	'
+	' SALVAR O REGISTRO
+	'---------------------------------------------------------------------------------------------------
+	Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
         '
         '--- verifica os dados se os campos estão preechidos
         If VerificaDados() = False Then Exit Sub

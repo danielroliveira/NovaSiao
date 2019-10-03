@@ -166,18 +166,19 @@ Public Class AcaoGlobal
         '
         Dim IDFornecedor As Integer = fForn.propFornecedor_Escolha.IDPessoa
         Dim FornecedorUF As String = fForn.propFornecedor_Escolha.UF
-        '
-        '--- Pergunta ao Usuário se Deseja inserir nova COMPRA
-        If AbrirDialog("Você deseja realmente inserir uma NOVA COMPRA?",
-                       "Inserir Nova Compra",
-                       frmDialog.DialogType.OK,
-                       frmDialog.DialogIcon.Information) <> DialogResult.OK Then
-            Return Nothing
-        End If
-        '
-        '--- Insere um novo Registro de COMPRA
-        '---------------------------------------------------------------------------------------
-        Dim cmpBLL As New CompraBLL
+		'
+		'--- Pergunta ao Usuário se Deseja inserir nova COMPRA
+		If AbrirDialog("Você deseja inserir uma NOVA COMPRA?" & vbNewLine &
+					   fForn.propFornecedor_Escolha.Cadastro,
+					   "Inserir Nova Compra",
+					   frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question) <> DialogResult.Yes Then
+			Return Nothing
+		End If
+		'
+		'--- Insere um novo Registro de COMPRA
+		'---------------------------------------------------------------------------------------
+		Dim cmpBLL As New CompraBLL
         Dim newCompra As New clCompra
         Dim tranBLL As New TransacaoBLL
         '
