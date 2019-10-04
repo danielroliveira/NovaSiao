@@ -74,6 +74,7 @@
     <Compile Include="clClientePJ.vb" />
     <Compile Include="clClienteSimples.vb" />
     <Compile Include="clCompra.vb" />
+    <Compile Include="clConsignacao.vb" />
     <Compile Include="clConta.vb" />
     <Compile Include="clCredor.vb" />
     <Compile Include="clDadosEmpresa.vb" />
