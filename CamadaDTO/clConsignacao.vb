@@ -370,23 +370,373 @@ Public Class clConsignacao : Implements IEditableObject
 	'
 End Class
 '
-Public Class clConsignacaoDevolucao
+Public Class clConsignacaoDevolucao : Implements IEditableObject
 	'
-	Sub New(IDConsignacao As Integer)
-		IDConsignacaoDevolucao = Nothing
-		IDConsignacaoOrigem = IDConsignacao
-		ValorProdutos = 0
-		ValorAcrescimos = 0
-		ValorDescontos = 0
-		TotalDevolucao = 0
+#Region "ESTRUTURA DOS DADOS"
+	Structure ConsigStructure ' alguns usam FRIEND em vez de DIM
+		'
+		' TBLTRANSACAO =====================================================
+		Dim _IDConsignacaoDevolucao As Integer?
+		Dim _IDPessoaDestino As Integer
+		' Cadastro As String
+		' CNP As String
+		' UF As String
+		' Cidade As String
+		Dim _IDPessoaOrigem As Integer
+		' Dim _ApelidoFilial As String
+		Dim _IDOperacao As Byte
+		Dim _IDSituacao As Byte
+		Dim _IDUser As Integer
+		Dim _CFOP As Int16
+		Dim _TransacaoData As Date
+		'
+		' TBLCONSIGNACAO DEVOLUCAO =====================================================
+		Dim _IDConsignacaoOrigem As Integer
+		Dim _ValorProdutos As Decimal
+		Dim _ValorAcrescimos As Decimal
+		Dim _ValorDescontos As Decimal
+		Dim _TotalDevolucao As Decimal
+		Dim _Observacao As String
+		'
+		' TBLFRETE =====================================================
+		' Transportadora As String
+		Dim _IDTransportadora As Integer?
+		Dim _FreteTipo As Byte ' 0="Sem Frete" | 1="Emitente" | 2="Destinatário" | 3=Reembolso | 4="A Cobrar"
+		Dim _FreteValor As Decimal?
+		Dim _Volumes As Int16?
+		Dim _IDFreteDespesa As Integer?
+		'
+	End Structure
+#End Region
+	'
+#Region "PRIVATE VARIABLES"
+	Private CData As ConsigStructure
+	Private backupData As ConsigStructure
+	Private inTxn As Boolean = False
+#End Region
+	'
+#Region "IMPLEMENTS EVENTS"
+	Public Sub New()
+		CData = New ConsigStructure()
+		With CData
+			._IDConsignacaoDevolucao = Nothing
+			._TransacaoData = DateTime.Today
+			._IDSituacao = 0
+			._FreteTipo = 0
+			._TotalDevolucao = 0
+			._ValorDescontos = 0
+			._ValorAcrescimos = 0
+			._ValorProdutos = 0
+		End With
 	End Sub
 	'
-	Property IDConsignacaoDevolucao As Integer?
-	Property IDConsignacaoOrigem As Integer
-	Property ValorProdutos As Decimal
-	Property ValorAcrescimos As Decimal
-	Property ValorDescontos As Decimal
-	Property TotalDevolucao As Decimal
+	'-- IMPLEMENTS IEditableObject
+	Public Sub BeginEdit() Implements IEditableObject.BeginEdit
+		If Not inTxn Then
+			Me.backupData = CData
+			inTxn = True
+		End If
+	End Sub
+	'
+	Public Sub CancelEdit() Implements IEditableObject.CancelEdit
+		If inTxn Then
+			Me.CData = backupData
+			inTxn = False
+		End If
+	End Sub
+	'
+	Public Sub EndEdit() Implements IEditableObject.EndEdit
+		If inTxn Then
+			backupData = New ConsigStructure()
+			inTxn = False
+		End If
+	End Sub
+	'
+	'-- _EVENTO PUBLIC AOALTERAR
+	Public Event AoAlterar()
+	'
+	Public Overrides Function ToString() As String
+		Return IDConsignacaoDevolucao.ToString
+	End Function
+	'
+	Public ReadOnly Property RegistroAlterado As Boolean
+		Get
+			Return inTxn
+		End Get
+	End Property
+	'
+#End Region
+	'
+#Region "PROPRIEDADES"
+	'
+	'===========================================================================================
+	'--- TBLTRANSACAO
+	'===========================================================================================
+	'
+	Property IDConsignacaoDevolucao() As Nullable(Of Integer)
+		Get
+			Return CData._IDConsignacaoDevolucao
+		End Get
+		Set(value As Nullable(Of Integer))
+			CData._IDConsignacaoDevolucao = value
+		End Set
+	End Property
+	'
+	Property IDPessoaDestino() As Integer
+		Get
+			Return CData._IDPessoaDestino
+		End Get
+		Set(value As Integer)
+			If Not IsNothing(CData._IDPessoaDestino) AndAlso value <> CData._IDPessoaDestino Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._IDPessoaDestino = value
+		End Set
+	End Property
+	'
+	'--- PROPRIEDADES SOMENTE LEITURA
+	Public Property Cadastro
+	Public Property CNP
+	Public Property UF
+	Public Property Cidade
+	Public Property ApelidoFilial
+	'
+	'--- Propriedade IDPessoaOrigem
+	Public Property IDPessoaOrigem() As Integer?
+		Get
+			Return CData._IDPessoaOrigem
+		End Get
+		Set(ByVal value As Integer?)
+			If value <> CData._IDPessoaOrigem Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._IDPessoaOrigem = value
+		End Set
+	End Property
+	'
+	'--- Propriedade IDOperacao
+	Public Property IDOperacao() As Byte
+		Get
+			Return CData._IDOperacao
+		End Get
+		Set(ByVal value As Byte)
+			If value <> CData._IDOperacao Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._IDOperacao = value
+		End Set
+	End Property
+	'
+	Property IDSituacao() As Byte
+		Get
+			Return CData._IDSituacao
+		End Get
+		Set(value As Byte)
+			If Not IsNothing(CData._IDSituacao) AndAlso value <> CData._IDSituacao Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._IDSituacao = value
+		End Set
+	End Property
+	'
+	Property Situacao As String ' texto da Situacao da Venda
+	'
+	Property IDUser() As Integer
+		Get
+			Return CData._IDUser
+		End Get
+		Set(value As Integer)
+			If Not IsNothing(CData._IDUser) AndAlso value <> CData._IDUser Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._IDUser = value
+		End Set
+	End Property
+	'
+	Property CFOP() As Int16
+		Get
+			Return CData._CFOP
+		End Get
+		Set(value As Int16)
+			If Not IsNothing(CData._CFOP) AndAlso value <> CData._CFOP Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._CFOP = value
+		End Set
+	End Property
+	'
+	Property TransacaoData() As Date
+		Get
+			Return CData._TransacaoData
+		End Get
+		Set(value As Date)
+			If Not IsNothing(CData._TransacaoData) AndAlso value <> CData._TransacaoData Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._TransacaoData = value
+		End Set
+	End Property
+	'
+	'===========================================================================================
+	'--- TBLCONSIGNACAO
+	'===========================================================================================
+	'
+	'--- Propriedade IDConsignacaoOrigem
+	'------------------------------------------------------
+	Public Property IDConsignacaoOrigem() As Integer
+		Get
+			Return CData._IDConsignacaoOrigem
+		End Get
+		Set(ByVal value As Integer)
+			If value <> CData._IDConsignacaoOrigem Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._IDConsignacaoOrigem = value
+		End Set
+	End Property
+	'
+	Property FreteTipo() As Byte
+		Get
+			Return CData._FreteTipo
+		End Get
+		Set(value As Byte)
+			If Not IsNothing(CData._FreteTipo) AndAlso value <> CData._FreteTipo Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._FreteTipo = value
+		End Set
+	End Property
+	'
+	'--- Propriedade ValorProdutos
+	Public Property ValorProdutos() As Decimal
+		Get
+			Return CData._ValorProdutos
+		End Get
+		Set(ByVal value As Decimal)
+			If value <> CData._ValorProdutos Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._ValorProdutos = value
+		End Set
+	End Property
+	'
+	'--- Propriedade ValorAcrescimos
+	Public Property ValorAcrescimos() As Decimal
+		Get
+			Return CData._ValorAcrescimos
+		End Get
+		Set(ByVal value As Decimal)
+			If value <> CData._ValorAcrescimos Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._ValorAcrescimos = value
+		End Set
+	End Property
+	'
+	'--- Propriedade Descontos
+	Public Property ValorDescontos() As Decimal
+		Get
+			Return CData._ValorDescontos
+		End Get
+		Set(ByVal value As Decimal)
+			If value <> CData._ValorDescontos Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._ValorDescontos = value
+		End Set
+	End Property
+	'
+	Property TotalDevolucao() As Decimal
+		Get
+			Return CData._TotalDevolucao
+		End Get
+		Set(value As Decimal)
+			If Not IsNothing(CData._TotalDevolucao) AndAlso value <> CData._TotalDevolucao Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._TotalDevolucao = value
+		End Set
+	End Property
+	'
+	Property Observacao As String
+		Get
+			Return CData._Observacao
+		End Get
+		Set(value As String)
+			If Not IsNothing(CData._Observacao) AndAlso value <> CData._Observacao Then
+				RaiseEvent AoAlterar()
+			End If
+			CData._Observacao = value
+		End Set
+	End Property
+	'
+	'===========================================================================================
+	'--- TBLVENDAFRETE
+	'===========================================================================================
+	'
+	'--- Propriedade IDTransportadora
+	Public Property IDTransportadora() As Integer?
+		Get
+			Return CData._IDTransportadora
+		End Get
+		Set(ByVal value As Integer?)
+			If Not IsNothing(CData._IDTransportadora) Then
+				If value <> CData._IDTransportadora Then
+					RaiseEvent AoAlterar()
+				End If
+			End If
+			CData._IDTransportadora = value
+		End Set
+	End Property
+	'
+	Public Property Transportadora
+	'
+	'--- Propriedade FreteValor
+	Public Property FreteValor() As Decimal?
+		Get
+			Return CData._FreteValor
+		End Get
+		Set(ByVal value As Decimal?)
+			If Not IsNothing(CData._FreteValor) Then
+				If value <> CData._FreteValor Then
+					RaiseEvent AoAlterar()
+				End If
+			End If
+			CData._FreteValor = value
+		End Set
+	End Property
+	'
+	'--- Propriedade Volumes
+	Public Property Volumes() As Int16?
+		Get
+			Return CData._Volumes
+		End Get
+		Set(ByVal value As Int16?)
+			If Not IsNothing(CData._Volumes) Then
+				If value <> CData._Volumes Then
+					RaiseEvent AoAlterar()
+				End If
+			End If
+			CData._Volumes = value
+		End Set
+	End Property
+	'
+	'--- Propriedade IDFreteDespesa do Frete
+	Public Property IDFreteDespesa() As Integer?
+		Get
+			Return CData._IDFreteDespesa
+		End Get
+		Set(ByVal value As Integer?)
+			If Not IsNothing(CData._IDFreteDespesa) Then
+				If value <> CData._IDFreteDespesa Then
+					RaiseEvent AoAlterar()
+				End If
+			End If
+			CData._IDFreteDespesa = value
+		End Set
+	End Property
+	'
+#End Region
 	'
 End Class
 '
@@ -402,12 +752,31 @@ Public Class clConsignacaoCompra
 	End Sub
 	'
 	Property IDConsignacaoCompra As Integer?
+	'
 	Property IDConsignacao As Integer
+	'
 	Property CobrancaTipo As Byte 'tinyint ==> 0 = SemCobrança | 1 = A Vista | 2 = Parcelada
-	Property CobrancaTipoTexto As String
+	'
 	Property Despesas As Decimal
+	'
 	Property Descontos As Decimal
+	'
 	Property TotalCompra As Decimal
+	'
+	ReadOnly Property CobrancaTipoTexto As String
+		Get
+			Select Case CobrancaTipo
+				Case 0
+					Return "Sem Cobrança"
+				Case 1
+					Return "A Vista"
+				Case 2
+					Return "Parcelada"
+				Case Else
+					Return ""
+			End Select
+		End Get
+	End Property
 	'
 End Class
 '

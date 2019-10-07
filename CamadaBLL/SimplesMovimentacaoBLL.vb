@@ -1,7 +1,6 @@
 ﻿Imports CamadaDTO
 Imports CamadaDAL
-Imports System.Data.SqlClient
-
+'
 Public Class SimplesMovimentacaoBLL
     '
     Private SQL As New SQLControl
@@ -35,10 +34,9 @@ Public Class SimplesMovimentacaoBLL
     '--------------------------------------------------------------------------------------------
     Public Function InsertSimplesSaida_Procedure_DT(ByVal _sim As clSimplesSaida) As DataTable
         Dim objDB As New AcessoDados
-        Dim Conn As New SqlCommand
-        '
-        'Adiciona os Parâmetros
-        objDB.LimparParametros()
+		'
+		'Adiciona os Parâmetros
+		objDB.LimparParametros()
         '
         '-- PARAMETROS DA TBLTRANSACAO
         '@IDPessoaDestino AS INT, x
@@ -73,10 +71,9 @@ Public Class SimplesMovimentacaoBLL
     '--------------------------------------------------------------------------------------------
     Public Function AtualizaSimplesSaida_Procedure_DT(ByVal _sim As clSimplesSaida) As Integer
         Dim objDB As New AcessoDados
-        Dim Conn As New SqlCommand
-        '
-        'Adiciona os Parâmetros
-        objDB.LimparParametros()
+		'
+		'Adiciona os Parâmetros
+		objDB.LimparParametros()
         '
         '-- PARAMETROS DA TBLTRANSACAO
         objDB.AdicionarParametros("@IDTransacao", _sim.IDTransacao)
@@ -487,11 +484,9 @@ Public Class SimplesMovimentacaoBLL
         Else
             objDB = myAcesso
         End If
-        '
-        Dim Conn As New SqlCommand
-        '
-        'Adiciona os Parâmetros
-        objDB.LimparParametros()
+		'
+		'Adiciona os Parâmetros
+		objDB.LimparParametros()
         objDB.BeginTransaction()
         '
         '-- PARAMETROS DA TBLTRANSACAO

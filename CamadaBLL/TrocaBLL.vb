@@ -1,6 +1,5 @@
 ﻿Imports CamadaDTO
 Imports CamadaDAL
-Imports System.Data.SqlClient
 '
 Public Class TrocaBLL
     '
@@ -98,10 +97,9 @@ Public Class TrocaBLL
                                                Optional dBTran As Object = Nothing) As Object
         '
         Dim objDB As AcessoDados = If(dBTran, New AcessoDados)
-        Dim Conn As New SqlCommand
-        '
-        'Limpa os Parâmetros
-        objDB.LimparParametros()
+		'
+		'Limpa os Parâmetros
+		objDB.LimparParametros()
         '
         '--- Inserir Parametros
         objDB.AdicionarParametros("@IDTroca", _troca.IDTroca)
@@ -180,10 +178,9 @@ Public Class TrocaBLL
     '--------------------------------------------------------------------------------------------
     Public Function InsereNovaTroca_Procedure_DT(ByVal _troca As clTroca, _IDUser As Integer) As DataTable
         Dim objDB As New AcessoDados
-        Dim Conn As New SqlCommand
-        '
-        'Adiciona os Parâmetros
-        objDB.LimparParametros()
+		'
+		'Adiciona os Parâmetros
+		objDB.LimparParametros()
         '
         '@IDUser AS INT
         objDB.AdicionarParametros("@IDUser", _IDUser)

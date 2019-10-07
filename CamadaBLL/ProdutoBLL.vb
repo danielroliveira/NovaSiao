@@ -1,6 +1,5 @@
 ﻿Imports CamadaDTO
 Imports CamadaDAL
-Imports System.Data.SqlClient
 '
 '=================================================================================================================
 ' PRODUTO BLL
@@ -254,42 +253,43 @@ Public Class ProdutoBLL
     Public Function AtualizaProduto_Procedure_ID(ByVal _prod As clProduto, _filial As Integer) As Integer
         '
         Dim objDB As New AcessoDados
-        Dim Conn As New SqlCommand
-        '
-        'PARAMETROS DA TBLPRODUTO
-        Conn.Parameters.Add(New SqlParameter("@IDProduto", _prod.IDProduto))
-        Conn.Parameters.Add(New SqlParameter("@RGProduto", _prod.RGProduto))
-        Conn.Parameters.Add(New SqlParameter("@Produto", _prod.Produto))
-        Conn.Parameters.Add(New SqlParameter("@CodBarrasA", _prod.CodBarrasA))
-        Conn.Parameters.Add(New SqlParameter("@IDFabricante", _prod.IDFabricante))
-        Conn.Parameters.Add(New SqlParameter("@IDProdutoTipo", _prod.IDProdutoTipo))
-        Conn.Parameters.Add(New SqlParameter("@IDProdutoSubTipo", _prod.IDProdutoSubTipo))
-        Conn.Parameters.Add(New SqlParameter("@IDCategoria", _prod.IDCategoria))
-        Conn.Parameters.Add(New SqlParameter("@Autor", _prod.Autor))
-        Conn.Parameters.Add(New SqlParameter("@Unidade", _prod.Unidade))
-        Conn.Parameters.Add(New SqlParameter("@PCompra", _prod.PCompra))
-        Conn.Parameters.Add(New SqlParameter("@DescontoCompra", _prod.DescontoCompra))
-        Conn.Parameters.Add(New SqlParameter("@PVenda", _prod.PVenda))
-        Conn.Parameters.Add(New SqlParameter("@ProdutoAtivo", _prod.ProdutoAtivo))
-        Conn.Parameters.Add(New SqlParameter("@SitTributaria", _prod.SitTributaria))
-        Conn.Parameters.Add(New SqlParameter("@NCM", _prod.NCM))
-        Conn.Parameters.Add(New SqlParameter("@UltAltera", _prod.UltAltera))
-        Conn.Parameters.Add(New SqlParameter("@EntradaData", _prod.EntradaData))
-        Conn.Parameters.Add(New SqlParameter("@Movimento", _prod.Movimento))
-        '
-        ' PARAMETROS DA TBLESTOQUE
-        Conn.Parameters.Add(New SqlParameter("@EstoqueNivel", _prod.EstoqueNivel))
-        Conn.Parameters.Add(New SqlParameter("@EstoqueIdeal", _prod.EstoqueIdeal))
-        Conn.Parameters.Add(New SqlParameter("@IDFilial", _filial))
-        '
-        Try
-            Dim strReturn As String = objDB.ExecuteProcedureID("uspProduto_Alterar", Conn.Parameters)
-            If IsNumeric(strReturn) Then
-                Return CInt(strReturn)
-            Else
-                Throw New Exception(strReturn)
-            End If
-        Catch ex As Exception
+		'
+		'PARAMETROS DA TBLPRODUTO
+		objDB.AdicionarParametros("@IDProduto", _prod.IDProduto)
+		objDB.AdicionarParametros("@RGProduto", _prod.RGProduto)
+		objDB.AdicionarParametros("@Produto", _prod.Produto)
+		objDB.AdicionarParametros("@CodBarrasA", _prod.CodBarrasA)
+		objDB.AdicionarParametros("@IDFabricante", _prod.IDFabricante)
+		objDB.AdicionarParametros("@IDProdutoTipo", _prod.IDProdutoTipo)
+		objDB.AdicionarParametros("@IDProdutoSubTipo", _prod.IDProdutoSubTipo)
+		objDB.AdicionarParametros("@IDCategoria", _prod.IDCategoria)
+		objDB.AdicionarParametros("@Autor", _prod.Autor)
+		objDB.AdicionarParametros("@Unidade", _prod.Unidade)
+		objDB.AdicionarParametros("@PCompra", _prod.PCompra)
+		objDB.AdicionarParametros("@DescontoCompra", _prod.DescontoCompra)
+		objDB.AdicionarParametros("@PVenda", _prod.PVenda)
+		objDB.AdicionarParametros("@ProdutoAtivo", _prod.ProdutoAtivo)
+		objDB.AdicionarParametros("@SitTributaria", _prod.SitTributaria)
+		objDB.AdicionarParametros("@NCM", _prod.NCM)
+		objDB.AdicionarParametros("@UltAltera", _prod.UltAltera)
+		objDB.AdicionarParametros("@EntradaData", _prod.EntradaData)
+		objDB.AdicionarParametros("@Movimento", _prod.Movimento)
+		'
+		' PARAMETROS DA TBLESTOQUE
+		objDB.AdicionarParametros("@EstoqueNivel", _prod.EstoqueNivel)
+		objDB.AdicionarParametros("@EstoqueIdeal", _prod.EstoqueIdeal)
+		objDB.AdicionarParametros("@IDFilial", _filial)
+		'
+		Try
+			Dim strReturn As String = objDB.ExecutarManipulacao(CommandType.StoredProcedure, "uspProduto_Alterar")
+			'
+			If IsNumeric(strReturn) Then
+				Return CInt(strReturn)
+			Else
+				Throw New Exception(strReturn)
+			End If
+			'
+		Catch ex As Exception
             Throw ex
         End Try
 
@@ -301,38 +301,37 @@ Public Class ProdutoBLL
     Public Function SalvaNovoProduto_Procedure_ID(ByVal _prod As clProduto, _filial As Integer) As Long
         '
         Dim objDB As New AcessoDados
-        Dim Conn As New SqlCommand
-
-        'Adiciona os Parâmetros
-        Conn.Parameters.Add(New SqlParameter("@RGProduto", _prod.RGProduto))
-        Conn.Parameters.Add(New SqlParameter("@Produto", _prod.Produto))
-        Conn.Parameters.Add(New SqlParameter("@CodBarrasA", _prod.CodBarrasA))
-        Conn.Parameters.Add(New SqlParameter("@IDFabricante", _prod.IDFabricante))
-        Conn.Parameters.Add(New SqlParameter("@IDProdutoTipo", _prod.IDProdutoTipo))
-        Conn.Parameters.Add(New SqlParameter("@IDProdutoSubTipo", _prod.IDProdutoSubTipo))
-        Conn.Parameters.Add(New SqlParameter("@IDCategoria", _prod.IDCategoria))
-        Conn.Parameters.Add(New SqlParameter("@Autor", _prod.Autor))
-        Conn.Parameters.Add(New SqlParameter("@Unidade", _prod.Unidade))
-        Conn.Parameters.Add(New SqlParameter("@PCompra", _prod.PCompra))
-        Conn.Parameters.Add(New SqlParameter("@DescontoCompra", _prod.DescontoCompra))
-        Conn.Parameters.Add(New SqlParameter("@PVenda", _prod.PVenda))
-        Conn.Parameters.Add(New SqlParameter("@ProdutoAtivo", _prod.ProdutoAtivo))
-        Conn.Parameters.Add(New SqlParameter("@SitTributaria", _prod.SitTributaria))
-        Conn.Parameters.Add(New SqlParameter("@NCM", _prod.NCM))
-        Conn.Parameters.Add(New SqlParameter("@UltAltera", _prod.UltAltera))
-        Conn.Parameters.Add(New SqlParameter("@EntradaData", _prod.EntradaData))
-        Conn.Parameters.Add(New SqlParameter("@Movimento", _prod.Movimento))
-        '
-        ' PARAMETROS DA TBLESTOQUE
-        Conn.Parameters.Add(New SqlParameter("@EstoqueNivel", _prod.EstoqueNivel))
-        Conn.Parameters.Add(New SqlParameter("@EstoqueIdeal", _prod.EstoqueIdeal))
-        Conn.Parameters.Add(New SqlParameter("@IDFilial", _filial))
-        '
-        Try
-            '
-            Dim obj As Object = objDB.ExecuteProcedureID("uspProduto_Inserir", Conn.Parameters)
-            '
-            If Not IsNothing(obj) AndAlso IsNumeric(obj) Then
+		'
+		'Adiciona os Parâmetros
+		objDB.AdicionarParametros("@RGProduto", _prod.RGProduto)
+		objDB.AdicionarParametros("@Produto", _prod.Produto)
+		objDB.AdicionarParametros("@CodBarrasA", _prod.CodBarrasA)
+		objDB.AdicionarParametros("@IDFabricante", _prod.IDFabricante)
+		objDB.AdicionarParametros("@IDProdutoTipo", _prod.IDProdutoTipo)
+		objDB.AdicionarParametros("@IDProdutoSubTipo", _prod.IDProdutoSubTipo)
+		objDB.AdicionarParametros("@IDCategoria", _prod.IDCategoria)
+		objDB.AdicionarParametros("@Autor", _prod.Autor)
+		objDB.AdicionarParametros("@Unidade", _prod.Unidade)
+		objDB.AdicionarParametros("@PCompra", _prod.PCompra)
+		objDB.AdicionarParametros("@DescontoCompra", _prod.DescontoCompra)
+		objDB.AdicionarParametros("@PVenda", _prod.PVenda)
+		objDB.AdicionarParametros("@ProdutoAtivo", _prod.ProdutoAtivo)
+		objDB.AdicionarParametros("@SitTributaria", _prod.SitTributaria)
+		objDB.AdicionarParametros("@NCM", _prod.NCM)
+		objDB.AdicionarParametros("@UltAltera", _prod.UltAltera)
+		objDB.AdicionarParametros("@EntradaData", _prod.EntradaData)
+		objDB.AdicionarParametros("@Movimento", _prod.Movimento)
+		'
+		' PARAMETROS DA TBLESTOQUE
+		objDB.AdicionarParametros("@EstoqueNivel", _prod.EstoqueNivel)
+		objDB.AdicionarParametros("@EstoqueIdeal", _prod.EstoqueIdeal)
+		objDB.AdicionarParametros("@IDFilial", _filial)
+		'
+		Try
+			'
+			Dim obj As Object = objDB.ExecutarManipulacao(CommandType.StoredProcedure, "uspProduto_Inserir")
+			'
+			If Not IsNothing(obj) AndAlso IsNumeric(obj) Then
                 Return obj
             Else
                 Throw New Exception(obj)

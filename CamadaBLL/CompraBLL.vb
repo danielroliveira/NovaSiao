@@ -1,7 +1,6 @@
 ﻿Imports CamadaDTO
 Imports CamadaDAL
-Imports System.Data.SqlClient
-
+'
 Public Class CompraBLL
     '
     '--------------------------------------------------------------------------------------------
@@ -90,93 +89,78 @@ Public Class CompraBLL
     ' UPDATE
     '--------------------------------------------------------------------------------------------
     Public Function AtualizaCompra_Procedure_ID(ByVal _compra As clCompra) As String
-        Dim objDB As New AcessoDados
-        Dim Conn As New SqlCommand
-        '
-        'Limpa os Parâmetros
-        objDB.LimparParametros()
-        '
-        '-- PARAMETROS DA TBLTRANSACAO
-        '@IDcompra AS INT
-        objDB.AdicionarParametros("@IDcompra", _compra.IDCompra)
-        '@IDPessoaDestino AS INT, 
-        objDB.AdicionarParametros("@IDPessoaDestino", _compra.IDPessoaDestino)
-        '@IDPessoaOrigem AS INT, 
-        objDB.AdicionarParametros("@IDPessoaOrigem", _compra.IDPessoaOrigem)
-        '@IDOperacao AS BYTE, 
-        objDB.AdicionarParametros("@IDOperacao", _compra.IDOperacao)
-        '@IDSituacao AS TINYINT = 0, --0|INSERIDA ; 1|VERIFICADA ; 2|FECHADA 
-        objDB.AdicionarParametros("@IDSituacao", _compra.IDSituacao)
-        '@IDUser AS INT,
-        objDB.AdicionarParametros("@IDUser", _compra.IDUser)
-        '@CFOP AS INT(16), 
-        objDB.AdicionarParametros("@CFOP", _compra.CFOP)
-        '@compraData AS SMALLDATETIME, 
-        objDB.AdicionarParametros("@TransacaoData", _compra.TransacaoData)
-        '
-        '-- PARAMETROS DA TBLCompra
-        objDB.AdicionarParametros("@FreteCobrado", _compra.FreteCobrado)
-        objDB.AdicionarParametros("@ICMSValor", _compra.ICMSValor)
-        objDB.AdicionarParametros("@Despesas", _compra.Despesas)
-        objDB.AdicionarParametros("@Descontos", _compra.Descontos)
-        objDB.AdicionarParametros("@CobrancaTipo", _compra.CobrancaTipo)
-        objDB.AdicionarParametros("@TotalCompra", _compra.TotalCompra)
-        '
-        '-- PARAMETROS DA TBLOBSERVACAO
-        '@Observacao AS VARCHAR(max) = null, 
-        objDB.AdicionarParametros("@Observacao", _compra.Observacao)
-        '
-        '-- PARAMETROS DA TBLFRETE
-        '@IDTransportadora AS INT = NULL,
-        objDB.AdicionarParametros("@IDTransportadora", _compra.IDTransportadora)
-        '@FreteValor AS MONEY = 0,
-        objDB.AdicionarParametros("@FreteValor", _compra.FreteValor)
-        objDB.AdicionarParametros("@FreteTipo", _compra.FreteTipo) '-- 0|SEM FRETE ; 1|EMITENTE; 2|DESTINATARIO
-        '@Volumes AS SMALLINT = 1,
-        objDB.AdicionarParametros("@Volumes", _compra.Volumes)
-        '@IDAPagar AS INT = NULL
-        objDB.AdicionarParametros("@IDFreteDespesa", _compra.IDFreteDespesa)
-        '
-        '
-        Try
-            Return objDB.ExecutarManipulacao(CommandType.StoredProcedure, "uspCompra_Alterar")
-        Catch ex As Exception
+		Dim dbTran As New AcessoDados
+		'
+		'Limpa os Parâmetros
+		dbTran.LimparParametros()
+		'
+		'-- PARAMETROS DA TBLTRANSACAO
+		dbTran.AdicionarParametros("@IDcompra", _compra.IDCompra)
+		dbTran.AdicionarParametros("@IDPessoaDestino", _compra.IDPessoaDestino)
+		dbTran.AdicionarParametros("@IDPessoaOrigem", _compra.IDPessoaOrigem)
+		dbTran.AdicionarParametros("@IDOperacao", _compra.IDOperacao)
+		dbTran.AdicionarParametros("@IDSituacao", _compra.IDSituacao)
+		dbTran.AdicionarParametros("@IDUser", _compra.IDUser)
+		dbTran.AdicionarParametros("@CFOP", _compra.CFOP)
+		dbTran.AdicionarParametros("@TransacaoData", _compra.TransacaoData)
+		'
+		'-- PARAMETROS DA TBLCompra
+		dbTran.AdicionarParametros("@FreteCobrado", _compra.FreteCobrado)
+		dbTran.AdicionarParametros("@ICMSValor", _compra.ICMSValor)
+		dbTran.AdicionarParametros("@Despesas", _compra.Despesas)
+		dbTran.AdicionarParametros("@Descontos", _compra.Descontos)
+		dbTran.AdicionarParametros("@CobrancaTipo", _compra.CobrancaTipo)
+		dbTran.AdicionarParametros("@TotalCompra", _compra.TotalCompra)
+		'
+		'-- PARAMETROS DA TBLOBSERVACAO
+		dbTran.AdicionarParametros("@Observacao", _compra.Observacao)
+		'
+		'-- PARAMETROS DA TBLFRETE
+		dbTran.AdicionarParametros("@IDTransportadora", _compra.IDTransportadora)
+		dbTran.AdicionarParametros("@FreteValor", _compra.FreteValor)
+		dbTran.AdicionarParametros("@FreteTipo", _compra.FreteTipo) '-- 0|SEM FRETE ; 1|EMITENTE; 2|DESTINATARIO
+		dbTran.AdicionarParametros("@Volumes", _compra.Volumes)
+		dbTran.AdicionarParametros("@IDFreteDespesa", _compra.IDFreteDespesa)
+		'
+		Try
+			Return dbTran.ExecutarManipulacao(CommandType.StoredProcedure, "uspCompra_Alterar")
+		Catch ex As Exception
             Throw ex
             Return Nothing
         End Try
         '
     End Function
-    '
-    '--------------------------------------------------------------------------------------------
-    ' INSERT NOVA COMPRA E RETORNA UMA CLCOMPRA
-    '--------------------------------------------------------------------------------------------
-    Public Function SalvaNovaCompra_Procedure_Compra(ByVal _compra As clCompra,
-                                                     Optional dbTran As Object = Nothing) As clCompra
-        '
-        Try
-            '
-            Dim dtCompra As DataTable
-            '
-            dtCompra = SalvaNovaCompra_DT(_compra, dbTran)
-            '
-            If dtCompra.Rows.Count > 0 Then
-                Dim r As DataRow = dtCompra(0)
-                '
-                Return ConvertDtRow_clCompra(r)
-            Else
-                Return Nothing
-            End If
-            '
-        Catch ex As Exception
-            Throw ex
-        End Try
-        '
-    End Function
-    '
-    '--------------------------------------------------------------------------------------------
-    ' INSERT NOVA COMPRA E RETORNA UM DATATABLE
-    '--------------------------------------------------------------------------------------------
-    Public Function SalvaNovaCompra_DT(ByVal _compra As clCompra,
+	'
+	'--------------------------------------------------------------------------------------------
+	' INSERT NOVA COMPRA E RETORNA UMA CLCOMPRA
+	'--------------------------------------------------------------------------------------------
+	Public Function SalvaNovaCompra_Compra(ByVal _compra As clCompra,
+													 Optional dbTran As Object = Nothing) As clCompra
+		'
+		Try
+			'
+			Dim dtCompra As DataTable
+			'
+			dtCompra = SalvaNovaCompra_DT(_compra, dbTran)
+			'
+			If dtCompra.Rows.Count > 0 Then
+				Dim r As DataRow = dtCompra(0)
+				'
+				Return ConvertDtRow_clCompra(r)
+			Else
+				Return Nothing
+			End If
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'--------------------------------------------------------------------------------------------
+	' INSERT NOVA COMPRA E RETORNA UM DATATABLE
+	'--------------------------------------------------------------------------------------------
+	Public Function SalvaNovaCompra_DT(ByVal _compra As clCompra,
                                        Optional dbTran As AcessoDados = Nothing) As DataTable
         '
         Dim db As AcessoDados

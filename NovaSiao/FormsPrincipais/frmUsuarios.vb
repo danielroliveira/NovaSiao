@@ -283,14 +283,14 @@ Public Class frmUsuarios
 
 		If Sit = EnumFlagEstado.NovoRegistro Then
 			Try
-				newID = uBLL.SalvaNovoUsuario_Procedure_ID(_user)
+				newID = uBLL.SalvaNovoUsuario_ID(_user)
 			Catch ex As Exception
 				MessageBox.Show(ex.Message)
 				Exit Sub
 			End Try
 		ElseIf Sit = EnumFlagEstado.Alterado Then
 			Try
-				newID = uBLL.AtualizaUsuario_Procedure_ID(_user)
+				newID = uBLL.AtualizaUsuario_ID(_user)
 			Catch ex As Exception
 				MessageBox.Show(ex.Message)
 				Exit Sub

@@ -1,6 +1,5 @@
 ﻿Imports CamadaDTO
 Imports CamadaDAL
-Imports System.Data.SqlClient
 '
 Public Class TransportadoraBLL
     '
@@ -9,16 +8,21 @@ Public Class TransportadoraBLL
     '-----------------------------------------------------------------------------------------------------
     Public Function Transportadora_GET_ListaSimples(Optional Ativo As Boolean? = Nothing) As DataTable
         Dim db As New AcessoDados
-        '
-        If Not IsNothing(Ativo) Then
-            db.LimparParametros()
-            db.AdicionarParametros("@Ativo", Ativo)
-        End If
-        '
-        Try
-            Return db.ExecutarConsulta(CommandType.StoredProcedure, "uspTransportadoras_GET_ListaSimples")
-        Catch ex As Exception
-            Throw ex
+		'
+		Dim query As String = "SELECT IDTransportadora, P.Cadastro " &
+							  "FROM tblPessoaTransportadora AS T " &
+							  "JOIN tblPessoa AS P ON T.IDTransportadora = P.IDPessoa "
+		'
+		If Not IsNothing(Ativo) Then
+			db.LimparParametros()
+			db.AdicionarParametros("@Ativo", Ativo)
+			query += "WHERE Ativo = @Ativo"
+		End If
+		'
+		Try
+			Return db.ExecutarConsulta(CommandType.Text, query)
+		Catch ex As Exception
+			Throw ex
         End Try
         '
     End Function
@@ -38,39 +42,37 @@ Public Class TransportadoraBLL
         End If
         '
         Try
-            '
-            Dim dr As SqlDataReader = objdb.ExecuteAndGetReader(strSql)
-            Dim lista As New List(Of clTransportadora)
-            While dr.Read
-                Dim tran As New clTransportadora
-                '
-                tran.IDPessoa = IIf(IsDBNull(dr("IDTransportadora")), Nothing, dr("IDTransportadora"))
-                tran.Ativo = IIf(IsDBNull(dr("Ativo")), 0, dr("Ativo"))
-                tran.Observacao = IIf(IsDBNull(dr("Observacao")), String.Empty, dr("Observacao"))
-                '
-                tran.Cadastro = IIf(IsDBNull(dr("Cadastro")), String.Empty, dr("Cadastro"))
-                tran.NomeFantasia = IIf(IsDBNull(dr("NomeFantasia")), String.Empty, dr("NomeFantasia"))
-                tran.Endereco = IIf(IsDBNull(dr("Endereco")), String.Empty, dr("Endereco"))
-                tran.Bairro = IIf(IsDBNull(dr("Bairro")), String.Empty, dr("Bairro"))
-                tran.Cidade = IIf(IsDBNull(dr("Cidade")), String.Empty, dr("Cidade"))
-                tran.UF = IIf(IsDBNull(dr("UF")), String.Empty, dr("UF"))
-                tran.CEP = IIf(IsDBNull(dr("CEP")), String.Empty, dr("CEP"))
-                tran.TelefoneA = IIf(IsDBNull(dr("TelefoneA")), String.Empty, dr("TelefoneA"))
-                tran.TelefoneB = IIf(IsDBNull(dr("TelefoneB")), String.Empty, dr("TelefoneB"))
-                tran.Email = IIf(IsDBNull(dr("Email")), String.Empty, dr("Email"))
-                tran.CNPJ = IIf(IsDBNull(dr("CNPJ")), String.Empty, dr("CNPJ"))
-                tran.InscricaoEstadual = IIf(IsDBNull(dr("InscricaoEstadual")), String.Empty, dr("InscricaoEstadual"))
-                tran.ContatoNome = IIf(IsDBNull(dr("ContatoNome")), String.Empty, dr("ContatoNome"))
-                tran.FundacaoData = IIf(IsDBNull(dr("FundacaoData")), Nothing, dr("FundacaoData"))
-                lista.Add(tran)
-                '
-            End While
-            '
-            '--- CLOSE DATAREADER
-            dr.Close()
-            '
-            '--- RETURN
-            Return lista
+			'
+			Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, strSql)
+			Dim lista As New List(Of clTransportadora)
+			'
+			For Each dr In dt.Rows
+				Dim tran As New clTransportadora
+				'
+				tran.IDPessoa = IIf(IsDBNull(dr("IDTransportadora")), Nothing, dr("IDTransportadora"))
+				tran.Ativo = IIf(IsDBNull(dr("Ativo")), 0, dr("Ativo"))
+				tran.Observacao = IIf(IsDBNull(dr("Observacao")), String.Empty, dr("Observacao"))
+				'
+				tran.Cadastro = IIf(IsDBNull(dr("Cadastro")), String.Empty, dr("Cadastro"))
+				tran.NomeFantasia = IIf(IsDBNull(dr("NomeFantasia")), String.Empty, dr("NomeFantasia"))
+				tran.Endereco = IIf(IsDBNull(dr("Endereco")), String.Empty, dr("Endereco"))
+				tran.Bairro = IIf(IsDBNull(dr("Bairro")), String.Empty, dr("Bairro"))
+				tran.Cidade = IIf(IsDBNull(dr("Cidade")), String.Empty, dr("Cidade"))
+				tran.UF = IIf(IsDBNull(dr("UF")), String.Empty, dr("UF"))
+				tran.CEP = IIf(IsDBNull(dr("CEP")), String.Empty, dr("CEP"))
+				tran.TelefoneA = IIf(IsDBNull(dr("TelefoneA")), String.Empty, dr("TelefoneA"))
+				tran.TelefoneB = IIf(IsDBNull(dr("TelefoneB")), String.Empty, dr("TelefoneB"))
+				tran.Email = IIf(IsDBNull(dr("Email")), String.Empty, dr("Email"))
+				tran.CNPJ = IIf(IsDBNull(dr("CNPJ")), String.Empty, dr("CNPJ"))
+				tran.InscricaoEstadual = IIf(IsDBNull(dr("InscricaoEstadual")), String.Empty, dr("InscricaoEstadual"))
+				tran.ContatoNome = IIf(IsDBNull(dr("ContatoNome")), String.Empty, dr("ContatoNome"))
+				tran.FundacaoData = IIf(IsDBNull(dr("FundacaoData")), Nothing, dr("FundacaoData"))
+				lista.Add(tran)
+				'
+			Next
+			'
+			'--- RETURN
+			Return lista
             '
         Catch ex As Exception
             Throw ex

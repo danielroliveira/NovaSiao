@@ -1,7 +1,6 @@
 ﻿Imports CamadaDTO
 Imports CamadaDAL
-Imports System.Data.SqlClient
-
+'
 Public Class UsuarioBLL
     '
     '--------------------------------------------------------------------------------------------------------------------
@@ -9,31 +8,30 @@ Public Class UsuarioBLL
     '--------------------------------------------------------------------------------------------------------------------
     Public Function GetUsuarios() As List(Of clUsuario)
         Dim objdb As New AcessoDados
-        Dim strSql As String = ""
-        '
-        strSql = "SELECT * FROM tblUsuario"
-        '
-        Try
-            '
-            Dim dr As SqlDataReader = objdb.ExecuteAndGetReader(strSql)
-            Dim lista As New List(Of clUsuario)
-            While dr.Read
-                Dim usu As clUsuario = New clUsuario
-
-                usu.IdUser = IIf(IsDBNull(dr("IdUser")), 0, dr("IdUser"))
-                usu.UsuarioApelido = IIf(IsDBNull(dr("UsuarioApelido")), String.Empty, dr("UsuarioApelido"))
-                usu.UsuarioAcesso = IIf(IsDBNull(dr("UsuarioAcesso")), Nothing, dr("UsuarioAcesso"))
-                usu.UsuarioSenha = IIf(IsDBNull(dr("UsuarioSenha")), String.Empty, dr("UsuarioSenha"))
-                usu.UsuarioAtivo = IIf(IsDBNull(dr("UsuarioAtivo")), Nothing, dr("UsuarioAtivo"))
-                lista.Add(usu)
-
-            End While
-
-            '--- CLOSE DATAREADER
-            dr.Close()
-
-            '--- RETURN
-            Return lista
+		'
+		Dim query As String = "SELECT * FROM tblUsuario"
+		'
+		Try
+			'
+			Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, query)
+			Dim lista As New List(Of clUsuario)
+			'
+			If dt.Rows.Count = 0 Then Return lista
+			'
+			For Each r In dt.Rows
+				Dim usu As clUsuario = New clUsuario
+				'
+				usu.IdUser = IIf(IsDBNull(r("IdUser")), 0, r("IdUser"))
+				usu.UsuarioApelido = IIf(IsDBNull(r("UsuarioApelido")), String.Empty, r("UsuarioApelido"))
+				usu.UsuarioAcesso = IIf(IsDBNull(r("UsuarioAcesso")), Nothing, r("UsuarioAcesso"))
+				usu.UsuarioSenha = IIf(IsDBNull(r("UsuarioSenha")), String.Empty, r("UsuarioSenha"))
+				usu.UsuarioAtivo = IIf(IsDBNull(r("UsuarioAtivo")), Nothing, r("UsuarioAtivo"))
+				lista.Add(usu)
+				'
+			Next
+			'
+			'--- RETURN
+			Return lista
             '
         Catch ex As Exception
             Throw ex
@@ -45,56 +43,69 @@ Public Class UsuarioBLL
         End Try
         '
     End Function
-    '
-    '--------------------------------------------------------------------------------------------------------------------
-    ' UPDATE
-    '--------------------------------------------------------------------------------------------------------------------
-    Public Function AtualizaUsuario_Procedure_ID(ByVal _usuario As clUsuario) As Long
-        Dim objDB As New AcessoDados
-        Dim Conn As New SqlCommand
-
-        'Adiciona os Parâmetros
-        Conn.Parameters.Add(New SqlParameter("@IdUser", _usuario.IdUser))
-        Conn.Parameters.Add(New SqlParameter("@UsuarioApelido", _usuario.UsuarioApelido))
-        Conn.Parameters.Add(New SqlParameter("@UsuarioAcesso", _usuario.UsuarioAcesso))
-        Conn.Parameters.Add(New SqlParameter("@UsuarioSenha", _usuario.UsuarioSenha))
-        Conn.Parameters.Add(New SqlParameter("@UsuarioAtivo", _usuario.UsuarioAtivo))
-
-        Try
-            Return objDB.ExecuteProcedureID("uspUsuario_Alterar", Conn.Parameters)
-        Catch ex As Exception
-            Throw ex
-            Return Nothing
-        End Try
-
-    End Function
-    '
-    '--------------------------------------------------------------------------------------------------------------------
-    ' SALVA NOVO USUÁRIO
-    '--------------------------------------------------------------------------------------------------------------------
-    Public Function SalvaNovoUsuario_Procedure_ID(ByVal _usuario As clUsuario) As Long
-        Dim objDB As New AcessoDados
-        Dim Conn As New SqlCommand
-
-        'Adiciona os Parâmetros
-        Conn.Parameters.Add(New SqlParameter("@UsuarioApelido", _usuario.UsuarioApelido))
-        Conn.Parameters.Add(New SqlParameter("@UsuarioAcesso", _usuario.UsuarioAcesso))
-        Conn.Parameters.Add(New SqlParameter("@UsuarioSenha", _usuario.UsuarioSenha))
-        Conn.Parameters.Add(New SqlParameter("@UsuarioAtivo", _usuario.UsuarioAtivo))
-
-        Try
-            Return objDB.ExecuteProcedureID("uspUsuario_Inserir", Conn.Parameters)
-        Catch ex As Exception
-            Throw ex
-            Return Nothing
-        End Try
-
-    End Function
-    '
-    '--------------------------------------------------------------------------------------------------------------------
-    ' DELETE
-    '--------------------------------------------------------------------------------------------------------------------
-    Public Function DeletaUsuario_PorID(ByVal _IdUser As Long) As Boolean
+	'
+	'--------------------------------------------------------------------------------------------------------------------
+	' UPDATE
+	'--------------------------------------------------------------------------------------------------------------------
+	Public Function AtualizaUsuario_ID(ByVal _usuario As clUsuario) As Long
+		'
+		Dim objDB As New AcessoDados
+		Dim query As String = "UPDATE tblUsuario SET " &
+							  "UsuarioApelido = @UsuarioApelido, " &
+							  "UsuarioAcesso = @UsuarioAcesso, " &
+							  "UsuarioSenha = @UsuarioSenha, " &
+							  "UsuarioAtivo = @UsuarioAtivo " &
+							  "WHERE IdUser = @IdUser;"
+		'
+		'Adiciona os Parâmetros
+		objDB.AdicionarParametros("@IdUser", _usuario.IdUser)
+		objDB.AdicionarParametros("@UsuarioApelido", _usuario.UsuarioApelido)
+		objDB.AdicionarParametros("@UsuarioAcesso", _usuario.UsuarioAcesso)
+		objDB.AdicionarParametros("@UsuarioSenha", _usuario.UsuarioSenha)
+		objDB.AdicionarParametros("@UsuarioAtivo", _usuario.UsuarioAtivo)
+		'
+		Try
+			objDB.ExecutarManipulacao(CommandType.Text, query)
+			'
+			Return _usuario.IdUser
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'--------------------------------------------------------------------------------------------------------------------
+	' SALVA NOVO USUÁRIO
+	'--------------------------------------------------------------------------------------------------------------------
+	Public Function SalvaNovoUsuario_ID(ByVal _usuario As clUsuario) As Long
+		'
+		Dim objDB As New AcessoDados
+		Dim query As String = "INSERT INTO tblUsuario " &
+							  "(UsuarioApelido, UsuarioAcesso, UsuarioSenha, UsuarioAtivo) " &
+							  "VALUES " &
+							  "(@UsuarioApelido, @UsuarioAcesso, @UsuarioSenha, @UsuarioAtivo);"
+		'
+		'Adiciona os Parâmetros
+		objDB.AdicionarParametros("@UsuarioApelido", _usuario.UsuarioApelido)
+		objDB.AdicionarParametros("@UsuarioAcesso", _usuario.UsuarioAcesso)
+		objDB.AdicionarParametros("@UsuarioSenha", _usuario.UsuarioSenha)
+		objDB.AdicionarParametros("@UsuarioAtivo", _usuario.UsuarioAtivo)
+		'
+		Try
+			'
+			Return objDB.ExecutarInsertGetID(query)
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'--------------------------------------------------------------------------------------------------------------------
+	' DELETE
+	'--------------------------------------------------------------------------------------------------------------------
+	Public Function DeletaUsuario_PorID(ByVal _IdUser As Long) As Boolean
         Dim strSql As String
         Dim objDB As AcessoDados
         strSql = "DELETE FROM tblUsuario where IdUser=" & _IdUser
