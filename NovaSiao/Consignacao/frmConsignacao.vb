@@ -2,547 +2,556 @@
 Imports CamadaDTO
 '
 Public Class frmConsignacao
-	'    '--- CLASSE
-	'    Private _Compra As clCompra
-	'    Private cBLL As New CompraBLL
-	'    Private _IDFilial As Integer
-	'    '--- LISTS
-	'    Private _ItensList As New List(Of clTransacaoItem)
-	'    Private _APagarList As New List(Of clAPagar)
-	'    Private _NotasList As New List(Of clNotaFiscal)
-	'    '--- BINDINGS
-	'    Private bindCompra As New BindingSource
-	'    Private bindItem As New BindingSource
-	'    Private bindAPagar As New BindingSource
-	'    Private bindNota As New BindingSource
-	'    '--- CONTROLES
-	'    Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
-	'    Private VerificaAlteracao As Boolean
-	'    '--- TOTAIS
-	'    Private _TotalGeral As Decimal
-	'    Private _TotalProdutos As Decimal
-	'    '
-	'#Region "LOAD"
-	'    Private Property Sit As EnumFlagEstado
-	'        Get
-	'            Return _Sit
-	'        End Get
-	'        Set(value As EnumFlagEstado)
-	'            _Sit = value
-	'            Select Case _Sit
-	'                Case EnumFlagEstado.RegistroSalvo '--- REGISTRO FINALIZADO | NÃO BLOQUEADO
-	'                    lblSituacao.Text = "Finalizada"
-	'                    btnFinalizar.Text = "&Fechar"
-	'                    '
-	'                    btnData.Enabled = True
-	'                    txtFreteValor.ReadOnly = False
-	'                    txtObservacao.ReadOnly = False
-	'                    txtVolumes.ReadOnly = False
-	'                    '
-	'                    txtFreteCobrado.ReadOnly = False
-	'                    txtICMSValor.ReadOnly = False
-	'                    txtDespesas.ReadOnly = False
-	'                    txtDescontos.ReadOnly = False
-	'                    '
-	'                Case EnumFlagEstado.Alterado '--- REGISTRO FINALIZADO ALTERADO
-	'                    lblSituacao.Text = "Alterada"
-	'                    btnFinalizar.Text = "&Finalizar"
-	'                    '
-	'                    btnData.Enabled = True
-	'                    txtFreteValor.ReadOnly = False
-	'                    txtObservacao.ReadOnly = False
-	'                    txtVolumes.ReadOnly = False
-	'                    '
-	'                    txtFreteCobrado.ReadOnly = False
-	'                    txtICMSValor.ReadOnly = False
-	'                    txtDespesas.ReadOnly = False
-	'                    txtDescontos.ReadOnly = False
-	'                    '
-	'                Case EnumFlagEstado.NovoRegistro '--- REGISTRO NÃO FINALIZADO
-	'                    lblSituacao.Text = "Em Aberto"
-	'                    btnFinalizar.Text = "&Finalizar"
-	'                    '
-	'                    btnData.Enabled = True
-	'                    txtFreteValor.ReadOnly = False
-	'                    txtObservacao.ReadOnly = False
-	'                    txtVolumes.ReadOnly = False
-	'                    '
-	'                    txtFreteCobrado.ReadOnly = False
-	'                    txtICMSValor.ReadOnly = False
-	'                    txtDespesas.ReadOnly = False
-	'                    txtDescontos.ReadOnly = False
-	'                    '
-	'                Case EnumFlagEstado.RegistroBloqueado '--- REGISTRO BLOQUEADO PARA ALTERACOES
-	'                    lblSituacao.Text = "Bloqueada"
-	'                    btnFinalizar.Text = "&Fechar"
-	'                    '
-	'                    btnData.Enabled = False
-	'                    txtFreteValor.ReadOnly = True
-	'                    txtObservacao.ReadOnly = True
-	'                    txtVolumes.ReadOnly = True
-	'                    '
-	'                    txtFreteCobrado.ReadOnly = True
-	'                    txtICMSValor.ReadOnly = True
-	'                    txtDespesas.ReadOnly = True
-	'                    txtDescontos.ReadOnly = True
-	'                    '
-	'            End Select
-	'        End Set
-	'    End Property
-	'    '
-	'    Property propCompra As clCompra
-	'        Get
-	'            Return _Compra
-	'        End Get
-	'        Set(value As clCompra)
-	'            'VerificaAlteracao = False '--- Inibe a verificacao dos campos IDPlano
-	'            _Compra = value
-	'            _IDFilial = _Compra.IDPessoaDestino
-	'            obterItens()
-	'            obterAPagar()
-	'            obterNotas()
-	'            bindItem.DataSource = _ItensList
-	'            bindAPagar.DataSource = _APagarList
-	'            bindNota.DataSource = _NotasList
-	'            dgvItens.DataSource = bindItem
-	'            '
-	'            If IsNothing(bindCompra.DataSource) Then
-	'                bindCompra.DataSource = _Compra
-	'                PreencheDataBinding()
-	'            Else
-	'                bindCompra.Clear()
-	'                bindCompra.DataSource = _Compra
-	'                bindCompra.ResetBindings(True)
-	'                'AddHandler _ClientePF.AoAlterar, AddressOf HandlerAoAlterar
-	'            End If
-	'            '
-	'            '--- Preenche os Itens da Compra
-	'            PreencheItens()
-	'            '
-	'            '--- Preenche Itens do A Pagar (parcelas)
-	'            Preenche_APagar()
-	'            cmbFreteTipo.SelectedValue = _Compra.FreteTipo
-	'            cmbIDTransportadora.SelectedValue = If(_Compra.IDTransportadora, -1)
-	'            cmbNotaTipo.SelectedValue = -1
-	'            '
-	'            '--- Preenche Notas Fiscais
-	'            Preenche_Notas()
-	'            '
-	'            '--- Atualiza o estado da Situacao: EnumFlagEstado
-	'            Select Case _Compra.IDSituacao
-	'                Case 1 ' COMPRA INICIADA
-	'                    Sit = EnumFlagEstado.NovoRegistro
-	'                Case 2 ' COMPRA FINALIZADA
-	'                    Sit = EnumFlagEstado.RegistroSalvo
-	'                Case 3 ' COMPRA BLOQUEADA
-	'                    Sit = EnumFlagEstado.RegistroBloqueado
-	'                Case Else
-	'            End Select
-	'            '
-	'            '--- Habilita ou Desabilita os campos do Frete da Compra
-	'            Controla_cmbFrete()
-	'            '
-	'            '--- Permite a verificacao dos campos IDPlano
-	'            VerificaAlteracao = True
-	'            '
-	'        End Set
-	'    End Property
-	'    '
-	'    Public ReadOnly Property TotalGeral() As Decimal
-	'        Get
-	'            '--- Declara variaveis do Total de produto e de adicionais da Compra
-	'            Dim TAdic As Double = 0
-	'            '
-	'            TAdic = IIf(IsNothing(_Compra.FreteCobrado), 0, _Compra.FreteCobrado)
-	'            TAdic = TAdic + IIf(IsNothing(_Compra.ICMSValor), 0, _Compra.ICMSValor)
-	'            TAdic = TAdic + IIf(IsNothing(_Compra.Despesas), 0, _Compra.Despesas)
-	'            TAdic = TAdic - IIf(IsNothing(_Compra.Descontos), 0, _Compra.Descontos)
-	'            '
-	'            '--- verifica se o valor Total de Adicionais é menor que zero
-	'            If TAdic < 0 Then TAdic = 0
-	'            '
-	'            _TotalGeral = TotalProdutos + TAdic
-	'            '
-	'            '--- atualiza o label
-	'            lblTotalGeral.Text = Format(_TotalGeral, "c")
-	'            '
-	'            '--- retorna
-	'            Return _TotalGeral
-	'            '
-	'        End Get
-	'    End Property
-	'    '
-	'    Public ReadOnly Property TotalProdutos() As Decimal
-	'        Get
-	'            Dim TProd As Decimal = _ItensList.Sum(Function(x) x.Total)
-	'            _TotalProdutos = TProd
-	'            '--- atualiza o label
-	'            lblTotalProdutos.Text = Format(TProd, "c")
-	'            '
-	'            '--- retorna
-	'            Return _TotalProdutos
-	'            '
-	'        End Get
-	'    End Property
-	'    '
-	'    Public Sub New(myCompra As clCompra)
-	'        ' This call is required by the designer.
-	'        InitializeComponent()
-	'        '
-	'        ' Add any initialization after the InitializeComponent() call.
-	'        propCompra = myCompra
-	'        '
-	'        '--- hANDLER Menu Acao
-	'        MenuOpen_AdHandler()
-	'        '
-	'    End Sub
-	'    '
-	'#End Region
-	'    '
-	'#Region "DATABINDING"
-	'    '
-	'    Private Sub PreencheDataBinding()
-	'        '
-	'        txtFreteCobrado.DataBindings.Add("Text", bindCompra, "FreteCobrado", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        txtICMSValor.DataBindings.Add("Text", bindCompra, "ICMSValor", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        txtDespesas.DataBindings.Add("Text", bindCompra, "Despesas", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        txtDescontos.DataBindings.Add("Text", bindCompra, "Descontos", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        lblFornecedor.DataBindings.Add("Text", bindCompra, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        lblIDCompra.DataBindings.Add("Text", bindCompra, "IDCompra", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        lblFilial.DataBindings.Add("Text", bindCompra, "ApelidoFilial", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        lblCompraData.DataBindings.Add("Text", bindCompra, "TransacaoData", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        txtVolumes.DataBindings.Add("Text", bindCompra, "Volumes", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        txtFreteValor.DataBindings.Add("Text", bindCompra, "FreteValor", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        txtObservacao.DataBindings.Add("Text", bindCompra, "Observacao", True, DataSourceUpdateMode.OnPropertyChanged)
-	'		'
-	'		'dgvItens.DataBindings.Add("Tag", bindItem, "IDProduto", True, DataSourceUpdateMode.OnPropertyChanged)
-	'		'
-	'		' FORMATA OS VALORES DO DATABINDING
-	'		AddHandler lblIDCompra.DataBindings("Text").Format, AddressOf FormatRG
-	'        AddHandler txtFreteValor.DataBindings("text").Format, AddressOf FormatCUR
-	'        AddHandler txtDescontos.DataBindings("text").Format, AddressOf FormatCUR
-	'        AddHandler txtDespesas.DataBindings("text").Format, AddressOf FormatCUR
-	'        AddHandler txtFreteCobrado.DataBindings("text").Format, AddressOf FormatCUR
-	'        AddHandler txtICMSValor.DataBindings("text").Format, AddressOf FormatCUR
-	'        AddHandler txtVolumes.DataBindings("text").Format, AddressOf Format00
-	'        AddHandler lblCompraData.DataBindings("text").Format, AddressOf FormatDT
-	'        '
-	'        ' CARREGA OS COMBOBOX
-	'        CarregaCmbFreteTipo()
-	'        CarregaCmbTransportadora()
-	'        CarregaCmbNotaTipo()
-	'        '
-	'        ' ADD HANDLER PARA DATABINGS
-	'        AddHandler _Compra.AoAlterar, AddressOf HandlerAoAlterar
-	'        '
-	'    End Sub
-	'    '
-	'    Private Sub HandlerAoAlterar()
-	'        If _Compra.RegistroAlterado = True And Sit = EnumFlagEstado.RegistroSalvo Then
-	'            Sit = EnumFlagEstado.Alterado
-	'        End If
-	'    End Sub
-	'    '
-	'    ' FORMATA OS BINDINGS
-	'    Private Sub FormatRG(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
-	'        e.Value = Format(e.Value, "0000")
-	'    End Sub
-	'    Private Sub FormatCUR(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
-	'        e.Value = FormatCurrency(e.Value, 2)
-	'    End Sub
-	'    Private Sub FormatDT(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
-	'        e.Value = Format(e.Value, "dd/MM/yyyy")
-	'    End Sub
-	'    Private Sub Format00(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
-	'        If Not IsNothing(e.Value) Then
-	'            e.Value = Format(CInt(e.Value), "00")
-	'        End If
-	'    End Sub
-	'    '
-	'#End Region
-	'    '
-	'#Region "CARREGA OS COMBOBOX"
-	'    '
-	'    Private Sub CarregaCmbFreteTipo()
-	'        '
-	'        Dim dtFTipo As New DataTable
-	'        '--- Adiciona as Colunas
-	'        dtFTipo.Columns.Add("idFTipo")
-	'        dtFTipo.Columns.Add("FTipo")
-	'        '--- Adiciona todas as possibilidades de Frete
-	'        dtFTipo.Rows.Add(New Object() {0, "Sem Frete"})
-	'        dtFTipo.Rows.Add(New Object() {1, "Emitente"})
-	'        dtFTipo.Rows.Add(New Object() {2, "Destinatário"})
-	'        '
-	'        With cmbFreteTipo
-	'            .DataSource = dtFTipo
-	'            .ValueMember = "idFTipo"
-	'            .DisplayMember = "FTipo"
-	'            .DataBindings.Add("SelectedValue", bindCompra, "FreteTipo", True, DataSourceUpdateMode.OnPropertyChanged)
-	'        End With
-	'        '
-	'    End Sub
-	'    '
-	'    Private Sub CarregaCmbTransportadora()
-	'        Dim tBLL As New TransportadoraBLL
-	'        '
-	'        Try
-	'            Dim dt As DataTable = tBLL.Transportadora_GET_ListaSimples(True)
-	'            '
-	'            With cmbIDTransportadora
-	'                .DataSource = dt
-	'                .ValueMember = "IDTransportadora"
-	'                .DisplayMember = "Cadastro"
-	'                .DataBindings.Add("SelectedValue", bindCompra, "IDTransportadora", True, DataSourceUpdateMode.OnPropertyChanged)
-	'            End With
-	'        Catch ex As Exception
-	'            MessageBox.Show("Um erro aconteceu obter lista de Transportadoras" & vbNewLine &
-	'            ex.Message, "Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Error)
-	'        End Try
-	'        '
-	'    End Sub
-	'    '
-	'    Private Sub CarregaCmbNotaTipo()
-	'        '
-	'        Dim dtNTipo As New DataTable
-	'        '
-	'        With dtNTipo
-	'            '--- Adiciona as Colunas
-	'            .Columns.Add("idNTipo")
-	'            .Columns.Add("NTipo")
-	'            '--- Adiciona todas as possibilidades de Frete
-	'            .Rows.Add(New Object() {1, "NF-e"})
-	'            .Rows.Add(New Object() {2, "Cupom Fiscal"})
-	'            .Rows.Add(New Object() {3, "Outros Tipos"})
-	'        End With
-	'        '
-	'        With cmbNotaTipo
-	'            .DataSource = dtNTipo
-	'            .ValueMember = "idNTipo"
-	'            .DisplayMember = "NTipo"
-	'        End With
-	'        '
-	'    End Sub
-	'    '
-	'    '--------------------------------------------------------------------------------------------------------
-	'#End Region
-	'    '
-	'#Region "CARREGA/INSERE ITENS"
-	'    Private Sub PreencheItens()
-	'        '
-	'        '--- limpa as colunas do datagrid
-	'        dgvItens.Columns.Clear()
-	'        dgvItens.AutoGenerateColumns = False
-	'        '
-	'        ' altera as propriedades importantes
-	'        dgvItens.MultiSelect = False
-	'        dgvItens.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-	'        dgvItens.ColumnHeadersVisible = True
-	'        dgvItens.AllowUserToResizeRows = False
-	'        dgvItens.AllowUserToResizeColumns = False
-	'        dgvItens.RowHeadersVisible = True
-	'        dgvItens.RowHeadersWidth = 30
-	'        dgvItens.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
-	'        dgvItens.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-	'        dgvItens.StandardTab = True
-	'        '
-	'        '--- configura o DataSource
-	'        dgvItens.DataSource = GetType(List(Of))
-	'        dgvItens.DataSource = _ItensList
-	'        If dgvItens.Rows.Count > 0 Then dgvItens.CurrentCell = dgvItens.Rows(dgvItens.Rows.Count).Cells(1)
-	'        '--- formata as colunas do datagrid
-	'        FormataColunas_Itens()
-	'        '
-	'    End Sub
-	'    '
-	'    Private Sub FormataColunas_Itens()
-	'        '
-	'        ' (1) COLUNA IDItem
-	'        dgvItens.Columns.Add("clnIDTansacaoItem", "IDItem")
-	'        With dgvItens.Columns("clnIDTansacaoItem")
-	'            .DataPropertyName = "IDTransacaoItem"
-	'            .Width = 0
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = False
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'        End With
-	'        '
-	'        ' (2) COLUNA RGProduto
-	'        dgvItens.Columns.Add("clnRGProduto", "Reg.")
-	'        With dgvItens.Columns("clnRGProduto")
-	'            .DataPropertyName = "RGProduto"
-	'            .Width = 60
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .DefaultCellStyle.Format = "0000"
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'            '.DefaultCellStyle.Font = New Font("Arial Narrow", 12)
-	'        End With
-	'        '
-	'        ' (3) COLUNA PRODUTO
-	'        dgvItens.Columns.Add("clnProduto", "Descrição")
-	'        With dgvItens.Columns("clnProduto")
-	'            .DataPropertyName = "Produto"
-	'            .Width = 375
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-	'        End With
-	'        '
-	'        ' (4) COLUNA QUANTIDADE
-	'        dgvItens.Columns.Add("clnQuantidade", "Qtde.")
-	'        With dgvItens.Columns("clnQuantidade")
-	'            .DataPropertyName = "Quantidade"
-	'            .Width = 60
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-	'            .DefaultCellStyle.Format = "00"
-	'            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-	'        End With
-	'        '
-	'        ' (5) COLUNA PRECO
-	'        dgvItens.Columns.Add("clnPreco", "Preço")
-	'        With dgvItens.Columns("clnPreco")
-	'            .DataPropertyName = "Preco"
-	'            .Width = 90
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'            .DefaultCellStyle.Format = "C"
-	'            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'        End With
-	'        '
-	'        ' (6) COLUNA SUB TOTAL
-	'        dgvItens.Columns.Add("clnSubTotal", "SubTotal")
-	'        With dgvItens.Columns("clnSubTotal")
-	'            .DataPropertyName = "SubTotal"
-	'            .Width = 90
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'            .DefaultCellStyle.Format = "C"
-	'            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'        End With
-	'        '
-	'        ' (7) COLUNA DESCONTO
-	'        dgvItens.Columns.Add("clnDesconto", "Desc.%")
-	'        With dgvItens.Columns("clnDesconto")
-	'            .DataPropertyName = "Desconto"
-	'            .Width = 80
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'            .DefaultCellStyle.Format = "0.00"
-	'            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'        End With
-	'        '
-	'        ' (8) COLUNA TOTAL
-	'        dgvItens.Columns.Add("clnTotal", "Total")
-	'        With dgvItens.Columns("clnTotal")
-	'            .DataPropertyName = "Total"
-	'            .Width = 90
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'            .DefaultCellStyle.Format = "C"
-	'            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'        End With
-	'        '
-	'        ' (9) COLUNA ICMS
-	'        dgvItens.Columns.Add("clnICMS", "ICMS%")
-	'        With dgvItens.Columns("clnICMS")
-	'            .DataPropertyName = "ICMS"
-	'            .Width = 60
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'            .DefaultCellStyle.Format = "0.00"
-	'            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'        End With
-	'        '
-	'        ' (10) COLUNA ST
-	'        dgvItens.Columns.Add("clnSubstituicao", "ST")
-	'        With dgvItens.Columns("clnSubstituicao")
-	'            .DataPropertyName = "Substituicao"
-	'            .Width = 75
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'            .DefaultCellStyle.Format = "C"
-	'            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'        End With
-	'        '
-	'        ' (11) COLUNA MVA
-	'        dgvItens.Columns.Add("clnMVA", "MVA%")
-	'        With dgvItens.Columns("clnMVA")
-	'            .DataPropertyName = "MVA"
-	'            .Width = 60
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'            .DefaultCellStyle.Format = "0.00"
-	'            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'        End With
-	'        '
-	'        ' (12) COLUNA IPI
-	'        dgvItens.Columns.Add("clnIPI", "IPI%")
-	'        With dgvItens.Columns("clnIPI")
-	'            .DataPropertyName = "IPI"
-	'            .Width = 60
-	'            .Resizable = DataGridViewTriState.False
-	'            .Visible = True
-	'            .ReadOnly = True
-	'            .SortMode = DataGridViewColumnSortMode.NotSortable
-	'            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'            .DefaultCellStyle.Format = "0.00"
-	'            .HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'        End With
-	'    End Sub
-	'    '
-	'    '--- RETORNA TODOS OS ITENS DA COMPRA
-	'    Private Sub obterItens()
-	'        '
-	'        Dim tBLL As New TransacaoItemBLL
-	'        '
-	'        Try
-	'            '--- Ampulheta ON
-	'            Cursor = Cursors.WaitCursor
-	'            '
-	'            _ItensList = tBLL.GetTransacaoItens_WithCustos_List(_Compra.IDCompra, _IDFilial)
-	'            '--- Atualiza o label TOTAL
-	'            Dim x = TotalGeral
-	'            '
-	'        Catch ex As Exception
-	'            MessageBox.Show("Uma exceção ocorreu ao obter Itens da Compra:..." & vbNewLine &
-	'                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-	'        Finally
-	'            '--- Ampulheta OFF
-	'            Cursor = Cursors.Default
-	'        End Try
-	'        '
-	'    End Sub
+	'
+	'--- CLASSE
+	Private _Consig As clConsignacao
+	Private cBLL As New ConsignacaoBLL
+	Private _IDFilial As Integer
+	'
+	'--- LISTS
+	Private _ItensList As New List(Of clTransacaoItem)
+	Private _NotasList As New List(Of clNotaFiscal)
+	'
+	'--- BINDINGS
+	Private bindConsig As New BindingSource
+	Private bindItem As New BindingSource
+	Private bindNota As New BindingSource
+	'
+	'--- CONTROLES
+	Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
+	Private VerificaAlteracao As Boolean
+	'
+	'--- TOTAIS
+	Private _TotalGeral As Decimal
+	Private _TotalProdutos As Decimal
+	'
+#Region "LOAD"
+	'
+	Public Sub New(consignacao As clConsignacao)
+		'
+		' This call is required by the designer.
+		InitializeComponent()
+		'
+		' Add any initialization after the InitializeComponent() call.
+		propConsig = consignacao
+		'
+		'--- hANDLER Menu Acao
+		'MenuOpen_AdHandler()
+		'
+	End Sub
+	'
+	Private Property Sit As EnumFlagEstado
+		'
+		Get
+			Return _Sit
+		End Get
+		'
+		Set(value As EnumFlagEstado)
+			'
+			_Sit = value
+			'
+			Select Case _Sit
+				Case EnumFlagEstado.RegistroSalvo '--- REGISTRO FINALIZADO | NÃO BLOQUEADO
+					lblSituacao.Text = "Finalizada"
+					btnFinalizar.Text = "&Fechar"
+					'
+					btnData.Enabled = True
+					txtFreteValor.ReadOnly = False
+					txtObservacao.ReadOnly = False
+					txtVolumes.ReadOnly = False
+					'
+					txtFreteCobrado.ReadOnly = False
+					txtICMSValor.ReadOnly = False
+					txtDespesas.ReadOnly = False
+					txtDescontos.ReadOnly = False
+						'
+				Case EnumFlagEstado.Alterado '--- REGISTRO FINALIZADO ALTERADO
+					lblSituacao.Text = "Alterada"
+					btnFinalizar.Text = "&Finalizar"
+					'
+					btnData.Enabled = True
+					txtFreteValor.ReadOnly = False
+					txtObservacao.ReadOnly = False
+					txtVolumes.ReadOnly = False
+					'
+					txtFreteCobrado.ReadOnly = False
+					txtICMSValor.ReadOnly = False
+					txtDespesas.ReadOnly = False
+					txtDescontos.ReadOnly = False
+						'
+				Case EnumFlagEstado.NovoRegistro '--- REGISTRO NÃO FINALIZADO
+					lblSituacao.Text = "Em Aberto"
+					btnFinalizar.Text = "&Finalizar"
+					'
+					btnData.Enabled = True
+					txtFreteValor.ReadOnly = False
+					txtObservacao.ReadOnly = False
+					txtVolumes.ReadOnly = False
+					'
+					txtFreteCobrado.ReadOnly = False
+					txtICMSValor.ReadOnly = False
+					txtDespesas.ReadOnly = False
+					txtDescontos.ReadOnly = False
+						'
+				Case EnumFlagEstado.RegistroBloqueado '--- REGISTRO BLOQUEADO PARA ALTERACOES
+					lblSituacao.Text = "Bloqueada"
+					btnFinalizar.Text = "&Fechar"
+					'
+					btnData.Enabled = False
+					txtFreteValor.ReadOnly = True
+					txtObservacao.ReadOnly = True
+					txtVolumes.ReadOnly = True
+					'
+					txtFreteCobrado.ReadOnly = True
+					txtICMSValor.ReadOnly = True
+					txtDespesas.ReadOnly = True
+					txtDescontos.ReadOnly = True
+					'
+			End Select
+			'
+		End Set
+		'
+	End Property
+	'    
+	Property propConsig As clConsignacao
+		'
+		Get
+			Return _Consig
+		End Get
+		'
+		Set(value As clConsignacao)
+			VerificaAlteracao = False '--- Inibe a verificacao dos campos IDPlano
+			_Consig = value
+			_IDFilial = _Consig.IDPessoaDestino
+			'
+			obterItens()
+			'obterAPagar()
+			obterNotas()
+			'
+			bindItem.DataSource = _ItensList
+			bindNota.DataSource = _NotasList
+			dgvItens.DataSource = bindItem
+			'
+			If IsNothing(bindConsig.DataSource) Then
+				bindConsig.DataSource = _Consig
+				PreencheDataBinding()
+			Else
+				bindConsig.Clear()
+				bindConsig.DataSource = _Consig
+				bindConsig.ResetBindings(True)
+				'AddHandler _ClientePF.AoAlterar, AddressOf HandlerAoAlterar
+			End If
+			'
+			'--- Preenche os Itens da Compra
+			PreencheItens()
+			'
+			cmbFreteTipo.SelectedValue = _Consig.FreteTipo
+			cmbIDTransportadora.SelectedValue = If(_Consig.IDTransportadora, -1)
+			cmbNotaTipo.SelectedValue = -1
+			'
+			'--- Preenche Notas Fiscais
+			Preenche_Notas()
+			'
+			'--- Atualiza o estado da Situacao: EnumFlagEstado
+			Select Case _Consig.IDSituacao
+				Case 1 ' COMPRA INICIADA
+					Sit = EnumFlagEstado.NovoRegistro
+				Case 2 ' COMPRA FINALIZADA
+					Sit = EnumFlagEstado.RegistroSalvo
+				Case 3 ' COMPRA BLOQUEADA
+					Sit = EnumFlagEstado.RegistroBloqueado
+				Case Else
+			End Select
+			'
+			'--- Habilita ou Desabilita os campos do Frete da Compra
+			Controla_cmbFrete()
+			'
+			'--- Permite a verificacao dos campos IDPlano
+			VerificaAlteracao = True
+			'
+		End Set
+	End Property
+	'
+	Public ReadOnly Property TotalGeral() As Decimal
+		Get
+			'--- Declara variaveis do Total de produto e de adicionais da Compra
+			Dim TAdic As Double = 0
+			'
+			TAdic = IIf(IsNothing(_Consig.FreteCobrado), 0, _Consig.FreteCobrado)
+			TAdic = TAdic + IIf(IsNothing(_Consig.ICMSValor), 0, _Consig.ICMSValor)
+			TAdic = TAdic + IIf(IsNothing(_Consig.Despesas), 0, _Consig.Despesas)
+			TAdic = TAdic - IIf(IsNothing(_Consig.Descontos), 0, _Consig.Descontos)
+			'
+			'--- verifica se o valor Total de Adicionais é menor que zero
+			If TAdic < 0 Then TAdic = 0
+			'
+			_TotalGeral = TotalProdutos + TAdic
+			'
+			'--- atualiza o label
+			lblTotalGeral.Text = Format(_TotalGeral, "c")
+			'
+			'--- retorna
+			Return _TotalGeral
+			'
+		End Get
+	End Property
+	'
+	Public ReadOnly Property TotalProdutos() As Decimal
+		Get
+			Dim TProd As Decimal = _ItensList.Sum(Function(x) x.Total)
+			_TotalProdutos = TProd
+			'--- atualiza o label
+			lblTotalProdutos.Text = Format(TProd, "c")
+			'
+			'--- retorna
+			Return _TotalProdutos
+			'
+		End Get
+	End Property
+	'    
+#End Region
+	'
+#Region "DATABINDING"
+	'
+	Private Sub PreencheDataBinding()
+		'
+		txtFreteCobrado.DataBindings.Add("Text", bindConsig, "FreteCobrado", True, DataSourceUpdateMode.OnPropertyChanged)
+		txtICMSValor.DataBindings.Add("Text", bindConsig, "ICMSValor", True, DataSourceUpdateMode.OnPropertyChanged)
+		txtDespesas.DataBindings.Add("Text", bindConsig, "Despesas", True, DataSourceUpdateMode.OnPropertyChanged)
+		txtDescontos.DataBindings.Add("Text", bindConsig, "Descontos", True, DataSourceUpdateMode.OnPropertyChanged)
+		lblFornecedor.DataBindings.Add("Text", bindConsig, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
+		lblIDConsignacao.DataBindings.Add("Text", bindConsig, "IDConsignacao", True, DataSourceUpdateMode.OnPropertyChanged)
+		lblFilial.DataBindings.Add("Text", bindConsig, "ApelidoFilial", True, DataSourceUpdateMode.OnPropertyChanged)
+		lblConsignacaoData.DataBindings.Add("Text", bindConsig, "TransacaoData", True, DataSourceUpdateMode.OnPropertyChanged)
+		txtVolumes.DataBindings.Add("Text", bindConsig, "Volumes", True, DataSourceUpdateMode.OnPropertyChanged)
+		txtFreteValor.DataBindings.Add("Text", bindConsig, "FreteValor", True, DataSourceUpdateMode.OnPropertyChanged)
+		txtObservacao.DataBindings.Add("Text", bindConsig, "Observacao", True, DataSourceUpdateMode.OnPropertyChanged)
+		'
+		'dgvItens.DataBindings.Add("Tag", bindItem, "IDProduto", True, DataSourceUpdateMode.OnPropertyChanged)
+		'
+		' FORMATA OS VALORES DO DATABINDING
+		AddHandler lblIDConsignacao.DataBindings("Text").Format, AddressOf FormatRG
+		AddHandler txtFreteValor.DataBindings("text").Format, AddressOf FormatCUR
+		AddHandler txtDescontos.DataBindings("text").Format, AddressOf FormatCUR
+		AddHandler txtDespesas.DataBindings("text").Format, AddressOf FormatCUR
+		AddHandler txtFreteCobrado.DataBindings("text").Format, AddressOf FormatCUR
+		AddHandler txtICMSValor.DataBindings("text").Format, AddressOf FormatCUR
+		AddHandler txtVolumes.DataBindings("text").Format, AddressOf Format00
+		AddHandler lblConsignacaoData.DataBindings("text").Format, AddressOf FormatDT
+		'
+		' CARREGA OS COMBOBOX
+		CarregaCmbFreteTipo()
+		CarregaCmbTransportadora()
+		CarregaCmbNotaTipo()
+		'
+		' ADD HANDLER PARA DATABINGS
+		AddHandler _Consig.AoAlterar, AddressOf HandlerAoAlterar
+		'
+	End Sub
+	'
+	Private Sub HandlerAoAlterar()
+		If _Consig.RegistroAlterado = True And Sit = EnumFlagEstado.RegistroSalvo Then
+			Sit = EnumFlagEstado.Alterado
+		End If
+	End Sub
+	'
+	' FORMATA OS BINDINGS
+	Private Sub FormatRG(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
+		e.Value = Format(e.Value, "0000")
+	End Sub
+	Private Sub FormatCUR(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
+		e.Value = FormatCurrency(e.Value, 2)
+	End Sub
+	Private Sub FormatDT(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
+		e.Value = Format(e.Value, "dd/MM/yyyy")
+	End Sub
+	Private Sub Format00(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
+		If Not IsNothing(e.Value) Then
+			e.Value = Format(CInt(e.Value), "00")
+		End If
+	End Sub
+	'
+#End Region
+	'    
+#Region "CARREGA OS COMBOBOX"
+	'
+	Private Sub CarregaCmbFreteTipo()
+		'
+		Dim dtFTipo As New DataTable
+		'--- Adiciona as Colunas
+		dtFTipo.Columns.Add("idFTipo")
+		dtFTipo.Columns.Add("FTipo")
+		'--- Adiciona todas as possibilidades de Frete
+		dtFTipo.Rows.Add(New Object() {0, "Sem Frete"})
+		dtFTipo.Rows.Add(New Object() {1, "Emitente"})
+		dtFTipo.Rows.Add(New Object() {2, "Destinatário"})
+		'
+		With cmbFreteTipo
+			.DataSource = dtFTipo
+			.ValueMember = "idFTipo"
+			.DisplayMember = "FTipo"
+			.DataBindings.Add("SelectedValue", bindConsig, "FreteTipo", True, DataSourceUpdateMode.OnPropertyChanged)
+		End With
+		'
+	End Sub
+	'
+	Private Sub CarregaCmbTransportadora()
+		Dim tBLL As New TransportadoraBLL
+		'
+		Try
+			Dim dt As DataTable = tBLL.Transportadora_GET_ListaSimples(True)
+			'
+			With cmbIDTransportadora
+				.DataSource = dt
+				.ValueMember = "IDTransportadora"
+				.DisplayMember = "Cadastro"
+				.DataBindings.Add("SelectedValue", bindConsig, "IDTransportadora", True, DataSourceUpdateMode.OnPropertyChanged)
+			End With
+		Catch ex As Exception
+			MessageBox.Show("Um erro aconteceu obter lista de Transportadoras" & vbNewLine &
+			ex.Message, "Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		End Try
+		'
+	End Sub
+	'
+	Private Sub CarregaCmbNotaTipo()
+		'
+		Dim dtNTipo As New DataTable
+		'
+		With dtNTipo
+			'--- Adiciona as Colunas
+			.Columns.Add("idNTipo")
+			.Columns.Add("NTipo")
+			'--- Adiciona todas as possibilidades de Frete
+			.Rows.Add(New Object() {1, "NF-e"})
+			.Rows.Add(New Object() {2, "Cupom Fiscal"})
+			.Rows.Add(New Object() {3, "Outros Tipos"})
+		End With
+		'
+		With cmbNotaTipo
+			.DataSource = dtNTipo
+			.ValueMember = "idNTipo"
+			.DisplayMember = "NTipo"
+		End With
+		'
+	End Sub
+	'
+	'--------------------------------------------------------------------------------------------------------
+#End Region
+	'
+#Region "CARREGA/INSERE ITENS"
+	'
+	'--- RETORNA TODOS OS ITENS DA COMPRA
+	Private Sub obterItens()
+		'
+		Dim tBLL As New TransacaoItemBLL
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			_ItensList = tBLL.GetTransacaoItens_WithCustos_List(_Consig.IDConsignacao, _IDFilial)
+			'--- Atualiza o label TOTAL
+			Dim x = TotalGeral
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao obter Itens da Consignação:..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
+	Private Sub PreencheItens()
+		'
+		'--- limpa as colunas do datagrid
+		dgvItens.Columns.Clear()
+		dgvItens.AutoGenerateColumns = False
+		'
+		' altera as propriedades importantes
+		dgvItens.MultiSelect = False
+		dgvItens.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+		dgvItens.ColumnHeadersVisible = True
+		dgvItens.AllowUserToResizeRows = False
+		dgvItens.AllowUserToResizeColumns = False
+		dgvItens.RowHeadersVisible = True
+		dgvItens.RowHeadersWidth = 30
+		dgvItens.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
+		dgvItens.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
+		dgvItens.StandardTab = True
+		'
+		'--- configura o DataSource
+		dgvItens.DataSource = GetType(List(Of))
+		dgvItens.DataSource = _ItensList
+		If dgvItens.Rows.Count > 0 Then dgvItens.CurrentCell = dgvItens.Rows(dgvItens.Rows.Count).Cells(1)
+		'--- formata as colunas do datagrid
+		FormataColunas_Itens()
+		'
+	End Sub
+	'
+	Private Sub FormataColunas_Itens()
+		'
+		' (1) COLUNA IDItem
+		With clnIDTransacaoItem
+			.DataPropertyName = "IDTransacaoItem"
+			.Width = 0
+			.Resizable = DataGridViewTriState.False
+			.Visible = False
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+		End With
+		'
+		' (2) COLUNA RGProduto
+		With clnRGProduto
+			.DataPropertyName = "RGProduto"
+			.Width = 60
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.DefaultCellStyle.Format = "0000"
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			'.DefaultCellStyle.Font = New Font("Arial Narrow", 12)
+		End With
+		'
+		' (3) COLUNA PRODUTO
+		With clnProduto
+			.DataPropertyName = "Produto"
+			.Width = 375
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+		End With
+		'
+		' (4) COLUNA QUANTIDADE
+		With clnQuantidade
+			.DataPropertyName = "Quantidade"
+			.Width = 60
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+			.DefaultCellStyle.Format = "00"
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+		End With
+		'
+		' (5) COLUNA PRECO
+		With clnPreco
+			.DataPropertyName = "Preco"
+			.Width = 90
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.DefaultCellStyle.Format = "C"
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (6) COLUNA SUB TOTAL
+		With clnSubTotal
+			.DataPropertyName = "SubTotal"
+			.Width = 90
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.DefaultCellStyle.Format = "C"
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (7) COLUNA DESCONTO
+		With clnDesconto
+			.DataPropertyName = "Desconto"
+			.Width = 80
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.DefaultCellStyle.Format = "0.00"
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (8) COLUNA TOTAL
+		With clnTotal
+			.DataPropertyName = "Total"
+			.Width = 90
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.DefaultCellStyle.Format = "C"
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (9) COLUNA ICMS
+		With clnICMS
+			.DataPropertyName = "ICMS"
+			.Width = 60
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.DefaultCellStyle.Format = "0.00"
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (10) COLUNA ST
+		With clnST
+			.DataPropertyName = "Substituicao"
+			.Width = 75
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.DefaultCellStyle.Format = "C"
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (11) COLUNA MVA
+		With clnMVA
+			.DataPropertyName = "MVA"
+			.Width = 60
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.DefaultCellStyle.Format = "0.00"
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (12) COLUNA IPI
+		With clnIPI
+			.DataPropertyName = "IPI"
+			.Width = 60
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.DefaultCellStyle.Format = "0.00"
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		'--- ADD COLUMNS
+		Me.dgvItens.Columns.AddRange(New DataGridViewColumn() {
+									 clnIDTransacaoItem, clnRGProduto, clnProduto, clnQuantidade,
+									 clnPreco, clnSubTotal, clnDesconto, clnTotal, clnICMS,
+									 clnST, clnMVA, clnIPI})
+
+		'
+	End Sub
 	'    '
 	'    '--- INSERIR NOVO ITEM NA LISTA DE PRODUTOS
 	'    '----------------------------------------------------------------------------------------------------
@@ -555,7 +564,7 @@ Public Class frmConsignacao
 	'        '--- Abre o frmItem
 	'        Dim newItem As New clTransacaoItem
 	'		'
-	'		Dim fItem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_COMPRA, _IDFilial, newItem)
+	'		Dim fItem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_Consig, _IDFilial, newItem)
 	'		fItem.ShowDialog()
 	'        '
 	'        '--- Verifica a resposa do Dialog
@@ -566,10 +575,10 @@ Public Class frmConsignacao
 	'        '
 	'        '--- Insere o novo ITEM no BD
 	'        Try
-	'            newItem.IDTransacao = _Compra.IDCompra
+	'            newItem.IDTransacao = _Consig.IDCompra
 	'            myID = ItemBLL.InserirNovoItem(newItem,
 	'                                           TransacaoItemBLL.EnumMovimento.ENTRADA,
-	'                                           _Compra.TransacaoData,
+	'                                           _Consig.TransacaoData,
 	'                                           InsereCustos:=True
 	'                                           )
 	'            newItem.IDTransacaoItem = myID
@@ -610,7 +619,7 @@ Public Class frmConsignacao
 	'            '--- Ampulheta ON
 	'            Cursor = Cursors.WaitCursor
 	'			'
-	'			Dim fitem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_COMPRA, _IDFilial, itmAtual)
+	'			Dim fitem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_Consig, _IDFilial, itmAtual)
 	'			'
 	'			fitem.ShowDialog()
 	'            '
@@ -635,10 +644,10 @@ Public Class frmConsignacao
 	'            '--- Ampulheta ON
 	'            Cursor = Cursors.WaitCursor
 	'            '
-	'            itmAtual.IDTransacao = _Compra.IDCompra
+	'            itmAtual.IDTransacao = _Consig.IDCompra
 	'            myID = ItemBLL.EditarItem(itmAtual,
 	'                                      TransacaoItemBLL.EnumMovimento.ENTRADA,
-	'                                      _Compra.TransacaoData,
+	'                                      _Consig.TransacaoData,
 	'                                      InsereCustos:=True)
 	'            '
 	'            itmAtual.IDTransacaoItem = myID
@@ -739,7 +748,7 @@ Public Class frmConsignacao
 	'        Editar_Item()
 	'    End Sub
 	'    '
-	'#End Region
+#End Region
 	'    '
 	'#Region "BOTOES DE ACAO"
 	'    '
@@ -758,7 +767,7 @@ Public Class frmConsignacao
 	'    Private Sub lblCompraData_DoubleClick(sender As Object, e As EventArgs) _
 	'        Handles lblCompraData.DoubleClick, btnData.Click
 	'        '
-	'        Dim frmDt As New frmDataInformar("Informe a data da Compra", EnumDataTipo.PassadoPresente, _Compra.TransacaoData, Me)
+	'        Dim frmDt As New frmDataInformar("Informe a data da Compra", EnumDataTipo.PassadoPresente, _Consig.TransacaoData, Me)
 	'        frmDt.ShowDialog()
 	'        '
 	'        If frmDt.DialogResult <> DialogResult.OK Then Exit Sub
@@ -772,9 +781,9 @@ Public Class frmConsignacao
 	'        Try
 	'            '
 	'            Dim tranBLL As New TransacaoBLL
-	'            If tranBLL.AtualizaTransacaoData(_Compra.IDCompra, newDt) Then
+	'            If tranBLL.AtualizaTransacaoData(_Consig.IDCompra, newDt) Then
 	'                '
-	'                _Compra.TransacaoData = frmDt.propDataInfo
+	'                _Consig.TransacaoData = frmDt.propDataInfo
 	'                lblCompraData.DataBindings("Text").ReadValue()
 	'                '
 	'            End If
@@ -817,99 +826,103 @@ Public Class frmConsignacao
 	'    '
 	'#End Region
 	'    '
-	'#Region "FORMATACAO E FLUXO"
-	'    ' CRIA TECLA DE ATALHO PARA O TAB
-	'    '---------------------------------------------------------------------------------------------------
-	'    Private Sub Form_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
-	'        '
-	'        If e.Alt AndAlso e.KeyCode = Keys.D1 Then
-	'            tabPrincipal.SelectedTab = vtab1
-	'            tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
-	'        ElseIf e.Alt AndAlso e.KeyCode = Keys.D2 Then
-	'            tabPrincipal.SelectedTab = vtab2
-	'            tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
-	'        ElseIf e.Alt AndAlso e.KeyCode = Keys.D3 Then
-	'            tabPrincipal.SelectedTab = vtab3
-	'            tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
-	'        End If
-	'        '
-	'    End Sub
-	'    '
-	'    Private Sub tabPrincipal_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabPrincipal.SelectedIndexChanged
-	'        '
-	'        If tabPrincipal.SelectedIndex = 0 Then
-	'            dgvItens.Focus()
-	'        ElseIf tabPrincipal.SelectedIndex = 1 Then
-	'            txtFreteCobrado.Focus()
-	'        ElseIf tabPrincipal.SelectedIndex = 2 Then
-	'            dgvVendaNotas.Focus()
-	'        End If
-	'        '
-	'    End Sub
-	'    '
-	'    ' HABILITA OU DESABILITA OS CONTROLES DO FRETE
-	'    '---------------------------------------------------------------------------------------------------
-	'    Private Sub cmbFreteTipo_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbFreteTipo.SelectedIndexChanged
-	'        Controla_cmbFrete()
-	'    End Sub
-	'    '
-	'    Public Sub Controla_cmbFrete()
-	'        '
-	'        If Not IsNumeric(cmbFreteTipo.SelectedValue) Then Exit Sub
-	'        '
-	'        If _Compra.FreteTipo = 0 Then
-	'            '--- Nulifica os valores das propriedades do Frete
-	'            _Compra.IDTransportadora = Nothing
-	'            _Compra.FreteValor = Nothing
-	'            _Compra.Volumes = Nothing
-	'            '--- Atualiza os novos valores dos controles
-	'            If cmbIDTransportadora.DataBindings.Count > 0 Then
-	'                cmbIDTransportadora.DataBindings.Item("SelectedValue").ReadValue()
-	'                cmbIDTransportadora.Text = String.Empty
-	'                txtFreteValor.DataBindings.Item("Text").ReadValue()
-	'                txtVolumes.DataBindings.Item("Text").ReadValue()
-	'            End If
-	'            '--- Desabilita os controles
-	'            cmbIDTransportadora.Enabled = False
-	'            btnTransportadoraAdd.Enabled = False
-	'            txtFreteValor.Enabled = False
-	'            txtVolumes.Enabled = False
-	'        Else
-	'            cmbIDTransportadora.Enabled = True
-	'            btnTransportadoraAdd.Enabled = True
-	'            txtFreteValor.Enabled = True
-	'            txtVolumes.Enabled = True
-	'        End If
-	'        '
-	'    End Sub
-	'    '
-	'    '--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
-	'    Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) Handles txtFreteCobrado.KeyDown, txtICMSValor.KeyDown,
-	'            txtDespesas.KeyDown, txtDescontos.KeyDown, txtFreteValor.KeyDown,
-	'            txtVolumes.KeyDown, txtObservacao.KeyDown
-	'        '
-	'        '--- Se for o campo observacao, verifica se esta preenchido com algum texto
-	'        '--- Se esta preenchido entao permite que o ENTER funcione como nova linha
-	'        If DirectCast(sender, TextBox).Name = "txtObservacao" AndAlso txtObservacao.Text.Trim.Length > 0 Then
-	'            Exit Sub
-	'        End If
-	'        '
-	'        If e.KeyCode = Keys.Enter Then
-	'            e.SuppressKeyPress = True
-	'            SendKeys.Send("{Tab}")
-	'        End If
-	'        '
-	'    End Sub
-	'    '
-	'    '--- CALCULA VALOR TOTAL QUANDO ALTERA OS VALORES ADICIONAIS DA NOTA
-	'    Private Sub txtControl_Validated(sender As Object, e As EventArgs) Handles txtFreteCobrado.Validated,
-	'            txtICMSValor.Validated, txtDescontos.Validated, txtDespesas.Validated
-	'        '
-	'        Dim x = TotalGeral
-	'        '
-	'    End Sub
-	'	'
-	'#End Region
+#Region "FORMATACAO E FLUXO"
+	'
+	' CRIA TECLA DE ATALHO PARA O TAB
+	'---------------------------------------------------------------------------------------------------
+	Private Sub Form_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+		'
+		If e.Alt AndAlso e.KeyCode = Keys.D1 Then
+			tabPrincipal.SelectedTab = vtab1
+			tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
+		ElseIf e.Alt AndAlso e.KeyCode = Keys.D2 Then
+			tabPrincipal.SelectedTab = vtab2
+			tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
+		ElseIf e.Alt AndAlso e.KeyCode = Keys.D3 Then
+			tabPrincipal.SelectedTab = vtab3
+			tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
+		End If
+		'
+	End Sub
+	'
+	Private Sub tabPrincipal_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabPrincipal.SelectedIndexChanged
+		'
+		If tabPrincipal.SelectedIndex = 0 Then
+			dgvItens.Focus()
+		ElseIf tabPrincipal.SelectedIndex = 1 Then
+			txtFreteCobrado.Focus()
+		ElseIf tabPrincipal.SelectedIndex = 2 Then
+			dgvNotas.Focus()
+		End If
+		'
+	End Sub
+	'
+	' HABILITA OU DESABILITA OS CONTROLES DO FRETE
+	'---------------------------------------------------------------------------------------------------
+	Private Sub cmbFreteTipo_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbFreteTipo.SelectedIndexChanged
+		Controla_cmbFrete()
+	End Sub
+	'
+	Public Sub Controla_cmbFrete()
+		'
+		If Not IsNumeric(cmbFreteTipo.SelectedValue) Then Exit Sub
+		'
+		If _Consig.FreteTipo = 0 Then
+			'
+			'--- Nulifica os valores das propriedades do Frete
+			_Consig.IDTransportadora = Nothing
+			_Consig.FreteValor = Nothing
+			_Consig.Volumes = Nothing
+			'
+			'--- Atualiza os novos valores dos controles
+			If cmbIDTransportadora.DataBindings.Count > 0 Then
+				cmbIDTransportadora.DataBindings.Item("SelectedValue").ReadValue()
+				cmbIDTransportadora.Text = String.Empty
+				txtFreteValor.DataBindings.Item("Text").ReadValue()
+				txtVolumes.DataBindings.Item("Text").ReadValue()
+			End If
+			'
+			'--- Desabilita os controles
+			cmbIDTransportadora.Enabled = False
+			btnTransportadoraAdd.Enabled = False
+			txtFreteValor.Enabled = False
+			txtVolumes.Enabled = False
+		Else
+			cmbIDTransportadora.Enabled = True
+			btnTransportadoraAdd.Enabled = True
+			txtFreteValor.Enabled = True
+			txtVolumes.Enabled = True
+		End If
+		'
+	End Sub
+	'
+	'--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
+	Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) Handles txtFreteCobrado.KeyDown, txtICMSValor.KeyDown,
+			txtDespesas.KeyDown, txtDescontos.KeyDown, txtFreteValor.KeyDown,
+			txtVolumes.KeyDown, txtObservacao.KeyDown
+		'
+		'--- Se for o campo observacao, verifica se esta preenchido com algum texto
+		'--- Se esta preenchido entao permite que o ENTER funcione como nova linha
+		If DirectCast(sender, TextBox).Name = "txtObservacao" AndAlso txtObservacao.Text.Trim.Length > 0 Then
+			Exit Sub
+		End If
+		'
+		If e.KeyCode = Keys.Enter Then
+			e.SuppressKeyPress = True
+			SendKeys.Send("{Tab}")
+		End If
+		'
+	End Sub
+	'
+	'--- CALCULA VALOR TOTAL QUANDO ALTERA OS VALORES ADICIONAIS DA NOTA
+	Private Sub txtControl_Validated(sender As Object, e As EventArgs) Handles txtFreteCobrado.Validated,
+			txtICMSValor.Validated, txtDescontos.Validated, txtDespesas.Validated
+		'
+		Dim x = TotalGeral
+		'
+	End Sub
+	'
+#End Region
 	'	'
 	'#Region "CONTROLE DO A PAGAR"
 	'	'============================================================================================================
@@ -920,7 +933,7 @@ Public Class frmConsignacao
 	'	Private Sub obterAPagar()
 	'		Dim pBLL As New APagarBLL
 	'		Try
-	'			_APagarList = pBLL.APagar_GET_PorOrigem(_Compra.IDCompra, clAPagar.Origem_APagar.Compra)
+	'			_APagarList = pBLL.APagar_GET_PorOrigem(_Consig.IDCompra, clAPagar.Origem_APagar.Compra)
 	'			'--- Atualiza o label TOTAL
 	'			AtualizaTotalAPagar()
 	'		Catch ex As Exception
@@ -1096,11 +1109,11 @@ Public Class frmConsignacao
 	'		Dim clPag As New clAPagar
 	'		'
 	'		clPag.Origem = 1
-	'		clPag.IDOrigem = _Compra.IDCompra
-	'		clPag.IDPessoa = _Compra.IDPessoaOrigem
-	'		clPag.IDFilial = _Compra.IDPessoaDestino
+	'		clPag.IDOrigem = _Consig.IDCompra
+	'		clPag.IDPessoa = _Consig.IDPessoaOrigem
+	'		clPag.IDFilial = _Consig.IDPessoaDestino
 	'		clPag.APagarValor = vl - _APagarList.Sum(Function(x) x.APagarValor)
-	'		clPag.Vencimento = _Compra.TransacaoData
+	'		clPag.Vencimento = _Consig.TransacaoData
 	'		clPag.Situacao = 0
 	'		'
 	'		'--- verifica se houve outro APagar anterior para obter valores padrão
@@ -1114,7 +1127,7 @@ Public Class frmConsignacao
 	'		End If
 	'		'
 	'		'--- abre o form frmAPagar
-	'		Dim fPag As New frmAPagarItem(Me, clPag.APagarValor, _Compra.TransacaoData, clPag, EnumFlagAcao.INSERIR, pos)
+	'		Dim fPag As New frmAPagarItem(Me, clPag.APagarValor, _Consig.TransacaoData, clPag, EnumFlagAcao.INSERIR, pos)
 	'		fPag.ShowDialog()
 	'		'
 	'		If fPag.DialogResult = DialogResult.OK Then
@@ -1141,7 +1154,7 @@ Public Class frmConsignacao
 	'		If dgvAPagar.SelectedRows.Count = 0 Then Exit Sub
 	'		'
 	'		Dim PagAtual As clAPagar = dgvAPagar.SelectedRows(0).DataBoundItem
-	'		Dim fPag As New frmAPagarItem(Me, TotalGeral, _Compra.TransacaoData, PagAtual, EnumFlagAcao.EDITAR, pos)
+	'		Dim fPag As New frmAPagarItem(Me, TotalGeral, _Consig.TransacaoData, PagAtual, EnumFlagAcao.EDITAR, pos)
 	'		fPag.ShowDialog()
 	'		'
 	'		'--- AtualizaTotalAPagar
@@ -1215,14 +1228,14 @@ Public Class frmConsignacao
 	'			'
 	'			'--- Determina se o Tipo da Cobrança é A VISTA OU PARCELADA
 	'			If _APagarList.Count = 0 Then
-	'				_Compra.CobrancaTipo = 0 '--- SEM COBRANÇA
+	'				_Consig.CobrancaTipo = 0 '--- SEM COBRANÇA
 	'			Else
 	'				For Each pag In _APagarList
-	'					If pag.Vencimento <> _Compra.TransacaoData Then
-	'						_Compra.CobrancaTipo = 2 '--- PARCELADA
+	'					If pag.Vencimento <> _Consig.TransacaoData Then
+	'						_Consig.CobrancaTipo = 2 '--- PARCELADA
 	'						Exit For
 	'					Else
-	'						_Compra.CobrancaTipo = 1 '--- A VISTA
+	'						_Consig.CobrancaTipo = 1 '--- A VISTA
 	'					End If
 	'				Next
 	'			End If
@@ -1233,8 +1246,8 @@ Public Class frmConsignacao
 	'			'--- SALVA O APAGAR PARCELAS NO BD
 	'			If Salvar_APagar() = False Then
 	'				'--- If FALSE cancel SAVE
-	'				_Compra.IDSituacao = 1
-	'				_Compra.TotalCompra = TGeral
+	'				_Consig.IDSituacao = 1
+	'				_Consig.TotalCompra = TGeral
 	'				SalvaRegistroCompra()
 	'				Sit = EnumFlagEstado.Alterado
 	'				Return
@@ -1245,8 +1258,8 @@ Public Class frmConsignacao
 	'			EfetuarFinalizacao()
 	'			'
 	'			'--- altera a situacao da transacao atual
-	'			_Compra.IDSituacao = 2 'CONCLUÍDA
-	'			_Compra.TotalCompra = TGeral
+	'			_Consig.IDSituacao = 2 'CONCLUÍDA
+	'			_Consig.TotalCompra = TGeral
 	'			'
 	'			'--- SALVA A TRANSACAO/COMPRA NO BD
 	'			If SalvaRegistroCompra() Then
@@ -1278,7 +1291,7 @@ Public Class frmConsignacao
 	'			'--- Ampulheta ON
 	'			Cursor = Cursors.WaitCursor
 	'			'
-	'			Dim obj As Object = cBLL.AtualizaCompra_Procedure_ID(_Compra)
+	'			Dim obj As Object = cBLL.AtualizaCompra_Procedure_ID(_Consig)
 	'			'
 	'			If Not IsNumeric(obj) Then
 	'				Throw New Exception(obj.ToString)
@@ -1359,10 +1372,10 @@ Public Class frmConsignacao
 	'		'----------------------------------------------------------------------------------------------
 	'		'
 	'		'--- Verifica se há FRETE COBRADO
-	'		If IsNothing(_Compra.FreteCobrado) OrElse _Compra.FreteCobrado < 0 Then _Compra.FreteCobrado = 0
+	'		If IsNothing(_Consig.FreteCobrado) OrElse _Consig.FreteCobrado < 0 Then _Consig.FreteCobrado = 0
 	'		'
 	'		'--- Verifica se há TIPO DE FRETE
-	'		If IsNothing(_Compra.FreteTipo) Then
+	'		If IsNothing(_Consig.FreteTipo) Then
 	'			MessageBox.Show("O campo TIPO DE FRETE não pode ficar vazio...", "Campo Necessário",
 	'							MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
 	'			tabPrincipal.SelectedTab = vtab2
@@ -1371,8 +1384,8 @@ Public Class frmConsignacao
 	'		End If
 	'		'
 	'		'--- Verifica se houve dupla cobrança de FRETE na compra
-	'		If _Compra.FreteTipo = 2 Then
-	'			If _Compra.FreteCobrado > 0 Then
+	'		If _Consig.FreteTipo = 2 Then
+	'			If _Consig.FreteCobrado > 0 Then
 	'				MessageBox.Show("Quando o TIPO de FRETE é DESTINÁRIO, o valor do FRETE deve ser inserido no campo: VALOR DO FRETE..." & vbNewLine &
 	'								"Favor retirar o valor do FRETE COBRADO ou alterar o tipo de frete...", "Frete Cobrado",
 	'								MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -1382,7 +1395,7 @@ Public Class frmConsignacao
 	'			End If
 	'			'
 	'			'--- Verifica se o valor do Frete foi inserido
-	'			If If(_Compra.FreteValor, 0) = 0 Then
+	'			If If(_Consig.FreteValor, 0) = 0 Then
 	'				MessageBox.Show("O VALOR DO FRETE precisa ser maior do que Zero" & vbNewLine &
 	'								"Favor inserir o Valor do Frete", "Frete Valor",
 	'								MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -1393,9 +1406,9 @@ Public Class frmConsignacao
 	'			'
 	'		End If
 	'		'
-	'		If IsNothing(_Compra.ICMSValor) OrElse _Compra.ICMSValor < 0 Then _Compra.ICMSValor = 0
-	'		If IsNothing(_Compra.Despesas) OrElse _Compra.Despesas < 0 Then _Compra.Despesas = 0
-	'		If IsNothing(_Compra.Descontos) OrElse _Compra.Descontos < 0 Then _Compra.Descontos = 0
+	'		If IsNothing(_Consig.ICMSValor) OrElse _Consig.ICMSValor < 0 Then _Consig.ICMSValor = 0
+	'		If IsNothing(_Consig.Despesas) OrElse _Consig.Despesas < 0 Then _Consig.Despesas = 0
+	'		If IsNothing(_Consig.Descontos) OrElse _Consig.Descontos < 0 Then _Consig.Descontos = 0
 	'		'
 	'		Return True
 	'		'
@@ -1415,7 +1428,7 @@ Public Class frmConsignacao
 	'			'--- Ampulheta ON
 	'			Cursor = Cursors.WaitCursor
 	'			'
-	'			pagBLL.APagarDeletePorOrigem(_Compra.IDCompra, clAPagar.Origem_APagar.Compra, False)
+	'			pagBLL.APagarDeletePorOrigem(_Consig.IDCompra, clAPagar.Origem_APagar.Compra, False)
 	'			'
 	'			'--- Insere cada um APagar no BD
 	'			For Each pag As clAPagar In _APagarList
@@ -1449,10 +1462,10 @@ Public Class frmConsignacao
 	'			'--- Ampulheta ON
 	'			Cursor = Cursors.WaitCursor
 	'			'
-	'			Dim FreteTotal As Decimal = IIf(IsNothing(_Compra.FreteCobrado), 0, _Compra.FreteCobrado)
-	'			FreteTotal += IIf(IsNothing(_Compra.FreteValor), 0, _Compra.FreteValor)
+	'			Dim FreteTotal As Decimal = IIf(IsNothing(_Consig.FreteCobrado), 0, _Consig.FreteCobrado)
+	'			FreteTotal += IIf(IsNothing(_Consig.FreteValor), 0, _Consig.FreteValor)
 	'			'
-	'			Response = cBLL.CompraFinalizar(_Compra.IDCompra, _Compra.TransacaoData, _Compra.IDPessoaOrigem, FreteTotal, TProdutos)
+	'			Response = cBLL.CompraFinalizar(_Consig.IDCompra, _Consig.TransacaoData, _Consig.IDPessoaOrigem, FreteTotal, TProdutos)
 	'			'
 	'			If Not IsNumeric(Response) Then
 	'				Throw New Exception(Response.ToString)
@@ -1599,11 +1612,11 @@ Public Class frmConsignacao
 	'					VerificaAlteracao = True
 	'				Case "cmbFreteTipo"
 	'					VerificaAlteracao = False
-	'					cmbFreteTipo.SelectedValue = IIf(IsNothing(_Compra.FreteTipo), -1, _Compra.FreteTipo)
+	'					cmbFreteTipo.SelectedValue = IIf(IsNothing(_Consig.FreteTipo), -1, _Consig.FreteTipo)
 	'					VerificaAlteracao = True
 	'				Case "cmbIDTransportadora"
 	'					VerificaAlteracao = False
-	'					cmbIDTransportadora.SelectedValue = IIf(IsNothing(_Compra.IDTransportadora), -1, _Compra.IDTransportadora)
+	'					cmbIDTransportadora.SelectedValue = IIf(IsNothing(_Consig.IDTransportadora), -1, _Consig.IDTransportadora)
 	'					VerificaAlteracao = True
 	'			End Select
 	'			'
@@ -1644,7 +1657,7 @@ Public Class frmConsignacao
 	'					   frmDialog.DialogIcon.Question) = DialogResult.No Then Return True
 	'		'
 	'		'--- Edita o registro e altera a situação
-	'		_Compra.IDSituacao = 1
+	'		_Consig.IDSituacao = 1
 	'		Sit = EnumFlagEstado.Alterado
 	'		'
 	'		'--- SAVE A TRANSACAO/COMPRA NO BD
@@ -1686,137 +1699,131 @@ Public Class frmConsignacao
 	'	'
 	'#End Region
 	'	'
-	'#Region "NOTA FISCAL CONTROLE GRID"
-	'	'
-	'	Private Sub obterNotas()
-	'		'
-	'		Dim nBLL As New NotaFiscalBLL
-	'		Try
-	'			_NotasList = nBLL.NotaFiscal_GET_PorIDCompra(_Compra.IDCompra)
-	'		Catch ex As Exception
-	'			MessageBox.Show("Um execeção ocorreu ao obter a listagem de Notas Fiscais:" & vbNewLine &
-	'							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-	'		End Try
-	'		'
-	'	End Sub
-	'	'
-	'	Private Sub Preenche_Notas()
-	'		'
-	'		With dgvVendaNotas
-	'			'
-	'			'--- limpa as colunas do datagrid
-	'			.Columns.Clear()
-	'			.AutoGenerateColumns = False
-	'			'
-	'			' altera as propriedades importantes
-	'			.MultiSelect = False
-	'			.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-	'			.ColumnHeadersVisible = True
-	'			.AllowUserToResizeRows = False
-	'			.AllowUserToResizeColumns = False
-	'			.RowHeadersVisible = True
-	'			.RowHeadersWidth = 30
-	'			.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
-	'			.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-	'			.StandardTab = True
-	'			'
-	'			'--- configura o DataSource
-	'			.DataSource = bindNota
-	'			If .Rows.Count > 0 Then .CurrentCell = .Rows(.Rows.Count).Cells(1)
-	'		End With
-	'		'
-	'		'--- formata as colunas do datagrid
-	'		FormataGrid_Notas()
-	'		'
-	'	End Sub
-	'	'
-	'	Private Sub FormataGrid_Notas()
-	'		'
-	'		Dim cellStyleCur As New DataGridViewCellStyle
-	'		cellStyleCur.Format = "c"
-	'		cellStyleCur.NullValue = Nothing
-	'		cellStyleCur.Alignment = DataGridViewContentAlignment.MiddleRight
-	'		'
-	'		' (1) COLUNA CHAVE ACESSO
-	'		dgvVendaNotas.Columns.Add("clnChaveAcesso", "Chave Acesso")
-	'		With dgvVendaNotas.Columns("clnChaveAcesso")
-	'			.DataPropertyName = "ChaveAcesso"
-	'			.Width = 350
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = True
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'		End With
-	'		'
-	'		' (2) COLUNA NOTA TIPO DESCRIÇÃO
-	'		dgvVendaNotas.Columns.Add("clnNotaTipoDesc", "Nota Tipo")
-	'		With dgvVendaNotas.Columns("clnNotaTipoDesc")
-	'			.DataPropertyName = "NotaTipoDesc"
-	'			.Width = 100
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = True
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-	'			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft
-	'		End With
-	'		'
-	'		' (3) COLUNA NOTA SERIE
-	'		dgvVendaNotas.Columns.Add("clnNotaSerie", "Série")
-	'		With dgvVendaNotas.Columns("clnNotaSerie")
-	'			.DefaultCellStyle.Format = "000"
-	'			.DataPropertyName = "NotaSerie"
-	'			.Width = 70
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = True
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'		End With
-	'		'
-	'		' (4) COLUNA NOTA NUMERO
-	'		dgvVendaNotas.Columns.Add("clnNotaNumero", "Número")
-	'		With dgvVendaNotas.Columns("clnNotaNumero")
-	'			.DataPropertyName = "NotaNumero"
-	'			.Width = 70
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = True
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-	'			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-	'		End With
-	'		'
-	'		' (5) COLUNA NOTA EMISSAO DATA
-	'		dgvVendaNotas.Columns.Add("clnEmissaoData", "Emissão Dt.")
-	'		With dgvVendaNotas.Columns("clnEmissaoData")
-	'			.DataPropertyName = "EmissaoData"
-	'			.Width = 100
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = True
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-	'			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-	'		End With
-	'		'
-	'		' (6) COLUNA NOTA VALOR
-	'		dgvVendaNotas.Columns.Add("clnNotaValor", "Valor")
-	'		With dgvVendaNotas.Columns("clnNotaValor")
-	'			.DefaultCellStyle = cellStyleCur
-	'			.DataPropertyName = "NotaValor"
-	'			.Width = 80
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = True
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'		End With
-	'		'
-	'	End Sub
-	'	'
+#Region "NOTA FISCAL CONTROLE GRID"
+	'
+	Private Sub obterNotas()
+		'
+		Dim nBLL As New NotaFiscalBLL
+		Try
+			_NotasList = nBLL.NotaFiscal_GET_PorIDCompra(_Consig.IDConsignacao)
+		Catch ex As Exception
+			MessageBox.Show("Um execeção ocorreu ao obter a listagem de Notas Fiscais:" & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		End Try
+		'
+	End Sub
+	'
+	Private Sub Preenche_Notas()
+		'
+		With dgvNotas
+			'
+			'--- limpa as colunas do datagrid
+			.Columns.Clear()
+			.AutoGenerateColumns = False
+			'
+			' altera as propriedades importantes
+			.MultiSelect = False
+			.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+			.ColumnHeadersVisible = True
+			.AllowUserToResizeRows = False
+			.AllowUserToResizeColumns = False
+			.RowHeadersVisible = True
+			.RowHeadersWidth = 30
+			.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
+			.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
+			.StandardTab = True
+			'
+			'--- configura o DataSource
+			.DataSource = bindNota
+			If .Rows.Count > 0 Then .CurrentCell = .Rows(.Rows.Count).Cells(1)
+		End With
+		'
+		'--- formata as colunas do datagrid
+		FormataGrid_Notas()
+		'
+	End Sub
+	'	
+	Private Sub FormataGrid_Notas()
+		'
+		Dim cellStyleCur As New DataGridViewCellStyle
+		cellStyleCur.Format = "c"
+		cellStyleCur.NullValue = Nothing
+		cellStyleCur.Alignment = DataGridViewContentAlignment.MiddleRight
+		'
+		' (1) COLUNA CHAVE ACESSO
+		With clnChaveAcesso
+			.DataPropertyName = "ChaveAcesso"
+			.Width = 350
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+		End With
+		'
+		' (2) COLUNA NOTA TIPO DESCRIÇÃO
+		With clnNotaTipo
+			.DataPropertyName = "NotaTipoDesc"
+			.Width = 100
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft
+		End With
+		'
+		' (3) COLUNA NOTA SERIE
+		With clnNotaSerie
+			.DefaultCellStyle.Format = "000"
+			.DataPropertyName = "NotaSerie"
+			.Width = 70
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (4) COLUNA NOTA NUMERO
+		With clnNotaNumero
+			.DataPropertyName = "NotaNumero"
+			.Width = 70
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+		End With
+		'
+		' (5) COLUNA NOTA EMISSAO DATA
+		With clnEmissaoData
+			.DataPropertyName = "EmissaoData"
+			.Width = 100
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+		End With
+		'
+		' (6) COLUNA NOTA VALOR
+		With clnNotaValor
+			.DefaultCellStyle = cellStyleCur
+			.DataPropertyName = "NotaValor"
+			.Width = 80
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+	End Sub
+	'
 	'	' COLOCA UM TEXTO QUANDO A CHAVE DE ACESSO É NULA
 	'	Private Sub dgvVendaNotas_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvVendaNotas.CellFormatting
 	'		'
@@ -1910,7 +1917,7 @@ Public Class frmConsignacao
 	'		txtNotaSerie.Clear()
 	'		txtNotaNumero.Clear()
 	'		txtNotaValor.Clear()
-	'		txtEmissaoData.Text = _Compra.TransacaoData
+	'		txtEmissaoData.Text = _Consig.TransacaoData
 	'	End Sub
 	'	'
 	'	'--- Preencher os controles da NF pelo NotaLista
@@ -2002,7 +2009,7 @@ Public Class frmConsignacao
 	'		With newNota
 	'			.ChaveAcesso = txtChaveAcesso.Text
 	'			.EmissaoData = txtEmissaoData.Text
-	'			.IDTransacao = _Compra.IDCompra
+	'			.IDTransacao = _Consig.IDCompra
 	'			.NotaNumero = txtNotaNumero.Text
 	'			.NotaSerie = txtNotaSerie.Text
 	'			.NotaTipo = Convert.ToByte(cmbNotaTipo.SelectedValue)
@@ -2104,7 +2111,7 @@ Public Class frmConsignacao
 	'		If txtChaveAcesso.Text.Length >= 44 Then PreencheCamposPelaChave()
 	'	End Sub
 	'	'
-	'#End Region
+#End Region
 	'	'
 	'#Region "MENU ACAO INFERIOR"
 	'	'
@@ -2162,7 +2169,7 @@ Public Class frmConsignacao
 	'		'
 	'		If IsNothing(newCompra) Then Exit Sub
 	'		'
-	'		_Compra = newCompra
+	'		_Consig = newCompra
 	'		'
 	'	End Sub
 	'	'
@@ -2194,7 +2201,7 @@ Public Class frmConsignacao
 	'			'--- Ampulheta ON
 	'			Cursor = Cursors.WaitCursor
 	'			'
-	'			If cBLL.DeletaCompraPorID(_Compra.IDCompra, _IDFilial, New Info) Then
+	'			If cBLL.DeletaCompraPorID(_Consig.IDCompra, _IDFilial, New Info) Then
 	'				'
 	'				'--- fecha
 	'				Close()
@@ -2224,7 +2231,7 @@ Public Class frmConsignacao
 	'	Private Sub miImprimirEtiquetas_Click(sender As Object, e As EventArgs) Handles miImprimirEtiquetas.Click
 	'		'
 	'		'--- CHECK IDCOMPRA
-	'		If IsNothing(_Compra.IDCompra) OrElse _Compra.IDCompra = 0 Then
+	'		If IsNothing(_Consig.IDCompra) OrElse _Consig.IDCompra = 0 Then
 	'			'
 	'			AbrirDialog("A Compra ainda não efetuada..." & vbNewLine &
 	'						"Favor efetuar a compra para imprimir as Etiquetas.",
@@ -2249,7 +2256,7 @@ Public Class frmConsignacao
 	'			'
 	'			Dim eBLL As New ProdutoEtiquetaBLL
 	'			'
-	'			eBLL.Insert_EtiquetasTransacao(_Compra.IDCompra)
+	'			eBLL.Insert_EtiquetasTransacao(_Consig.IDCompra)
 	'			'
 	'			If AbrirDialog("Etiquetas inseridas na listagem com sucesso..." & vbNewLine &
 	'						   "Deseja abrir o formulário de Impressão de Etiquetas?",

@@ -111,6 +111,9 @@ Partial Class frmPrincipal
 		Me.miConfiguracaoSistema = New System.Windows.Forms.ToolStripMenuItem()
 		Me.miCFOP = New System.Windows.Forms.ToolStripMenuItem()
 		Me.miEmailServer = New System.Windows.Forms.ToolStripMenuItem()
+		Me.miOutrasConfigurações = New System.Windows.Forms.ToolStripMenuItem()
+		Me.miAtividadesDosClientes = New System.Windows.Forms.ToolStripMenuItem()
+		Me.miPlanosDeParcelamento = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
 		Me.miConfiguracaoUsuarios = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripSeparator15 = New System.Windows.Forms.ToolStripSeparator()
@@ -132,9 +135,7 @@ Partial Class frmPrincipal
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.lblHora = New System.Windows.Forms.Label()
 		Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-		Me.miOutrasConfigurações = New System.Windows.Forms.ToolStripMenuItem()
-		Me.miAtividadesDosClientes = New System.Windows.Forms.ToolStripMenuItem()
-		Me.miPlanosDeParcelamento = New System.Windows.Forms.ToolStripMenuItem()
+		Me.miConsignacaoEntrada = New System.Windows.Forms.ToolStripMenuItem()
 		Me.tsPrincipal.SuspendLayout()
 		Me.Panel1.SuspendLayout()
 		CType(Me.SContainerPrincipal, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -495,7 +496,7 @@ Partial Class frmPrincipal
 		'tsbCompras
 		'
 		Me.tsbCompras.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-		Me.tsbCompras.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miNovaCompra, Me.miSimplesEntrada, Me.ToolStripSeparator6, Me.miProcurarOperacaoEntrada, Me.ToolStripSeparator16, Me.miNovaReserva, Me.miProcurarReserva, Me.ToolStripSeparator17, Me.miControleDePedidos})
+		Me.tsbCompras.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miNovaCompra, Me.miSimplesEntrada, Me.miConsignacaoEntrada, Me.ToolStripSeparator6, Me.miProcurarOperacaoEntrada, Me.ToolStripSeparator16, Me.miNovaReserva, Me.miProcurarReserva, Me.ToolStripSeparator17, Me.miControleDePedidos})
 		Me.tsbCompras.Image = Global.NovaSiao.My.Resources.Resources.compras_entradas
 		Me.tsbCompras.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.tsbCompras.Name = "tsbCompras"
@@ -513,10 +514,10 @@ Partial Class frmPrincipal
 		'
 		'miNovaCompraNormal
 		'
-		Me.miNovaCompraNormal.Image = Global.NovaSiao.My.Resources.Resources.editar
+		Me.miNovaCompraNormal.Image = Global.NovaSiao.My.Resources.Resources.full_page
 		Me.miNovaCompraNormal.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
 		Me.miNovaCompraNormal.Name = "miNovaCompraNormal"
-		Me.miNovaCompraNormal.Size = New System.Drawing.Size(168, 30)
+		Me.miNovaCompraNormal.Size = New System.Drawing.Size(188, 30)
 		Me.miNovaCompraNormal.Text = "Normal"
 		'
 		'miNovaCompraNFeXML
@@ -524,7 +525,7 @@ Partial Class frmPrincipal
 		Me.miNovaCompraNFeXML.Image = Global.NovaSiao.My.Resources.Resources.download
 		Me.miNovaCompraNFeXML.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
 		Me.miNovaCompraNFeXML.Name = "miNovaCompraNFeXML"
-		Me.miNovaCompraNFeXML.Size = New System.Drawing.Size(168, 30)
+		Me.miNovaCompraNFeXML.Size = New System.Drawing.Size(188, 30)
 		Me.miNovaCompraNFeXML.Text = "Por NFe XML"
 		'
 		'miSimplesEntrada
@@ -842,6 +843,31 @@ Partial Class frmPrincipal
 		Me.miEmailServer.Size = New System.Drawing.Size(246, 30)
 		Me.miEmailServer.Text = "Configuração do Email"
 		'
+		'miOutrasConfigurações
+		'
+		Me.miOutrasConfigurações.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAtividadesDosClientes, Me.miPlanosDeParcelamento})
+		Me.miOutrasConfigurações.Image = Global.NovaSiao.My.Resources.Resources.Controles_24x24
+		Me.miOutrasConfigurações.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+		Me.miOutrasConfigurações.Name = "miOutrasConfigurações"
+		Me.miOutrasConfigurações.Size = New System.Drawing.Size(246, 30)
+		Me.miOutrasConfigurações.Text = "Outras Configurações"
+		'
+		'miAtividadesDosClientes
+		'
+		Me.miAtividadesDosClientes.Image = Global.NovaSiao.My.Resources.Resources.editar
+		Me.miAtividadesDosClientes.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+		Me.miAtividadesDosClientes.Name = "miAtividadesDosClientes"
+		Me.miAtividadesDosClientes.Size = New System.Drawing.Size(242, 30)
+		Me.miAtividadesDosClientes.Text = "Atividades dos Clientes"
+		'
+		'miPlanosDeParcelamento
+		'
+		Me.miPlanosDeParcelamento.Image = Global.NovaSiao.My.Resources.Resources.editar
+		Me.miPlanosDeParcelamento.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+		Me.miPlanosDeParcelamento.Name = "miPlanosDeParcelamento"
+		Me.miPlanosDeParcelamento.Size = New System.Drawing.Size(242, 30)
+		Me.miPlanosDeParcelamento.Text = "Planos de Parcelamento"
+		'
 		'ToolStripSeparator2
 		'
 		Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
@@ -1079,30 +1105,13 @@ Partial Class frmPrincipal
 		Me.Timer1.Enabled = True
 		Me.Timer1.Interval = 600
 		'
-		'miOutrasConfigurações
+		'miConsignacaoEntrada
 		'
-		Me.miOutrasConfigurações.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAtividadesDosClientes, Me.miPlanosDeParcelamento})
-		Me.miOutrasConfigurações.Image = Global.NovaSiao.My.Resources.Resources.Controles_24x24
-		Me.miOutrasConfigurações.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-		Me.miOutrasConfigurações.Name = "miOutrasConfigurações"
-		Me.miOutrasConfigurações.Size = New System.Drawing.Size(246, 30)
-		Me.miOutrasConfigurações.Text = "Outras Configurações"
-		'
-		'miAtividadesDosClientes
-		'
-		Me.miAtividadesDosClientes.Image = Global.NovaSiao.My.Resources.Resources.editar
-		Me.miAtividadesDosClientes.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-		Me.miAtividadesDosClientes.Name = "miAtividadesDosClientes"
-		Me.miAtividadesDosClientes.Size = New System.Drawing.Size(242, 30)
-		Me.miAtividadesDosClientes.Text = "Atividades dos Clientes"
-		'
-		'miPlanosDeParcelamento
-		'
-		Me.miPlanosDeParcelamento.Image = Global.NovaSiao.My.Resources.Resources.editar
-		Me.miPlanosDeParcelamento.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-		Me.miPlanosDeParcelamento.Name = "miPlanosDeParcelamento"
-		Me.miPlanosDeParcelamento.Size = New System.Drawing.Size(242, 30)
-		Me.miPlanosDeParcelamento.Text = "Planos de Parcelamento"
+		Me.miConsignacaoEntrada.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
+		Me.miConsignacaoEntrada.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+		Me.miConsignacaoEntrada.Name = "miConsignacaoEntrada"
+		Me.miConsignacaoEntrada.Size = New System.Drawing.Size(259, 30)
+		Me.miConsignacaoEntrada.Text = "Consignação de Entrada"
 		'
 		'frmPrincipal
 		'
@@ -1247,4 +1256,5 @@ Partial Class frmPrincipal
 	Friend WithEvents miOutrasConfigurações As ToolStripMenuItem
 	Friend WithEvents miAtividadesDosClientes As ToolStripMenuItem
 	Friend WithEvents miPlanosDeParcelamento As ToolStripMenuItem
+	Friend WithEvents miConsignacaoEntrada As ToolStripMenuItem
 End Class

@@ -1123,6 +1123,29 @@ Public Class frmPrincipal
 		'
 	End Sub
 	'
+	Private Sub miConsignacaoEntrada_Click(sender As Object, e As EventArgs) Handles miConsignacaoEntrada.Click
+		'
+		Dim c As New AcaoGlobal
+		Dim obj As Object = c.ConsignacaoEntrada_Nova
+		'
+		If IsNothing(obj) Then Exit Sub
+		'
+		Try
+			OcultaMenuPrincipal()
+			Dim f As New frmConsignacao(obj)
+			f.MdiParent = Me
+			f.StartPosition = FormStartPosition.CenterScreen
+			f.Show()
+		Catch ex As Exception
+			MessageBox.Show("Um erro inesperado ocorreu ao abrir Nova Consignação",
+							"Erro",
+							MessageBoxButtons.OK,
+							MessageBoxIcon.Error)
+			MostraMenuPrincipal()
+		End Try
+		'
+	End Sub
+	'
 #End Region
 	'
 #Region "A RECEBER"

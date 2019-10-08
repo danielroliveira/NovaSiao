@@ -528,4 +528,96 @@ Public Class ConsignacaoBLL
 		'
 	End Function
 	'
+	'==========================================================================================
+	' INSERT ITEM CONSIGNACAO COMPRA
+	'==========================================================================================
+	Public Function InsertItemConsigCompra(item As clConsignacaoCompraItem,
+										   Optional dbTran As AcessoDados = Nothing) As clConsignacaoCompraItem
+		'
+		Try
+			Dim db As AcessoDados = If(dbTran, New AcessoDados)
+			'
+			db.LimparParametros()
+			db.AdicionarParametros("@IDConsignacaoCompra", item.IDConsignacaoCompra)
+			db.AdicionarParametros("@IDProduto", item.IDProduto)
+			db.AdicionarParametros("@Quantidade", item.Quantidade)
+			db.AdicionarParametros("@Preco", item.Preco)
+			db.AdicionarParametros("@Desconto", item.Desconto)
+			'
+			Dim query As String = "INSERT INTO tblConsignacaoCompraItem " &
+								  "(IDConsignacaoCompra, IDProduto, Quantidade, Preco, Desconto) " &
+								  "VALUES " &
+								  "(@IDConsignacaoCompra, @IDProduto, @Quantidade, @Preco, @Desconto)"
+			'
+			Dim newID As Integer = db.ExecutarInsertGetID(query)
+			'
+			item.IDItem = newID
+			Return item
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' UPDATE ITEM CONSIGNACAO COMPRA
+	'==========================================================================================
+	Public Function UpdateItemConsigCompra(item As clConsignacaoCompraItem,
+										   Optional dbTran As AcessoDados = Nothing) As Boolean
+		'
+		Try
+			Dim db As AcessoDados = If(dbTran, New AcessoDados)
+			'
+			db.LimparParametros()
+			db.AdicionarParametros("@IDItem", item.IDItem)
+			db.AdicionarParametros("@IDConsignacaoCompra", item.IDConsignacaoCompra)
+			db.AdicionarParametros("@IDProduto", item.IDProduto)
+			db.AdicionarParametros("@Quantidade", item.Quantidade)
+			db.AdicionarParametros("@Preco", item.Preco)
+			db.AdicionarParametros("@Desconto", item.Desconto)
+			'
+			Dim query As String = "UPDATE tblConsignacaoCompraItem SET " &
+								  "IDConsignacaoCompra = @IDConsignacaoCompra, " &
+								  "IDProduto = @IDProduto, " &
+								  "Quantidade = @Quantidade, " &
+								  "Preco = @Preco, " &
+								  "Desconto = @Desconto " &
+								  "WHERE IDItem = @Item"
+			'
+			db.ExecutarManipulacao(CommandType.Text, query)
+
+			Return True
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' DELETE ITEM CONSIGNACAO COMPRA
+	'==========================================================================================
+	Public Function DeleteItemConsigCompra(item As clConsignacaoCompraItem,
+										   Optional dbTran As AcessoDados = Nothing) As Boolean
+		'
+		Try
+			Dim db As AcessoDados = If(dbTran, New AcessoDados)
+			'
+			db.LimparParametros()
+			db.AdicionarParametros("@IDItem", item.IDItem)
+			'
+			Dim query As String = "DELETE tblConsignacaoCompraItem " &
+								  "WHERE IDItem = @Item"
+			'
+			db.ExecutarManipulacao(CommandType.Text, query)
+
+			Return True
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
 End Class

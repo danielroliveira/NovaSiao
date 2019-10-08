@@ -2098,7 +2098,7 @@ Public Class frmCompraGetNFe
 				'
 			End With
 			'
-			newCompra = cmpBLL.SalvaNovaCompra_Procedure_Compra(newCompra, dbTran)
+			newCompra = cmpBLL.SalvaNovaCompra_Compra(newCompra, dbTran)
 			'
 			If IsNothing(newCompra) Then
 				Throw New Exception("Um erro ocorreu ao salvar ao Inserir Nova Compra")
