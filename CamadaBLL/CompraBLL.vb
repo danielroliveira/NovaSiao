@@ -84,11 +84,11 @@ Public Class CompraBLL
         End Try
         '
     End Function
-    '
-    '--------------------------------------------------------------------------------------------
-    ' UPDATE
-    '--------------------------------------------------------------------------------------------
-    Public Function AtualizaCompra_Procedure_ID(ByVal _compra As clCompra) As String
+	'
+	'--------------------------------------------------------------------------------------------
+	' UPDATE
+	'--------------------------------------------------------------------------------------------
+	Public Function AtualizaCompra_Procedure_ID(ByVal _compra As clCompra) As String
 		Dim dbTran As New AcessoDados
 		'
 		'Limpa os Parâmetros
@@ -125,11 +125,47 @@ Public Class CompraBLL
 		Try
 			Return dbTran.ExecutarManipulacao(CommandType.StoredProcedure, "uspCompra_Alterar")
 		Catch ex As Exception
-            Throw ex
-            Return Nothing
-        End Try
-        '
-    End Function
+			Throw ex
+			Return Nothing
+		End Try
+		'
+	End Function
+	'
+	'--------------------------------------------------------------------------------------------
+	' UPDATE TOTAL DA COMPRA
+	'--------------------------------------------------------------------------------------------
+	Public Function UpdateCompraTotal(IDCompra As Integer, newTotal As Double) As Boolean
+		'
+		Dim dbTran As AcessoDados = Nothing
+		Dim query As String = ""
+		'
+		Try
+			'
+			'--- BEGIN
+			'----------------------------------------------------------------------------------
+			dbTran = New AcessoDados
+			'
+			'--- UPDATE TBLCONSIGNACAO
+			'----------------------------------------------------------------------------------
+			dbTran.LimparParametros()
+			dbTran.AdicionarParametros("@IDCompra", IDCompra)
+			dbTran.AdicionarParametros("@TotalCompra", newTotal)
+			'
+			query = "UPDATE tblCompra SET " &
+					"TotalCompra = @TotalCompra " &
+					"WHERE IDCompra = @IDCompra"
+			'
+			dbTran.ExecutarManipulacao(CommandType.Text, query)
+			'
+			'--- RETURN
+			'----------------------------------------------------------------------------------
+			Return True
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
 	'
 	'--------------------------------------------------------------------------------------------
 	' INSERT NOVA COMPRA E RETORNA UMA CLCOMPRA
@@ -680,50 +716,47 @@ Public Class CompraBLL
     Public Function GetCompraLista_Procura(IDFilial As Integer,
                                            Optional dtInicial As Date? = Nothing,
                                            Optional dtFinal As Date? = Nothing) As List(Of clCompra)
-        '
-        Dim sql As New SQLControl
-        '
-        sql.AddParam("@IDFilial", IDFilial)
-        Dim myQuery As String = "SELECT * FROM qryCompra WHERE IDPessoaDestino = @IDFilial"
-        '
-        If Not IsNothing(dtInicial) Then
-            '
-            sql.AddParam("@DataInicial", dtInicial)
-            myQuery = myQuery & " AND TransacaoData >= @DataInicial"
-            '
-        End If
-        '
-        If Not IsNothing(dtFinal) Then
-            '
-            sql.AddParam("@DataFinal", dtFinal)
-            myQuery = myQuery & " AND TransacaoData <= @DataFinal"
-            '
-        End If
-        '
-        Try
-            Dim cmpList As New List(Of clCompra)
-            '
-            sql.ExecQuery(myQuery)
-            '
-            If sql.HasException Then
-                Throw New Exception(sql.Exception)
-            End If
-            '
-            If sql.DBDT.Rows.Count = 0 Then Return cmpList
-            '
-            For Each r As DataRow In sql.DBDT.Rows
-                Dim cmp As New clCompra
-                '
-                cmp = ConvertDtRow_clCompra(r)
-                '
-                cmpList.Add(cmp)
-                '
-            Next
-            '
-            Return cmpList
-            '
-        Catch ex As Exception
-            Throw ex
+		'
+		Try
+			'
+			Dim db As New AcessoDados
+			'
+			db.AdicionarParametros("@IDFilial", IDFilial)
+			Dim myQuery As String = "SELECT * FROM qryCompra WHERE IDPessoaDestino = @IDFilial"
+			'
+			If Not IsNothing(dtInicial) Then
+				'
+				db.AdicionarParametros("@DataInicial", dtInicial)
+				myQuery = myQuery & " AND TransacaoData >= @DataInicial"
+				'
+			End If
+			'
+			If Not IsNothing(dtFinal) Then
+				'
+				db.AdicionarParametros("@DataFinal", dtFinal)
+				myQuery = myQuery & " AND TransacaoData <= @DataFinal"
+				'
+			End If
+			'
+			Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, myQuery)
+			'
+			Dim cmpList As New List(Of clCompra)
+			'
+			If dt.Rows.Count = 0 Then Return cmpList
+			'
+			For Each r As DataRow In dt.Rows
+				Dim cmp As New clCompra
+				'
+				cmp = ConvertDtRow_clCompra(r)
+				'
+				cmpList.Add(cmp)
+				'
+			Next
+			'
+			Return cmpList
+			'
+		Catch ex As Exception
+			Throw ex
         End Try
         '
     End Function

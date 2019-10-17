@@ -122,7 +122,7 @@ Public Class frmCompraGetNFe
 			'
 			CNPJFilial = frmP.propContaPadrao.CNPJFilial
 			'
-			If CNPJFilial.Length > 0 Then
+			If CNPJFilial.Length > 0 AndAlso CNPJFilial <> "00.000.000/0000-00" Then
 				Return CNPJFilial
 			End If
 			'
@@ -1314,7 +1314,7 @@ Public Class frmCompraGetNFe
 		'--- CHECK PRECO DE COMPRA
 		Dim ItemPrecoCompra As Double = Format(CDbl(item.vUnCom.Replace(".", ",")), "#,##0.00")
 		'
-		If PrecoCompra <> Format(CDbl(item.vUnCom.Replace(".", ",")), "#,##0.00") Then
+		If PrecoCompra <> ItemPrecoCompra Then
 			'
 			If AbrirDialog("Novo Preço de Compra na NFe é diferente do atual..." & vbCrLf &
 						   "ITEM: " & item.xProd & vbCrLf &

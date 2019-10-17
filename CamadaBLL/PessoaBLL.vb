@@ -802,13 +802,13 @@ Public Class PessoaBLL
         dbTran.AdicionarParametros("@Cidade", PJ.Cidade)
         dbTran.AdicionarParametros("@UF", PJ.UF)
         dbTran.AdicionarParametros("@CEP", PJ.CEP)
-        '
-        myQuery = "INSERT INTO tblPessoaEndereco
-			      (IDPessoa, Endereco, Bairro, Cidade, UF, CEP)
-			      VALUES (@IDPessoa, @Endereco, @Bairro, @Cidade, @UF, @CEP)"
-        '
-        '--- INSERT
-        Try
+		'
+		myQuery = "INSERT INTO tblPessoaEndereco " &
+				  "(IDPessoa, Endereco, Bairro, Cidade, UF, CEP) " &
+				  "VALUES (@IDPessoa, @Endereco, @Bairro, @Cidade, @UF, @CEP)"
+		'
+		'--- INSERT
+		Try
             dbTran.ExecutarManipulacao(CommandType.Text, myQuery)
         Catch ex As Exception
             Throw ex

@@ -391,7 +391,7 @@ Public Class AcaoGlobal
 			With newConsig
 				.IDPessoaDestino = Obter_FilialPadrao()
 				.IDPessoaOrigem = IDFornecedor
-				.IDOperacao = 2
+				.IDOperacao = 7
 				.IDSituacao = TransacaoBLL.EnumTransacaoSituacao.INICIADA
 				.IDUser = UsuarioAtual.IdUser
 				If FornecedorUF = ObterDefault("UF") Then

@@ -50,13 +50,17 @@ Public Class clPessoa
         Get
             Return PData._Cadastro
         End Get
-        Set(ByVal value As String)
-            If value <> PData._Cadastro Then
-                RaiseEvent AoAlterar()
-            End If
-            PData._Cadastro = value
-        End Set
-    End Property
+		Set(ByVal value As String)
+			'
+			'--- check string length
+			If value.Length > 100 Then value = value.Substring(0, 100)
+			'
+			If value <> PData._Cadastro Then
+				RaiseEvent AoAlterar()
+			End If
+			PData._Cadastro = value
+		End Set
+	End Property
     '
     '--- Propriedade PessoaTipo
     Public Property PessoaTipo() As Byte
@@ -113,52 +117,68 @@ Public Class clPessoaEndereco
         Get
             Return PEndData._Endereco
         End Get
-        Set(ByVal value As String)
-            If value <> PEndData._Endereco Then
-                RaiseAoAlterar()
-            End If
-            PEndData._Endereco = value
-        End Set
-    End Property
+		Set(ByVal value As String)
+			'
+			'--- check string length
+			If value.Length > 50 Then value = value.Substring(0, 50)
+			'
+			If value <> PEndData._Endereco Then
+				RaiseAoAlterar()
+			End If
+			PEndData._Endereco = value
+		End Set
+	End Property
     '
     '--- Propriedade Bairro
     Public Property Bairro() As String
         Get
             Return PEndData._Bairro
         End Get
-        Set(ByVal value As String)
-            If value <> PEndData._Bairro Then
-                RaiseAoAlterar()
-            End If
-            PEndData._Bairro = value
-        End Set
-    End Property
+		Set(ByVal value As String)
+			'
+			'--- check string length
+			If value.Length > 30 Then value = value.Substring(0, 30)
+			'
+			If value <> PEndData._Bairro Then
+				RaiseAoAlterar()
+			End If
+			PEndData._Bairro = value
+		End Set
+	End Property
     '
     '--- Propriedade Cidade
     Public Property Cidade() As String
         Get
             Return PEndData._Cidade
         End Get
-        Set(ByVal value As String)
-            If value <> PEndData._Cidade Then
-                RaiseAoAlterar()
-            End If
-            PEndData._Cidade = value
-        End Set
-    End Property
+		Set(ByVal value As String)
+			'
+			'--- check string length
+			If value.Length > 30 Then value = value.Substring(0, 30)
+			'
+			If value <> PEndData._Cidade Then
+				RaiseAoAlterar()
+			End If
+			PEndData._Cidade = value
+		End Set
+	End Property
     '
     '--- Propriedade UF
     Public Property UF() As String
         Get
             Return PEndData._UF
         End Get
-        Set(ByVal value As String)
-            If value <> PEndData._UF Then
-                RaiseAoAlterar()
-            End If
-            PEndData._UF = value
-        End Set
-    End Property
+		Set(ByVal value As String)
+			'
+			'--- check string length
+			If value.Length > 2 Then value = value.Substring(0, 2)
+			'
+			If value <> PEndData._UF Then
+				RaiseAoAlterar()
+			End If
+			PEndData._UF = value
+		End Set
+	End Property
     '
     '--- Propriedade CEP
     Public Property CEP() As String
@@ -178,13 +198,17 @@ Public Class clPessoaEndereco
         Get
             Return PEndData._Email
         End Get
-        Set(ByVal value As String)
-            If value <> PEndData._Email Then
-                RaiseAoAlterar()
-            End If
-            PEndData._Email = value
-        End Set
-    End Property
+		Set(ByVal value As String)
+			'
+			'--- check string length
+			If value.Length > 100 Then value = value.Substring(0, 100)
+			'
+			If value <> PEndData._Email Then
+				RaiseAoAlterar()
+			End If
+			PEndData._Email = value
+		End Set
+	End Property
     '
     '--- Propriedade EmailDestino
     Public Property EmailDestino() As String

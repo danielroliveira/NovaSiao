@@ -27,40 +27,53 @@ Partial Class frmConsignacao
 		Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Me.tabPrincipal = New VIBlend.WinForms.Controls.vTabControl()
 		Me.vtab1 = New VIBlend.WinForms.Controls.vTabPage()
 		Me.dgvItens = New System.Windows.Forms.DataGridView()
+		Me.clnIDTransacaoItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnQuantidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnSubTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnICMS = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnST = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnMVA = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnIPI = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.vtab2 = New VIBlend.WinForms.Controls.vTabPage()
 		Me.lblTotalProdutos = New System.Windows.Forms.Label()
 		Me.Label27 = New System.Windows.Forms.Label()
 		Me.btnTransportadoraAdd = New System.Windows.Forms.Button()
 		Me.Label20 = New System.Windows.Forms.Label()
 		Me.VButton2 = New VIBlend.WinForms.Controls.vButton()
-		Me.txtDescontos = New Controles.Text_Monetario()
 		Me.btnCompra = New VIBlend.WinForms.Controls.vButton()
-		Me.txtDespesas = New Controles.Text_Monetario()
 		Me.Label19 = New System.Windows.Forms.Label()
 		Me.Label5 = New System.Windows.Forms.Label()
-		Me.txtICMSValor = New Controles.Text_Monetario()
 		Me.Label2 = New System.Windows.Forms.Label()
-		Me.txtFreteCobrado = New Controles.Text_Monetario()
 		Me.Label1 = New System.Windows.Forms.Label()
 		Me.txtObservacao = New System.Windows.Forms.TextBox()
 		Me.Label12 = New System.Windows.Forms.Label()
-		Me.txtVolumes = New Controles.Text_SoNumeros()
 		Me.Label14 = New System.Windows.Forms.Label()
-		Me.txtFreteValor = New Controles.Text_Monetario()
 		Me.Label10 = New System.Windows.Forms.Label()
 		Me.Label9 = New System.Windows.Forms.Label()
 		Me.Label8 = New System.Windows.Forms.Label()
 		Me.Label7 = New System.Windows.Forms.Label()
-		Me.cmbIDTransportadora = New Controles.ComboBox_OnlyValues()
-		Me.cmbFreteTipo = New Controles.ComboBox_OnlyValues()
 		Me.dgvCompras = New System.Windows.Forms.DataGridView()
 		Me.clnCompraData = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.clnCompraValor = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.Label6 = New System.Windows.Forms.Label()
 		Me.ShapeContainer2 = New Microsoft.VisualBasic.PowerPacks.ShapeContainer()
+		Me.txtDescontos = New Controles.Text_Monetario()
+		Me.txtDespesas = New Controles.Text_Monetario()
+		Me.txtICMSValor = New Controles.Text_Monetario()
+		Me.txtFreteCobrado = New Controles.Text_Monetario()
+		Me.txtVolumes = New Controles.Text_SoNumeros()
+		Me.txtFreteValor = New Controles.Text_Monetario()
+		Me.cmbIDTransportadora = New Controles.ComboBox_OnlyValues()
+		Me.cmbFreteTipo = New Controles.ComboBox_OnlyValues()
 		Me.vtab3 = New VIBlend.WinForms.Controls.vTabPage()
 		Me.pnlNota = New System.Windows.Forms.Panel()
 		Me.txtChaveAcesso = New System.Windows.Forms.TextBox()
@@ -135,18 +148,26 @@ Partial Class frmConsignacao
 		Me.miImprimirRelatorio = New System.Windows.Forms.ToolStripMenuItem()
 		Me.btnData = New VIBlend.WinForms.Controls.vArrowButton()
 		Me.ShapeContainer3 = New Microsoft.VisualBasic.PowerPacks.ShapeContainer()
-		Me.clnIDTransacaoItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnQuantidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnSubTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnICMS = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnST = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnMVA = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnIPI = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.Panel1.SuspendLayout()
 		Me.tabPrincipal.SuspendLayout()
 		Me.vtab1.SuspendLayout()
@@ -271,6 +292,96 @@ Partial Class frmConsignacao
 		Me.dgvItens.Size = New System.Drawing.Size(1162, 444)
 		Me.dgvItens.TabIndex = 0
 		'
+		'clnIDTransacaoItem
+		'
+		Me.clnIDTransacaoItem.Frozen = True
+		Me.clnIDTransacaoItem.HeaderText = "IDItem"
+		Me.clnIDTransacaoItem.Name = "clnIDTransacaoItem"
+		Me.clnIDTransacaoItem.ReadOnly = True
+		Me.clnIDTransacaoItem.Visible = False
+		'
+		'clnRGProduto
+		'
+		Me.clnRGProduto.Frozen = True
+		Me.clnRGProduto.HeaderText = "Reg."
+		Me.clnRGProduto.Name = "clnRGProduto"
+		Me.clnRGProduto.ReadOnly = True
+		Me.clnRGProduto.Width = 60
+		'
+		'clnProduto
+		'
+		Me.clnProduto.Frozen = True
+		Me.clnProduto.HeaderText = "Produto"
+		Me.clnProduto.Name = "clnProduto"
+		Me.clnProduto.ReadOnly = True
+		Me.clnProduto.Width = 375
+		'
+		'clnQuantidade
+		'
+		Me.clnQuantidade.Frozen = True
+		Me.clnQuantidade.HeaderText = "Qtde"
+		Me.clnQuantidade.Name = "clnQuantidade"
+		Me.clnQuantidade.ReadOnly = True
+		Me.clnQuantidade.Width = 60
+		'
+		'clnPreco
+		'
+		Me.clnPreco.Frozen = True
+		Me.clnPreco.HeaderText = "Preço"
+		Me.clnPreco.Name = "clnPreco"
+		Me.clnPreco.ReadOnly = True
+		Me.clnPreco.Width = 90
+		'
+		'clnSubTotal
+		'
+		Me.clnSubTotal.Frozen = True
+		Me.clnSubTotal.HeaderText = "SubTotal"
+		Me.clnSubTotal.Name = "clnSubTotal"
+		Me.clnSubTotal.ReadOnly = True
+		Me.clnSubTotal.Width = 90
+		'
+		'clnDesconto
+		'
+		Me.clnDesconto.HeaderText = "Desc."
+		Me.clnDesconto.Name = "clnDesconto"
+		Me.clnDesconto.ReadOnly = True
+		Me.clnDesconto.Width = 80
+		'
+		'clnTotal
+		'
+		Me.clnTotal.HeaderText = "Total"
+		Me.clnTotal.Name = "clnTotal"
+		Me.clnTotal.ReadOnly = True
+		Me.clnTotal.Width = 90
+		'
+		'clnICMS
+		'
+		Me.clnICMS.HeaderText = "ICMS"
+		Me.clnICMS.Name = "clnICMS"
+		Me.clnICMS.ReadOnly = True
+		Me.clnICMS.Width = 60
+		'
+		'clnST
+		'
+		Me.clnST.HeaderText = "ST"
+		Me.clnST.Name = "clnST"
+		Me.clnST.ReadOnly = True
+		Me.clnST.Width = 75
+		'
+		'clnMVA
+		'
+		Me.clnMVA.HeaderText = "MVA"
+		Me.clnMVA.Name = "clnMVA"
+		Me.clnMVA.ReadOnly = True
+		Me.clnMVA.Width = 60
+		'
+		'clnIPI
+		'
+		Me.clnIPI.HeaderText = "IPI%"
+		Me.clnIPI.Name = "clnIPI"
+		Me.clnIPI.ReadOnly = True
+		Me.clnIPI.Width = 60
+		'
 		'vtab2
 		'
 		Me.vtab2.Controls.Add(Me.lblTotalProdutos)
@@ -278,29 +389,29 @@ Partial Class frmConsignacao
 		Me.vtab2.Controls.Add(Me.btnTransportadoraAdd)
 		Me.vtab2.Controls.Add(Me.Label20)
 		Me.vtab2.Controls.Add(Me.VButton2)
-		Me.vtab2.Controls.Add(Me.txtDescontos)
 		Me.vtab2.Controls.Add(Me.btnCompra)
-		Me.vtab2.Controls.Add(Me.txtDespesas)
 		Me.vtab2.Controls.Add(Me.Label19)
 		Me.vtab2.Controls.Add(Me.Label5)
-		Me.vtab2.Controls.Add(Me.txtICMSValor)
 		Me.vtab2.Controls.Add(Me.Label2)
-		Me.vtab2.Controls.Add(Me.txtFreteCobrado)
 		Me.vtab2.Controls.Add(Me.Label1)
 		Me.vtab2.Controls.Add(Me.txtObservacao)
 		Me.vtab2.Controls.Add(Me.Label12)
-		Me.vtab2.Controls.Add(Me.txtVolumes)
 		Me.vtab2.Controls.Add(Me.Label14)
-		Me.vtab2.Controls.Add(Me.txtFreteValor)
 		Me.vtab2.Controls.Add(Me.Label10)
 		Me.vtab2.Controls.Add(Me.Label9)
 		Me.vtab2.Controls.Add(Me.Label8)
 		Me.vtab2.Controls.Add(Me.Label7)
-		Me.vtab2.Controls.Add(Me.cmbIDTransportadora)
-		Me.vtab2.Controls.Add(Me.cmbFreteTipo)
 		Me.vtab2.Controls.Add(Me.dgvCompras)
 		Me.vtab2.Controls.Add(Me.Label6)
 		Me.vtab2.Controls.Add(Me.ShapeContainer2)
+		Me.vtab2.Controls.Add(Me.txtDescontos)
+		Me.vtab2.Controls.Add(Me.txtDespesas)
+		Me.vtab2.Controls.Add(Me.txtICMSValor)
+		Me.vtab2.Controls.Add(Me.txtFreteCobrado)
+		Me.vtab2.Controls.Add(Me.txtVolumes)
+		Me.vtab2.Controls.Add(Me.txtFreteValor)
+		Me.vtab2.Controls.Add(Me.cmbIDTransportadora)
+		Me.vtab2.Controls.Add(Me.cmbFreteTipo)
 		Me.vtab2.Dock = System.Windows.Forms.DockStyle.Fill
 		Me.vtab2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.vtab2.Location = New System.Drawing.Point(0, 38)
@@ -386,15 +497,6 @@ Partial Class frmConsignacao
 		Me.VButton2.UseVisualStyleBackColor = False
 		Me.VButton2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.BLUEBLEND
 		'
-		'txtDescontos
-		'
-		Me.txtDescontos.Location = New System.Drawing.Point(371, 84)
-		Me.txtDescontos.Name = "txtDescontos"
-		Me.txtDescontos.Size = New System.Drawing.Size(100, 27)
-		Me.txtDescontos.SomentePositivos = True
-		Me.txtDescontos.TabIndex = 3
-		Me.txtDescontos.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-		'
 		'btnCompra
 		'
 		Me.btnCompra.AllowAnimations = True
@@ -419,15 +521,6 @@ Partial Class frmConsignacao
 		Me.btnCompra.UseVisualStyleBackColor = False
 		Me.btnCompra.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.BLUEBLEND
 		'
-		'txtDespesas
-		'
-		Me.txtDespesas.Location = New System.Drawing.Point(149, 84)
-		Me.txtDespesas.Name = "txtDespesas"
-		Me.txtDespesas.Size = New System.Drawing.Size(100, 27)
-		Me.txtDespesas.SomentePositivos = True
-		Me.txtDespesas.TabIndex = 2
-		Me.txtDespesas.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-		'
 		'Label19
 		'
 		Me.Label19.AutoSize = True
@@ -448,15 +541,6 @@ Partial Class frmConsignacao
 		Me.Label5.TabIndex = 9
 		Me.Label5.Text = "Outras Despesas"
 		'
-		'txtICMSValor
-		'
-		Me.txtICMSValor.Location = New System.Drawing.Point(371, 51)
-		Me.txtICMSValor.Name = "txtICMSValor"
-		Me.txtICMSValor.Size = New System.Drawing.Size(100, 27)
-		Me.txtICMSValor.SomentePositivos = True
-		Me.txtICMSValor.TabIndex = 1
-		Me.txtICMSValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-		'
 		'Label2
 		'
 		Me.Label2.AutoSize = True
@@ -466,15 +550,6 @@ Partial Class frmConsignacao
 		Me.Label2.Size = New System.Drawing.Size(100, 19)
 		Me.Label2.TabIndex = 9
 		Me.Label2.Text = "ICMS Cobrado"
-		'
-		'txtFreteCobrado
-		'
-		Me.txtFreteCobrado.Location = New System.Drawing.Point(149, 51)
-		Me.txtFreteCobrado.Name = "txtFreteCobrado"
-		Me.txtFreteCobrado.Size = New System.Drawing.Size(100, 27)
-		Me.txtFreteCobrado.SomentePositivos = True
-		Me.txtFreteCobrado.TabIndex = 0
-		Me.txtFreteCobrado.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
 		'
 		'Label1
 		'
@@ -505,15 +580,6 @@ Partial Class frmConsignacao
 		Me.Label12.TabIndex = 15
 		Me.Label12.Text = "Observações Importantes:"
 		'
-		'txtVolumes
-		'
-		Me.txtVolumes.Inteiro = True
-		Me.txtVolumes.Location = New System.Drawing.Point(334, 234)
-		Me.txtVolumes.Name = "txtVolumes"
-		Me.txtVolumes.Size = New System.Drawing.Size(49, 27)
-		Me.txtVolumes.TabIndex = 7
-		Me.txtVolumes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-		'
 		'Label14
 		'
 		Me.Label14.AutoSize = True
@@ -524,15 +590,6 @@ Partial Class frmConsignacao
 		Me.Label14.Size = New System.Drawing.Size(62, 26)
 		Me.Label14.TabIndex = 13
 		Me.Label14.Text = "Frete:"
-		'
-		'txtFreteValor
-		'
-		Me.txtFreteValor.Location = New System.Drawing.Point(149, 234)
-		Me.txtFreteValor.Name = "txtFreteValor"
-		Me.txtFreteValor.Size = New System.Drawing.Size(100, 27)
-		Me.txtFreteValor.SomentePositivos = True
-		Me.txtFreteValor.TabIndex = 6
-		Me.txtFreteValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
 		'
 		'Label10
 		'
@@ -573,28 +630,6 @@ Partial Class frmConsignacao
 		Me.Label7.Size = New System.Drawing.Size(94, 19)
 		Me.Label7.TabIndex = 11
 		Me.Label7.Text = "Tipo de Frete"
-		'
-		'cmbIDTransportadora
-		'
-		Me.cmbIDTransportadora.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-		Me.cmbIDTransportadora.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-		Me.cmbIDTransportadora.FormattingEnabled = True
-		Me.cmbIDTransportadora.Location = New System.Drawing.Point(149, 201)
-		Me.cmbIDTransportadora.Name = "cmbIDTransportadora"
-		Me.cmbIDTransportadora.RestrictContentToListItems = True
-		Me.cmbIDTransportadora.Size = New System.Drawing.Size(288, 27)
-		Me.cmbIDTransportadora.TabIndex = 5
-		'
-		'cmbFreteTipo
-		'
-		Me.cmbFreteTipo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-		Me.cmbFreteTipo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-		Me.cmbFreteTipo.FormattingEnabled = True
-		Me.cmbFreteTipo.Location = New System.Drawing.Point(149, 168)
-		Me.cmbFreteTipo.Name = "cmbFreteTipo"
-		Me.cmbFreteTipo.RestrictContentToListItems = True
-		Me.cmbFreteTipo.Size = New System.Drawing.Size(149, 27)
-		Me.cmbFreteTipo.TabIndex = 4
 		'
 		'dgvCompras
 		'
@@ -651,6 +686,82 @@ Partial Class frmConsignacao
 		Me.ShapeContainer2.Size = New System.Drawing.Size(1172, 454)
 		Me.ShapeContainer2.TabIndex = 14
 		Me.ShapeContainer2.TabStop = False
+		'
+		'txtDescontos
+		'
+		Me.txtDescontos.Location = New System.Drawing.Point(371, 84)
+		Me.txtDescontos.Name = "txtDescontos"
+		Me.txtDescontos.Size = New System.Drawing.Size(100, 27)
+		Me.txtDescontos.SomentePositivos = True
+		Me.txtDescontos.TabIndex = 3
+		Me.txtDescontos.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'txtDespesas
+		'
+		Me.txtDespesas.Location = New System.Drawing.Point(149, 84)
+		Me.txtDespesas.Name = "txtDespesas"
+		Me.txtDespesas.Size = New System.Drawing.Size(100, 27)
+		Me.txtDespesas.SomentePositivos = True
+		Me.txtDespesas.TabIndex = 2
+		Me.txtDespesas.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'txtICMSValor
+		'
+		Me.txtICMSValor.Location = New System.Drawing.Point(371, 51)
+		Me.txtICMSValor.Name = "txtICMSValor"
+		Me.txtICMSValor.Size = New System.Drawing.Size(100, 27)
+		Me.txtICMSValor.SomentePositivos = True
+		Me.txtICMSValor.TabIndex = 1
+		Me.txtICMSValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'txtFreteCobrado
+		'
+		Me.txtFreteCobrado.Location = New System.Drawing.Point(149, 51)
+		Me.txtFreteCobrado.Name = "txtFreteCobrado"
+		Me.txtFreteCobrado.Size = New System.Drawing.Size(100, 27)
+		Me.txtFreteCobrado.SomentePositivos = True
+		Me.txtFreteCobrado.TabIndex = 0
+		Me.txtFreteCobrado.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'txtVolumes
+		'
+		Me.txtVolumes.Inteiro = True
+		Me.txtVolumes.Location = New System.Drawing.Point(334, 234)
+		Me.txtVolumes.Name = "txtVolumes"
+		Me.txtVolumes.Size = New System.Drawing.Size(49, 27)
+		Me.txtVolumes.TabIndex = 7
+		Me.txtVolumes.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'txtFreteValor
+		'
+		Me.txtFreteValor.Location = New System.Drawing.Point(149, 234)
+		Me.txtFreteValor.Name = "txtFreteValor"
+		Me.txtFreteValor.Size = New System.Drawing.Size(100, 27)
+		Me.txtFreteValor.SomentePositivos = True
+		Me.txtFreteValor.TabIndex = 6
+		Me.txtFreteValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'cmbIDTransportadora
+		'
+		Me.cmbIDTransportadora.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+		Me.cmbIDTransportadora.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+		Me.cmbIDTransportadora.FormattingEnabled = True
+		Me.cmbIDTransportadora.Location = New System.Drawing.Point(149, 201)
+		Me.cmbIDTransportadora.Name = "cmbIDTransportadora"
+		Me.cmbIDTransportadora.RestrictContentToListItems = True
+		Me.cmbIDTransportadora.Size = New System.Drawing.Size(288, 27)
+		Me.cmbIDTransportadora.TabIndex = 5
+		'
+		'cmbFreteTipo
+		'
+		Me.cmbFreteTipo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+		Me.cmbFreteTipo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+		Me.cmbFreteTipo.FormattingEnabled = True
+		Me.cmbFreteTipo.Location = New System.Drawing.Point(149, 168)
+		Me.cmbFreteTipo.Name = "cmbFreteTipo"
+		Me.cmbFreteTipo.RestrictContentToListItems = True
+		Me.cmbFreteTipo.Size = New System.Drawing.Size(149, 27)
+		Me.cmbFreteTipo.TabIndex = 4
 		'
 		'vtab3
 		'
@@ -1456,95 +1567,133 @@ Partial Class frmConsignacao
 		Me.ShapeContainer3.TabIndex = 14
 		Me.ShapeContainer3.TabStop = False
 		'
-		'clnIDTransacaoItem
+		'DataGridViewTextBoxColumn9
 		'
-		Me.clnIDTransacaoItem.Frozen = True
-		Me.clnIDTransacaoItem.HeaderText = "IDItem"
-		Me.clnIDTransacaoItem.Name = "clnIDTransacaoItem"
-		Me.clnIDTransacaoItem.ReadOnly = True
-		Me.clnIDTransacaoItem.Visible = False
+		Me.DataGridViewTextBoxColumn9.HeaderText = "ICMS"
+		Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+		Me.DataGridViewTextBoxColumn9.Width = 60
 		'
-		'clnRGProduto
+		'DataGridViewTextBoxColumn10
 		'
-		Me.clnRGProduto.Frozen = True
-		Me.clnRGProduto.HeaderText = "Reg."
-		Me.clnRGProduto.Name = "clnRGProduto"
-		Me.clnRGProduto.ReadOnly = True
-		Me.clnRGProduto.Width = 60
+		Me.DataGridViewTextBoxColumn10.HeaderText = "ST"
+		Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+		Me.DataGridViewTextBoxColumn10.Width = 75
 		'
-		'clnProduto
+		'DataGridViewTextBoxColumn11
 		'
-		Me.clnProduto.Frozen = True
-		Me.clnProduto.HeaderText = "Produto"
-		Me.clnProduto.Name = "clnProduto"
-		Me.clnProduto.ReadOnly = True
-		Me.clnProduto.Width = 375
+		Me.DataGridViewTextBoxColumn11.HeaderText = "MVA"
+		Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+		Me.DataGridViewTextBoxColumn11.Width = 60
 		'
-		'clnQuantidade
+		'DataGridViewTextBoxColumn12
 		'
-		Me.clnQuantidade.Frozen = True
-		Me.clnQuantidade.HeaderText = "Qtde"
-		Me.clnQuantidade.Name = "clnQuantidade"
-		Me.clnQuantidade.ReadOnly = True
-		Me.clnQuantidade.Width = 60
+		Me.DataGridViewTextBoxColumn12.HeaderText = "IPI%"
+		Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+		Me.DataGridViewTextBoxColumn12.Width = 60
 		'
-		'clnPreco
+		'DataGridViewTextBoxColumn13
 		'
-		Me.clnPreco.Frozen = True
-		Me.clnPreco.HeaderText = "Preço"
-		Me.clnPreco.Name = "clnPreco"
-		Me.clnPreco.ReadOnly = True
-		Me.clnPreco.Width = 90
+		DataGridViewCellStyle8.Format = "C2"
+		DataGridViewCellStyle8.NullValue = "0"
+		Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle8
+		Me.DataGridViewTextBoxColumn13.HeaderText = "Data"
+		Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+		Me.DataGridViewTextBoxColumn13.Width = 150
 		'
-		'clnSubTotal
+		'DataGridViewTextBoxColumn14
 		'
-		Me.clnSubTotal.Frozen = True
-		Me.clnSubTotal.HeaderText = "SubTotal"
-		Me.clnSubTotal.Name = "clnSubTotal"
-		Me.clnSubTotal.ReadOnly = True
-		Me.clnSubTotal.Width = 90
+		Me.DataGridViewTextBoxColumn14.HeaderText = "Valor"
+		Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+		Me.DataGridViewTextBoxColumn14.Width = 150
 		'
-		'clnDesconto
+		'DataGridViewTextBoxColumn15
 		'
-		Me.clnDesconto.HeaderText = "Desc."
-		Me.clnDesconto.Name = "clnDesconto"
-		Me.clnDesconto.ReadOnly = True
-		Me.clnDesconto.Width = 80
+		Me.DataGridViewTextBoxColumn15.HeaderText = "Chave Acesso"
+		Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+		Me.DataGridViewTextBoxColumn15.Width = 350
 		'
-		'clnTotal
+		'DataGridViewTextBoxColumn16
 		'
-		Me.clnTotal.HeaderText = "Total"
-		Me.clnTotal.Name = "clnTotal"
-		Me.clnTotal.ReadOnly = True
-		Me.clnTotal.Width = 90
+		Me.DataGridViewTextBoxColumn16.HeaderText = "Tipo"
+		Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+		Me.DataGridViewTextBoxColumn16.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
 		'
-		'clnICMS
+		'DataGridViewTextBoxColumn17
 		'
-		Me.clnICMS.HeaderText = "ICMS"
-		Me.clnICMS.Name = "clnICMS"
-		Me.clnICMS.ReadOnly = True
-		Me.clnICMS.Width = 60
+		Me.DataGridViewTextBoxColumn17.HeaderText = "Série"
+		Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+		Me.DataGridViewTextBoxColumn17.Width = 70
 		'
-		'clnST
+		'DataGridViewTextBoxColumn18
 		'
-		Me.clnST.HeaderText = "ST"
-		Me.clnST.Name = "clnST"
-		Me.clnST.ReadOnly = True
-		Me.clnST.Width = 75
+		Me.DataGridViewTextBoxColumn18.HeaderText = "Número"
+		Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+		Me.DataGridViewTextBoxColumn18.Width = 70
 		'
-		'clnMVA
+		'DataGridViewTextBoxColumn19
 		'
-		Me.clnMVA.HeaderText = "MVA"
-		Me.clnMVA.Name = "clnMVA"
-		Me.clnMVA.ReadOnly = True
-		Me.clnMVA.Width = 60
+		Me.DataGridViewTextBoxColumn19.HeaderText = "Data"
+		Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
 		'
-		'clnIPI
+		'DataGridViewTextBoxColumn20
 		'
-		Me.clnIPI.HeaderText = "IPI%"
-		Me.clnIPI.Name = "clnIPI"
-		Me.clnIPI.ReadOnly = True
-		Me.clnIPI.Width = 60
+		Me.DataGridViewTextBoxColumn20.HeaderText = "Valor"
+		Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
+		Me.DataGridViewTextBoxColumn20.Width = 80
+		'
+		'DataGridViewTextBoxColumn21
+		'
+		Me.DataGridViewTextBoxColumn21.Frozen = True
+		Me.DataGridViewTextBoxColumn21.HeaderText = "IDItem"
+		Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
+		Me.DataGridViewTextBoxColumn21.Visible = False
+		'
+		'DataGridViewTextBoxColumn22
+		'
+		Me.DataGridViewTextBoxColumn22.Frozen = True
+		Me.DataGridViewTextBoxColumn22.HeaderText = "Reg."
+		Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
+		Me.DataGridViewTextBoxColumn22.Width = 60
+		'
+		'DataGridViewTextBoxColumn23
+		'
+		Me.DataGridViewTextBoxColumn23.Frozen = True
+		Me.DataGridViewTextBoxColumn23.HeaderText = "Produto"
+		Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
+		Me.DataGridViewTextBoxColumn23.Width = 375
+		'
+		'DataGridViewTextBoxColumn24
+		'
+		Me.DataGridViewTextBoxColumn24.Frozen = True
+		Me.DataGridViewTextBoxColumn24.HeaderText = "Qtde"
+		Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
+		Me.DataGridViewTextBoxColumn24.Width = 60
+		'
+		'DataGridViewTextBoxColumn25
+		'
+		Me.DataGridViewTextBoxColumn25.Frozen = True
+		Me.DataGridViewTextBoxColumn25.HeaderText = "Preço"
+		Me.DataGridViewTextBoxColumn25.Name = "DataGridViewTextBoxColumn25"
+		Me.DataGridViewTextBoxColumn25.Width = 90
+		'
+		'DataGridViewTextBoxColumn26
+		'
+		Me.DataGridViewTextBoxColumn26.Frozen = True
+		Me.DataGridViewTextBoxColumn26.HeaderText = "SubTotal"
+		Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
+		Me.DataGridViewTextBoxColumn26.Width = 90
+		'
+		'DataGridViewTextBoxColumn27
+		'
+		Me.DataGridViewTextBoxColumn27.HeaderText = "Desc."
+		Me.DataGridViewTextBoxColumn27.Name = "DataGridViewTextBoxColumn27"
+		Me.DataGridViewTextBoxColumn27.Width = 80
+		'
+		'DataGridViewTextBoxColumn28
+		'
+		Me.DataGridViewTextBoxColumn28.HeaderText = "Total"
+		Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
+		Me.DataGridViewTextBoxColumn28.Width = 90
 		'
 		'frmConsignacao
 		'
@@ -1712,4 +1861,24 @@ Partial Class frmConsignacao
 	Friend WithEvents clnST As DataGridViewTextBoxColumn
 	Friend WithEvents clnMVA As DataGridViewTextBoxColumn
 	Friend WithEvents clnIPI As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn12 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn13 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn14 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn15 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn16 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn17 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn18 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn19 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn20 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn21 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn22 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn23 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn24 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn25 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn26 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn27 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn28 As DataGridViewTextBoxColumn
 End Class

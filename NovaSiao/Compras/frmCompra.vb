@@ -745,12 +745,31 @@ Public Class frmCompra
 #Region "BOTOES DE ACAO"
     '
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        '
-        '--- ASK USER
-        If Not CanCloseMessage() Then Exit Sub
-        '
-        '--- CLOSE
-        Close()
+		'
+		'--- ASK USER
+		If Not CanCloseMessage() Then Exit Sub
+		'
+		'--- CHECK AND SAVE TOTAL
+		If _Compra.TotalCompra <> TotalGeral Then
+			'
+			Try
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				SaveTotal()
+				'
+			Catch ex As Exception
+				MessageBox.Show("Uma exceção ocorreu ao Salvar Total da Compra..." & vbNewLine &
+								ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+			Finally
+				'--- Ampulheta OFF
+				Cursor = Cursors.Default
+			End Try
+			'
+		End If
+		'
+		'--- CLOSE
+		Close()
         MostraMenuPrincipal()
         '
     End Sub
@@ -1269,43 +1288,66 @@ Public Class frmCompra
         End If
         '
     End Sub
-    '
-    '==========================================================================================
-    ' SAVE IN BD
-    '==========================================================================================
-    Private Function SalvaRegistroCompra() As Boolean
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            Dim obj As Object = cBLL.AtualizaCompra_Procedure_ID(_Compra)
-            '
-            If Not IsNumeric(obj) Then
-                Throw New Exception(obj.ToString)
-            End If
-            '
-            Return True
-            '
-        Catch ex As Exception
-            '
-            MessageBox.Show("Uma exceção ocorreu ao Salvar o Registro da Compra..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-            '
-        End Try
-        '
-        Return False
-        '
-    End Function
-    '
-    '==========================================================================================
-    ' CHECK TO SAVE
-    '==========================================================================================
-    Private Function Verificar() As Boolean
+	'
+	'==========================================================================================
+	' SAVE IN BD
+	'==========================================================================================
+	Private Function SalvaRegistroCompra() As Boolean
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim obj As Object = cBLL.AtualizaCompra_Procedure_ID(_Compra)
+			'
+			If Not IsNumeric(obj) Then
+				Throw New Exception(obj.ToString)
+			End If
+			'
+			Return True
+			'
+		Catch ex As Exception
+			'
+			MessageBox.Show("Uma exceção ocorreu ao Salvar o Registro da Compra..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
+		'
+		Return False
+		'
+	End Function
+	'
+	'==========================================================================================
+	' SAVE TOTAL OF COMPRA
+	'==========================================================================================
+	Private Function SaveTotal() As Boolean
+		'
+		Try
+			'
+			Dim obj As Object = cBLL.UpdateCompraTotal(_Compra.IDCompra, TotalGeral)
+			'
+			If Not IsNumeric(obj) Then
+				Throw New Exception(obj.ToString)
+			End If
+			'
+			Return True
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+		Return False
+		'
+	End Function
+	'
+	'==========================================================================================
+	' CHECK TO SAVE
+	'==========================================================================================
+	Private Function Verificar() As Boolean
         '--- Verifica se a Data não está BLOQUEADA pelo sistema
         '
         '----------------------------------------------------------------------------------------------

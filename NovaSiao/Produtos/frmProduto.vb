@@ -640,15 +640,9 @@ Public Class frmProduto
         '--- save the RGProduto to control changes
         _OldRGProduto = _produto.RGProduto
     End Sub
-    '
-    '--- ENABLE AUTOVALIDATE AGAIN
-    Private Sub txtRGProduto_Leave(sender As Object, e As EventArgs) Handles txtRGProduto.Leave
-        _OldRGProduto = _produto.RGProduto
-        AutoValidate = True
-    End Sub
-    '
-    ' AO ENTRAR NO MENU SELECIONAR O btnProcurar
-    Private Sub tsMenu_Enter(sender As Object, e As EventArgs) Handles tsMenu.Enter
+	'
+	' AO ENTRAR NO MENU SELECIONAR O btnProcurar
+	Private Sub tsMenu_Enter(sender As Object, e As EventArgs) Handles tsMenu.Enter
         If btnProcurar.Enabled Then btnProcurar.Select()
     End Sub
     '
@@ -789,46 +783,50 @@ Public Class frmProduto
         End If
         '
     End Sub
-    '
+	'
 #End Region '// OUTRAS FUNÇÕES
-    '
+	'
 #Region "CORRELACAO DB ANTERIOR"
-    '
-    '--- PROCURA PELO CADASTRO DADOS ANTERIORES DA NA X_TBLPRODUTOS
-    Private Sub txtRGProduto_Validating(sender As Object, e As CancelEventArgs) Handles txtRGProduto.Validating
-        '
-        '--- VERIFICA VALOR
-        If Sit = EnumFlagEstado.RegistroSalvo OrElse txtRGProduto.Text.Trim.Length = 0 Then
-            Return
-        End If
-        '
-        '--- CHECK ANY CHANGES IN RGPRODUTO
-        If txtRGProduto.Text = _OldRGProduto Then
-            Return '---> no changes
-        End If
-        '
-        '--- CHECK IF RGPRODUTO IS ALREADY IN USE
-        If Not IsNothing(ProcurarProduto_RG(txtRGProduto.Text)) Then
-            '
-            AbrirDialog("Já existe produto cadastrado com esse mesmo número de Reg. Interno...",
-                        "Reg. Interno",
-                        frmDialog.DialogType.OK,
-                        frmDialog.DialogIcon.Exclamation)
-            '
-            showToolTip(sender, New EventArgs)
-            e.Cancel = True
-            Return
-            '
-        End If
-        '
-        '--- procura no cadastro antigo o registro do produto pelo RG
-        FindProdutoAntigoAndAddNew(txtRGProduto.Text)
-        '
-    End Sub
-    '
-    '--- PROCURA NO CADASTRO ANTIGO E FAZ RELACAO
-    '----------------------------------------------------------------------------------
-    Public Function FindProdutoAntigoAndAddNew(RGProdutoAntigo As Integer) As Boolean
+	'
+	'--- PROCURA PELO CADASTRO DADOS ANTERIORES DA NA X_TBLPRODUTOS
+	Private Sub txtRGProduto_Validating(sender As Object, e As CancelEventArgs) Handles txtRGProduto.Validating
+		'
+		'--- VERIFICA VALOR
+		If Sit = EnumFlagEstado.RegistroSalvo OrElse txtRGProduto.Text.Trim.Length = 0 Then
+			Return
+		End If
+		'
+		'--- CHECK ANY CHANGES IN RGPRODUTO
+		If txtRGProduto.Text = _OldRGProduto Then
+			Return '---> no changes
+		End If
+		'
+		'--- CHECK IF RGPRODUTO IS ALREADY IN USE
+		If Not IsNothing(ProcurarProduto_RG(txtRGProduto.Text)) Then
+			'
+			AbrirDialog("Já existe produto cadastrado com esse mesmo número de Reg. Interno...",
+						"Reg. Interno",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			'
+			showToolTip(sender, New EventArgs)
+			e.Cancel = True
+			Return
+			'
+		End If
+		'
+		'--- procura no cadastro antigo o registro do produto pelo RG
+		FindProdutoAntigoAndAddNew(txtRGProduto.Text)
+		'
+	End Sub
+	'
+	Private Sub txtRGProduto_Validated(sender As Object, e As EventArgs) Handles txtRGProduto.Validated
+		_OldRGProduto = _produto.RGProduto
+	End Sub
+	'
+	'--- PROCURA NO CADASTRO ANTIGO E FAZ RELACAO
+	'----------------------------------------------------------------------------------
+	Public Function FindProdutoAntigoAndAddNew(RGProdutoAntigo As Integer) As Boolean
         '
         Try
             '--- try obtain BDANTERIOR
@@ -855,30 +853,35 @@ Public Class frmProduto
             If AbrirDialog(msn, "Obter Dados Anteriores",
                            frmDialog.DialogType.SIM_NAO, frmDialog.DialogIcon.Question,
                            frmDialog.DialogDefaultButton.Second) = DialogResult.No Then Return False
-            '
-            '--- CHECK PRECO DE COMPRA
-            '----------------------------------------------------------------------------------------------------
-            If _produto.PCompra > 0 AndAlso _produto.PCompra <> clP.PCompra Then
-                '
-                If AbrirDialog("Novo Preço de Compra da NFe é diferente do Preço Anterior..." & vbCrLf &
-                               "Você deseja alterar o Preço de compra Atual para o novo preço da NFe?",
-                               "Preço Divergente",
-                               frmDialog.DialogType.SIM_NAO,
-                               frmDialog.DialogIcon.Question,
-                               frmDialog.DialogDefaultButton.First) = DialogResult.No Then
-                    '
-                    _produto.PCompra = clP.PCompra
-                    '
-                End If
-            Else
-                '
-                _produto.PCompra = clP.PCompra
-                '
-            End If
-            '
-            '--- ITEMS WITH SAME OLD VALUE
-            '----------------------------------------------------------------------------------------------------
-            _produto.Produto = clP.Produto
+			'
+			'--- CHECK PRECO DE COMPRA
+			'----------------------------------------------------------------------------------------------------
+			If _produto.PCompra > 0 AndAlso _produto.PCompra <> clP.PCompra Then
+				'
+				AbrirDialog("O Preço de Compra da NFe é diferente do Preço Anterior..." & vbCrLf &
+							"O preço anterior será substituído pelo preço da NFe",
+							"Preço Divergente",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Information)
+				'
+				'If AbrirDialog("Novo Preço de Compra da NFe é diferente do Preço Anterior..." & vbCrLf &
+				'			   "Você deseja alterar o Preço de compra Atual para o novo preço da NFe?",
+				'			   "Preço Divergente",
+				'			   frmDialog.DialogType.SIM_NAO,
+				'			   frmDialog.DialogIcon.Question,
+				'			   frmDialog.DialogDefaultButton.First) = DialogResult.No Then
+				'	'
+				'	_produto.PCompra = clP.PCompra
+				'	'
+				'End If
+				'
+			ElseIf IsNothing(_produto.PCompra) OrElse _produto.PCompra = 0 Then
+				_produto.PCompra = clP.PCompra
+			End If
+			'
+			'--- ITEMS WITH SAME OLD VALUE
+			'----------------------------------------------------------------------------------------------------
+			_produto.Produto = clP.Produto
             _produto.Autor = clP.Autor
             _produto.PVenda = clP.PVenda
             _produto.PCompra = clP.PCompra
@@ -1792,7 +1795,7 @@ Public Class frmProduto
         RemoveHandler myControl.MouseHover, AddressOf showToolTip
         '
     End Sub
-    '
+	'
 #End Region '// TOOLTIPS
-    ' 
+	' 
 End Class

@@ -3,6 +3,55 @@ Imports CamadaDAL
 '
 Public Class ConsignacaoBLL
 	'
+	'--------------------------------------------------------------------------------------------
+	' GET LISTA COMPRA PARA FRMPROCURA
+	'--------------------------------------------------------------------------------------------
+	Public Function GetCompraLista_Procura(IDFilial As Integer,
+										   Optional dtInicial As Date? = Nothing,
+										   Optional dtFinal As Date? = Nothing) As List(Of clConsignacao)
+		'
+		Try
+			'
+			Dim db As New AcessoDados
+			'
+			db.AdicionarParametros("@IDFilial", IDFilial)
+			Dim myQuery As String = "SELECT * FROM qryConsignacao WHERE IDPessoaDestino = @IDFilial"
+			'
+			If Not IsNothing(dtInicial) Then
+				'
+				db.AdicionarParametros("@DataInicial", dtInicial)
+				myQuery = myQuery & " AND TransacaoData >= @DataInicial"
+				'
+			End If
+			'
+			If Not IsNothing(dtFinal) Then
+				'
+				db.AdicionarParametros("@DataFinal", dtFinal)
+				myQuery = myQuery & " AND TransacaoData <= @DataFinal"
+				'
+			End If
+			'
+			Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, myQuery)
+			'
+			Dim cList As New List(Of clConsignacao)
+			'
+			If dt.Rows.Count = 0 Then Return cList
+			'
+			For Each r As DataRow In dt.Rows
+				'
+				Dim consig As clConsignacao = ConvertDtRow_clConsignacao(r)
+				cList.Add(consig)
+				'
+			Next
+			'
+			Return cList
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
 	'==========================================================================================
 	' INSERT CONSIGNACAO ENTRADA
 	'==========================================================================================
@@ -170,7 +219,7 @@ Public Class ConsignacaoBLL
 			'
 			dbTran.ExecutarManipulacao(CommandType.Text, query)
 			'
-			'--- UPDATE TBLCONSIGNACAO
+			'--- UPDATE TBLCONSIGNACAOENTRADA
 			'----------------------------------------------------------------------------------
 			dbTran.LimparParametros()
 			dbTran.AdicionarParametros("@IDConsignacao", consig.IDConsignacao)
@@ -180,7 +229,7 @@ Public Class ConsignacaoBLL
 			dbTran.AdicionarParametros("@Descontos", consig.Descontos)
 			dbTran.AdicionarParametros("@TotalConsignacao", consig.TotalConsignacao)
 			'
-			query = "UPDATE tblConsignacao SET " &
+			query = "UPDATE tblConsignacaoEntrada SET " &
 					"FreteCobrado = @FreteCobrado " &
 					",ICMSValor = @ICMSValor " &
 					",Despesas = @Despesas " &
@@ -231,6 +280,42 @@ Public Class ConsignacaoBLL
 			dbTran.RollBackTransaction()
 			Throw ex
 			'
+		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' UPDATE TOTAL DA CONSIGNACAO ENTRADA
+	'==========================================================================================
+	Public Function UpdateConsignacaoEntradaTotal(IDConsignacao As Integer, newTotal As Double) As Boolean
+		'
+		Dim dbTran As AcessoDados = Nothing
+		Dim query As String = ""
+		'
+		Try
+			'
+			'--- BEGIN
+			'----------------------------------------------------------------------------------
+			dbTran = New AcessoDados
+			'
+			'--- UPDATE TBLCONSIGNACAO
+			'----------------------------------------------------------------------------------
+			dbTran.LimparParametros()
+			dbTran.AdicionarParametros("@IDConsignacao", IDConsignacao)
+			dbTran.AdicionarParametros("@TotalConsignacao", newTotal)
+			'
+			query = "UPDATE tblConsignacaoEntrada SET " &
+					"TotalConsignacao = @TotalConsignacao " &
+					"WHERE IDConsignacao = @IDConsignacao"
+			'
+			dbTran.ExecutarManipulacao(CommandType.Text, query)
+			'
+			'--- RETURN
+			'----------------------------------------------------------------------------------
+			Return True
+			'
+		Catch ex As Exception
+			Throw ex
 		End Try
 		'
 	End Function

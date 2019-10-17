@@ -552,216 +552,233 @@ Public Class frmConsignacao
 
 		'
 	End Sub
-	'    '
-	'    '--- INSERIR NOVO ITEM NA LISTA DE PRODUTOS
-	'    '----------------------------------------------------------------------------------------------------
-	'    Private Sub Inserir_Item()
-	'        '
-	'        '--- Verifica se esta Bloqueado ou Finalizado
-	'        If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
-	'        If RegistroFinalizado() Then Exit Sub '--- Verifica se o registro está Finalizado
-	'        '
-	'        '--- Abre o frmItem
-	'        Dim newItem As New clTransacaoItem
-	'		'
-	'		Dim fItem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_Consig, _IDFilial, newItem)
-	'		fItem.ShowDialog()
-	'        '
-	'        '--- Verifica a resposa do Dialog
-	'        If Not fItem.DialogResult = DialogResult.OK Then Exit Sub
-	'        '
-	'        Dim ItemBLL As New TransacaoItemBLL
-	'        Dim myID As Long? = Nothing
-	'        '
-	'        '--- Insere o novo ITEM no BD
-	'        Try
-	'            newItem.IDTransacao = _Consig.IDCompra
-	'            myID = ItemBLL.InserirNovoItem(newItem,
-	'                                           TransacaoItemBLL.EnumMovimento.ENTRADA,
-	'                                           _Consig.TransacaoData,
-	'                                           InsereCustos:=True
-	'                                           )
-	'            newItem.IDTransacaoItem = myID
-	'        Catch ex As Exception
-	'            MessageBox.Show("Houve um exceção ao INSERIR o item no BD..." & vbNewLine & ex.Message, "Exceção Inesperada",
-	'                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-	'        End Try
-	'        '
-	'        '--- Insere o ITEM na lista
-	'        _ItensList.Add(newItem)
-	'        bindItem.ResetBindings(False)
-	'        '--- Atualiza o DataGrid
-	'        dgvItens.DataSource = bindItem
-	'        bindItem.MoveLast()
-	'        '
-	'        '--- Atualiza o label TOTAL
-	'        Dim a = TotalGeral
-	'        '
-	'    End Sub
-	'    '
-	'    '--- EDITAR ITEM DA LISTA DE PRODUTOS
-	'    '----------------------------------------------------------------------------------------------------
-	'    Private Sub Editar_Item()
-	'        '
-	'        '--- Verifica se existe algum item selecionado
-	'        If dgvItens.SelectedRows.Count = 0 Then Exit Sub
-	'        '
-	'        '--- Verifica se esta Bloqueado ou Finalizado
-	'        If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
-	'        If RegistroFinalizado() Then Exit Sub '--- Verifica se o registro está Finalizado
-	'        '
-	'        '--- Abre o frmItem
-	'        Dim itmAtual As clTransacaoItem
-	'        itmAtual = dgvItens.SelectedRows(0).DataBoundItem
-	'        '
-	'        '
-	'        Try
-	'            '--- Ampulheta ON
-	'            Cursor = Cursors.WaitCursor
-	'			'
-	'			Dim fitem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_Consig, _IDFilial, itmAtual)
-	'			'
-	'			fitem.ShowDialog()
-	'            '
-	'            '--- Verifica a resposa do Dialog
-	'            If Not fitem.DialogResult = DialogResult.OK Then Exit Sub
-	'            '
-	'        Catch ex As Exception
-	'            MessageBox.Show("Uma exceção ocorreu ao Abrir Form de Item..." & vbNewLine &
-	'            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-	'        Finally
-	'            '--- Ampulheta OFF
-	'            Cursor = Cursors.Default
-	'        End Try
-	'        '
-	'        Dim ItemBLL As New TransacaoItemBLL
-	'        Dim myID As Long? = Nothing
-	'        '
-	'        'Dim i As Integer = _ItensList.FindIndex(Function(x) x.IDTransacaoItem = Item.IDTransacaoItem)
-	'        '
-	'        '--- Altera o ITEM no BD e reforma o ESTOQUE
-	'        Try
-	'            '--- Ampulheta ON
-	'            Cursor = Cursors.WaitCursor
-	'            '
-	'            itmAtual.IDTransacao = _Consig.IDCompra
-	'            myID = ItemBLL.EditarItem(itmAtual,
-	'                                      TransacaoItemBLL.EnumMovimento.ENTRADA,
-	'                                      _Consig.TransacaoData,
-	'                                      InsereCustos:=True)
-	'            '
-	'            itmAtual.IDTransacaoItem = myID
-	'            '
-	'        Catch ex As Exception
-	'            MessageBox.Show("Houve um exceção ao ALTERAR o item no BD..." & vbNewLine & ex.Message,
-	'                            "Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-	'        Finally
-	'            '--- Ampulheta OFF
-	'            Cursor = Cursors.Default
-	'        End Try
-	'        '
-	'        '--- Atualiza o ITEM da lista
-	'        '_ItensList.Item(i) = Item
-	'        bindItem.ResetBindings(False)
-	'        '--- Atualiza o DataGrid
-	'        dgvItens.DataSource = bindItem
-	'        'bindItem.CurrencyManager.Position = i
-	'        '
-	'        '--- Atualiza o label TOTAL
-	'        Dim a = TotalGeral
-	'        '
-	'    End Sub
-	'    '
-	'    '--- EXCLUIR ITEM DA LISTA DE PRODUTOS
-	'    '---------------------------------------------------------------------------------------------------
-	'    Private Sub Excluir_Item()
-	'        '
-	'        '--- Verifica se existe algum item selecionado
-	'        If dgvItens.SelectedRows.Count = 0 Then Exit Sub
-	'        '
-	'        '--- Verifica se esta Bloqueado ou Finalizado
-	'        If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
-	'        If RegistroFinalizado() Then Exit Sub '--- Verifica se o registro está Finalizado
-	'        '
-	'        '--- seleciona o item
-	'        Dim itmAtual As clTransacaoItem
-	'        itmAtual = dgvItens.SelectedRows(0).DataBoundItem
-	'        '
-	'        '--- pergunta ao usuário se deseja excluir o item
-	'        If MessageBox.Show("Deseja realmente REMOVER esse item da Compra?" & vbNewLine & vbNewLine &
-	'                           itmAtual.Produto.ToUpper, "Excluir Item",
-	'                           MessageBoxButtons.YesNo,
-	'                           MessageBoxIcon.Question,
-	'                           MessageBoxDefaultButton.Button2) = DialogResult.No Then Exit Sub
-	'        '
-	'        '--- Exclui o ITEM
-	'        '------------------------------------------
-	'        Dim ItemBLL As New TransacaoItemBLL
-	'        Dim myID As Long? = Nothing
-	'        '
-	'        Dim i As Integer = _ItensList.FindIndex(Function(x) x.IDTransacaoItem = itmAtual.IDTransacaoItem)
-	'        '
-	'        '--- Altera o ITEM no BD e reforma o ESTOQUE
-	'        Try
-	'            '--- Ampulheta ON
-	'            Cursor = Cursors.WaitCursor
-	'            '
-	'            myID = ItemBLL.ExcluirItem(itmAtual, TransacaoItemBLL.EnumMovimento.ENTRADA)
-	'            '
-	'        Catch ex As Exception
-	'            MessageBox.Show("Houve um exceção ao EXCLUIR o item no BD..." & vbNewLine & ex.Message,
-	'                            "Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-	'        Finally
-	'            '--- Ampulheta OFF
-	'            Cursor = Cursors.Default
-	'        End Try
-	'        '
-	'        '--- Atualiza o ITEM da lista
-	'        _ItensList.RemoveAt(i)
-	'        bindItem.ResetBindings(False)
-	'        '--- Atualiza o DataGrid
-	'        dgvItens.DataSource = bindItem
-	'        '
-	'        '--- Atualiza o label TOTAL
-	'        Dim a = TotalGeral
-	'        '
-	'    End Sub
-	'    '
-	'    '---------------------------------------------------------------------------------------------------
-	'    ' CRIA TECLA DE ATALHO PARA INSERIR/EDITAR PRODUTO
-	'    '---------------------------------------------------------------------------------------------------
-	'    Private Sub dgvItens_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvItens.KeyDown
-	'        '
-	'        If e.KeyCode = Keys.Add Then
-	'            e.Handled = True
-	'            Inserir_Item()
-	'        ElseIf e.KeyCode = Keys.Enter Then
-	'            e.Handled = True
-	'            Editar_Item()
-	'        ElseIf e.KeyCode = Keys.Delete Then
-	'            e.Handled = True
-	'            Excluir_Item()
-	'        End If
-	'    End Sub
-	'    '
-	'    Private Sub dgvItens_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
-	'        Editar_Item()
-	'    End Sub
-	'    '
+	'
+	'--- INSERIR NOVO ITEM NA LISTA DE PRODUTOS
+	'----------------------------------------------------------------------------------------------------
+	Private Sub Inserir_Item()
+		'
+		'--- Verifica se esta Bloqueado ou Finalizado
+		If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
+		'
+		'--- Abre o frmItem
+		Dim newItem As New clTransacaoItem
+		'
+		Using fItem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_COMPRA, _IDFilial, newItem)
+			'
+			fItem.ShowDialog()
+			'
+			'--- Verifica a resposa do Dialog
+			If Not fItem.DialogResult = DialogResult.OK Then Exit Sub
+			'
+		End Using
+		'
+		Dim ItemBLL As New TransacaoItemBLL
+		Dim myID As Long? = Nothing
+		'
+		'--- Insere o novo ITEM no BD
+		Try
+			newItem.IDTransacao = _Consig.IDConsignacao
+			myID = ItemBLL.InserirNovoItem(newItem,
+										   TransacaoItemBLL.EnumMovimento.ENTRADA,
+										   _Consig.TransacaoData,
+										   InsereCustos:=True
+										   )
+			newItem.IDTransacaoItem = myID
+		Catch ex As Exception
+			MessageBox.Show("Houve um exceção ao INSERIR o item no BD..." & vbNewLine & ex.Message, "Exceção Inesperada",
+							MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+		End Try
+		'
+		'--- Insere o ITEM na lista
+		_ItensList.Add(newItem)
+		bindItem.ResetBindings(False)
+		'--- Atualiza o DataGrid
+		dgvItens.DataSource = bindItem
+		bindItem.MoveLast()
+		'
+		'--- Atualiza o label TOTAL
+		Dim a = TotalGeral
+		'
+	End Sub
+	'
+	'--- EDITAR ITEM DA LISTA DE PRODUTOS
+	'----------------------------------------------------------------------------------------------------
+	Private Sub Editar_Item()
+		'
+		'--- Verifica se existe algum item selecionado
+		If dgvItens.SelectedRows.Count = 0 Then Exit Sub
+		'
+		'--- Verifica se esta Bloqueado ou Finalizado
+		If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
+		'
+		'--- Abre o frmItem
+		Dim itmAtual As clTransacaoItem
+		itmAtual = dgvItens.SelectedRows(0).DataBoundItem
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Using fitem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_COMPRA, _IDFilial, itmAtual)
+				'
+				fitem.ShowDialog()
+				'
+				'--- Verifica a resposa do Dialog
+				If Not fitem.DialogResult = DialogResult.OK Then Exit Sub
+				'
+			End Using
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao Abrir Form de Item..." & vbNewLine &
+			ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+		Dim ItemBLL As New TransacaoItemBLL
+		Dim myID As Long? = Nothing
+		'
+		'--- Altera o ITEM no BD e reforma o ESTOQUE
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			itmAtual.IDTransacao = _Consig.IDConsignacao
+			myID = ItemBLL.EditarItem(itmAtual,
+									  TransacaoItemBLL.EnumMovimento.ENTRADA,
+									  _Consig.TransacaoData,
+									  InsereCustos:=True)
+			'
+			itmAtual.IDTransacaoItem = myID
+			'
+		Catch ex As Exception
+			MessageBox.Show("Houve um exceção ao ALTERAR o item no BD..." & vbNewLine & ex.Message,
+							"Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+		'--- Atualiza o ITEM da lista
+		bindItem.ResetBindings(False)
+		'
+		'--- Atualiza o DataGrid
+		dgvItens.DataSource = bindItem
+		'
+		'--- Atualiza o label TOTAL
+		Dim a = TotalGeral
+		'
+	End Sub
+	'
+	'--- EXCLUIR ITEM DA LISTA DE PRODUTOS
+	'---------------------------------------------------------------------------------------------------
+	Private Sub Excluir_Item()
+		'
+		'--- Verifica se existe algum item selecionado
+		If dgvItens.SelectedRows.Count = 0 Then Exit Sub
+		'
+		'--- Verifica se esta Bloqueado ou Finalizado
+		If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
+		'
+		'--- seleciona o item
+		Dim itmAtual As clTransacaoItem
+		itmAtual = dgvItens.SelectedRows(0).DataBoundItem
+		'
+		'--- pergunta ao usuário se deseja excluir o item
+		If MessageBox.Show("Deseja realmente REMOVER esse item da Consignação?" & vbNewLine & vbNewLine &
+						   itmAtual.Produto.ToUpper, "Excluir Item",
+						   MessageBoxButtons.YesNo,
+						   MessageBoxIcon.Question,
+						   MessageBoxDefaultButton.Button2) = DialogResult.No Then Exit Sub
+		'
+		'--- Exclui o ITEM
+		'------------------------------------------
+		Dim ItemBLL As New TransacaoItemBLL
+		Dim myID As Long? = Nothing
+		'
+		Dim i As Integer = _ItensList.FindIndex(Function(x) x.IDTransacaoItem = itmAtual.IDTransacaoItem)
+		'
+		'--- Altera o ITEM no BD e reforma o ESTOQUE
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			myID = ItemBLL.ExcluirItem(itmAtual, TransacaoItemBLL.EnumMovimento.ENTRADA)
+			'
+		Catch ex As Exception
+			MessageBox.Show("Houve um exceção ao EXCLUIR o item no BD..." & vbNewLine & ex.Message,
+							"Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+		'--- Atualiza o ITEM da lista
+		_ItensList.RemoveAt(i)
+		bindItem.ResetBindings(False)
+		'--- Atualiza o DataGrid
+		dgvItens.DataSource = bindItem
+		'
+		'--- Atualiza o label TOTAL
+		Dim a = TotalGeral
+		'
+	End Sub
+	'
+	'---------------------------------------------------------------------------------------------------
+	' CRIA TECLA DE ATALHO PARA INSERIR/EDITAR PRODUTO
+	'---------------------------------------------------------------------------------------------------
+	Private Sub dgvItens_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvItens.KeyDown
+		'
+		If e.KeyCode = Keys.Add Then
+			e.Handled = True
+			Inserir_Item()
+		ElseIf e.KeyCode = Keys.Enter Then
+			e.Handled = True
+			Editar_Item()
+		ElseIf e.KeyCode = Keys.Delete Then
+			e.Handled = True
+			Excluir_Item()
+		End If
+	End Sub
+	'
+	Private Sub dgvItens_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItens.CellDoubleClick
+		Editar_Item()
+	End Sub
+	'
 #End Region
-	'    '
-	'#Region "BOTOES DE ACAO"
-	'    '
-	'    Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-	'        '
-	'        '--- ASK USER
-	'        If Not CanCloseMessage() Then Exit Sub
-	'        '
-	'        '--- CLOSE
-	'        Close()
-	'        MostraMenuPrincipal()
-	'        '
-	'    End Sub
+	'    
+#Region "BOTOES DE ACAO"
+	'
+	Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+		'
+		'--- ASK USER
+		If Not CanCloseMessage() Then Exit Sub
+		'
+		'--- CHECK AND SAVE TOTAL
+		If _Consig.TotalConsignacao <> TotalGeral Then
+			'
+			Try
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				SaveTotal()
+				'
+			Catch ex As Exception
+				MessageBox.Show("Uma exceção ocorreu ao Salvar Total da Consignação..." & vbNewLine &
+								ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+			Finally
+				'--- Ampulheta OFF
+				Cursor = Cursors.Default
+			End Try
+			'
+		End If
+		'
+		'--- CLOSE
+		Close()
+		MostraMenuPrincipal()
+		'
+	End Sub
 	'    '
 	'    '--- ALTERAR A DATA DA COMPRA
 	'    Private Sub lblCompraData_DoubleClick(sender As Object, e As EventArgs) _
@@ -824,8 +841,8 @@ Public Class frmConsignacao
 	'        '
 	'    End Sub
 	'    '
-	'#End Region
-	'    '
+#End Region
+	'    
 #Region "FORMATACAO E FLUXO"
 	'
 	' CRIA TECLA DE ATALHO PARA O TAB
@@ -923,8 +940,8 @@ Public Class frmConsignacao
 	End Sub
 	'
 #End Region
-	'	'
-	'#Region "CONTROLE DO A PAGAR"
+	'	
+#Region "CONTROLE DO A PAGAR"
 	'	'============================================================================================================
 	'	' A RECEBER CONTROLES
 	'	'============================================================================================================
@@ -1206,9 +1223,9 @@ Public Class frmConsignacao
 	'	End Sub
 	'	'
 	'	'============================================================================================================
-	'#End Region
-	'	'
-	'#Region "FINALIZAR COMPRA"
+#End Region
+	'	
+#Region "FINALIZAR CONSIGNACAO"
 	'	'
 	'	'==========================================================================================
 	'	' FINALIZE COMPRA WITH VERIFIES
@@ -1282,37 +1299,60 @@ Public Class frmConsignacao
 	'		'
 	'	End Sub
 	'	'
-	'	'==========================================================================================
-	'	' SAVE IN BD
-	'	'==========================================================================================
-	'	Private Function SalvaRegistroCompra() As Boolean
-	'		'
-	'		Try
-	'			'--- Ampulheta ON
-	'			Cursor = Cursors.WaitCursor
-	'			'
-	'			Dim obj As Object = cBLL.AtualizaCompra_Procedure_ID(_Consig)
-	'			'
-	'			If Not IsNumeric(obj) Then
-	'				Throw New Exception(obj.ToString)
-	'			End If
-	'			'
-	'			Return True
-	'			'
-	'		Catch ex As Exception
-	'			'
-	'			MessageBox.Show("Uma exceção ocorreu ao Salvar o Registro da Compra..." & vbNewLine &
-	'							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-	'		Finally
-	'			'
-	'			'--- Ampulheta OFF
-	'			Cursor = Cursors.Default
-	'			'
-	'		End Try
-	'		'
-	'		Return False
-	'		'
-	'	End Function
+	'==========================================================================================
+	' SAVE IN BD
+	'==========================================================================================
+	Private Function SalvaRegistroConsignacao() As Boolean
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim obj As Object = cBLL.UpdateConsignacaoEntrada(_Consig)
+			'
+			If Not IsNumeric(obj) Then
+				Throw New Exception(obj.ToString)
+			End If
+			'
+			Return True
+			'
+		Catch ex As Exception
+			'
+			MessageBox.Show("Uma exceção ocorreu ao Salvar o Registro da Consignação..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
+		'
+		Return False
+		'
+	End Function
+	'
+	'==========================================================================================
+	' SAVE TOTAL OF CONSIGNACAO
+	'==========================================================================================
+	Private Function SaveTotal() As Boolean
+		'
+		Try
+			'
+			Dim obj As Object = cBLL.UpdateConsignacaoEntradaTotal(_Consig.IDConsignacao, TotalGeral)
+			'
+			If Not IsNumeric(obj) Then
+				Throw New Exception(obj.ToString)
+			End If
+			'
+			Return True
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+		Return False
+		'
+	End Function
 	'	'
 	'	'==========================================================================================
 	'	' CHECK TO SAVE
@@ -1483,9 +1523,9 @@ Public Class frmConsignacao
 	'		'
 	'	End Sub
 	'	'   
-	'#End Region
-	'	'
-	'#Region "CONTROLE DO CONTEXT MENUSTRIP"
+#End Region
+	'	
+#Region "CONTROLE DO CONTEXT MENUSTRIP"
 	'	'
 	'	'=============================================================================
 	'	' CONTROLA O MENUSTRIP NO DATAGRID ITENS
@@ -1593,9 +1633,9 @@ Public Class frmConsignacao
 	'		Return T
 	'	End Function
 	'	'
-	'#End Region
-	'	'
-	'#Region "BLOQUEIO DE REGISTROS"
+#End Region
+	'	
+#Region "BLOQUEIO DE REGISTROS"
 	'	'
 	'	' PROIBE EDICAO NOS COMBOBOX QUANDO COMPRA BLOQUEADA
 	'	'-----------------------------------------------------------------------------------------------------
@@ -1627,77 +1667,47 @@ Public Class frmConsignacao
 	'		'
 	'	End Sub
 	'	'
-	'	' FUNCAO QUE CONFERE REGISTRO BLOQUEADO E EMITE MENSAGEM PADRAO
-	'	'-----------------------------------------------------------------------------------------------------
-	'	Private Function RegistroBloqueado() As Boolean
-	'		'
-	'		If Sit = EnumFlagEstado.RegistroBloqueado Then
-	'			MessageBox.Show("Esse registro de COMPRA está BLOQUEADO para alterações..." & vbNewLine &
-	'							"Não é possível adicionar produtos ou alterar algum dado!",
-	'							"Registro Bloqueado", MessageBoxButtons.OK, MessageBoxIcon.Information)
-	'			RegistroBloqueado = True
-	'		Else
-	'			RegistroBloqueado = False
-	'		End If
-	'		'
-	'	End Function
+	' FUNCAO QUE CONFERE REGISTRO BLOQUEADO E EMITE MENSAGEM PADRAO
+	'-----------------------------------------------------------------------------------------------------
+	Private Function RegistroBloqueado() As Boolean
+		'
+		If Sit = EnumFlagEstado.RegistroBloqueado Then
+			MessageBox.Show("Esse registro de CONSIGNAÇÃO está BLOQUEADO para alterações..." & vbNewLine &
+							"Não é possível adicionar produtos ou alterar algum dado!",
+							"Registro Bloqueado", MessageBoxButtons.OK, MessageBoxIcon.Information)
+			RegistroBloqueado = True
+		Else
+			RegistroBloqueado = False
+		End If
+		'
+	End Function
+	'
+	Private Function CanCloseMessage() As Boolean
+		'
+		If Not (Sit = EnumFlagEstado.NovoRegistro Or Sit = EnumFlagEstado.Alterado) Then Return True
+		'
+		If AbrirDialog("Essa CONSIGNAÇÃO ainda não está CONCLUÍDA!" & vbNewLine & vbNewLine &
+						"Se você fechar agora o fomulário," & vbNewLine &
+						"Algumas alterações podem ser perdidas." & vbNewLine & vbNewLine &
+						"Deseja Fechar assim mesmo?",
+						"Fechar Consignação",
+						frmDialog.DialogType.SIM_NAO,
+						frmDialog.DialogIcon.Question) = vbNo Then
+			'
+			'--- Seleciona a TAB
+			tabPrincipal.SelectedTab = vtab2
+			'
+			'--- return
+			Return False
+			'
+		End If
+		'
+		'--- return
+		Return True
+		'
+	End Function
 	'	'
-	'	' FUNCAO QUE CONFERE REGISTRO FINALIZADO E PERGUNTA SE DESEJA ALTERAR
-	'	'-----------------------------------------------------------------------------------------------------
-	'	Private Function RegistroFinalizado() As Boolean
-	'		'
-	'		'--- check Sit
-	'		If Not Sit = EnumFlagEstado.RegistroSalvo Then Return False
-	'		'
-	'		'--- ask to user
-	'		If AbrirDialog("Esse registro de COMPRA já se encontra FINALIZADO..." & vbNewLine &
-	'					   "Deseja realmente fazer alterações nesse registro?",
-	'					   "Registro Finalizado",
-	'					   frmDialog.DialogType.SIM_NAO,
-	'					   frmDialog.DialogIcon.Question) = DialogResult.No Then Return True
-	'		'
-	'		'--- Edita o registro e altera a situação
-	'		_Consig.IDSituacao = 1
-	'		Sit = EnumFlagEstado.Alterado
-	'		'
-	'		'--- SAVE A TRANSACAO/COMPRA NO BD
-	'		If SalvaRegistroCompra() Then
-	'			Return False
-	'		Else
-	'			Return True
-	'		End If
-	'		'
-	'	End Function
-	'	'
-	'	Private Function CanCloseMessage() As Boolean
-	'		'
-	'		If Not (Sit = EnumFlagEstado.NovoRegistro Or Sit = EnumFlagEstado.Alterado) Then Return True
-	'		'
-	'		If AbrirDialog("Essa COMPRA ainda não está CONCLUÍDA!" & vbNewLine & vbNewLine &
-	'						"Se você fechar agora o fomulário de compra," & vbNewLine &
-	'						"Algumas alterações podem ser perdidas." & vbNewLine & vbNewLine &
-	'						"Deseja Fechar a Compra assim mesmo?",
-	'						"Fechar a Compra",
-	'						frmDialog.DialogType.SIM_NAO,
-	'						frmDialog.DialogIcon.Question) = vbNo Then
-	'			'
-	'			'--- Seleciona a TAB
-	'			tabPrincipal.SelectedTab = vtab2
-	'			'
-	'			'--- Select Control txtValorFrete
-	'			dgvAPagar.Focus()
-	'			'
-	'			'--- return
-	'			Return False
-	'			'
-	'		End If
-	'		'
-	'		'--- return
-	'		Return True
-	'		'
-	'	End Function
-	'	'
-	'#End Region
+#End Region
 	'	'
 #Region "NOTA FISCAL CONTROLE GRID"
 	'
@@ -2113,7 +2123,7 @@ Public Class frmConsignacao
 	'	'
 #End Region
 	'	'
-	'#Region "MENU ACAO INFERIOR"
+#Region "MENU ACAO INFERIOR"
 	'	'
 	'	'--- CONTROLE DO MENU ACAO INFERIOR
 	'	'=====================================
@@ -2289,6 +2299,6 @@ Public Class frmConsignacao
 
 	'	End Sub
 	'	'
-	'#End Region '/ MENU ACAO INFERIOR
+#End Region '/ MENU ACAO INFERIOR
 	'	'
 End Class
