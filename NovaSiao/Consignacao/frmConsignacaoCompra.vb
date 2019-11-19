@@ -33,29 +33,29 @@ Public Class frmConsignacaoCompra
                     '
                     lblSituacao.Text = "Finalizada"
                     btnFinalizar.Text = "&Fechar"
-                    txtObservacao.ReadOnly = False
-                    btnExcluir.Enabled = True
+					'txtObservacao.ReadOnly = False
+					btnExcluir.Enabled = True
                     '
                 Case EnumFlagEstado.Alterado '--- REGISTRO FINALIZADO ALTERADO
                     '
                     lblSituacao.Text = "Alterada"
                     btnFinalizar.Text = "&Concluir"
-                    txtObservacao.ReadOnly = False
-                    btnExcluir.Enabled = True
+					'txtObservacao.ReadOnly = False
+					btnExcluir.Enabled = True
                     '
                 Case EnumFlagEstado.NovoRegistro '--- REGISTRO NÃO FINALIZADO
                     '
                     lblSituacao.Text = "Em Aberto"
                     btnFinalizar.Text = "&Concluir"
-                    txtObservacao.ReadOnly = False
-                    btnExcluir.Enabled = True
+					'txtObservacao.ReadOnly = False
+					btnExcluir.Enabled = True
                     '
                 Case EnumFlagEstado.RegistroBloqueado '--- REGISTRO BLOQUEADO PARA ALTERACOES
                     '
                     lblSituacao.Text = "Bloqueada"
                     btnFinalizar.Text = "&Fechar"
-                    txtObservacao.ReadOnly = True
-                    btnExcluir.Enabled = False
+					'txtObservacao.ReadOnly = True
+					btnExcluir.Enabled = False
                     '
             End Select
             '
@@ -131,24 +131,24 @@ Public Class frmConsignacaoCompra
 #Region "DATABINDING"
     '
     Private Sub PreencheDataBinding()
-        '
-        lblCliente.DataBindings.Add("Text", bindTroca, "PessoaTroca", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblIDTroca.DataBindings.Add("Text", bindTroca, "IDTroca", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblFilial.DataBindings.Add("Text", bindTroca, "ApelidoFilial", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblTrocaData.DataBindings.Add("Text", bindTroca, "TrocaData", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblVendedor.DataBindings.Add("Text", bindTroca, "ApelidoVenda", True, DataSourceUpdateMode.OnPropertyChanged)
-        txtObservacao.DataBindings.Add("Text", bindTroca, "Observacao", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblTotalGeral.DataBindings.Add("Text", bindTroca, "ValorTotal", True, DataSourceUpdateMode.OnPropertyChanged)
-        '
-        ' FORMATA OS VALORES DO DATABINDING
-        AddHandler lblIDTroca.DataBindings("Text").Format, AddressOf FormatRG
-        AddHandler lblTotalGeral.DataBindings("text").Format, AddressOf FormatCUR
-        AddHandler lblTrocaData.DataBindings("text").Format, AddressOf FormatDT
-        '
-        ' ADD HANDLER PARA DATABINGS
-        AddHandler _Troca.AoAlterar, AddressOf HandlerAoAlterar
-        '
-    End Sub
+		''
+		'lblCliente.DataBindings.Add("Text", bindTroca, "PessoaTroca", True, DataSourceUpdateMode.OnPropertyChanged)
+		'lblIDTroca.DataBindings.Add("Text", bindTroca, "IDTroca", True, DataSourceUpdateMode.OnPropertyChanged)
+		'lblFilial.DataBindings.Add("Text", bindTroca, "ApelidoFilial", True, DataSourceUpdateMode.OnPropertyChanged)
+		'lblTrocaData.DataBindings.Add("Text", bindTroca, "TrocaData", True, DataSourceUpdateMode.OnPropertyChanged)
+		'lblVendedor.DataBindings.Add("Text", bindTroca, "ApelidoVenda", True, DataSourceUpdateMode.OnPropertyChanged)
+		'txtObservacao.DataBindings.Add("Text", bindTroca, "Observacao", True, DataSourceUpdateMode.OnPropertyChanged)
+		'lblTotalGeral.DataBindings.Add("Text", bindTroca, "ValorTotal", True, DataSourceUpdateMode.OnPropertyChanged)
+		''
+		'' FORMATA OS VALORES DO DATABINDING
+		'AddHandler lblIDTroca.DataBindings("Text").Format, AddressOf FormatRG
+		'AddHandler lblTotalGeral.DataBindings("text").Format, AddressOf FormatCUR
+		'AddHandler lblTrocaData.DataBindings("text").Format, AddressOf FormatDT
+		''
+		'' ADD HANDLER PARA DATABINGS
+		'AddHandler _Troca.AoAlterar, AddressOf HandlerAoAlterar
+		''
+	End Sub
     '
     Private Sub HandlerAoAlterar()
         If _Troca.RegistroAlterado = True And Sit = EnumFlagEstado.RegistroSalvo Then
@@ -606,18 +606,18 @@ Public Class frmConsignacaoCompra
 	' CONVERTE ENTER EM TAB DE ALGUNS CONTROLES
 	'---------------------------------------------------------------------------------------------------
 	Private Sub Text_KeyDown(sender As Object, e As KeyEventArgs)
-		'
-		'--- Se for o campo observacao, verifica se esta preenchido com algum texto
-		'--- Se esta preenchido entao permite que o ENTER funcione como nova linha
-		If DirectCast(sender, TextBox).Name = "txtObservacao" AndAlso txtObservacao.Text.Trim.Length > 0 Then
-			Exit Sub
-		End If
-		'
-		If e.KeyCode = Keys.Enter Then
-			e.SuppressKeyPress = True
-			SendKeys.Send("{Tab}")
-		End If
-		'
+		''
+		''--- Se for o campo observacao, verifica se esta preenchido com algum texto
+		''--- Se esta preenchido entao permite que o ENTER funcione como nova linha
+		'If DirectCast(sender, TextBox).Name = "txtObservacao" AndAlso txtObservacao.Text.Trim.Length > 0 Then
+		'	Exit Sub
+		'End If
+		''
+		'If e.KeyCode = Keys.Enter Then
+		'	e.SuppressKeyPress = True
+		'	SendKeys.Send("{Tab}")
+		'End If
+		''
 	End Sub
 	'
 	' ALTERA A COR DO DATAGRIDVIEW QUANDO GANHA OU PERDE O FOCO
