@@ -25,9 +25,9 @@ Public Class frmFuncionario
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _formOrigem = formOrigem
-        propFunc = funcionario
+		' Add any initialization after the InitializeComponent() call.
+		_formOrigem = formOrigem
+		propFunc = funcionario
         PreencheDataBindings()
         AddHandlerControles() ' adiciona o handler para selecionar e usar tab com a tecla enter
         '
@@ -77,10 +77,9 @@ Public Class frmFuncionario
             If _Sit = EnumFlagEstado.RegistroSalvo Then
                 btnSalvar.Enabled = False
                 btnNovo.Enabled = True
-                btnCancelar.Enabled = False
-                lblIDFuncionario.Text = Format(lblIDFuncionario.Tag, "0000")
-                txtCPF.ReadOnly = True
-                AtivoButtonImage()
+				btnCancelar.Enabled = False
+				txtCPF.ReadOnly = True
+				AtivoButtonImage()
             ElseIf _Sit = EnumFlagEstado.Alterado Then
                 btnSalvar.Enabled = True
                 btnNovo.Enabled = False
@@ -93,8 +92,8 @@ Public Class frmFuncionario
                 btnNovo.Enabled = False
                 btnCancelar.Enabled = True
                 txtCPF.ReadOnly = False
-                lblIDFuncionario.Text = "NOVO"
-                AtivoButtonImage()
+				'lblIDFuncionario.Text = "NOVO"
+				AtivoButtonImage()
             End If
         End Set
     End Property
@@ -119,6 +118,8 @@ Public Class frmFuncionario
 				'--- SET VALORES DEFAULT DOS CAMPOS
 				If If(_Func.Cidade, "").Trim.Length = 0 Then _Func.Cidade = ObterDefault("CidadePadrao")
 				If If(_Func.UF, "").Trim.Length = 0 Then _Func.UF = ObterDefault("UFPadrao")
+				_Func.IDFilial = Obter_FilialPadrao()
+				_Func.ApelidoFilial = ObterDefault("FilialDescricao")
 				'
 				'--- SET NEW
 				Sit = EnumFlagEstado.NovoRegistro
@@ -143,33 +144,35 @@ Public Class frmFuncionario
                 Return False
                 '
             End If
-            '
-            propFunc = New clFuncionario With {
-                .IDPessoa = PF.IDPessoa,
-                .Cadastro = PF.Cadastro,
-                .CPF = PF.CPF,
-                .PessoaTipo = PF.PessoaTipo,
-                .Ativo = True,
-                .Endereco = PF.Endereco,
-                .Bairro = PF.Bairro,
-                .Cidade = PF.Cidade,
-                .UF = PF.UF,
-                .CEP = PF.CEP,
-                .TelefoneA = PF.TelefoneA,
-                .TelefoneB = PF.TelefoneB,
-                .Identidade = PF.Identidade,
-                .IdentidadeData = PF.IdentidadeData,
-                .IdentidadeOrgao = PF.IdentidadeOrgao,
-                .Email = PF.Email,
-                .EmailDestino = PF.EmailDestino,
-                .EmailPrincipal = PF.EmailPrincipal,
-                .NascimentoData = PF.NascimentoData,
-                .InsercaoData = PF.InsercaoData,
-                .Sexo = PF.Sexo
-            }
-            '
-            '--- SET NEW
-            Sit = EnumFlagEstado.NovoRegistro
+			'
+			propFunc = New clFuncionario With {
+				.IDPessoa = PF.IDPessoa,
+				.Cadastro = PF.Cadastro,
+				.CPF = PF.CPF,
+				.PessoaTipo = PF.PessoaTipo,
+				.Ativo = True,
+				.Endereco = PF.Endereco,
+				.Bairro = PF.Bairro,
+				.Cidade = PF.Cidade,
+				.UF = PF.UF,
+				.CEP = PF.CEP,
+				.TelefoneA = PF.TelefoneA,
+				.TelefoneB = PF.TelefoneB,
+				.Identidade = PF.Identidade,
+				.IdentidadeData = PF.IdentidadeData,
+				.IdentidadeOrgao = PF.IdentidadeOrgao,
+				.Email = PF.Email,
+				.EmailDestino = PF.EmailDestino,
+				.EmailPrincipal = PF.EmailPrincipal,
+				.NascimentoData = PF.NascimentoData,
+				.InsercaoData = PF.InsercaoData,
+				.Sexo = PF.Sexo,
+				.IDFilial = Obter_FilialPadrao(),
+				.ApelidoFilial = ObterDefault("FilialDescricao")
+			}
+			'
+			'--- SET NEW
+			Sit = EnumFlagEstado.NovoRegistro
             '
         End If
         '
@@ -182,11 +185,11 @@ Public Class frmFuncionario
 #Region "BINDINGS"
     '
     Private Sub PreencheDataBindings()
-        ' ADICIONANDO O DATABINDINGS AOS CONTROLES TEXT
-        ' OS COMBOS JA SÃO ADICIONADOS DATABINDINGS QUANDO CARREGA
-        '
-        lblIDFuncionario.DataBindings.Add("Tag", bindFunc, "IDPessoa")
-        txtFuncionario.DataBindings.Add("Text", bindFunc, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
+		' ADICIONANDO O DATABINDINGS AOS CONTROLES TEXT
+		' OS COMBOS JA SÃO ADICIONADOS DATABINDINGS QUANDO CARREGA
+		'
+		lblIDFuncionario.DataBindings.Add("Text", bindFunc, "IDPessoa", True, DataSourceUpdateMode.OnPropertyChanged)
+		txtFuncionario.DataBindings.Add("Text", bindFunc, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
         txtCPF.DataBindings.Add("Text", bindFunc, "CPF", True, DataSourceUpdateMode.OnPropertyChanged)
         txtNascimentoData.DataBindings.Add("Text", bindFunc, "NascimentoData", True, DataSourceUpdateMode.OnPropertyChanged)
         txtIdentidade.DataBindings.Add("Text", bindFunc, "Identidade", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -206,10 +209,10 @@ Public Class frmFuncionario
         txtComissao.DataBindings.Add("Text", bindFunc, "Comissao", True, DataSourceUpdateMode.OnPropertyChanged)
         chkVendedorAtivo.DataBindings.Add("CheckState", bindFunc, "VendedorAtivo", True, DataSourceUpdateMode.OnPropertyChanged)
         lblApelidoFilial.DataBindings.Add("Text", bindFunc, "ApelidoFilial", True, DataSourceUpdateMode.OnPropertyChanged)
-        '
-        ' FORMATA OS VALORES DO DATABINDING
-        AddHandler lblIDFuncionario.DataBindings("Tag").Format, AddressOf idFormatRG
-        AddHandler txtComissao.DataBindings("Text").Format, AddressOf idFormatPercent
+		'
+		' FORMATA OS VALORES DO DATABINDING
+		AddHandler lblIDFuncionario.DataBindings("Text").Format, AddressOf idFormatRG
+		AddHandler txtComissao.DataBindings("Text").Format, AddressOf idFormatPercent
         AddHandler lblApelidoFilial.DataBindings("Text").Format, AddressOf formatApelidoFilial
         AddHandler bindFunc.CurrentChanged, AddressOf handler_CurrentChanged
         '
@@ -225,10 +228,10 @@ Public Class frmFuncionario
 		If IsNothing(DirectCast(bindFunc.Current, clFuncionario).IDPessoa) Then
             Exit Sub
         Else
-            ' LER O ID
-            lblIDFuncionario.DataBindings.Item("Tag").ReadValue()
-            ' ALTERAR PARA REGISTRO SALVO
-            Sit = EnumFlagEstado.RegistroSalvo
+			' LER O ID
+			lblIDFuncionario.DataBindings.Item("Text").ReadValue()
+			' ALTERAR PARA REGISTRO SALVO
+			Sit = EnumFlagEstado.RegistroSalvo
         End If
         '
     End Sub
@@ -241,21 +244,30 @@ Public Class frmFuncionario
     '
     ' FORMATA OS BINDINGS
     Private Sub idFormatRG(sender As Object, e As ConvertEventArgs)
-        If IsDBNull(e.Value) Then Exit Sub
-        e.Value = Format(e.Value, "0000")
-    End Sub
-    '
-    Private Sub idFormatPercent(sender As Object, e As ConvertEventArgs)
+		If e.Value Is Nothing Then
+			e.Value = "NOVO"
+		Else
+			e.Value = Format(e.Value, "0000")
+		End If
+	End Sub
+	'
+	Private Sub idFormatPercent(sender As Object, e As ConvertEventArgs)
         e.Value = Format(e.Value, "#.##\%")
     End Sub
-    '
-    Private Sub formatApelidoFilial(sender As Object, e As ConvertEventArgs)
-        e.Value = "Filial " & e.Value.ToString.ToUpper
-    End Sub
-    '
-    ' CARREGA OS COMBOBOX
-    '--------------------------------------------------------------------------------------------------------
-    Private Sub CarregaComboVendaTipo()
+	'
+	Private Sub formatApelidoFilial(sender As Object, e As ConvertEventArgs)
+
+		If e.Value IsNot Nothing Then
+			e.Value = "Filial " & e.Value.ToString.ToUpper
+		Else
+			e.Value = "Definir Filial"
+		End If
+
+	End Sub
+	'
+	' CARREGA OS COMBOBOX
+	'--------------------------------------------------------------------------------------------------------
+	Private Sub CarregaComboVendaTipo()
         '
         Dim dtTipo As New DataTable
         '
@@ -762,17 +774,18 @@ Public Class frmFuncionario
     Private Sub btnCancelar_Click(sender As Object, e As EventArgs) Handles btnCancelar.Click
         '
         If Sit = EnumFlagEstado.NovoRegistro Then
-            '
-            If IsNothing(_formOrigem) Then
-                btnProcurar_Click(btnCancelar, New EventArgs)
-                Exit Sub
-            Else
-                DialogResult = DialogResult.Cancel
-                _formOrigem.Visible = True
-                Me.Close()
-            End If
-            '
-        ElseIf Sit = EnumFlagEstado.Alterado Then
+			'
+			If IsNothing(_formOrigem) Then
+				btnProcurar_Click(btnCancelar, New EventArgs)
+				Exit Sub
+			Else
+				DialogResult = DialogResult.Cancel
+				_formOrigem.Visible = True
+				Me.Close()
+				If Application.OpenForms.Count = 1 Then MostraMenuPrincipal()
+			End If
+			'
+		ElseIf Sit = EnumFlagEstado.Alterado Then
             '
             bindFunc.CancelEdit()
             AtivoButtonImage()

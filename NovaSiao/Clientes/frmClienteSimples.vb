@@ -67,7 +67,7 @@ Public Class frmClienteSimples
 				btnNovo.Enabled = False
 				btnCancelar.Enabled = True
 				btnProcurar.Enabled = False
-				lblID.Text = "NOVO"
+				'lblID.Text = "NOVO"
 			End If
 			'
 			'--- check if FormOrigem is DEFINED
@@ -103,9 +103,9 @@ Public Class frmClienteSimples
 			'
 			AtivoButtonImage()
 			'
-			If Not IsNothing(_cliente.IDClienteSimples) Then
-				lblID.Text = Format(_cliente.IDClienteSimples, "0000")
-			End If
+			'If Not IsNothing(_cliente.IDClienteSimples) Then
+			'	lblID.Text = Format(_cliente.IDClienteSimples, "0000")
+			'End If
 			'
 			PropRegistrarEndereco = _cliente.Endereco IsNot Nothing AndAlso _cliente.Endereco.Length > 0
 			chkEndereco.Checked = _cliente.Endereco IsNot Nothing AndAlso _cliente.Endereco.Length > 0
@@ -153,7 +153,7 @@ Public Class frmClienteSimples
 	Private Sub PreencheDataBindings()
 		'
 		' ADICIONANDO O DATABINDINGS AOS CONTROLES TEXT
-		lblID.DataBindings.Add("Tag", BindCliente, "IDClienteSimples")
+		lblID.DataBindings.Add("Text", BindCliente, "IDClienteSimples")
 		txtClienteNome.DataBindings.Add("Text", BindCliente, "ClienteNome", True, DataSourceUpdateMode.OnPropertyChanged)
 		txtTelefoneA.DataBindings.Add("Text", BindCliente, "TelefoneA", True, DataSourceUpdateMode.OnPropertyChanged)
 		txtTelefoneB.DataBindings.Add("Text", BindCliente, "TelefoneB", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -167,7 +167,7 @@ Public Class frmClienteSimples
 		txtCEP.DataBindings.Add("Text", BindCliente, "CEP", True, DataSourceUpdateMode.OnPropertyChanged)
 		'
 		' FORMATA OS VALORES DO DATABINDING
-		AddHandler lblID.DataBindings("Tag").Format, AddressOf idFormatRG
+		AddHandler lblID.DataBindings("Text").Format, AddressOf idFormatRG
 		AddHandler BindCliente.CurrentChanged, AddressOf handler_CurrentChanged
 		'
 	End Sub
@@ -179,7 +179,7 @@ Public Class frmClienteSimples
 			Exit Sub
 		Else
 			' LER O ID
-			lblID.DataBindings.Item("Tag").ReadValue()
+			lblID.DataBindings.Item("Text").ReadValue()
 			' ALTERAR PARA REGISTRO SALVO
 			Sit = EnumFlagEstado.RegistroSalvo
 		End If
@@ -194,8 +194,11 @@ Public Class frmClienteSimples
 	'
 	' FORMATA OS BINDINGS
 	Private Sub idFormatRG(sender As Object, e As ConvertEventArgs)
-		If IsDBNull(e.Value) Then Exit Sub
-		e.Value = Format(e.Value, "0000")
+		If e.Value Is Nothing Then
+			e.Value = "NOVO"
+		Else
+			e.Value = Format(e.Value, "0000")
+		End If
 	End Sub
 	'
 #End Region
@@ -400,7 +403,7 @@ Public Class frmClienteSimples
 			'--- Retorna o número de Registro do Novo Cliente Cadastrado
 			If Sit = EnumFlagEstado.NovoRegistro Then
 				_cliente.IDClienteSimples = NewID
-				lblID.DataBindings("Tag").ReadValue()
+				lblID.DataBindings("Text").ReadValue()
 			End If
 
 			'--- Altera a Situação
@@ -581,7 +584,6 @@ Public Class frmClienteSimples
 	'
 #End Region
 	'
-
 #Region "EFEITO VISUAL"
 	'
 	'-------------------------------------------------------------------------------------------------

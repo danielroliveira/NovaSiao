@@ -105,9 +105,9 @@ Public Class frmUsuarios
 		'Adiciona todas as possibilidades de instrucao
 		dtAcesso.Columns.Add("UsuarioAcesso")
 		dtAcesso.Columns.Add("Acesso")
-		dtAcesso.Rows.Add(New Object() {EnumAcessoTipo.Administrador, "Administrador"}) ' linha 1 - Administrador
-		dtAcesso.Rows.Add(New Object() {EnumAcessoTipo.UsuarioSenior, "Usuário Senior"}) ' linha 2 - Usuário Senior
-		dtAcesso.Rows.Add(New Object() {EnumAcessoTipo.UsuarioComum, "Usuário Comum"}) ' linha 3 - Usuário Comum
+		dtAcesso.Rows.Add(New Object() {1, "Administrador"}) ' linha 1 - Administrador
+		dtAcesso.Rows.Add(New Object() {2, "Usuário Senior"}) ' linha 2 - Usuário Senior
+		dtAcesso.Rows.Add(New Object() {3, "Usuário Comum"}) ' linha 3 - Usuário Comum
 		'
 		With cmbUsuarioAcesso
 			.DataSource = dtAcesso

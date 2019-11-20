@@ -38,11 +38,15 @@ Public Class clVenda : Implements IEditableObject
         Dim _FreteTipo As Byte
         Dim _Volumes As Int16?
         Dim _IDFreteDespesa As Integer?
-    End Structure
+		'tblClienteSimples =====================================================
+		Dim _IDClienteSimples As Integer?
+		'Dim _ClienteNome As String
+
+	End Structure
 #End Region
-    '
+	'
 #Region "PRIVATE VARIABLES"
-    Private VData As VendaDados
+	Private VData As VendaDados
     Private backupData As VendaDados
     Private inTxn As Boolean = False
 #End Region
@@ -133,16 +137,16 @@ Public Class clVenda : Implements IEditableObject
             VData._IDPessoaDestino = value
         End Set
     End Property
-    '
-    '--- PROPRIEDADES SOMENTE LEITURA
-    Public Property Cadastro
-    Public Property CNP
-    Public Property Cidade
-    Public Property UF
-    Public Property ApelidoFilial
-    '
-    '--- Propriedade IDPessoaOrigem
-    Public Property IDPessoaOrigem() As Integer?
+	'
+	'--- PROPRIEDADES SOMENTE LEITURA
+	Public Property Cadastro As String
+	Public Property CNP As String
+	Public Property Cidade As String
+	Public Property UF As String
+	Public Property ApelidoFilial As String
+	'
+	'--- Propriedade IDPessoaOrigem
+	Public Property IDPessoaOrigem() As Integer?
         Get
             Return VData._IDPessoaOrigem
         End Get
@@ -534,7 +538,29 @@ Public Class clVenda : Implements IEditableObject
             VData._IDFreteDespesa = value
         End Set
     End Property
-    '
+	'
+	'===========================================================================================
+	'--- TBLCLIENTE SIMPLES
+	'==========================================================================================='
+	'
+	'--- Propriedade IDClienteSimples
+	'------------------------------------------------------
+	Public Property IDClienteSimples() As Integer?
+		Get
+			Return VData._IDClienteSimples
+		End Get
+		Set(ByVal value As Integer?)
+			If value <> VData._IDClienteSimples Then
+				RaiseEvent AoAlterar()
+			End If
+			VData._IDClienteSimples = value
+		End Set
+	End Property
+	'
+	'--- Propriedade ClienteSimplesNome
+	'------------------------------------------------------
+	Public Property ClienteSimplesNome As String
+
 #End Region
-    '
+	'
 End Class

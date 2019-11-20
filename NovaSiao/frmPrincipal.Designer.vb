@@ -71,6 +71,7 @@ Partial Class frmPrincipal
 		Me.miNovaCompraNormal = New System.Windows.Forms.ToolStripMenuItem()
 		Me.miNovaCompraNFeXML = New System.Windows.Forms.ToolStripMenuItem()
 		Me.miSimplesEntrada = New System.Windows.Forms.ToolStripMenuItem()
+		Me.miConsignacaoEntrada = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
 		Me.miProcurarOperacaoEntrada = New System.Windows.Forms.ToolStripMenuItem()
 		Me.ToolStripSeparator16 = New System.Windows.Forms.ToolStripSeparator()
@@ -135,7 +136,6 @@ Partial Class frmPrincipal
 		Me.Label2 = New System.Windows.Forms.Label()
 		Me.lblHora = New System.Windows.Forms.Label()
 		Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
-		Me.miConsignacaoEntrada = New System.Windows.Forms.ToolStripMenuItem()
 		Me.tsPrincipal.SuspendLayout()
 		Me.Panel1.SuspendLayout()
 		CType(Me.SContainerPrincipal, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -517,7 +517,7 @@ Partial Class frmPrincipal
 		Me.miNovaCompraNormal.Image = Global.NovaSiao.My.Resources.Resources.full_page
 		Me.miNovaCompraNormal.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
 		Me.miNovaCompraNormal.Name = "miNovaCompraNormal"
-		Me.miNovaCompraNormal.Size = New System.Drawing.Size(188, 30)
+		Me.miNovaCompraNormal.Size = New System.Drawing.Size(168, 30)
 		Me.miNovaCompraNormal.Text = "Normal"
 		'
 		'miNovaCompraNFeXML
@@ -525,7 +525,7 @@ Partial Class frmPrincipal
 		Me.miNovaCompraNFeXML.Image = Global.NovaSiao.My.Resources.Resources.download
 		Me.miNovaCompraNFeXML.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
 		Me.miNovaCompraNFeXML.Name = "miNovaCompraNFeXML"
-		Me.miNovaCompraNFeXML.Size = New System.Drawing.Size(188, 30)
+		Me.miNovaCompraNFeXML.Size = New System.Drawing.Size(168, 30)
 		Me.miNovaCompraNFeXML.Text = "Por NFe XML"
 		'
 		'miSimplesEntrada
@@ -535,6 +535,14 @@ Partial Class frmPrincipal
 		Me.miSimplesEntrada.Name = "miSimplesEntrada"
 		Me.miSimplesEntrada.Size = New System.Drawing.Size(259, 30)
 		Me.miSimplesEntrada.Text = "Simples Entrada"
+		'
+		'miConsignacaoEntrada
+		'
+		Me.miConsignacaoEntrada.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
+		Me.miConsignacaoEntrada.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
+		Me.miConsignacaoEntrada.Name = "miConsignacaoEntrada"
+		Me.miConsignacaoEntrada.Size = New System.Drawing.Size(259, 30)
+		Me.miConsignacaoEntrada.Text = "Consignação de Entrada"
 		'
 		'ToolStripSeparator6
 		'
@@ -800,7 +808,7 @@ Partial Class frmPrincipal
 		Me.tsbConfig.ImageTransparentColor = System.Drawing.Color.Magenta
 		Me.tsbConfig.Name = "tsbConfig"
 		Me.tsbConfig.Size = New System.Drawing.Size(76, 64)
-		Me.tsbConfig.Tag = "1"
+		Me.tsbConfig.Tag = ""
 		Me.tsbConfig.Text = "Controles"
 		Me.tsbConfig.ToolTipText = "Configuração e Controles"
 		'
@@ -889,6 +897,7 @@ Partial Class frmPrincipal
 		'
 		'miFazerBackup
 		'
+		Me.miFazerBackup.Enabled = False
 		Me.miFazerBackup.Image = Global.NovaSiao.My.Resources.Resources.Backup_ICO
 		Me.miFazerBackup.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
 		Me.miFazerBackup.Name = "miFazerBackup"
@@ -1104,14 +1113,6 @@ Partial Class frmPrincipal
 		'
 		Me.Timer1.Enabled = True
 		Me.Timer1.Interval = 600
-		'
-		'miConsignacaoEntrada
-		'
-		Me.miConsignacaoEntrada.Image = Global.NovaSiao.My.Resources.Resources.add_24x24
-		Me.miConsignacaoEntrada.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None
-		Me.miConsignacaoEntrada.Name = "miConsignacaoEntrada"
-		Me.miConsignacaoEntrada.Size = New System.Drawing.Size(259, 30)
-		Me.miConsignacaoEntrada.Text = "Consignação de Entrada"
 		'
 		'frmPrincipal
 		'

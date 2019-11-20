@@ -157,11 +157,13 @@ Public Class VendaBLL
         objDB.AdicionarParametros("@FreteValor", _vnd.FreteValor)
         '@Volumes AS SMALLINT = 1,
         objDB.AdicionarParametros("@Volumes", _vnd.Volumes)
-        '@IDFreteDespesa AS INT = NULL
-        objDB.AdicionarParametros("@IDFreteDespesa", _vnd.IDFreteDespesa)
-        '
-        '
-        Try
+		'@IDFreteDespesa AS INT = NULL
+		objDB.AdicionarParametros("@IDFreteDespesa", _vnd.IDFreteDespesa)
+		'@IDClienteSimples AS INT = NULL
+		objDB.AdicionarParametros("@IDClienteSimples", If(_vnd.IDClienteSimples, DBNull.Value))
+		'
+		'
+		Try
             Return objDB.ExecutarManipulacao(CommandType.StoredProcedure, "uspVenda_Alterar")
         Catch ex As Exception
             Throw ex
@@ -678,10 +680,13 @@ Public Class VendaBLL
         vnd.FreteValor = IIf(IsDBNull(r("FreteValor")), Nothing, r("FreteValor"))
         vnd.Volumes = IIf(IsDBNull(r("Volumes")), Nothing, r("Volumes"))
         vnd.IDFreteDespesa = IIf(IsDBNull(r("IDFreteDespesa")), Nothing, r("IDFreteDespesa"))
-        '--- Dados Adicionais
-        vnd.ApelidoFuncionario = IIf(IsDBNull(r("ApelidoFuncionario")), String.Empty, r("ApelidoFuncionario"))
-        '
-        Return vnd
+		'--- Dados Adicionais
+		vnd.ApelidoFuncionario = IIf(IsDBNull(r("ApelidoFuncionario")), String.Empty, r("ApelidoFuncionario"))
+		'--- ClienteSimples
+		vnd.IDClienteSimples = If(IsDBNull(r("IDClienteSimples")), Nothing, r("IDClienteSimples"))
+		vnd.ClienteSimplesNome = IIf(IsDBNull(r("ClienteNome")), String.Empty, r("ClienteNome"))
+		'
+		Return vnd
         '
     End Function
     '
@@ -765,32 +770,76 @@ Public Class VendaBLL
         End Try
         '
     End Function
-    '
-    '--------------------------------------------------------------------------------------------
-    ' UPDATE A FUNCIONARIO / VENDEDOR DA VENDA
-    '--------------------------------------------------------------------------------------------
-    Public Function AtualizaVendaVendedor(myIDVenda As Integer, NewIDVendedor As Integer) As Boolean
-        '
-        Dim SQL As New SQLControl
-        SQL.AddParam("@IDVenda", myIDVenda)
-        SQL.AddParam("@IDVendedor", NewIDVendedor)
-        '
-        Dim myQuery As String = "UPDATE tblVenda SET IDVendedor = @IDVendedor WHERE IDVenda = @IDVenda"
-        '
-        Try
-            SQL.ExecQuery(myQuery)
-            '
-            '--- verifica erro
-            If SQL.HasException Then
-                Throw New Exception(SQL.Exception)
-            Else
-                Return True
-            End If
-            '
-        Catch ex As Exception
-            Throw ex
-        End Try
-        '
-    End Function
-    '
+	'
+	'--------------------------------------------------------------------------------------------
+	' UPDATE A FUNCIONARIO / VENDEDOR DA VENDA
+	'--------------------------------------------------------------------------------------------
+	Public Function AtualizaVendaVendedor(myIDVenda As Integer, NewIDVendedor As Integer) As Boolean
+		'
+		Dim SQL As New SQLControl
+		SQL.AddParam("@IDVenda", myIDVenda)
+		SQL.AddParam("@IDVendedor", NewIDVendedor)
+		'
+		Dim myQuery As String = "UPDATE tblVenda SET IDVendedor = @IDVendedor WHERE IDVenda = @IDVenda"
+		'
+		Try
+			SQL.ExecQuery(myQuery)
+			'
+			'--- verifica erro
+			If SQL.HasException Then
+				Throw New Exception(SQL.Exception)
+			Else
+				Return True
+			End If
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'--------------------------------------------------------------------------------------------
+	' UPDATE CLIENTE SIMPLES DA VENDA
+	'--------------------------------------------------------------------------------------------
+	Public Function AtualizaRemoveVendaClienteSimples(IDVenda As Integer, IDClienteSimples As Integer?) As Boolean
+		'
+		Dim db As AcessoDados = Nothing
+		'
+		Try
+			'
+			db = New AcessoDados
+			'
+			db.LimparParametros()
+			db.AdicionarParametros("@IDVenda", IDVenda)
+			db.BeginTransaction()
+			'
+			'--- DELETE
+			Dim query As String = "DELETE tblVendaClienteSimples WHERE IDVenda = @IDVenda"
+			'
+			db.ExecutarManipulacao(CommandType.Text, query)
+			'
+			'--- INSERT IF NECESSARY
+			If IDClienteSimples IsNot Nothing Then '--- INSERT Cliente Simples
+				'
+				db.LimparParametros()
+				db.AdicionarParametros("@IDVenda", IDVenda)
+				db.AdicionarParametros("@IDClienteSimples", IDClienteSimples)
+				'
+				query = "INSERT INTO tblVendaClienteSimples (IDVenda, IDClienteSimples) VALUES (@IDVenda, @IDClienteSimples)"
+				'
+				db.ExecutarManipulacao(CommandType.Text, query)
+				'
+			End If
+			'
+			'--- COMMIT TRANSACTION
+			db.CommitTransaction()
+			Return True
+			'
+		Catch ex As Exception
+			db.RollBackTransaction()
+			Throw ex
+		End Try
+		'
+	End Function
+	'
 End Class

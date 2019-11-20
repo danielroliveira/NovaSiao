@@ -269,111 +269,113 @@ Public Class frmOperacaoSaidaProcurar
         dgvListagem.StandardTab = True
         '
     End Sub
-    '
-    Private Sub PreencheColunas_Venda()
-        '
-        '--- limpa as colunas do datagrid
-        dgvListagem.Columns.Clear()
-        '
-        ' (0) COLUNA REG
-        dgvListagem.Columns.Add("IDVenda", "Reg.")
-        With dgvListagem.Columns("IDVenda")
-            .DataPropertyName = "IDVenda"
-            .Width = 50
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Format = "0000"
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-        End With
-        '
-        ' (1) COLUNA DATAVENDA
-        dgvListagem.Columns.Add("VendaData", "Data")
-        With dgvListagem.Columns("VendaData")
-            .DataPropertyName = "TransacaoData"
-            .Width = 100
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            '.DefaultCellStyle.Font = New Font("Arial Narrow", 12)
-        End With
-        '
-        ' (2) COLUNA NOME
-        dgvListagem.Columns.Add("CadastroNome", "Nome / Razão Social")
-        With dgvListagem.Columns("CadastroNome")
-            .DataPropertyName = "Cadastro"
-            .Width = 300
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
-        ' (3) COLUNA VENDEDOR
-        dgvListagem.Columns.Add("Apelido", "Vendedor")
-        With dgvListagem.Columns("Apelido")
-            .DataPropertyName = "ApelidoFuncionario"
-            .Width = 150
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
-        ' (4) COLUNA VALOR
-        dgvListagem.Columns.Add("TotalVenda", "Valor Total")
-        With dgvListagem.Columns("TotalVenda")
-            .DataPropertyName = "TotalVenda"
-            .Width = 100
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-            .DefaultCellStyle.Format = "C"
-        End With
-        '
-        ' (5) COLUNA COBRANCA TIPO
-        dgvListagem.Columns.Add("CobrancaTipo", "Pagamento")
-        With dgvListagem.Columns("CobrancaTipo")
-            .DataPropertyName = "CobrancaTipo"
-            .Width = 90
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-        End With
-        '
-        ' (6) COLUNA IMAGEM SITUACAO
-        Dim colImage As New DataGridViewImageColumn
-        With colImage
-            .HeaderText = "Sit."
-            .Resizable = False
-            .Width = 50
-        End With
-        dgvListagem.Columns.Add(colImage)
-        '
-        ' (7) COLUNA SITUAÇÃO
-        dgvListagem.Columns.Add("Situacao", "Situação")
-        With dgvListagem.Columns("Situacao")
-            .DataPropertyName = "IDSituacao"
-            .Width = 80
-            .Resizable = DataGridViewTriState.False
-            .Visible = False
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
-    End Sub
-    '
-    Private Sub PreencheColunas_Simples()
+	'
+	'--- VENDAS VISTA E PRAZO
+	Private Sub PreencheColunas_Venda()
+		'
+		'--- limpa as colunas do datagrid
+		dgvListagem.Columns.Clear()
+		'
+		' (0) COLUNA REG
+		dgvListagem.Columns.Add("IDVenda", "Reg.")
+		With dgvListagem.Columns("IDVenda")
+			.DataPropertyName = "IDVenda"
+			.Width = 50
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Format = "0000"
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (1) COLUNA DATAVENDA
+		dgvListagem.Columns.Add("VendaData", "Data")
+		With dgvListagem.Columns("VendaData")
+			.DataPropertyName = "TransacaoData"
+			.Width = 100
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+			'.DefaultCellStyle.Font = New Font("Arial Narrow", 12)
+		End With
+		'
+		' (2) COLUNA NOME
+		dgvListagem.Columns.Add("CadastroNome", "Nome / Razão Social")
+		With dgvListagem.Columns("CadastroNome")
+			.DataPropertyName = "Cadastro"
+			.Width = 300
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+		End With
+		'
+		' (3) COLUNA VENDEDOR
+		dgvListagem.Columns.Add("Apelido", "Vendedor")
+		With dgvListagem.Columns("Apelido")
+			.DataPropertyName = "ApelidoFuncionario"
+			.Width = 150
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+		End With
+		'
+		' (4) COLUNA VALOR
+		dgvListagem.Columns.Add("TotalVenda", "Valor Total")
+		With dgvListagem.Columns("TotalVenda")
+			.DataPropertyName = "TotalVenda"
+			.Width = 100
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.DefaultCellStyle.Format = "C"
+		End With
+		'
+		' (5) COLUNA COBRANCA TIPO
+		dgvListagem.Columns.Add("CobrancaTipo", "Pagamento")
+		With dgvListagem.Columns("CobrancaTipo")
+			.DataPropertyName = "CobrancaTipo"
+			.Width = 90
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+		End With
+		'
+		' (6) COLUNA IMAGEM SITUACAO
+		Dim colImage As New DataGridViewImageColumn
+		With colImage
+			.HeaderText = "Sit."
+			.Resizable = False
+			.Width = 50
+		End With
+		dgvListagem.Columns.Add(colImage)
+		'
+		' (7) COLUNA SITUAÇÃO
+		dgvListagem.Columns.Add("Situacao", "Situação")
+		With dgvListagem.Columns("Situacao")
+			.DataPropertyName = "IDSituacao"
+			.Width = 80
+			.Resizable = DataGridViewTriState.False
+			.Visible = False
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+		End With
+		'
+	End Sub
+	'
+	'--- SIMPLES SAIDAS
+	Private Sub PreencheColunas_Simples()
         '
         '--- limpa as colunas do datagrid
         dgvListagem.Columns.Clear()
@@ -475,105 +477,106 @@ Public Class frmOperacaoSaidaProcurar
         End With
         '
     End Sub
-    '
-    Private Sub PreencheColunas_Devolucao()
-        '
-        '--- limpa as colunas do datagrid
-        dgvListagem.Columns.Clear()
-        '
-        ' (0) COLUNA REG
-        dgvListagem.Columns.Add("IDDevolucao", "Reg.")
-        With dgvListagem.Columns("IDDevolucao")
-            .DataPropertyName = "IDDevolucao"
-            .Width = 50
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Format = "0000"
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-        End With
-        '
-        ' (1) COLUNA TRANSACAODATA
-        dgvListagem.Columns.Add("TransacaoData", "Data")
-        With dgvListagem.Columns("TransacaoData")
-            .DataPropertyName = "TransacaoData"
-            .Width = 100
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            '.DefaultCellStyle.Font = New Font("Arial Narrow", 12)
-        End With
-        '
-        ' (2) COLUNA FORNECEDOR
-        dgvListagem.Columns.Add("Fornecedor", "Fornecedor")
-        With dgvListagem.Columns("Fornecedor")
-            .DataPropertyName = "Fornecedor"
-            .Width = 350
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
-        ' (3) COLUNA VALORTOTAL
-        dgvListagem.Columns.Add("ValorTotal", "Valor Total")
-        With dgvListagem.Columns("ValorTotal")
-            .DataPropertyName = "ValorTotal"
-            .Width = 100
-            .Resizable = DataGridViewTriState.False
-            .Visible = True
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-            .DefaultCellStyle.Format = "C"
-        End With
-        '
-        ' (4) COLUNA ENVIADA
-        Dim colImageEnviada As New DataGridViewImageColumn
-        With colImageEnviada
-            .HeaderText = "Enviada"
-            .Resizable = False
-            .Width = 80
-        End With
-        dgvListagem.Columns.Add(colImageEnviada)
-        '
-        ' (5) COLUNA CREDITADA
-        Dim colImageCreditada As New DataGridViewImageColumn
-        With colImageCreditada
-            .HeaderText = "Creditada"
-            .Resizable = False
-            .Width = 80
-        End With
-        dgvListagem.Columns.Add(colImageCreditada)
-        '
-        ' (6) COLUNA IMAGEM SITUACAO
-        Dim colImage As New DataGridViewImageColumn
-        With colImage
-            .HeaderText = "Sit."
-            .Resizable = False
-            .Width = 80
-        End With
-        dgvListagem.Columns.Add(colImage)
-        '
-        ' (7) COLUNA SITUAÇÃO
-        dgvListagem.Columns.Add("Situacao", "Situação")
-        With dgvListagem.Columns("Situacao")
-            .DataPropertyName = "IDSituacao"
-            .Width = 0
-            .Resizable = DataGridViewTriState.False
-            .Visible = False
-            .ReadOnly = True
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            .DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-        End With
-        '
-    End Sub
-    '
-    Private Sub PreencheColunas_Consignacao()
+	'
+	'--- DEVOLUCAO
+	Private Sub PreencheColunas_Devolucao()
+		'
+		'--- limpa as colunas do datagrid
+		dgvListagem.Columns.Clear()
+		'
+		' (0) COLUNA REG
+		dgvListagem.Columns.Add("IDDevolucao", "Reg.")
+		With dgvListagem.Columns("IDDevolucao")
+			.DataPropertyName = "IDDevolucao"
+			.Width = 50
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Format = "0000"
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (1) COLUNA TRANSACAODATA
+		dgvListagem.Columns.Add("TransacaoData", "Data")
+		With dgvListagem.Columns("TransacaoData")
+			.DataPropertyName = "TransacaoData"
+			.Width = 100
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+			'.DefaultCellStyle.Font = New Font("Arial Narrow", 12)
+		End With
+		'
+		' (2) COLUNA FORNECEDOR
+		dgvListagem.Columns.Add("Fornecedor", "Fornecedor")
+		With dgvListagem.Columns("Fornecedor")
+			.DataPropertyName = "Fornecedor"
+			.Width = 350
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+		End With
+		'
+		' (3) COLUNA VALORTOTAL
+		dgvListagem.Columns.Add("ValorTotal", "Valor Total")
+		With dgvListagem.Columns("ValorTotal")
+			.DataPropertyName = "ValorTotal"
+			.Width = 100
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.DefaultCellStyle.Format = "C"
+		End With
+		'
+		' (4) COLUNA ENVIADA
+		Dim colImageEnviada As New DataGridViewImageColumn
+		With colImageEnviada
+			.HeaderText = "Enviada"
+			.Resizable = False
+			.Width = 80
+		End With
+		dgvListagem.Columns.Add(colImageEnviada)
+		'
+		' (5) COLUNA CREDITADA
+		Dim colImageCreditada As New DataGridViewImageColumn
+		With colImageCreditada
+			.HeaderText = "Creditada"
+			.Resizable = False
+			.Width = 80
+		End With
+		dgvListagem.Columns.Add(colImageCreditada)
+		'
+		' (6) COLUNA IMAGEM SITUACAO
+		Dim colImage As New DataGridViewImageColumn
+		With colImage
+			.HeaderText = "Sit."
+			.Resizable = False
+			.Width = 80
+		End With
+		dgvListagem.Columns.Add(colImage)
+		'
+		' (7) COLUNA SITUAÇÃO
+		dgvListagem.Columns.Add("Situacao", "Situação")
+		With dgvListagem.Columns("Situacao")
+			.DataPropertyName = "IDSituacao"
+			.Width = 0
+			.Resizable = DataGridViewTriState.False
+			.Visible = False
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+		End With
+		'
+	End Sub
+	'
+	Private Sub PreencheColunas_Consignacao()
         '
         '--- limpa as colunas do datagrid
         dgvListagem.Columns.Clear()
@@ -650,11 +653,11 @@ Public Class frmOperacaoSaidaProcurar
     End Sub
     '
     Private Function FindCadastro(ByVal v As clVenda) As Boolean
-        '
-        If (v.Cadastro.ToLower Like "*" & txtProcura.Text.ToLower & "*") Then
-            Return True
-        Else
-            Return False
+		'
+		If (v.Cadastro.ToLower Like "*" & txtProcura.Text.ToLower & "*") Or (v.ClienteSimplesNome.ToLower Like "*" & txtProcura.Text.ToLower & "*") Then
+			Return True
+		Else
+			Return False
         End If
         '
     End Function
@@ -694,14 +697,19 @@ Public Class frmOperacaoSaidaProcurar
                         e.Value = "À Prazo"
                 End Select
             End If
-            '
-            If e.ColumnIndex = 2 Then '--- coluna Razão Social
-                If IsDBNull(e.Value) Then
-                    e.Value = "VENDA À VISTA"
-                End If
-            End If
-            '
-        End If
+			'
+			If e.ColumnIndex = 2 Then '--- coluna Cadastro / Nome Cliente
+				Dim venda As clVenda = dgvListagem.Rows(e.RowIndex).DataBoundItem
+				'
+				If venda.CobrancaTipo = 1 Then '--> venda a vista
+					If venda.ClienteSimplesNome <> String.Empty Then
+						e.Value = venda.ClienteSimplesNome
+					End If
+				End If
+				'
+			End If
+			'
+		End If
         '
         If e.ColumnIndex = 4 AndAlso propOperacao = 6 Then '--- Se for DEVOLUCAO
             '--- altera a IMAGEM da coluna 4

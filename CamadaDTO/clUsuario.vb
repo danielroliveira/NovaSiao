@@ -2,9 +2,9 @@
 '
 ' VARIANTE PUBLICA TIPO DE ACESSO DOS USUÁRIO
 Public Enum EnumAcessoTipo
-    Administrador = 1
-    UsuarioSenior = 2
-    UsuarioComum = 3
+	Administrador = 1
+	UsuarioSenior = 2
+	UsuarioComum = 3
 End Enum
 '
 Public Class clUsuario
@@ -98,22 +98,22 @@ Public Class clUsuario
             UsuarioData._UsuarioApelido = value
         End Set
     End Property
-    '
-    Property UsuarioAcesso() As EnumAcessoTipo
-        Get
-            Return UsuarioData._UsuarioAcesso
-        End Get
-        Set(value As EnumAcessoTipo)
-            If Not IsNothing(UsuarioData._UsuarioAcesso) Then
-                If value <> UsuarioData._UsuarioAcesso Then
-                    RaiseEvent AoAlterar()
-                End If
-            End If
-            UsuarioData._UsuarioAcesso = value
-        End Set
-    End Property
-    '
-    Property UsuarioSenha() As String
+	'
+	Property UsuarioAcesso() As Byte
+		Get
+			Return UsuarioData._UsuarioAcesso
+		End Get
+		Set(value As Byte)
+			If Not IsNothing(UsuarioData._UsuarioAcesso) Then
+				If value <> UsuarioData._UsuarioAcesso Then
+					RaiseEvent AoAlterar()
+				End If
+			End If
+			UsuarioData._UsuarioAcesso = value
+		End Set
+	End Property
+	'
+	Property UsuarioSenha() As String
         Get
             Return UsuarioData._UsuarioSenha
         End Get

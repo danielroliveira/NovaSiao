@@ -124,7 +124,7 @@ Public Class AcaoGlobal
 			.TransacaoData = VendaData
 			.IDDepartamento = 1
 			.IDVendedor = IDFunc
-			.CobrancaTipo = 1 '--- venda à prazo
+			.CobrancaTipo = 1 '--- venda à vista
 			.FreteTipo = 0
 			.ValorProdutos = 0
 			.ValorFrete = 0

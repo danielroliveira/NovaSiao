@@ -17,23 +17,42 @@ Public Class frmVendaVista
     Property DescontoMaximo As Double
     '
     Private Parciais As New List(Of SomaParcial)
-    '
-    Private Class SomaParcial
-        Property itemInicio As Integer
-        Property itemFinal As Integer
-        Sub New(inicio As Integer, Optional fim As Integer = 0)
-            itemInicio = inicio
-            If fim = 0 Then
-                itemFinal = inicio
-            Else
-                itemFinal = fim
-            End If
-        End Sub
-    End Class
-    '
-#Region "LOAD"
-    '
-    Private Property Sit As EnumFlagEstado
+	'
+	Private Class SomaParcial
+		'
+		Property itemInicio As Integer
+		Property itemFinal As Integer
+		'
+		Sub New(inicio As Integer, Optional fim As Integer = 0)
+			itemInicio = inicio
+			If fim = 0 Then
+				itemFinal = inicio
+			Else
+				itemFinal = fim
+			End If
+		End Sub
+		'
+	End Class
+	'
+#Region "NEW | PROPERTIES LOAD"
+	'
+	Public Sub New(myVenda As clVenda)
+		'
+		' This call is required by the designer.
+		InitializeComponent()
+		'
+		' Add any initialization after the InitializeComponent() call.
+		propVenda = myVenda
+		'
+		' Add Handler Menu Acao
+		MenuOpen_AdHandler()
+		'
+		'--- Define a DESCONTO MAXIMO padrao
+		DescontoMaximo = Obter_DescontoMaximo()
+		'
+	End Sub
+	'
+	Private Property Sit As EnumFlagEstado
         '
         Get
             Return _Sit
@@ -188,28 +207,12 @@ Public Class frmVendaVista
         'Throw New NotImplementedException()
         '
     End Sub
-    '
-    Public Sub New(myVenda As clVenda)
-        '
-        ' This call is required by the designer.
-        InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        propVenda = myVenda
-        '
-        ' Add Handler Menu Acao
-        MenuOpen_AdHandler()
-        '
-        '--- Define a DESCONTO MAXIMO padrao
-        DescontoMaximo = Obter_DescontoMaximo()
-        '
-    End Sub
-    '
+	'
 #End Region ' / LOAD
-    '
+	'
 #Region "DATABINDING"
-    '
-    Private Sub PreencheDataBinding()
+	'
+	Private Sub PreencheDataBinding()
         '
         lblIDVenda.DataBindings.Add("Text", bindVenda, "IDVenda", True, DataSourceUpdateMode.OnPropertyChanged)
         lblVendaData.DataBindings.Add("Text", bindVenda, "TransacaoData", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -218,10 +221,12 @@ Public Class frmVendaVista
         txtObservacao.DataBindings.Add("Text", bindVenda, "Observacao", True, DataSourceUpdateMode.OnPropertyChanged)
         lblTotalGeral.DataBindings.Add("Text", bindVenda, "TotalVenda", True, DataSourceUpdateMode.OnPropertyChanged)
         lblValorDevolucao.DataBindings.Add("Text", bindVenda, "ValorDevolucao", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblValorProdutos.DataBindings.Add("Text", bindVenda, "ValorProdutos", True, DataSourceUpdateMode.OnPropertyChanged)
-        '
-        ' FORMATA OS VALORES DO DATABINDING
-        AddHandler lblIDVenda.DataBindings("Text").Format, AddressOf FormatRG
+		lblValorProdutos.DataBindings.Add("Text", bindVenda, "ValorProdutos", True, DataSourceUpdateMode.OnPropertyChanged)
+		lblClienteSimplesNome.DataBindings.Add("Text", bindVenda, "ClienteSimplesNome", True, DataSourceUpdateMode.OnPropertyChanged, String.Empty)
+		lblClienteSimplesNome.DataBindings.Add("Tag", bindVenda, "IDClienteSimples", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+		'
+		' FORMATA OS VALORES DO DATABINDING
+		AddHandler lblIDVenda.DataBindings("Text").Format, AddressOf FormatRG
         AddHandler lblVendaData.DataBindings("text").Format, AddressOf FormatDT
         AddHandler lblTotalGeral.DataBindings("Text").Format, AddressOf FormatCUR
         AddHandler lblValorDevolucao.DataBindings("Text").Format, AddressOf FormatCUR
@@ -245,17 +250,22 @@ Public Class frmVendaVista
     Private Sub FormatDT(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
         e.Value = Format(e.Value, "dd/MM/yyyy")
     End Sub
-    Private Sub Format00(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
-        If Not IsNothing(e.Value) Then
-            e.Value = Format(CInt(e.Value), "00")
-        End If
-    End Sub
-    '
+	Private Sub Format00(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
+		If Not IsNothing(e.Value) Then
+			e.Value = Format(CInt(e.Value), "00")
+		End If
+	End Sub
+	Private Sub FormatCliente(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
+		If e.Value = "" Then
+			e.Value = "Cliente Varejo"
+		End If
+	End Sub
+	'
 #End Region ' / DATABINDINGS
-    '
+	'
 #Region "CARREGA/INSERE ITENS"
-    '
-    Private Sub PreencheItens()
+	'
+	Private Sub PreencheItens()
         '
         '--- limpa as colunas do datagrid
         dgvItens.Columns.Clear()
@@ -653,38 +663,83 @@ Public Class frmVendaVista
         Close()
         MostraMenuPrincipal()
     End Sub
-    '
-    '--- ALTERA O VENDEDOR E SALVA NO BD
-    Private Sub btnVendedorAlterar_Click(sender As Object, e As EventArgs) Handles btnVendedorAlterar.Click
-        '
-        Dim fFunc As New frmFuncionarioEscolher(True, Me)
-        fFunc.ShowDialog()
-        If fFunc.DialogResult = DialogResult.Cancel Then Exit Sub
-        '
-        Try
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            Dim newID As Integer = fFunc.IDEscolhido
-            '
-            If vndBLL.AtualizaVendaVendedor(_Venda.IDVenda, newID) Then
-                _Venda.IDVendedor = newID
-                _Venda.ApelidoFuncionario = fFunc.NomeEscolhido
-                lblVendedor.DataBindings("Text").ReadValue()
-            End If
-            '
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao atualizar o Vendedor..." & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-        End Try
-        '
-    End Sub
-    '
-    '--- ALTERAR A DATA DA VENDA
-    Private Sub lblVendaData_DoubleClick(sender As Object, e As EventArgs) _
+	'
+	'--- ALTERA O VENDEDOR E SALVA NO BD
+	Private Sub btnVendedorAlterar_Click(sender As Object, e As EventArgs) Handles btnVendedorAlterar.Click
+		'
+		Dim fFunc As New frmFuncionarioEscolher(True, Me)
+		fFunc.ShowDialog()
+		If fFunc.DialogResult = DialogResult.Cancel Then Exit Sub
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim newID As Integer = fFunc.IDEscolhido
+			'
+			If vndBLL.AtualizaVendaVendedor(_Venda.IDVenda, newID) Then
+				_Venda.IDVendedor = newID
+				_Venda.ApelidoFuncionario = fFunc.NomeEscolhido
+				lblVendedor.DataBindings("Text").ReadValue()
+			End If
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao atualizar o Vendedor..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
+	'--- ALTERA ou REMOVE O CLIENTE SIMPLES E SALVA NO BD
+	Private Sub btnClienteSimplesInsertRemove_Click(sender As Object, e As EventArgs) Handles btnClienteSimplesEscolher.Click, btnClienteSimplesRemover.Click
+		'
+		Try
+			'
+			If DirectCast(sender, Button).Name = "btnClienteSimplesEscolher" Then '---> ALTERAR / INSERIR
+				'
+				Dim fCli As New frmClienteSimplesProcurar(True, Me)
+				fCli.ShowDialog()
+				If fCli.DialogResult = DialogResult.Cancel Then Exit Sub
+				'
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				Dim newID As Integer = fCli.propCliente_Escolha.IDClienteSimples
+				'
+				If vndBLL.AtualizaRemoveVendaClienteSimples(_Venda.IDVenda, newID) Then
+					_Venda.IDClienteSimples = newID
+					_Venda.ClienteSimplesNome = fCli.propCliente_Escolha.ClienteNome
+				End If
+			Else '---> REMOVER
+				'
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				If vndBLL.AtualizaRemoveVendaClienteSimples(_Venda.IDVenda, Nothing) Then
+					_Venda.IDClienteSimples = Nothing
+					_Venda.ClienteSimplesNome = String.Empty
+				End If
+				'
+			End If
+			'
+			lblClienteSimplesNome.DataBindings("Text").ReadValue()
+			lblClienteSimplesNome.DataBindings("Tag").ReadValue()
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao atualizar o Cliente Simples da Venda..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
+	'--- ALTERAR A DATA DA VENDA
+	Private Sub lblVendaData_DoubleClick(sender As Object, e As EventArgs) _
         Handles lblVendaData.DoubleClick, btnData.Click
         '
         Dim frmDt As New frmDataInformar("Informe a data da Venda", EnumDataTipo.PassadoPresente, _Venda.TransacaoData, Me)
@@ -2052,7 +2107,7 @@ Public Class frmVendaVista
         End If
         '
     End Sub
-    '
+	'
 #End Region '/ TROCA FUNCOES
-    '
+	'
 End Class

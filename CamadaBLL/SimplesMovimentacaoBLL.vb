@@ -91,8 +91,8 @@ Public Class SimplesMovimentacaoBLL
         Try
             Dim dtV As DataTable = objDB.ExecutarConsulta(CommandType.StoredProcedure, "uspSimplesSaida_Alterar")
             If dtV.Rows.Count = 0 Then
-                Throw New Exception("Um erro ineperado ocorreu na uspVenda_Inserir")
-            End If
+				Throw New Exception("Um erro ineperado ocorreu na uspSimplesSaida_Alterar")
+			End If
             '
             Dim obj As Object = dtV.Rows(0).Item(0)
             '
