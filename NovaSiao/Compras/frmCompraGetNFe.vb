@@ -560,11 +560,13 @@ Public Class frmCompraGetNFe
 				Dim enumUF As TUf = emit.enderEmit.UF
 				.UF = enumUF.ToString
 				.CEP = emit.enderEmit.CEP
-				Dim telLen As Byte = emit.enderEmit.fone.Trim.Length
-				If telLen = 10 Then
-					.TelefoneA = emit.enderEmit.fone.Insert(2, " ")
-				Else
-					.TelefoneA = emit.enderEmit.fone
+				If emit.enderEmit.fone IsNot Nothing Then
+					Dim telLen As Byte = emit.enderEmit.fone.Trim.Length
+					If telLen = 10 Then
+						.TelefoneA = emit.enderEmit.fone.Insert(2, " ")
+					Else
+						.TelefoneA = emit.enderEmit.fone
+					End If
 				End If
 			End With
 			'

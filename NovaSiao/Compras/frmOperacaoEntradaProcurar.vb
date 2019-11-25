@@ -358,7 +358,7 @@ Public Class frmOperacaoEntradaProcurar
 		End With
 		'
 		' (3) COLUNA PESSOAORIGEM
-		Dim clnOrigem As New DataGridViewColumn
+		Dim clnOrigem As New DataGridViewTextBoxColumn
 		With clnOrigem
 			.DataPropertyName = "PessoaOrigem"
 			.HeaderText = "Filial Origem"

@@ -1353,6 +1353,7 @@
       <DependentUpon>frmProdutoEtiquetaPrint.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Produtos\Reports\rptProdutoEtiquetaVenda.rdlc" />
+    <EmbeddedResource Include="Produtos\Reports\rptProdutoEtiquetaVenda_A4351.rdlc" />
     <EmbeddedResource Include="Reservas\frmAdiantamentoEntrada.resx">
       <DependentUpon>frmAdiantamentoEntrada.vb</DependentUpon>
     </EmbeddedResource>

@@ -19,9 +19,13 @@ Partial Class frmProdutoEtiquetaPrint
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+		Me.components = New System.ComponentModel.Container()
+		Dim ReportDataSource1 As Microsoft.Reporting.WinForms.ReportDataSource = New Microsoft.Reporting.WinForms.ReportDataSource()
 		Me.btnFechar = New System.Windows.Forms.Button()
 		Me.rptvLocal = New Microsoft.Reporting.WinForms.ReportViewer()
+		Me.clProdutoEtiquetaBindingSource = New System.Windows.Forms.BindingSource(Me.components)
 		Me.Panel1.SuspendLayout()
+		CType(Me.clProdutoEtiquetaBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SuspendLayout()
 		'
 		'Panel1
@@ -68,13 +72,20 @@ Partial Class frmProdutoEtiquetaPrint
 		Me.rptvLocal.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
 			Or System.Windows.Forms.AnchorStyles.Left) _
 			Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-		Me.rptvLocal.LocalReport.ReportEmbeddedResource = "NovaSiao.rptProdutoEtiquetaVenda.rdlc"
+		ReportDataSource1.Name = "dsEtiquetas"
+		ReportDataSource1.Value = Me.clProdutoEtiquetaBindingSource
+		Me.rptvLocal.LocalReport.DataSources.Add(ReportDataSource1)
+		Me.rptvLocal.LocalReport.ReportEmbeddedResource = "NovaSiao.rptProdutoEtiquetaVenda_A4351.rdlc"
 		Me.rptvLocal.Location = New System.Drawing.Point(12, 63)
 		Me.rptvLocal.Margin = New System.Windows.Forms.Padding(4)
 		Me.rptvLocal.Name = "rptvLocal"
 		Me.rptvLocal.ServerReport.BearerToken = Nothing
 		Me.rptvLocal.Size = New System.Drawing.Size(975, 566)
 		Me.rptvLocal.TabIndex = 17
+		'
+		'clProdutoEtiquetaBindingSource
+		'
+		Me.clProdutoEtiquetaBindingSource.DataSource = GetType(CamadaDTO.clProdutoEtiqueta)
 		'
 		'frmProdutoEtiquetaPrint
 		'
@@ -88,10 +99,12 @@ Partial Class frmProdutoEtiquetaPrint
 		Me.Controls.SetChildIndex(Me.rptvLocal, 0)
 		Me.Controls.SetChildIndex(Me.Panel1, 0)
 		Me.Panel1.ResumeLayout(False)
+		CType(Me.clProdutoEtiquetaBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.ResumeLayout(False)
 
 	End Sub
 
 	Friend WithEvents btnFechar As Button
 	Private WithEvents rptvLocal As Microsoft.Reporting.WinForms.ReportViewer
+	Friend WithEvents clProdutoEtiquetaBindingSource As BindingSource
 End Class

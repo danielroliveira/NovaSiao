@@ -201,7 +201,7 @@ Public Class clPessoaEndereco
 		Set(ByVal value As String)
 			'
 			'--- check string length
-			If value.Length > 100 Then value = value.Substring(0, 100)
+			If value IsNot Nothing AndAlso value.Length > 100 Then value = value.Substring(0, 100)
 			'
 			If value <> PEndData._Email Then
 				RaiseAoAlterar()

@@ -183,17 +183,49 @@ Public Class frmFuncionarioEscolher
         End If
         '
     End Sub
-    '
+	'
+	' ALTERAR A FILIAL SEDE DO FUNCIONARIO
+	'----------------------------------------------------------------------------------
+	Private Sub btnAlterarFilial_Click(sender As Object, e As EventArgs) Handles btnAlterarFilial.Click
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			'--- Abre o frmFilial
+			Dim fFil As New frmFilialEscolher(Me, _IDFilial)
+			'
+			fFil.ShowDialog()
+			'
+			If fFil.DialogResult = DialogResult.Cancel Then Exit Sub
+			'
+			If fFil.propFilial.IDPessoa <> _IDFilial Then
+				_IDFilial = fFil.propFilial.IDPessoa
+				lblFilial.Text = fFil.propFilial.ApelidoFilial
+				PreencheData()
+				PreencheListagem()
+			End If
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao abrir o formulário de procurar filial..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
 #End Region '/ BUTTONS FUNCTION
-    '
+	'
 #Region "EFEITO VISUAL"
 
-    '
-    '
-    '-------------------------------------------------------------------------------------------------
-    ' CONSTRUIR UMA BORDA NO FORMULÁRIO
-    '-------------------------------------------------------------------------------------------------
-    Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
+	'
+	'
+	'-------------------------------------------------------------------------------------------------
+	' CONSTRUIR UMA BORDA NO FORMULÁRIO
+	'-------------------------------------------------------------------------------------------------
+	Protected Overrides Sub OnPaintBackground(ByVal e As PaintEventArgs)
         MyBase.OnPaintBackground(e)
 
         Dim rect As New Rectangle(0, 0, Me.ClientSize.Width - 1, Me.ClientSize.Height - 1)
@@ -234,7 +266,12 @@ Public Class frmFuncionarioEscolher
         Next
         '
     End Sub
-    '
+	'
+	Private Sub lblFilial_SizeChanged(sender As Object, e As EventArgs) Handles lblFilial.SizeChanged
+		Dim newX As Integer = lblFilial.Location.X + lblFilial.Size.Width + 5
+		btnAlterarFilial.Location = New Point(newX, btnAlterarFilial.Location.Y)
+	End Sub
+	'
 #End Region '/ EFEITO VISUAL
-    '
+	'
 End Class

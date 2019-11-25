@@ -700,19 +700,45 @@ Public Class frmVendaVista
 			'
 			If DirectCast(sender, Button).Name = "btnClienteSimplesEscolher" Then '---> ALTERAR / INSERIR
 				'
+				Dim newID As Integer
+				Dim ClienteNome As String
+				'
+				'--- open form Procurar Cliente
 				Dim fCli As New frmClienteSimplesProcurar(True, Me)
 				fCli.ShowDialog()
-				If fCli.DialogResult = DialogResult.Cancel Then Exit Sub
+				'
+				'--- check return (OK => cliente selected | RETRY => client NEW | CANCEL => canceled)
+				If fCli.DialogResult = DialogResult.OK Then
+					'
+					newID = fCli.propCliente_Escolha.IDClienteSimples
+					ClienteNome = fCli.propCliente_Escolha.ClienteNome
+					'
+				ElseIf fCli.DialogResult = DialogResult.Retry Then
+					'
+					'--- Ampulheta ON
+					Cursor = Cursors.WaitCursor
+					'
+					'--- open form Add Cliente Simples
+					Dim frmC As New frmClienteSimples(New clClienteSimples, Me)
+					'
+					frmC.ShowDialog()
+					If frmC.DialogResult <> DialogResult.OK Then Exit Sub
+					'
+					newID = frmC.propCliente.IDClienteSimples
+					ClienteNome = frmC.propCliente.ClienteNome
+					'
+				Else
+					Exit Sub
+				End If
 				'
 				'--- Ampulheta ON
 				Cursor = Cursors.WaitCursor
 				'
-				Dim newID As Integer = fCli.propCliente_Escolha.IDClienteSimples
-				'
 				If vndBLL.AtualizaRemoveVendaClienteSimples(_Venda.IDVenda, newID) Then
 					_Venda.IDClienteSimples = newID
-					_Venda.ClienteSimplesNome = fCli.propCliente_Escolha.ClienteNome
+					_Venda.ClienteSimplesNome = ClienteNome
 				End If
+				'
 			Else '---> REMOVER
 				'
 				'--- Ampulheta ON

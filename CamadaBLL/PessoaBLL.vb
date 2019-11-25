@@ -63,30 +63,30 @@ Public Class PessoaBLL
     Function DetachPessoaJuridica(newPessoa As Object) As clPessoaJuridica
         '
         Dim isCredorPF As Boolean = TypeOf newPessoa Is clCredor
-        '
-        Dim pj As New clPessoaJuridica With {
-            .IDPessoa = newPessoa.IDPessoa,
-            .Cadastro = newPessoa.Cadastro,
-            .NomeFantasia = If(Not isCredorPF, newPessoa.NomeFantasia, Nothing),
-            .PessoaTipo = newPessoa.PessoaTipo,
-            .ContatoNome = If(Not isCredorPF, newPessoa.ContatoNome, Nothing),
-            .Endereco = newPessoa.Endereco,
-            .Bairro = newPessoa.Bairro,
-            .Cidade = newPessoa.Cidade,
-            .CEP = newPessoa.CEP,
-            .UF = newPessoa.UF,
-            .TelefoneA = newPessoa.TelefoneA,
-            .TelefoneB = newPessoa.TelefoneB,
-            .CNPJ = If(Not isCredorPF, newPessoa.CNPJ, newPessoa.CNP),
-            .InscricaoEstadual = If(Not isCredorPF, newPessoa.InscricaoEstadual, Nothing),
-            .Email = newPessoa.Email,
-            .EmailDestino = newPessoa.EmailDestino,
-            .EmailPrincipal = newPessoa.EmailPrincipal,
-            .FundacaoData = If(Not isCredorPF, newPessoa.FundacaoData, Nothing),
-            .InsercaoData = newPessoa.InsercaoData
-        }
-        '
-        Return pj
+		'
+		Dim pj As New clPessoaJuridica With {
+			.IDPessoa = newPessoa.IDPessoa,
+			.Cadastro = newPessoa.Cadastro,
+			.NomeFantasia = If(Not isCredorPF, newPessoa.NomeFantasia, Nothing),
+			.PessoaTipo = newPessoa.PessoaTipo,
+			.ContatoNome = If(Not isCredorPF, newPessoa.ContatoNome, Nothing),
+			.Endereco = newPessoa.Endereco,
+			.Bairro = newPessoa.Bairro,
+			.Cidade = newPessoa.Cidade,
+			.CEP = newPessoa.CEP,
+			.UF = newPessoa.UF,
+			.TelefoneA = newPessoa.TelefoneA,
+			.TelefoneB = newPessoa.TelefoneB,
+			.CNPJ = If(Not isCredorPF, newPessoa.CNPJ, newPessoa.CNP),
+			.InscricaoEstadual = If(Not isCredorPF, newPessoa.InscricaoEstadual, Nothing),
+			.Email = newPessoa.Email,
+			.EmailDestino = newPessoa.EmailDestino,
+			.EmailPrincipal = newPessoa.EmailPrincipal,
+			.FundacaoData = If(Not isCredorPF, newPessoa.FundacaoData, Nothing),
+			.InsercaoData = newPessoa.InsercaoData
+		}
+		'
+		Return pj
         '
     End Function
     '
@@ -2368,8 +2368,8 @@ Public Class PessoaBLL
             ' PESSOA FUNCIONARIO
             .AdmissaoData = If(IsDBNull(r("AdmissaoData")), Nothing, r("AdmissaoData"))
             .Ativo = If(IsDBNull(r("Ativo")), Nothing, r("Ativo"))
-            .Vendedor = If(IsDBNull(r("AdmissaoData")), Nothing, r("AdmissaoData"))
-            .ApelidoFuncionario = If(IsDBNull(r("ApelidoFuncionario")), String.Empty, r("ApelidoFuncionario"))
+			.Vendedor = If(IsDBNull(r("Vendedor")), False, r("Vendedor"))
+			.ApelidoFuncionario = If(IsDBNull(r("ApelidoFuncionario")), String.Empty, r("ApelidoFuncionario"))
             ' PESSOA VENDEDOR
             .Comissao = If(IsDBNull(r("Comissao")), Nothing, r("Comissao"))
             .VendaTipo = If(IsDBNull(r("VendaTipo")), Nothing, r("VendaTipo"))
