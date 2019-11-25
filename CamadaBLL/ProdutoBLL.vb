@@ -1844,12 +1844,12 @@ Public Class ProdutoFornecedorBLL
                     "(@IDProdutoOrigem, @IDProdutoFornecedor, @DescricaoOrigem, @CodBarrasOrigem)"
             '
             db.LimparParametros()
-            db.AdicionarParametros("@IDProdutoOrigem", PFitem.IDProdutoOrigem)
-            db.AdicionarParametros("@IDProdutoFornecedor", PFitem.IDProdutoFornecedor)
-            db.AdicionarParametros("@DescricaoOrigem", PFitem.DescricaoOrigem)
-            db.AdicionarParametros("@CodBarrasOrigem", If(PFitem.CodBarrasOrigem, DBNull.Value))
-            '
-            Dim NewID As Integer = db.ExecutarInsertGetID(query)
+			db.AdicionarParametros("@IDProdutoOrigem", Left(PFitem.IDProdutoOrigem, 20))
+			db.AdicionarParametros("@IDProdutoFornecedor", PFitem.IDProdutoFornecedor)
+			db.AdicionarParametros("@DescricaoOrigem", Left(PFitem.DescricaoOrigem, 100))
+			db.AdicionarParametros("@CodBarrasOrigem", If(Left(PFitem.CodBarrasOrigem, 20), DBNull.Value))
+			'
+			Dim NewID As Integer = db.ExecutarInsertGetID(query)
             '
             '--- return
             If IsNothing(dbTran) Then db.CommitTransaction()

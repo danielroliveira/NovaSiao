@@ -948,13 +948,13 @@ Public Class frmProduto
             If _produto.IDFabricante = 0 Then
                 CheckCorrelacaoFabricante(oldProdutoBLL)
             End If
-            '
-            '--- SITUACAO
-            If _produto.SitTributaria = 0 Then
-                CheckCorrelacaoSituacao(oldProdutoBLL)
-            End If
-            '
-        Catch ex As Exception
+			'
+			'--- SITUACAO
+			If _produto.SitTributaria = 0 AndAlso _produto.SituacaoTributaria = String.Empty Then
+				CheckCorrelacaoSituacao(oldProdutoBLL)
+			End If
+			'
+		Catch ex As Exception
             Throw ex
         End Try
         '
