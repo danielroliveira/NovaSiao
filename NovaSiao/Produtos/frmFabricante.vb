@@ -2,16 +2,14 @@
 
 Public Class frmFabricante
     Private dtFab As DataTable
-    Dim SQL As New SQLControl
-    Private ImgInativo As Image = My.Resources.block
+	Private fBLL As New FabricanteBLL
+	Private ImgInativo As Image = My.Resources.block
     Private ImgAtivo As Image = My.Resources.accept
     Private _formOrigem As Form
     Dim _Sit As Byte
-    'Property propIDFabricanteEscolhido As Integer?
-    'Property propFabricanteEscolhido As String
-    '
-    ' PROPRIEDADE SIT
-    Private Property Sit As EnumFlagEstado
+	'
+	' PROPRIEDADE SIT
+	Private Property Sit As EnumFlagEstado
         Get
             Sit = _Sit
         End Get
@@ -49,23 +47,41 @@ Public Class frmFabricante
         Else
             btnFechar.Text = "&Fechar"
         End If
-        '
-        PreencheListaFabricante()
+		'
+		GetFabricantes()
+		PreencheListaFabricante()
         Sit = EnumFlagEstado.RegistroSalvo
         '
     End Sub
-    '
-    '--- EVENTO LOAD
-    Private Sub frmFabricante_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        PreencheListaImagem()
-    End Sub
-    '
-    ' PREENCHE LISTAGEM
-    Private Sub PreencheListaFabricante()
-        SQL.ExecQuery("SELECT * FROM tblProdutoFabricante")
-        dtFab = SQL.DBDT
-        '
-        dgvFabricantes.Columns.Clear()
+	'
+	'--- EVENTO LOAD
+	Private Sub frmFabricante_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		PreencheListaImagem()
+	End Sub
+	'
+	'--- GET DATATABLE OF FABRICANTES
+	Private Sub GetFabricantes()
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			dtFab = fBLL.GetFabricantes()
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao obter datatable de Fabricantes..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
+	' PREENCHE LISTAGEM
+	Private Sub PreencheListaFabricante()
+		'
+		dgvFabricantes.Columns.Clear()
         dgvFabricantes.AutoGenerateColumns = False
         '
         '--- PROPRIEDADES DA LISTAGEM
@@ -127,25 +143,31 @@ Public Class frmFabricante
         dgvFabricantes.DataSource = dtFab
         '
     End Sub
-    '
-    Private Sub PreencheListaImagem()
-        For Each r As DataGridViewRow In dgvFabricantes.Rows
-            If r.Cells(3).Value = True Then
-                r.Cells(2).Value = ImgAtivo
-            Else
-                r.Cells(2).Value = ImgInativo
-            End If
-        Next
-    End Sub
-    '
-    ' CONTROLE DA LISTAGEM
-    Private Sub dgvFabricantes_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvFabricantes.CellBeginEdit
-        If Not Sit <> EnumFlagEstado.NovoRegistro Then
-            Sit = EnumFlagEstado.Alterado
-        End If
-    End Sub
-    '
-    Private Sub dgvFabricantes_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvFabricantes.MouseDown
+	'
+	Private Sub PreencheListaImagem()
+		'
+		For Each r As DataGridViewRow In dgvFabricantes.Rows
+			'
+			If r.Cells(3).Value = True Then
+				r.Cells(2).Value = ImgAtivo
+			Else
+				r.Cells(2).Value = ImgInativo
+			End If
+			'
+		Next
+		'
+	End Sub
+	'
+	' CONTROLE DA LISTAGEM
+	Private Sub dgvFabricantes_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvFabricantes.CellBeginEdit
+		'
+		If Sit <> EnumFlagEstado.NovoRegistro Then
+			Sit = EnumFlagEstado.Alterado
+		End If
+		'
+	End Sub
+	'
+	Private Sub dgvFabricantes_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvFabricantes.MouseDown
         If e.Button = MouseButtons.Right Then
             Dim c As Control = DirectCast(sender, Control)
             Dim hit As DataGridView.HitTestInfo = dgvFabricantes.HitTest(e.X, e.Y)
@@ -209,23 +231,27 @@ Public Class frmFabricante
         '--- atualiza os botoes
         Sit = EnumFlagEstado.Alterado
     End Sub
-    '
-    ' BOTOES DO FORMULARIO
-    Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
-        '---adiciona novo ROW no datatable 
-        dtFab.Rows.Add()
-        Sit = EnumFlagEstado.NovoRegistro
-        ' seleciona a cell
-        dgvFabricantes.Focus()
-        dgvFabricantes.CurrentCell = dgvFabricantes.Rows(dgvFabricantes.Rows.Count - 1).Cells(1)
-        dgvFabricantes.BeginEdit(True)
-        '---adiciona a imagem no NOVO ROW
-        dgvFabricantes.CurrentRow.Cells("Ativo").Value = My.Resources.NovoPeq
-    End Sub
-    '
-    ' SALVAR O REGISTRO
-    '-----------------------------------------------------------------------------------------------
-    Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
+	'
+	' BOTOES DO FORMULARIO
+	Private Sub btnNovo_Click(sender As Object, e As EventArgs) Handles btnNovo.Click
+		'
+		'---adiciona novo ROW no datatable 
+		dtFab.Rows.Add()
+		Sit = EnumFlagEstado.NovoRegistro
+		'
+		' seleciona a cell
+		dgvFabricantes.Focus()
+		dgvFabricantes.CurrentCell = dgvFabricantes.Rows(dgvFabricantes.Rows.Count - 1).Cells(1)
+		dgvFabricantes.BeginEdit(True)
+		'
+		'---adiciona a imagem no NOVO ROW
+		dgvFabricantes.CurrentRow.Cells("Ativo").Value = My.Resources.NovoPeq
+		'
+	End Sub
+	'
+	' SALVAR O REGISTRO
+	'-----------------------------------------------------------------------------------------------
+	Private Sub btnFechar_Click(sender As Object, e As EventArgs) Handles btnFechar.Click
         If Sit = EnumFlagEstado.RegistroSalvo Then
             '--- Fecha o Form
             Me.Close()
@@ -262,63 +288,73 @@ Public Class frmFabricante
             '
         End If
     End Sub
-    '
-    ' SALVAR O REGISTRO
-    '-----------------------------------------------------------------------------------------------
-    Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
-        '-- variavel para informar o número de registros salvos
-        Dim regSalvos As Integer = 0
-        '
-        For Each r As DataGridViewRow In dgvFabricantes.Rows
-            ' verfica se já existe valor igual
-            If dtFab.Rows(r.Index).RowState <> DataRowState.Unchanged Then
-                If VerificaDuplicado(r.Index, dgvFabricantes.Rows(r.Index).Cells(1).Value) = True Then
-                    MessageBox.Show("Já existe uma Forma de Cobrança com a mesma descrição:" & vbNewLine &
-                                        CStr(dgvFabricantes.Rows(r.Index).Cells(1).Value).ToUpper,
-                                        "Valor Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    Continue For
-                End If
-            End If
-            '
-            '---salva os registros
-            If dtFab.Rows(r.Index).RowState = DataRowState.Modified Then ' registro ALTERADO
-                SQL.ExecQuery("UPDATE tblProdutoFabricante " &
-                              "SET Fabricante = '" & dgvFabricantes.Rows(r.Index).Cells(1).Value & "', " &
-                              " FabricanteAtivo = '" & dgvFabricantes.Rows(r.Index).Cells(3).Value & "'" &
-                              " WHERE IDFabricante = " & dgvFabricantes.Rows(r.Index).Cells(0).Value)
-                regSalvos += 1
-            ElseIf dtFab.Rows(r.Index).RowState = DataRowState.Added Then ' registro NOVO
-                SQL.ExecQuery("INSERT INTO tblProdutoFabricante" &
-                              " (Fabricante, FabricanteAtivo) VALUES ('" & dgvFabricantes.Rows(r.Index).Cells(1).Value & "', 'TRUE')", True)
-                regSalvos += 1
-            End If
-            '
-            '---veridica se houve erro
-            If SQL.HasException(True) Then
-                MessageBox.Show("O seguinte registro não pôde ser salvo:" & vbNewLine &
-                                CStr(dgvFabricantes.Rows(r.Index).Cells(1).Value).ToUpper, "Erro ao Salvar",
-                                MessageBoxButtons.OK, MessageBoxIcon.Error)
-                regSalvos -= 1
-            End If
-        Next
-        '
-        '--- mensagem de sucesso---
-        If regSalvos > 0 Then
-            MessageBox.Show("Sucesso ao salvar registro(s) de Fabricante(s)" & vbNewLine &
-                            "Foram salvo(s) com sucesso " & Format(regSalvos, "00") &
-                            IIf(regSalvos > 1, " registros", " registro"),
-                            "Registro(s) Salvo(s)", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End If
-        '
-        '---preencher a listagem com os novos valores
-        PreencheListaFabricante()
-        Sit = EnumFlagEstado.RegistroSalvo
-        PreencheListaImagem()
-    End Sub
-    '
-    ' VERIFICAR SE EXISTE UM REGISTRO COM A MESMA DESCRIÇÃO
-    '-----------------------------------------------------------------------------------------------
-    Public Function VerificaDuplicado(myRow As Integer, myNewValor As String) As Boolean
+	'
+	' SALVAR O REGISTRO
+	'-----------------------------------------------------------------------------------------------
+	Private Sub btnSalvar_Click(sender As Object, e As EventArgs) Handles btnSalvar.Click
+		'
+		'-- variavel para informar o número de registros salvos
+		Dim regSalvos As Integer = 0
+		Dim newID As Integer = 0
+		'
+		For Each r As DataGridViewRow In dgvFabricantes.Rows
+			'
+			' verfica se já existe valor igual
+			If dtFab.Rows(r.Index).RowState <> DataRowState.Unchanged Then
+				If VerificaDuplicado(r.Index, dgvFabricantes.Rows(r.Index).Cells(1).Value) = True Then
+					MessageBox.Show("Já existe uma Forma de Cobrança com a mesma descrição:" & vbNewLine &
+									CStr(dgvFabricantes.Rows(r.Index).Cells(1).Value).ToUpper,
+									"Valor Duplicado", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+					Continue For
+				End If
+			End If
+			'
+			Try
+				'--- Ampulheta ON
+				Cursor = Cursors.WaitCursor
+				'
+				'---salva os registros
+				If DirectCast(r.DataBoundItem, DataRowView).Row.RowState = DataRowState.Modified Then ' registro ALTERADO
+					fBLL.ProdutoFabricante_Update(dgvFabricantes.Rows(r.Index).Cells(0).Value,
+												  dgvFabricantes.Rows(r.Index).Cells(1).Value,
+												  dgvFabricantes.Rows(r.Index).Cells(3).Value)
+					regSalvos += 1
+				ElseIf DirectCast(r.DataBoundItem, DataRowview).Row.RowState = DataRowState.Added Then ' registro NOVO
+					newID = fBLL.ProdutoFabricante_Insert(dgvFabricantes.Rows(r.Index).Cells(1).Value)
+					DirectCast(r.DataBoundItem, DataRowView).Item(0) = newID
+					DirectCast(r.DataBoundItem, DataRowView).Item(2) = True
+					regSalvos += 1
+				End If
+				'
+			Catch ex As Exception
+				MessageBox.Show("Uma exceção ocorreu ao Salvar registro do Fabricante: " & vbNewLine &
+								CStr(dgvFabricantes.Rows(r.Index).Cells(1).Value).ToUpper & vbNewLine &
+								ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+			Finally
+				'--- Ampulheta OFF
+				Cursor = Cursors.Default
+			End Try
+			'
+		Next
+		'
+		'--- mensagem de sucesso---
+		If regSalvos > 0 Then
+			MessageBox.Show("Sucesso ao salvar registro(s) de Fabricante(s)" & vbNewLine &
+							"Foram salvo(s) com sucesso " & Format(regSalvos, "00") &
+							IIf(regSalvos > 1, " registros", " registro"),
+							"Registro(s) Salvo(s)", MessageBoxButtons.OK, MessageBoxIcon.Information)
+		End If
+		'
+		'---preencher a listagem com os novos valores
+		PreencheListaFabricante()
+		Sit = EnumFlagEstado.RegistroSalvo
+		PreencheListaImagem()
+		'
+	End Sub
+	'
+	' VERIFICAR SE EXISTE UM REGISTRO COM A MESMA DESCRIÇÃO
+	'-----------------------------------------------------------------------------------------------
+	Public Function VerificaDuplicado(myRow As Integer, myNewValor As String) As Boolean
         '---se não houver nenhum registro, Exit
         If dtFab.Rows.Count = 0 Then
             VerificaDuplicado = False

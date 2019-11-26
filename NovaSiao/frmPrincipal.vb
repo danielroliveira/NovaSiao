@@ -198,7 +198,7 @@ Public Class frmPrincipal
 				'
 				myConta = mBLL.Conta_GET_PorIDConta(Obter_ContaPadrao)
 				'
-				If IsDBNull(myConta.IDConta) Then
+				If myConta Is Nothing OrElse IsDBNull(myConta.IDConta) Then
 					AbrirConfig = True
 				Else
 					AbrirConfig = False

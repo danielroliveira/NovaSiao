@@ -37,11 +37,12 @@
     Private Sub Painel_MouseDown(sender As Object, e As MouseEventArgs)
         Px = Cursor.Position.X - Me.Left
 
-        If Me.IsMdiChild Then
-            Py = Cursor.Position.Y - Me.Top + Screen.PrimaryScreen.WorkingArea.Height - Parent.ClientSize.Height + 3
-        Else
-            Py = Cursor.Position.Y - Me.Top + Screen.PrimaryScreen.WorkingArea.Height - frmPrincipal.ClientSize.Height + Panel1.Height - 10
-        End If
+		If Me.IsMdiChild Then
+			Py = Cursor.Position.Y - Me.Top + Screen.PrimaryScreen.WorkingArea.Height - Parent.ClientSize.Height + 3
+		Else
+			Py = Cursor.Position.Y - Me.Top '+ Screen.PrimaryScreen.WorkingArea.Height - frmPrincipal.ClientSize.Height + Panel1.Height - 10
+			'Py = Cursor.Position.Y - Me.Top + Screen.PrimaryScreen.WorkingArea.Height - frmPrincipal.ClientSize.Height + Panel1.Height - 10
+		End If
         mover = True
     End Sub
     '

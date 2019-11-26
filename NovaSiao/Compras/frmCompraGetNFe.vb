@@ -842,7 +842,7 @@ Public Class frmCompraGetNFe
 					'
 					'--- CHECK PRECO COMPRA
 					'----------------------------------------------------------------------------------------------------
-					CheckPrecoDivergente(item, prodEncontrado.PCompra, prodEncontrado.IDProduto, False)
+					CheckPrecoDivergente(item, prodEncontrado.PCompra, prodEncontrado.IDProduto, dbTran)
 					'
 				End If
 				'
@@ -991,7 +991,7 @@ Public Class frmCompraGetNFe
 				If TypeOf PessoaRelacionada Is clFornecedor Then '---> FORNCEDOR RELACIONADO ENCONTRADO
 					'
 					If AbrirDialog("O CNPJ da NFe está relacionado com o CNPJ de:" & vbNewLine &
-								   pessoa.Cadastro & vbNewLine &
+								   PessoaRelacionada.Cadastro & vbNewLine &
 								   "Deseja usar a relação existente e transferir a compra para o CNPJ relacionado?",
 								   "CNPJ Relacionado",
 								   frmDialog.DialogType.SIM_NAO,

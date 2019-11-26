@@ -18,10 +18,10 @@ Public Class frmFabricanteProcurar
         '
         ' This call is required by the designer.
         InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        ObterTipo()
-        PreencheListagem()
+		'
+		' Add any initialization after the InitializeComponent() call.
+		ObterFabricantes()
+		PreencheListagem()
         '
         _formOrigem = formOrigem
         '
@@ -53,27 +53,27 @@ Public Class frmFabricanteProcurar
         End If
         '
     End Sub
-    '
+	'
 #End Region
-    '
+	'
 #Region "LISTAGEM"
-    '
-    '--- OBTER OS TIPOS
-    Private Sub ObterTipo()
-        '
-        Dim pBLL As New ProdutoBLL
-        '
-        Try
-            dtFab = pBLL.GetFabricantes
-        Catch ex As Exception
-            MessageBox.Show("Uma exceção ocorreu ao obter lista de Fabricantes de Produtos", "Exceção",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-        '
-    End Sub
-    '
-    '--- PREENCHE LISTAGEM
-    Private Sub PreencheListagem()
+	'
+	'--- OBTER OS FABRICANTES
+	Private Sub ObterFabricantes()
+		'
+		Dim pBLL As New FabricanteBLL
+		'
+		Try
+			dtFab = pBLL.GetFabricantes
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao obter lista de Fabricantes de Produtos", "Exceção",
+							MessageBoxButtons.OK, MessageBoxIcon.Error)
+		End Try
+		'
+	End Sub
+	'
+	'--- PREENCHE LISTAGEM
+	Private Sub PreencheListagem()
         lstItens.DataSource = dtFab
         FormataListagem()
     End Sub
