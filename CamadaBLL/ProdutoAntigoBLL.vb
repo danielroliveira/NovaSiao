@@ -225,8 +225,15 @@ Public Class ProdutoAntigoBLL
                 produto.Fabricante = ref.DescricaoInterna
                 '
             Case EnumReferencia.Situacao
-                '
-                Dim IDExterno As Integer? = If(IsDBNull(dadoAnterior("SitTributaria")), Nothing, CInt(dadoAnterior("SitTributaria")))
+				'
+				'--- check if Situacao Exists
+				If IsDBNull(dadoAnterior("SitTributaria")) Then
+					Throw New AppException(vbNewLine & "O produto: " & dadoAnterior("Produto") & vbNewLine &
+										   "está com a situação tributária vazia, assim não há como fazer correlação." & vbNewLine &
+										   "Favor preencher essa informação na origem...")
+				End If
+				'
+				Dim IDExterno As Integer? = If(IsDBNull(dadoAnterior("SitTributaria")), Nothing, CInt(dadoAnterior("SitTributaria")))
                 If IsNothing(IDExterno) Then Return
                 '
                 Dim ref As New clRef(referenciaTipo, IDExterno)

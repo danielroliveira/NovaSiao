@@ -1375,7 +1375,75 @@ Public Class frmProdutoListagem
         End Try
         '
     End Sub
-    '
+	'
+	'--- CHECK ESTOQUE NORMALIZADO
+	'----------------------------------------------------------------------------------
+	Private Sub miVerificarEstoqueNormalizado_Click(sender As Object, e As EventArgs) Handles miVerificarEstoqueNormalizado.Click
+		'
+		If dgvItens.SelectedRows.Count = 0 Then
+			MessageBox.Show("Não existe nenhum PRODUTO selecionado na listagem", "Escolher",
+							MessageBoxButtons.OK, MessageBoxIcon.Information)
+			Exit Sub
+		End If
+		'
+		'--- check Estoque
+		Dim clProd As clProduto = dgvItens.SelectedRows(0).DataBoundItem
+		'
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim eBLL As New EstoqueNormalizarBLL
+			'
+			Dim estoque As Integer = eBLL.GetEstoqueNormalizado(clProd.IDProduto, _IDFilial)
+			'
+			If Not IsNothing(clProd.Estoque) AndAlso clProd.Estoque <> estoque Then
+				'
+				Dim message As String = $"O Produto: {clProd.Produto}" + vbCrLf
+				message += $"possui uma quantidade normalizada de estoque de {estoque:00} un" + vbCrLf
+				message += $"porém a sua quantidade atual é divergente {clProd.Estoque:00} un"
+				'
+				AbrirDialog(message, "Estoque Divergente",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				'
+				Exit Sub
+				'
+			ElseIf IsNothing(clProd.Estoque) AndAlso estoque > 0 Then
+				'
+				Dim message As String = $"O Produto: {clProd.Produto}" + vbCrLf
+				message += $"possui uma quantidade normalizada de estoque de {estoque:00} un" + vbCrLf
+				message += $"porém no momento não possui nenhum movimento de estoque."
+				'
+				AbrirDialog(message, "Estoque Divergente",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Exclamation)
+				'
+				Exit Sub
+				'
+			Else
+				Dim message As String = $"O Produto: {clProd.Produto}" + vbCrLf
+				message += $"possui uma quantidade normalizada de estoque de {estoque:00} un" + vbCrLf
+				message += $"O Estoque está correto!"
+				'
+				AbrirDialog(message, "Estoque Correto",
+							frmDialog.DialogType.OK,
+							frmDialog.DialogIcon.Information)
+				'
+				Exit Sub
+				'
+			End If
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao Verificar o Estoque..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
 #End Region '/ MENU PRODUTO | ITENS
-    '
+	'
 End Class

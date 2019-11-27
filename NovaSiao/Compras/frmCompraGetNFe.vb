@@ -2013,7 +2013,7 @@ Public Class frmCompraGetNFe
 		'
 		'--- CHECK FOUND Fornecedor AND Transportadora
 		If IsNothing(FornecedorNFe.IDPessoa) Then Exit Sub
-		If IsNothing(TranspNFe.IDPessoa) Then Exit Sub
+		If Not IsNothing(TranspNFe) AndAlso IsNothing(TranspNFe.IDPessoa) Then Exit Sub
 		'
 		'--- CHECK ITEMS FOUND
 		If ItensNFe.Where(Function(x) IsNothing(x.IDProduto)).Count = 0 Then

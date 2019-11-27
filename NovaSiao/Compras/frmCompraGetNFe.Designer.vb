@@ -260,7 +260,7 @@ Partial Class frmCompraGetNFe
 		Me.mnuItens.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.mnuItens.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.miAnexarProduto, Me.miObterProdutoDBAnterior, Me.miNovoProduto, Me.ToolStripSeparator1, Me.miAbrirProduto})
 		Me.mnuItens.Name = "mnuItens"
-		Me.mnuItens.Size = New System.Drawing.Size(249, 128)
+		Me.mnuItens.Size = New System.Drawing.Size(249, 106)
 		'
 		'miAnexarProduto
 		'
