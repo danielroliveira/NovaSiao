@@ -193,12 +193,12 @@ Public Class frmOperacaoEntradaProcurar
 			'
 			'--- verifica o filtro das datas
 			If chkPeriodoTodos.Checked = True Then
-				SourceList = cBLL.GetCompraLista_Procura(Obter_FilialPadrao)
+				SourceList = cBLL.GetConsignacaoLista_Procura(Obter_FilialPadrao)
 			Else
 				Dim dtInicial As Date = Utilidades.FirstDayOfMonth(myMes)
 				Dim dtFinal As Date = Utilidades.LastDayOfMonth(myMes)
 				'
-				SourceList = cBLL.GetCompraLista_Procura(Obter_FilialPadrao, dtInicial, dtFinal)
+				SourceList = cBLL.GetConsignacaoLista_Procura(Obter_FilialPadrao, dtInicial, dtFinal)
 			End If
 			'
 			dgvListagem.DataSource = SourceList

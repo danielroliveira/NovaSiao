@@ -25,14 +25,6 @@ Partial Class frmConsignacaoCompra
 		Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Me.Label24 = New System.Windows.Forms.Label()
 		Me.dgvItens = New System.Windows.Forms.DataGridView()
-		Me.clnIDTransacaoItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnQuantidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnSubTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.lbl_IdTexto = New System.Windows.Forms.Label()
 		Me.lblTrocaData = New System.Windows.Forms.Label()
@@ -54,6 +46,14 @@ Partial Class frmConsignacaoCompra
 		Me.Label18 = New System.Windows.Forms.Label()
 		Me.lblFilial = New System.Windows.Forms.Label()
 		Me.btnExcluir = New VIBlend.WinForms.Controls.vButton()
+		Me.clnIDItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnQuantidade = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnPreco = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnSubTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnDesconto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnTotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.Panel1.SuspendLayout()
 		CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SuspendLayout()
@@ -119,7 +119,7 @@ Partial Class frmConsignacaoCompra
 		DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
 		Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
 		Me.dgvItens.ColumnHeadersHeight = 30
-		Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDTransacaoItem, Me.clnRGProduto, Me.clnProduto, Me.clnQuantidade, Me.clnPreco, Me.clnSubTotal, Me.clnDesconto, Me.clnTotal})
+		Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDItem, Me.clnRGProduto, Me.clnProduto, Me.clnQuantidade, Me.clnPreco, Me.clnSubTotal, Me.clnDesconto, Me.clnTotal})
 		DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
 		DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
 		DataGridViewCellStyle3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -147,65 +147,6 @@ Partial Class frmConsignacaoCompra
 		Me.dgvItens.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
 		Me.dgvItens.Size = New System.Drawing.Size(1012, 198)
 		Me.dgvItens.TabIndex = 4
-		'
-		'clnIDTransacaoItem
-		'
-		Me.clnIDTransacaoItem.Frozen = True
-		Me.clnIDTransacaoItem.HeaderText = "IDItem"
-		Me.clnIDTransacaoItem.Name = "clnIDTransacaoItem"
-		Me.clnIDTransacaoItem.ReadOnly = True
-		Me.clnIDTransacaoItem.Visible = False
-		'
-		'clnRGProduto
-		'
-		Me.clnRGProduto.Frozen = True
-		Me.clnRGProduto.HeaderText = "Reg."
-		Me.clnRGProduto.Name = "clnRGProduto"
-		Me.clnRGProduto.ReadOnly = True
-		Me.clnRGProduto.Width = 70
-		'
-		'clnProduto
-		'
-		Me.clnProduto.Frozen = True
-		Me.clnProduto.HeaderText = "Produto"
-		Me.clnProduto.Name = "clnProduto"
-		Me.clnProduto.ReadOnly = True
-		Me.clnProduto.Width = 430
-		'
-		'clnQuantidade
-		'
-		Me.clnQuantidade.Frozen = True
-		Me.clnQuantidade.HeaderText = "Qtde"
-		Me.clnQuantidade.Name = "clnQuantidade"
-		Me.clnQuantidade.ReadOnly = True
-		Me.clnQuantidade.Width = 70
-		'
-		'clnPreco
-		'
-		Me.clnPreco.Frozen = True
-		Me.clnPreco.HeaderText = "Preço"
-		Me.clnPreco.Name = "clnPreco"
-		Me.clnPreco.ReadOnly = True
-		'
-		'clnSubTotal
-		'
-		Me.clnSubTotal.Frozen = True
-		Me.clnSubTotal.HeaderText = "SubTotal"
-		Me.clnSubTotal.Name = "clnSubTotal"
-		Me.clnSubTotal.ReadOnly = True
-		'
-		'clnDesconto
-		'
-		Me.clnDesconto.HeaderText = "Desc."
-		Me.clnDesconto.Name = "clnDesconto"
-		Me.clnDesconto.ReadOnly = True
-		Me.clnDesconto.Width = 80
-		'
-		'clnTotal
-		'
-		Me.clnTotal.HeaderText = "Total"
-		Me.clnTotal.Name = "clnTotal"
-		Me.clnTotal.ReadOnly = True
 		'
 		'Label3
 		'
@@ -295,9 +236,9 @@ Partial Class frmConsignacaoCompra
 		Me.Label13.AutoSize = True
 		Me.Label13.Location = New System.Drawing.Point(745, 412)
 		Me.Label13.Name = "Label13"
-		Me.Label13.Size = New System.Drawing.Size(113, 19)
+		Me.Label13.Size = New System.Drawing.Size(115, 19)
 		Me.Label13.TabIndex = 8
-		Me.Label13.Text = "Total Devolvido:"
+		Me.Label13.Text = "Total Comprado:"
 		'
 		'lblSituacao
 		'
@@ -464,6 +405,65 @@ Partial Class frmConsignacaoCompra
 		Me.btnExcluir.UseVisualStyleBackColor = False
 		Me.btnExcluir.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.BLUEBLEND
 		'
+		'clnIDItem
+		'
+		Me.clnIDItem.Frozen = True
+		Me.clnIDItem.HeaderText = "IDItem"
+		Me.clnIDItem.Name = "clnIDItem"
+		Me.clnIDItem.ReadOnly = True
+		Me.clnIDItem.Visible = False
+		'
+		'clnRGProduto
+		'
+		Me.clnRGProduto.Frozen = True
+		Me.clnRGProduto.HeaderText = "Reg."
+		Me.clnRGProduto.Name = "clnRGProduto"
+		Me.clnRGProduto.ReadOnly = True
+		Me.clnRGProduto.Width = 70
+		'
+		'clnProduto
+		'
+		Me.clnProduto.Frozen = True
+		Me.clnProduto.HeaderText = "Produto"
+		Me.clnProduto.Name = "clnProduto"
+		Me.clnProduto.ReadOnly = True
+		Me.clnProduto.Width = 430
+		'
+		'clnQuantidade
+		'
+		Me.clnQuantidade.Frozen = True
+		Me.clnQuantidade.HeaderText = "Qtde"
+		Me.clnQuantidade.Name = "clnQuantidade"
+		Me.clnQuantidade.ReadOnly = True
+		Me.clnQuantidade.Width = 70
+		'
+		'clnPreco
+		'
+		Me.clnPreco.Frozen = True
+		Me.clnPreco.HeaderText = "Preço"
+		Me.clnPreco.Name = "clnPreco"
+		Me.clnPreco.ReadOnly = True
+		'
+		'clnSubTotal
+		'
+		Me.clnSubTotal.Frozen = True
+		Me.clnSubTotal.HeaderText = "SubTotal"
+		Me.clnSubTotal.Name = "clnSubTotal"
+		Me.clnSubTotal.ReadOnly = True
+		'
+		'clnDesconto
+		'
+		Me.clnDesconto.HeaderText = "Desc."
+		Me.clnDesconto.Name = "clnDesconto"
+		Me.clnDesconto.ReadOnly = True
+		Me.clnDesconto.Width = 80
+		'
+		'clnTotal
+		'
+		Me.clnTotal.HeaderText = "Total"
+		Me.clnTotal.Name = "clnTotal"
+		Me.clnTotal.ReadOnly = True
+		'
 		'frmConsignacaoCompra
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
@@ -498,14 +498,6 @@ Partial Class frmConsignacaoCompra
 	Friend WithEvents btnClose As VIBlend.WinForms.Controls.vFormButton
 	Friend WithEvents lblTotalGeral As Label
 	Friend WithEvents Label13 As Label
-	Friend WithEvents clnIDTransacaoItem As DataGridViewTextBoxColumn
-	Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
-	Friend WithEvents clnProduto As DataGridViewTextBoxColumn
-	Friend WithEvents clnQuantidade As DataGridViewTextBoxColumn
-	Friend WithEvents clnPreco As DataGridViewTextBoxColumn
-	Friend WithEvents clnSubTotal As DataGridViewTextBoxColumn
-	Friend WithEvents clnDesconto As DataGridViewTextBoxColumn
-	Friend WithEvents clnTotal As DataGridViewTextBoxColumn
 	Friend WithEvents Label15 As Label
 	Friend WithEvents lblSituacao As Label
 	Friend WithEvents MenuItemEditar As MenuItem
@@ -521,4 +513,12 @@ Partial Class frmConsignacaoCompra
 	Friend WithEvents Label24 As Label
 	Friend WithEvents mnuItens As VIBlend.WinForms.Controls.vContextMenu
 	Friend WithEvents btnExcluir As VIBlend.WinForms.Controls.vButton
+	Friend WithEvents clnIDItem As DataGridViewTextBoxColumn
+	Friend WithEvents clnRGProduto As DataGridViewTextBoxColumn
+	Friend WithEvents clnProduto As DataGridViewTextBoxColumn
+	Friend WithEvents clnQuantidade As DataGridViewTextBoxColumn
+	Friend WithEvents clnPreco As DataGridViewTextBoxColumn
+	Friend WithEvents clnSubTotal As DataGridViewTextBoxColumn
+	Friend WithEvents clnDesconto As DataGridViewTextBoxColumn
+	Friend WithEvents clnTotal As DataGridViewTextBoxColumn
 End Class

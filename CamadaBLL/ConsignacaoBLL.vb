@@ -4,9 +4,9 @@ Imports CamadaDAL
 Public Class ConsignacaoBLL
 	'
 	'--------------------------------------------------------------------------------------------
-	' GET LISTA COMPRA PARA FRMPROCURA
+	' GET LISTA CONSIGNACAO DE ENTRADA PARA FRMPROCURA
 	'--------------------------------------------------------------------------------------------
-	Public Function GetCompraLista_Procura(IDFilial As Integer,
+	Public Function GetConsignacaoLista_Procura(IDFilial As Integer,
 										   Optional dtInicial As Date? = Nothing,
 										   Optional dtFinal As Date? = Nothing) As List(Of clConsignacao)
 		'
@@ -444,7 +444,25 @@ Public Class ConsignacaoBLL
 	End Function
 	'
 	'==========================================================================================
-	' INSERT CONSIGNACAO ENTRADA
+	' UPDATE CONSIGNACAO COMPRA
+	'==========================================================================================
+	Public Function UpdateConsignacaoCompra(CosigCompra As clConsignacaoCompra) As clConsignacaoCompra
+		'
+		Throw New NotImplementedException("Ainda não implementado")
+		'
+	End Function
+	'
+	'==========================================================================================
+	' DELETE CONSIGNACAO COMPRA
+	'==========================================================================================
+	Public Function DeleteConsignacaoCompra(IDConsignacaoCompra As Integer) As Boolean
+		'
+		Throw New NotImplementedException("Ainda não implementado")
+		'
+	End Function
+	'
+	'==========================================================================================
+	' INSERT CONSIGNACAO DEVOLUCAO
 	'==========================================================================================
 	Public Function InsertConsignacaoDevolucao(devolucao As clConsignacaoDevolucao,
 											   Optional dbTran As Object = Nothing) As clConsignacaoDevolucao
@@ -617,7 +635,7 @@ Public Class ConsignacaoBLL
 	' INSERT ITEM CONSIGNACAO COMPRA
 	'==========================================================================================
 	Public Function InsertItemConsigCompra(item As clConsignacaoCompraItem,
-										   Optional dbTran As AcessoDados = Nothing) As clConsignacaoCompraItem
+										   Optional dbTran As Object = Nothing) As clConsignacaoCompraItem
 		'
 		Try
 			Dim db As AcessoDados = If(dbTran, New AcessoDados)
@@ -649,7 +667,7 @@ Public Class ConsignacaoBLL
 	' UPDATE ITEM CONSIGNACAO COMPRA
 	'==========================================================================================
 	Public Function UpdateItemConsigCompra(item As clConsignacaoCompraItem,
-										   Optional dbTran As AcessoDados = Nothing) As Boolean
+										   Optional dbTran As Object = Nothing) As Boolean
 		'
 		Try
 			Dim db As AcessoDados = If(dbTran, New AcessoDados)
@@ -684,7 +702,7 @@ Public Class ConsignacaoBLL
 	' DELETE ITEM CONSIGNACAO COMPRA
 	'==========================================================================================
 	Public Function DeleteItemConsigCompra(item As clConsignacaoCompraItem,
-										   Optional dbTran As AcessoDados = Nothing) As Boolean
+										   Optional dbTran As Object = Nothing) As Boolean
 		'
 		Try
 			Dim db As AcessoDados = If(dbTran, New AcessoDados)
@@ -702,6 +720,73 @@ Public Class ConsignacaoBLL
 		Catch ex As Exception
 			Throw ex
 		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' RETORNA UMA LISTA DE ITENS CONSIG COMPRA PELO IDCONSIG COMPRA
+	'==========================================================================================
+	Public Function GetConsigCompraItens_List(IDConsigCompra As Integer) As List(Of clConsignacaoCompraItem)
+		Dim objdb As New AcessoDados
+		'
+		'--- limpar os parâmetros
+		objdb.LimparParametros()
+		'
+		'--- adicionar os parâmetros
+		objdb.AdicionarParametros("@IDConsignacaoCompra", IDConsigCompra)
+		'
+		'--- Create SELECT query
+		Dim myQuery As String = "SELECT * FROM qryConsignacaoCompraItem WHERE IDConsignacaoCompra = @IDConsignacaoCompra"
+		'
+		Try
+			'--- GET DATATABLE
+			Dim dt As DataTable = objdb.ExecutarConsulta(CommandType.Text, myQuery)
+			'
+			'--- RETURN
+			Return ConvertDt_in_ListOf(dt, False)
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+	'
+	'==========================================================================================
+	' CONVERTE DATATABLE IN LIST OF CLCONSIGNACAOCOMPRA
+	'==========================================================================================
+	Private Function ConvertDt_in_ListOf(dt As DataTable, IDConsignacao As Integer) As List(Of clConsignacaoCompraItem)
+		'
+		Dim lista As New List(Of clConsignacaoCompraItem)
+		'
+		If dt.Rows.Count = 0 Then Return lista
+		'
+		For Each r As DataRow In dt.Rows
+			'
+			Dim itn As New clConsignacaoCompraItem()
+			'
+			'--- Itens da tblConsignacaoCompraItem
+			itn.IDConsignacaoCompra = IIf(IsDBNull(r("IDConsignacaoCompra")), Nothing, r("IDConsignacaoCompra"))
+			itn.Preco = IIf(IsDBNull(r("Preco")), Nothing, r("Preco"))
+			itn.IDItem = IIf(IsDBNull(r("IDItem")), Nothing, r("IDItem"))
+			itn.Quantidade = IIf(IsDBNull(r("Quantidade")), Nothing, r("Quantidade"))
+			itn.Desconto = IIf(IsDBNull(r("Desconto")), Nothing, r("Desconto"))
+			'
+			'--- Itens Importados tblProdutos
+			itn.IDProduto = IIf(IsDBNull(r("IDProduto")), Nothing, r("IDProduto"))
+			itn.RGProduto = IIf(IsDBNull(r("RGProduto")), Nothing, r("RGProduto"))
+			itn.CodBarrasA = IIf(IsDBNull(r("CodBarrasA")), Nothing, r("CodBarrasA"))
+			itn.PVenda = IIf(IsDBNull(r("PVenda")), Nothing, r("PVenda"))
+			itn.DescontoCompra = IIf(IsDBNull(r("DescontoCompra")), 0, r("DescontoCompra"))
+			itn.PCompra = IIf(IsDBNull(r("PCompra")), Nothing, r("PCompra"))
+			itn.ProdutoAtivo = IIf(IsDBNull(r("ProdutoAtivo")), Nothing, r("ProdutoAtivo"))
+			itn.Produto = IIf(IsDBNull(r("Produto")), String.Empty, r("Produto"))
+			itn.ProdutoAtivo = IIf(IsDBNull(r("ProdutoAtivo")), Nothing, r("ProdutoAtivo"))
+			'
+			lista.Add(itn)
+			'
+		Next
+		'
+		Return lista
 		'
 	End Function
 	'

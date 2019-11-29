@@ -360,6 +360,12 @@
     <Compile Include="Consignacao\frmConsignacaoCompra.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Consignacao\frmConsignacaoCompraItem.designer.vb">
+      <DependentUpon>frmConsignacaoCompraItem.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Consignacao\frmConsignacaoCompraItem.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="EnvioMalaDireta\frmEnvioListagem.designer.vb">
       <DependentUpon>frmEnvioListagem.vb</DependentUpon>
     </Compile>
@@ -1099,6 +1105,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Consignacao\frmConsignacaoCompra.resx">
       <DependentUpon>frmConsignacaoCompra.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Consignacao\frmConsignacaoCompraItem.resx">
+      <DependentUpon>frmConsignacaoCompraItem.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EnvioMalaDireta\frmEnvioListagem.resx">
       <DependentUpon>frmEnvioListagem.vb</DependentUpon>

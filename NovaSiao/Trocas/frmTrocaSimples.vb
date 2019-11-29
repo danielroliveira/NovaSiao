@@ -17,10 +17,27 @@ Public Class frmTrocaSimples
     Private WithEvents mnuItemInserir As New ToolStripMenuItem
     Private WithEvents mnuItemExcluir As New ToolStripMenuItem
     Private ToolStripSeparator1 As New ToolStripSeparator
-    '
-#Region "LOAD"
-    '
-    Private Property Sit As EnumFlagEstado
+	'
+#Region "NEW | LOAD"
+	'
+	Public Sub New(myTroca As clTroca, myVenda As clVenda, formOrigem As Form)
+		' This call is required by the designer.
+		InitializeComponent()
+		'
+		' Add any initialization after the InitializeComponent() call.
+		InicializarMenuItem()
+		propTroca = myTroca
+		'
+		'--- se a venda estiver finalizada entao a troca esta BLOQUEADA
+		If myVenda.IDSituacao = 2 OrElse myVenda.IDSituacao = 3 Then ' VENDA FINALIZADA
+			Sit = EnumFlagEstado.RegistroBloqueado ' TROCA BLOQUEADA
+		End If
+		'
+		_formOrigem = formOrigem
+		'
+	End Sub
+	'
+	Private Property Sit As EnumFlagEstado
         '
         Get
             Return _Sit
@@ -108,29 +125,12 @@ Public Class frmTrocaSimples
         End Set
         '
     End Property
-    '
-    Public Sub New(myTroca As clTroca, myVenda As clVenda, formOrigem As Form)
-        ' This call is required by the designer.
-        InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        InicializarMenuItem()
-        propTroca = myTroca
-        '
-        '--- se a venda estiver finalizada entao a troca esta BLOQUEADA
-        If myVenda.IDSituacao = 2 OrElse myVenda.IDSituacao = 3 Then ' VENDA FINALIZADA
-            Sit = EnumFlagEstado.RegistroBloqueado ' TROCA BLOQUEADA
-        End If
-        '
-        _formOrigem = formOrigem
-        '
-    End Sub
-    '
+	'
 #End Region '// LOAD
-    '
+	'
 #Region "DATABINDING"
-    '
-    Private Sub PreencheDataBinding()
+	'
+	Private Sub PreencheDataBinding()
         '
         lblCliente.DataBindings.Add("Text", bindTroca, "PessoaTroca", True, DataSourceUpdateMode.OnPropertyChanged)
         lblIDTroca.DataBindings.Add("Text", bindTroca, "IDTroca", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -171,34 +171,44 @@ Public Class frmTrocaSimples
             e.Value = Format(CInt(e.Value), "00")
         End If
     End Sub
-    '
+	'
 #End Region '// DATABINDING
-    '
+	'
 #Region "GET ITENS"
-    '
-    '--- RETORNA TODOS OS ITENS DA VENDA
-    Private Sub getItensList()
-        Dim tBLL As New TransacaoItemBLL
-        Try
-            '
-            '--- get itens da transacao entradas relacionadas a troca
-            _ItensList = tBLL.GetTransacaoItens_List(_Troca.IDTransacaoEntrada, _Troca.IDFilial)
-            BindItem.DataSource = _ItensList
-            dgvEntradas.DataSource = BindItem
-            '
-        Catch ex As Exception
-            MessageBox.Show("Um execeção ocorreu ao obter Produtos de Entrada da Troca:" & vbNewLine &
-                            ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End Try
-        '
-    End Sub
-    '
+	'
+	'--- RETORNA TODOS OS ITENS DA VENDA
+	Private Sub getItensList()
+		'
+		Dim tBLL As New TransacaoItemBLL
+		'
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			'--- get itens da transacao entradas relacionadas a troca
+			_ItensList = tBLL.GetTransacaoItens_List(_Troca.IDTransacaoEntrada, _Troca.IDFilial)
+			BindItem.DataSource = _ItensList
+			dgvEntradas.DataSource = BindItem
+			'
+		Catch ex As Exception
+			MessageBox.Show("Um execeção ocorreu ao obter Produtos de Entrada da Troca:" & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
+		'
+	End Sub
+	'
 #End Region '// GET ITENS
-    '
+	'
 #Region "DATAGRID"
-    '
-    '--- FORMATA E PREENCHE OS ITENS
-    Friend Sub PreencheItens()
+	'
+	'--- FORMATA E PREENCHE OS ITENS
+	Friend Sub PreencheItens()
         '
         '--- limpa as colunas do datagrid
         dgvEntradas.Columns.Clear()
@@ -362,19 +372,28 @@ Public Class frmTrocaSimples
         '--- Insere o novo Item
         Dim ItemBLL As New TransacaoItemBLL
         Dim myID As Long? = Nothing
-        '
-        '----------------------------------------------------------------------------------------------
-        '--- Insere o novo ITEM no BD
-        Try
-            newItem.IDTransacao = _Troca.IDTransacaoEntrada
-            '
-            myID = ItemBLL.InserirNovoItem(newItem, TransacaoItemBLL.EnumMovimento.ENTRADA, _Troca.TrocaData, InsereCustos:=False)
-            newItem.IDTransacaoItem = myID
-            '
-        Catch ex As Exception
-            MessageBox.Show("Houve um exceção ao INSERIR o item no BD..." & vbNewLine & ex.Message, "Exceção Inesperada",
-                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-        End Try
+		'
+		'----------------------------------------------------------------------------------------------
+		'--- Insere o novo ITEM no BD
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			newItem.IDTransacao = _Troca.IDTransacaoEntrada
+			'
+			myID = ItemBLL.InserirNovoItem(newItem, TransacaoItemBLL.EnumMovimento.ENTRADA, _Troca.TrocaData, InsereCustos:=False)
+			newItem.IDTransacaoItem = myID
+			'
+		Catch ex As Exception
+			MessageBox.Show("Houve um exceção ao INSERIR o item no BD..." & vbNewLine & ex.Message, "Exceção Inesperada",
+							MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
         '
         '--- Insere o ITEM na lista
         _ItensList.Add(newItem)
@@ -417,18 +436,28 @@ Public Class frmTrocaSimples
         '--- Edita o novo Item
         Dim ItemBLL As New TransacaoItemBLL
         Dim myID As Long? = Nothing
-        '
-        'Dim i As Integer = _ItensList.FindIndex(Function(x) x.IDTransacaoItem = itmAtual.IDTransacaoItem)
-        '
-        '--- Altera o ITEM no BD e reforma o ESTOQUE
-        Try
-            itmAtual.IDTransacao = _Troca.IDTroca
-            myID = ItemBLL.EditarItem(itmAtual, TransacaoItemBLL.EnumMovimento.ENTRADA, _Troca.TrocaData, InsereCustos:=False)
-            itmAtual.IDTransacaoItem = myID
-        Catch ex As Exception
-            MessageBox.Show("Houve um exceção ao ALTERAR o item no BD..." & vbNewLine & ex.Message,
-                            "Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-        End Try
+		'
+		'Dim i As Integer = _ItensList.FindIndex(Function(x) x.IDTransacaoItem = itmAtual.IDTransacaoItem)
+		'
+		'--- Altera o ITEM no BD e reforma o ESTOQUE
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			itmAtual.IDTransacao = _Troca.IDTroca
+			myID = ItemBLL.EditarItem(itmAtual, TransacaoItemBLL.EnumMovimento.ENTRADA, _Troca.TrocaData, InsereCustos:=False)
+			itmAtual.IDTransacaoItem = myID
+			'
+		Catch ex As Exception
+			MessageBox.Show("Houve um exceção ao ALTERAR o item no BD..." & vbNewLine & ex.Message,
+							"Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
         '
         '--- Atualiza o ITEM da lista
         '
@@ -474,14 +503,23 @@ Public Class frmTrocaSimples
         Dim myID As Long? = Nothing
         '
         Dim i As Integer = _ItensList.FindIndex(Function(x) x.IDTransacaoItem = itmAtual.IDTransacaoItem)
-        '
-        '--- Altera o ITEM no BD e reforma o ESTOQUE
-        Try
-            myID = ItemBLL.ExcluirItem(itmAtual, TransacaoItemBLL.EnumMovimento.ENTRADA)
-        Catch ex As Exception
-            MessageBox.Show("Houve um exceção ao EXCLUIR o item no BD..." & vbNewLine & ex.Message,
-                                "Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-        End Try
+		'
+		'--- Altera o ITEM no BD e reforma o ESTOQUE
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			myID = ItemBLL.ExcluirItem(itmAtual, TransacaoItemBLL.EnumMovimento.ENTRADA)
+		Catch ex As Exception
+			MessageBox.Show("Houve um exceção ao EXCLUIR o item no BD..." & vbNewLine & ex.Message,
+								"Exceção Inesperada", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
         '
         '--- Atualiza o ITEM da lista
         _ItensList.RemoveAt(i)

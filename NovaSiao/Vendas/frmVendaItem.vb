@@ -1,7 +1,6 @@
 ﻿Imports CamadaDTO
 Imports CamadaBLL
 Imports System.ComponentModel
-Imports System.Reflection
 '
 Public Class frmVendaItem
     '

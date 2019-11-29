@@ -763,6 +763,8 @@ Public Class clConsignacaoCompra
 	'
 	Property TotalCompra As Decimal
 	'
+	Property IDSituacao As Byte
+	'
 	ReadOnly Property CobrancaTipoTexto As String
 		Get
 			Select Case CobrancaTipo
