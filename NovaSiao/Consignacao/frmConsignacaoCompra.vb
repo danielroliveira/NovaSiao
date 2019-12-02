@@ -755,7 +755,7 @@ Public Class frmConsignacaoCompra
 			Next
 			'
 			_Compra.TotalCompra = T
-			lblTotalGeral.DataBindings.Item("Text").ReadValue()
+			'lblTotalGeral.DataBindings.Item("Text").ReadValue()
 			Return T
 		Else
 			_Compra.TotalCompra = 0

@@ -3,26 +3,30 @@
 Public Class clConsignacao : Implements IEditableObject
 	'
 #Region "ESTRUTURA DOS DADOS"
+	'
 	Structure ConsigStructure ' alguns usam FRIEND em vez de DIM
 		'
 		' TBLTRANSACAO =====================================================
 		Dim _IDConsignacao As Integer?
-		Dim _IDPessoaDestino As Integer
-		' Cadastro As String
+		Dim _IDFilial As Integer
+		' Dim _ApelidoFilial As String
+		Dim _IDFornecedor As Integer
+		' Fornecedor As String
 		' CNP As String
 		' UF As String
 		' Cidade As String
-		Dim _IDPessoaOrigem As Integer
-		' Dim _ApelidoFilial As String
 		Dim _IDOperacao As Byte
 		Dim _IDSituacao As Byte
+		' Situacao AS String
 		Dim _IDUser As Integer
 		Dim _CFOP As Int16
 		Dim _TransacaoData As Date
+		Dim _IDConsignacaoOrigem As Integer?
 		'
-		' TBLCOMPRA =====================================================
+		' TBLCONSIGNACAO =====================================================
 		Dim _FreteTipo As Byte ' 0="Sem Frete" | 1="Emitente" | 2="Destinatário" | 3=Reembolso | 4="A Cobrar"
 		Dim _FreteCobrado As Decimal
+
 		Dim _ICMSValor As Decimal
 		Dim _Despesas As Decimal
 		Dim _Descontos As Decimal
@@ -104,44 +108,53 @@ Public Class clConsignacao : Implements IEditableObject
 	'--- TBLTRANSACAO
 	'===========================================================================================
 	'
-	Property IDConsignacao() As Nullable(Of Integer)
+	Property IDConsignacao() As Integer?
 		Get
 			Return CData._IDConsignacao
 		End Get
-		Set(value As Nullable(Of Integer))
+		Set(value As Integer?)
 			CData._IDConsignacao = value
 		End Set
 	End Property
 	'
-	Property IDPessoaDestino() As Integer
+	Property IDConsignacaoOrigem() As Integer?
 		Get
-			Return CData._IDPessoaDestino
+			Return CData._IDConsignacaoOrigem
+		End Get
+		Set(value As Integer?)
+			CData._IDConsignacaoOrigem = value
+		End Set
+	End Property
+	'
+	Property IDFilial() As Integer
+		Get
+			Return CData._IDFilial
 		End Get
 		Set(value As Integer)
-			If Not IsNothing(CData._IDPessoaDestino) AndAlso value <> CData._IDPessoaDestino Then
+			If Not IsNothing(CData._IDFilial) AndAlso value <> CData._IDFilial Then
 				RaiseEvent AoAlterar()
 			End If
-			CData._IDPessoaDestino = value
+			CData._IDFilial = value
 		End Set
 	End Property
 	'
 	'--- PROPRIEDADES SOMENTE LEITURA
-	Public Property Cadastro
-	Public Property CNP
-	Public Property UF
-	Public Property Cidade
-	Public Property ApelidoFilial
+	Public Property ApelidoFilial As String
+	Public Property Fornecedor As String
+	Public Property CNP As String
+	Public Property UF As String
+	Public Property Cidade As String
 	'
-	'--- Propriedade IDPessoaOrigem
-	Public Property IDPessoaOrigem() As Integer?
+	'--- Propriedade IDFornecedor
+	Public Property IDFornecedor() As Integer?
 		Get
-			Return CData._IDPessoaOrigem
+			Return CData._IDFornecedor
 		End Get
 		Set(ByVal value As Integer?)
-			If value <> CData._IDPessoaOrigem Then
+			If value <> CData._IDFornecedor Then
 				RaiseEvent AoAlterar()
 			End If
-			CData._IDPessoaOrigem = value
+			CData._IDFornecedor = value
 		End Set
 	End Property
 	'
@@ -184,11 +197,11 @@ Public Class clConsignacao : Implements IEditableObject
 		End Set
 	End Property
 	'
-	Property CFOP() As Int16
+	Property CFOP() As Short
 		Get
 			Return CData._CFOP
 		End Get
-		Set(value As Int16)
+		Set(value As Short)
 			If Not IsNothing(CData._CFOP) AndAlso value <> CData._CFOP Then
 				RaiseEvent AoAlterar()
 			End If
@@ -319,7 +332,7 @@ Public Class clConsignacao : Implements IEditableObject
 		End Set
 	End Property
 	'
-	Public Property Transportadora
+	Public Property Transportadora As String
 	'
 	'--- Propriedade FreteValor
 	Public Property FreteValor() As Decimal?
@@ -789,7 +802,7 @@ Public Class clConsignacaoCompraItem : Implements IEditableObject
 	Structure ItensDados ' alguns usam FRIEND em vez de DIM
 		'--- Itens da tblTransacaoItens
 		Dim _IDItem As Integer?
-		Dim _IDConsignacaoCompra As Integer?
+		Dim _IDConsignacao As Integer?
 		Dim _IDProduto As Integer?
 		Dim _Produto As String
 		Dim _PCompra As Double
@@ -818,7 +831,7 @@ Public Class clConsignacaoCompraItem : Implements IEditableObject
 		itemData = New ItensDados()
 		With itemData
 			._IDItem = Nothing
-			._IDConsignacaoCompra = Nothing
+			._IDConsignacao = Nothing
 			._IDProduto = Nothing
 			._Preco = 0
 			._Quantidade = 1
@@ -884,13 +897,13 @@ Public Class clConsignacaoCompraItem : Implements IEditableObject
 	'
 	Property IDConsignacaoCompra() As Integer?
 		Get
-			Return itemData._IDConsignacaoCompra
+			Return itemData._IDConsignacao
 		End Get
 		Set(value As Nullable(Of Integer))
-			If Not IsNothing(itemData._IDConsignacaoCompra) Then
+			If Not IsNothing(itemData._IDConsignacao) Then
 				RaiseEvent AoAlterar()
 			End If
-			itemData._IDConsignacaoCompra = value
+			itemData._IDConsignacao = value
 		End Set
 	End Property
 	'

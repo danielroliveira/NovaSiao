@@ -56,31 +56,31 @@ Partial Class frmConsignacaoCompra
 		Me.Label27 = New System.Windows.Forms.Label()
 		Me.ShapeContainer2 = New Microsoft.VisualBasic.PowerPacks.ShapeContainer()
 		Me.vtab2 = New VIBlend.WinForms.Controls.vTabPage()
-		Me.ShapeContainer1 = New Microsoft.VisualBasic.PowerPacks.ShapeContainer()
-		Me.lblCobrancaTipo = New System.Windows.Forms.Label()
-		Me.Label25 = New System.Windows.Forms.Label()
-		Me.dgvAPagar = New System.Windows.Forms.DataGridView()
-		Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.Label11 = New System.Windows.Forms.Label()
-		Me.lblTotalCobrado = New System.Windows.Forms.Label()
-		Me.Label12 = New System.Windows.Forms.Label()
-		Me.txtObservacao = New System.Windows.Forms.TextBox()
-		Me.Label9 = New System.Windows.Forms.Label()
-		Me.txtFreteCobrado = New Controles.Text_Monetario()
-		Me.Label8 = New System.Windows.Forms.Label()
-		Me.txtICMSValor = New Controles.Text_Monetario()
-		Me.Label7 = New System.Windows.Forms.Label()
-		Me.Label19 = New System.Windows.Forms.Label()
-		Me.txtDespesas = New Controles.Text_Monetario()
-		Me.txtDescontos = New Controles.Text_Monetario()
-		Me.Label20 = New System.Windows.Forms.Label()
-		Me.Label5 = New System.Windows.Forms.Label()
-		Me.Label2 = New System.Windows.Forms.Label()
 		Me.Label1 = New System.Windows.Forms.Label()
+		Me.Label2 = New System.Windows.Forms.Label()
+		Me.Label5 = New System.Windows.Forms.Label()
+		Me.Label20 = New System.Windows.Forms.Label()
+		Me.txtDescontos = New Controles.Text_Monetario()
+		Me.txtDespesas = New Controles.Text_Monetario()
+		Me.txtICMSValor = New Controles.Text_Monetario()
+		Me.txtFreteCobrado = New Controles.Text_Monetario()
+		Me.txtObservacao = New System.Windows.Forms.TextBox()
+		Me.dgvAPagar = New System.Windows.Forms.DataGridView()
+		Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.Label19 = New System.Windows.Forms.Label()
+		Me.Label7 = New System.Windows.Forms.Label()
+		Me.Label8 = New System.Windows.Forms.Label()
+		Me.Label9 = New System.Windows.Forms.Label()
+		Me.Label12 = New System.Windows.Forms.Label()
+		Me.lblTotalCobrado = New System.Windows.Forms.Label()
+		Me.Label11 = New System.Windows.Forms.Label()
+		Me.Label25 = New System.Windows.Forms.Label()
+		Me.lblCobrancaTipo = New System.Windows.Forms.Label()
+		Me.ShapeContainer1 = New Microsoft.VisualBasic.PowerPacks.ShapeContainer()
 		Me.vtab1 = New VIBlend.WinForms.Controls.vTabPage()
 		Me.tabPrincipal = New VIBlend.WinForms.Controls.vTabControl()
 		Me.Panel1.SuspendLayout()
@@ -535,37 +535,93 @@ Partial Class frmConsignacaoCompra
 		Me.vtab2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
 		Me.vtab2.Visible = False
 		'
-		'ShapeContainer1
+		'Label1
 		'
-		Me.ShapeContainer1.Location = New System.Drawing.Point(4, 4)
-		Me.ShapeContainer1.Margin = New System.Windows.Forms.Padding(0)
-		Me.ShapeContainer1.Name = "ShapeContainer2"
-		Me.ShapeContainer1.Size = New System.Drawing.Size(1036, 389)
-		Me.ShapeContainer1.TabIndex = 14
-		Me.ShapeContainer1.TabStop = False
+		Me.Label1.AutoSize = True
+		Me.Label1.BackColor = System.Drawing.Color.Transparent
+		Me.Label1.Location = New System.Drawing.Point(736, 270)
+		Me.Label1.Name = "Label1"
+		Me.Label1.Size = New System.Drawing.Size(126, 19)
+		Me.Label1.TabIndex = 13
+		Me.Label1.Text = "Tipo de Cobrança:"
 		'
-		'lblCobrancaTipo
+		'Label2
 		'
-		Me.lblCobrancaTipo.BackColor = System.Drawing.Color.Transparent
-		Me.lblCobrancaTipo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-		Me.lblCobrancaTipo.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.lblCobrancaTipo.Location = New System.Drawing.Point(868, 266)
-		Me.lblCobrancaTipo.Name = "lblCobrancaTipo"
-		Me.lblCobrancaTipo.Size = New System.Drawing.Size(151, 32)
-		Me.lblCobrancaTipo.TabIndex = 1
-		Me.lblCobrancaTipo.Text = "Tipo de Cobrança"
-		Me.lblCobrancaTipo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+		Me.Label2.BackColor = System.Drawing.Color.Transparent
+		Me.Label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+		Me.Label2.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.Label2.Location = New System.Drawing.Point(868, 351)
+		Me.Label2.Margin = New System.Windows.Forms.Padding(0)
+		Me.Label2.Name = "Label2"
+		Me.Label2.Size = New System.Drawing.Size(151, 32)
+		Me.Label2.TabIndex = 12
+		Me.Label2.Text = "R$ 0,00"
+		Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		'
-		'Label25
+		'Label5
 		'
-		Me.Label25.AutoSize = True
-		Me.Label25.BackColor = System.Drawing.Color.Transparent
-		Me.Label25.Font = New System.Drawing.Font("Calibri", 15.75!)
-		Me.Label25.Location = New System.Drawing.Point(483, 15)
-		Me.Label25.Name = "Label25"
-		Me.Label25.Size = New System.Drawing.Size(264, 26)
-		Me.Label25.TabIndex = 1
-		Me.Label25.Text = "Desdobramento das Parcelas:"
+		Me.Label5.AutoSize = True
+		Me.Label5.BackColor = System.Drawing.Color.Transparent
+		Me.Label5.Location = New System.Drawing.Point(728, 356)
+		Me.Label5.Name = "Label5"
+		Me.Label5.Size = New System.Drawing.Size(134, 19)
+		Me.Label5.TabIndex = 13
+		Me.Label5.Text = "Valor dos Produtos:"
+		'
+		'Label20
+		'
+		Me.Label20.AutoSize = True
+		Me.Label20.BackColor = System.Drawing.Color.Transparent
+		Me.Label20.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.Label20.Location = New System.Drawing.Point(20, 15)
+		Me.Label20.Name = "Label20"
+		Me.Label20.Size = New System.Drawing.Size(158, 26)
+		Me.Label20.TabIndex = 13
+		Me.Label20.Text = "Outras Despesas:"
+		'
+		'txtDescontos
+		'
+		Me.txtDescontos.Location = New System.Drawing.Point(363, 84)
+		Me.txtDescontos.Name = "txtDescontos"
+		Me.txtDescontos.Size = New System.Drawing.Size(100, 27)
+		Me.txtDescontos.SomentePositivos = True
+		Me.txtDescontos.TabIndex = 3
+		Me.txtDescontos.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'txtDespesas
+		'
+		Me.txtDespesas.Location = New System.Drawing.Point(149, 84)
+		Me.txtDespesas.Name = "txtDespesas"
+		Me.txtDespesas.Size = New System.Drawing.Size(100, 27)
+		Me.txtDespesas.SomentePositivos = True
+		Me.txtDespesas.TabIndex = 2
+		Me.txtDespesas.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'txtICMSValor
+		'
+		Me.txtICMSValor.Location = New System.Drawing.Point(363, 51)
+		Me.txtICMSValor.Name = "txtICMSValor"
+		Me.txtICMSValor.Size = New System.Drawing.Size(100, 27)
+		Me.txtICMSValor.SomentePositivos = True
+		Me.txtICMSValor.TabIndex = 1
+		Me.txtICMSValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'txtFreteCobrado
+		'
+		Me.txtFreteCobrado.Location = New System.Drawing.Point(149, 51)
+		Me.txtFreteCobrado.Name = "txtFreteCobrado"
+		Me.txtFreteCobrado.Size = New System.Drawing.Size(100, 27)
+		Me.txtFreteCobrado.SomentePositivos = True
+		Me.txtFreteCobrado.TabIndex = 0
+		Me.txtFreteCobrado.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'txtObservacao
+		'
+		Me.txtObservacao.Location = New System.Drawing.Point(40, 160)
+		Me.txtObservacao.Multiline = True
+		Me.txtObservacao.Name = "txtObservacao"
+		Me.txtObservacao.Size = New System.Drawing.Size(423, 95)
+		Me.txtObservacao.TabIndex = 8
 		'
 		'dgvAPagar
 		'
@@ -586,11 +642,25 @@ Partial Class frmConsignacaoCompra
 		Me.dgvAPagar.Size = New System.Drawing.Size(549, 204)
 		Me.dgvAPagar.TabIndex = 9
 		'
-		'DataGridViewTextBoxColumn12
+		'DataGridViewTextBoxColumn8
 		'
-		Me.DataGridViewTextBoxColumn12.HeaderText = "Valor"
-		Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
-		Me.DataGridViewTextBoxColumn12.ReadOnly = True
+		Me.DataGridViewTextBoxColumn8.HeaderText = "IDAPagar"
+		Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+		Me.DataGridViewTextBoxColumn8.ReadOnly = True
+		Me.DataGridViewTextBoxColumn8.Visible = False
+		'
+		'DataGridViewTextBoxColumn9
+		'
+		Me.DataGridViewTextBoxColumn9.HeaderText = "Forma"
+		Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+		Me.DataGridViewTextBoxColumn9.ReadOnly = True
+		Me.DataGridViewTextBoxColumn9.Width = 160
+		'
+		'DataGridViewTextBoxColumn10
+		'
+		Me.DataGridViewTextBoxColumn10.HeaderText = "No. Reg.:"
+		Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+		Me.DataGridViewTextBoxColumn10.ReadOnly = True
 		'
 		'DataGridViewTextBoxColumn11
 		'
@@ -602,35 +672,62 @@ Partial Class frmConsignacaoCompra
 		Me.DataGridViewTextBoxColumn11.ReadOnly = True
 		Me.DataGridViewTextBoxColumn11.Width = 110
 		'
-		'DataGridViewTextBoxColumn10
+		'DataGridViewTextBoxColumn12
 		'
-		Me.DataGridViewTextBoxColumn10.HeaderText = "No. Reg.:"
-		Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
-		Me.DataGridViewTextBoxColumn10.ReadOnly = True
+		Me.DataGridViewTextBoxColumn12.HeaderText = "Valor"
+		Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+		Me.DataGridViewTextBoxColumn12.ReadOnly = True
 		'
-		'DataGridViewTextBoxColumn9
+		'Label19
 		'
-		Me.DataGridViewTextBoxColumn9.HeaderText = "Forma"
-		Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
-		Me.DataGridViewTextBoxColumn9.ReadOnly = True
-		Me.DataGridViewTextBoxColumn9.Width = 160
+		Me.Label19.AutoSize = True
+		Me.Label19.BackColor = System.Drawing.Color.Transparent
+		Me.Label19.Location = New System.Drawing.Point(280, 87)
+		Me.Label19.Name = "Label19"
+		Me.Label19.Size = New System.Drawing.Size(77, 19)
+		Me.Label19.TabIndex = 9
+		Me.Label19.Text = "Descontos"
 		'
-		'DataGridViewTextBoxColumn8
+		'Label7
 		'
-		Me.DataGridViewTextBoxColumn8.HeaderText = "IDAPagar"
-		Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-		Me.DataGridViewTextBoxColumn8.ReadOnly = True
-		Me.DataGridViewTextBoxColumn8.Visible = False
+		Me.Label7.AutoSize = True
+		Me.Label7.BackColor = System.Drawing.Color.Transparent
+		Me.Label7.Location = New System.Drawing.Point(23, 87)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(120, 19)
+		Me.Label7.TabIndex = 9
+		Me.Label7.Text = "Outras Despesas"
 		'
-		'Label11
+		'Label8
 		'
-		Me.Label11.AutoSize = True
-		Me.Label11.BackColor = System.Drawing.Color.Transparent
-		Me.Label11.Location = New System.Drawing.Point(759, 314)
-		Me.Label11.Name = "Label11"
-		Me.Label11.Size = New System.Drawing.Size(103, 19)
-		Me.Label11.TabIndex = 13
-		Me.Label11.Text = "Total Cobrado:"
+		Me.Label8.AutoSize = True
+		Me.Label8.BackColor = System.Drawing.Color.Transparent
+		Me.Label8.Location = New System.Drawing.Point(257, 54)
+		Me.Label8.Name = "Label8"
+		Me.Label8.Size = New System.Drawing.Size(100, 19)
+		Me.Label8.TabIndex = 9
+		Me.Label8.Text = "ICMS Cobrado"
+		'
+		'Label9
+		'
+		Me.Label9.AutoSize = True
+		Me.Label9.BackColor = System.Drawing.Color.Transparent
+		Me.Label9.Location = New System.Drawing.Point(43, 54)
+		Me.Label9.Name = "Label9"
+		Me.Label9.Size = New System.Drawing.Size(100, 19)
+		Me.Label9.TabIndex = 9
+		Me.Label9.Text = "Frete Cobrado"
+		'
+		'Label12
+		'
+		Me.Label12.AutoSize = True
+		Me.Label12.BackColor = System.Drawing.Color.Transparent
+		Me.Label12.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.Label12.Location = New System.Drawing.Point(20, 121)
+		Me.Label12.Name = "Label12"
+		Me.Label12.Size = New System.Drawing.Size(234, 26)
+		Me.Label12.TabIndex = 15
+		Me.Label12.Text = "Observações Importantes:"
 		'
 		'lblTotalCobrado
 		'
@@ -644,144 +741,47 @@ Partial Class frmConsignacaoCompra
 		Me.lblTotalCobrado.Text = "R$ 0,00"
 		Me.lblTotalCobrado.TextAlign = System.Drawing.ContentAlignment.MiddleRight
 		'
-		'Label12
+		'Label11
 		'
-		Me.Label12.AutoSize = True
-		Me.Label12.BackColor = System.Drawing.Color.Transparent
-		Me.Label12.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.Label12.Location = New System.Drawing.Point(20, 121)
-		Me.Label12.Name = "Label12"
-		Me.Label12.Size = New System.Drawing.Size(234, 26)
-		Me.Label12.TabIndex = 15
-		Me.Label12.Text = "Observações Importantes:"
+		Me.Label11.AutoSize = True
+		Me.Label11.BackColor = System.Drawing.Color.Transparent
+		Me.Label11.Location = New System.Drawing.Point(759, 314)
+		Me.Label11.Name = "Label11"
+		Me.Label11.Size = New System.Drawing.Size(103, 19)
+		Me.Label11.TabIndex = 13
+		Me.Label11.Text = "Total Cobrado:"
 		'
-		'txtObservacao
+		'Label25
 		'
-		Me.txtObservacao.Location = New System.Drawing.Point(40, 160)
-		Me.txtObservacao.Multiline = True
-		Me.txtObservacao.Name = "txtObservacao"
-		Me.txtObservacao.Size = New System.Drawing.Size(423, 109)
-		Me.txtObservacao.TabIndex = 8
+		Me.Label25.AutoSize = True
+		Me.Label25.BackColor = System.Drawing.Color.Transparent
+		Me.Label25.Font = New System.Drawing.Font("Calibri", 15.75!)
+		Me.Label25.Location = New System.Drawing.Point(483, 15)
+		Me.Label25.Name = "Label25"
+		Me.Label25.Size = New System.Drawing.Size(264, 26)
+		Me.Label25.TabIndex = 1
+		Me.Label25.Text = "Desdobramento das Parcelas:"
 		'
-		'Label9
+		'lblCobrancaTipo
 		'
-		Me.Label9.AutoSize = True
-		Me.Label9.BackColor = System.Drawing.Color.Transparent
-		Me.Label9.Location = New System.Drawing.Point(43, 54)
-		Me.Label9.Name = "Label9"
-		Me.Label9.Size = New System.Drawing.Size(100, 19)
-		Me.Label9.TabIndex = 9
-		Me.Label9.Text = "Frete Cobrado"
+		Me.lblCobrancaTipo.BackColor = System.Drawing.Color.Transparent
+		Me.lblCobrancaTipo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+		Me.lblCobrancaTipo.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.lblCobrancaTipo.Location = New System.Drawing.Point(868, 266)
+		Me.lblCobrancaTipo.Name = "lblCobrancaTipo"
+		Me.lblCobrancaTipo.Size = New System.Drawing.Size(151, 32)
+		Me.lblCobrancaTipo.TabIndex = 1
+		Me.lblCobrancaTipo.Text = "Tipo de Cobrança"
+		Me.lblCobrancaTipo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
 		'
-		'txtFreteCobrado
+		'ShapeContainer1
 		'
-		Me.txtFreteCobrado.Location = New System.Drawing.Point(149, 51)
-		Me.txtFreteCobrado.Name = "txtFreteCobrado"
-		Me.txtFreteCobrado.Size = New System.Drawing.Size(100, 27)
-		Me.txtFreteCobrado.SomentePositivos = True
-		Me.txtFreteCobrado.TabIndex = 0
-		Me.txtFreteCobrado.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-		'
-		'Label8
-		'
-		Me.Label8.AutoSize = True
-		Me.Label8.BackColor = System.Drawing.Color.Transparent
-		Me.Label8.Location = New System.Drawing.Point(257, 54)
-		Me.Label8.Name = "Label8"
-		Me.Label8.Size = New System.Drawing.Size(100, 19)
-		Me.Label8.TabIndex = 9
-		Me.Label8.Text = "ICMS Cobrado"
-		'
-		'txtICMSValor
-		'
-		Me.txtICMSValor.Location = New System.Drawing.Point(363, 51)
-		Me.txtICMSValor.Name = "txtICMSValor"
-		Me.txtICMSValor.Size = New System.Drawing.Size(100, 27)
-		Me.txtICMSValor.SomentePositivos = True
-		Me.txtICMSValor.TabIndex = 1
-		Me.txtICMSValor.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-		'
-		'Label7
-		'
-		Me.Label7.AutoSize = True
-		Me.Label7.BackColor = System.Drawing.Color.Transparent
-		Me.Label7.Location = New System.Drawing.Point(23, 87)
-		Me.Label7.Name = "Label7"
-		Me.Label7.Size = New System.Drawing.Size(120, 19)
-		Me.Label7.TabIndex = 9
-		Me.Label7.Text = "Outras Despesas"
-		'
-		'Label19
-		'
-		Me.Label19.AutoSize = True
-		Me.Label19.BackColor = System.Drawing.Color.Transparent
-		Me.Label19.Location = New System.Drawing.Point(280, 87)
-		Me.Label19.Name = "Label19"
-		Me.Label19.Size = New System.Drawing.Size(77, 19)
-		Me.Label19.TabIndex = 9
-		Me.Label19.Text = "Descontos"
-		'
-		'txtDespesas
-		'
-		Me.txtDespesas.Location = New System.Drawing.Point(149, 84)
-		Me.txtDespesas.Name = "txtDespesas"
-		Me.txtDespesas.Size = New System.Drawing.Size(100, 27)
-		Me.txtDespesas.SomentePositivos = True
-		Me.txtDespesas.TabIndex = 2
-		Me.txtDespesas.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-		'
-		'txtDescontos
-		'
-		Me.txtDescontos.Location = New System.Drawing.Point(363, 84)
-		Me.txtDescontos.Name = "txtDescontos"
-		Me.txtDescontos.Size = New System.Drawing.Size(100, 27)
-		Me.txtDescontos.SomentePositivos = True
-		Me.txtDescontos.TabIndex = 3
-		Me.txtDescontos.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-		'
-		'Label20
-		'
-		Me.Label20.AutoSize = True
-		Me.Label20.BackColor = System.Drawing.Color.Transparent
-		Me.Label20.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.Label20.Location = New System.Drawing.Point(20, 15)
-		Me.Label20.Name = "Label20"
-		Me.Label20.Size = New System.Drawing.Size(158, 26)
-		Me.Label20.TabIndex = 13
-		Me.Label20.Text = "Outras Despesas:"
-		'
-		'Label5
-		'
-		Me.Label5.AutoSize = True
-		Me.Label5.BackColor = System.Drawing.Color.Transparent
-		Me.Label5.Location = New System.Drawing.Point(728, 356)
-		Me.Label5.Name = "Label5"
-		Me.Label5.Size = New System.Drawing.Size(134, 19)
-		Me.Label5.TabIndex = 13
-		Me.Label5.Text = "Valor dos Produtos:"
-		'
-		'Label2
-		'
-		Me.Label2.BackColor = System.Drawing.Color.Transparent
-		Me.Label2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-		Me.Label2.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.Label2.Location = New System.Drawing.Point(868, 351)
-		Me.Label2.Margin = New System.Windows.Forms.Padding(0)
-		Me.Label2.Name = "Label2"
-		Me.Label2.Size = New System.Drawing.Size(151, 32)
-		Me.Label2.TabIndex = 12
-		Me.Label2.Text = "R$ 0,00"
-		Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-		'
-		'Label1
-		'
-		Me.Label1.AutoSize = True
-		Me.Label1.BackColor = System.Drawing.Color.Transparent
-		Me.Label1.Location = New System.Drawing.Point(736, 270)
-		Me.Label1.Name = "Label1"
-		Me.Label1.Size = New System.Drawing.Size(126, 19)
-		Me.Label1.TabIndex = 13
-		Me.Label1.Text = "Tipo de Cobrança:"
+		Me.ShapeContainer1.Location = New System.Drawing.Point(4, 4)
+		Me.ShapeContainer1.Margin = New System.Windows.Forms.Padding(0)
+		Me.ShapeContainer1.Name = "ShapeContainer2"
+		Me.ShapeContainer1.Size = New System.Drawing.Size(1036, 389)
+		Me.ShapeContainer1.TabIndex = 14
+		Me.ShapeContainer1.TabStop = False
 		'
 		'vtab1
 		'
@@ -819,7 +819,7 @@ Partial Class frmConsignacaoCompra
 		Me.tabPrincipal.TabIndex = 20
 		Me.tabPrincipal.TabPages.Add(Me.vtab1)
 		Me.tabPrincipal.TabPages.Add(Me.vtab2)
-		Me.tabPrincipal.TabsAreaBackColor = System.Drawing.Color.Beige
+		Me.tabPrincipal.TabsAreaBackColor = System.Drawing.Color.OldLace
 		Me.tabPrincipal.TabsInitialOffset = 40
 		Me.tabPrincipal.TabsShape = VIBlend.WinForms.Controls.TabsShape.Chrome
 		Me.tabPrincipal.TabsSpacing = 10

@@ -98,8 +98,8 @@ Public Class ConsignacaoBLL
 			db.LimparParametros()
 			'
 			'-- PARAMETROS DA TBLTRANSACAO
-			db.AdicionarParametros("@IDPessoaDestino", consig.IDPessoaDestino)
-			db.AdicionarParametros("@IDPessoaOrigem", consig.IDPessoaOrigem)
+			db.AdicionarParametros("@IDPessoaDestino", consig.IDFilial)
+			db.AdicionarParametros("@IDPessoaOrigem", consig.IDFornecedor)
 			db.AdicionarParametros("@IDOperacao", consig.IDOperacao)
 			db.AdicionarParametros("@IDSituacao", consig.IDSituacao)
 			db.AdicionarParametros("@IDUser", consig.IDUser)
@@ -203,8 +203,8 @@ Public Class ConsignacaoBLL
 			'----------------------------------------------------------------------------------
 			dbTran.LimparParametros()
 			dbTran.AdicionarParametros("@IDConsignacao", consig.IDConsignacao)
-			dbTran.AdicionarParametros("@IDPessoaDestino", consig.IDPessoaDestino)
-			dbTran.AdicionarParametros("@IDPessoaOrigem", consig.IDPessoaOrigem)
+			dbTran.AdicionarParametros("@IDPessoaDestino", consig.IDFilial)
+			dbTran.AdicionarParametros("@IDPessoaOrigem", consig.IDFornecedor)
 			dbTran.AdicionarParametros("@IDSituacao", consig.IDSituacao)
 			dbTran.AdicionarParametros("@IDUser", consig.IDUser)
 			dbTran.AdicionarParametros("@TransacaoData", consig.TransacaoData)
@@ -329,13 +329,14 @@ Public Class ConsignacaoBLL
 		'
 		'--- TBLTRANSACAO
 		cmp.IDConsignacao = IIf(IsDBNull(r("IDConsignacao")), Nothing, r("IDConsignacao"))
-		cmp.IDPessoaDestino = IIf(IsDBNull(r("IDPessoaDestino")), Nothing, r("IDPessoaDestino"))
-		cmp.Cadastro = IIf(IsDBNull(r("Cadastro")), String.Empty, r("Cadastro"))
+		cmp.IDConsignacaoOrigem = IIf(IsDBNull(r("IDConsignacaoOrigem")), Nothing, r("IDConsignacaoOrigem"))
+		cmp.IDFilial = IIf(IsDBNull(r("IDPessoaDestino")), Nothing, r("IDPessoaDestino"))
+		cmp.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
+		cmp.IDFornecedor = IIf(IsDBNull(r("IDPessoaOrigem")), Nothing, r("IDPessoaOrigem"))
+		cmp.Fornecedor = IIf(IsDBNull(r("Cadastro")), String.Empty, r("Cadastro"))
 		cmp.CNP = IIf(IsDBNull(r("CNP")), String.Empty, r("CNP"))
 		cmp.UF = IIf(IsDBNull(r("UF")), String.Empty, r("UF"))
 		cmp.Cidade = IIf(IsDBNull(r("Cidade")), String.Empty, r("Cidade"))
-		cmp.IDPessoaOrigem = IIf(IsDBNull(r("IDPessoaOrigem")), Nothing, r("IDPessoaOrigem"))
-		cmp.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
 		cmp.IDOperacao = IIf(IsDBNull(r("IDOperacao")), Nothing, r("IDOperacao"))
 		cmp.IDSituacao = IIf(IsDBNull(r("IDSituacao")), Nothing, r("IDSituacao"))
 		cmp.Situacao = IIf(IsDBNull(r("Situacao")), String.Empty, r("Situacao"))
