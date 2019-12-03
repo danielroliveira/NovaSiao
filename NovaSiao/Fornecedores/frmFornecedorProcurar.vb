@@ -133,6 +133,7 @@ Public Class frmFornecedorProcurar
 			.SortMode = DataGridViewColumnSortMode.NotSortable
 			Dim newPadding As New Padding(5, 0, 0, 0)
 			.DefaultCellStyle.Padding = newPadding
+			.DefaultCellStyle.Format = "0000"
 		End With
 		'
 		' (2) COLUNA FORNECEDOR | CADASTRO

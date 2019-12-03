@@ -15,7 +15,7 @@ Public Class ConsignacaoBLL
 			Dim db As New AcessoDados
 			'
 			db.AdicionarParametros("@IDFilial", IDFilial)
-			Dim myQuery As String = "SELECT * FROM qryConsignacao WHERE IDPessoaDestino = @IDFilial"
+			Dim myQuery As String = "SELECT * FROM qryConsignacao WHERE IDFilial = @IDFilial"
 			'
 			If Not IsNothing(dtInicial) Then
 				'
@@ -330,10 +330,10 @@ Public Class ConsignacaoBLL
 		'--- TBLTRANSACAO
 		cmp.IDConsignacao = IIf(IsDBNull(r("IDConsignacao")), Nothing, r("IDConsignacao"))
 		cmp.IDConsignacaoOrigem = IIf(IsDBNull(r("IDConsignacaoOrigem")), Nothing, r("IDConsignacaoOrigem"))
-		cmp.IDFilial = IIf(IsDBNull(r("IDPessoaDestino")), Nothing, r("IDPessoaDestino"))
+		cmp.IDFilial = IIf(IsDBNull(r("IDFilial")), Nothing, r("IDFilial"))
 		cmp.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial"))
-		cmp.IDFornecedor = IIf(IsDBNull(r("IDPessoaOrigem")), Nothing, r("IDPessoaOrigem"))
-		cmp.Fornecedor = IIf(IsDBNull(r("Cadastro")), String.Empty, r("Cadastro"))
+		cmp.IDFornecedor = IIf(IsDBNull(r("IDFornecedor")), Nothing, r("IDFornecedor"))
+		cmp.Fornecedor = IIf(IsDBNull(r("Fornecedor")), String.Empty, r("Fornecedor"))
 		cmp.CNP = IIf(IsDBNull(r("CNP")), String.Empty, r("CNP"))
 		cmp.UF = IIf(IsDBNull(r("UF")), String.Empty, r("UF"))
 		cmp.Cidade = IIf(IsDBNull(r("Cidade")), String.Empty, r("Cidade"))

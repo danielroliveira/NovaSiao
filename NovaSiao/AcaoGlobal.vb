@@ -388,8 +388,8 @@ Public Class AcaoGlobal
 		Try
 			'--- Define os valores iniciais
 			With newConsig
-				.IDPessoaDestino = Obter_FilialPadrao()
-				.IDPessoaOrigem = IDFornecedor
+				.IDFilial = Obter_FilialPadrao()
+				.IDFornecedor = IDFornecedor
 				.IDOperacao = 7
 				.IDSituacao = TransacaoBLL.EnumTransacaoSituacao.INICIADA
 				.IDUser = UsuarioAtual.IdUser

@@ -75,7 +75,7 @@ Public Class frmConsignacaoCompra
 			'
 			'--- define a Compra Atual
 			_Compra = value
-			_Filial = _Consignacao.IDPessoaDestino
+			_Filial = _Consignacao.IDFilial
 			'
 			'--- obtem os produtos da listagem
 			getItensList()

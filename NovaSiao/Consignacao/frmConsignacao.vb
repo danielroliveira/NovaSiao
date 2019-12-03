@@ -122,7 +122,7 @@ Public Class frmConsignacao
 		Set(value As clConsignacao)
 			VerificaAlteracao = False '--- Inibe a verificacao dos campos IDPlano
 			_Consig = value
-			_IDFilial = _Consig.IDPessoaDestino
+			_IDFilial = _Consig.IDFilial
 			'
 			obterItens()
 			'obterAPagar()
@@ -219,7 +219,7 @@ Public Class frmConsignacao
 		txtICMSValor.DataBindings.Add("Text", bindConsig, "ICMSValor", True, DataSourceUpdateMode.OnPropertyChanged)
 		txtDespesas.DataBindings.Add("Text", bindConsig, "Despesas", True, DataSourceUpdateMode.OnPropertyChanged)
 		txtDescontos.DataBindings.Add("Text", bindConsig, "Descontos", True, DataSourceUpdateMode.OnPropertyChanged)
-		lblFornecedor.DataBindings.Add("Text", bindConsig, "Cadastro", True, DataSourceUpdateMode.OnPropertyChanged)
+		lblFornecedor.DataBindings.Add("Text", bindConsig, "Fornecedor", True, DataSourceUpdateMode.OnPropertyChanged)
 		lblIDConsignacao.DataBindings.Add("Text", bindConsig, "IDConsignacao", True, DataSourceUpdateMode.OnPropertyChanged)
 		lblFilial.DataBindings.Add("Text", bindConsig, "ApelidoFilial", True, DataSourceUpdateMode.OnPropertyChanged)
 		lblConsignacaoData.DataBindings.Add("Text", bindConsig, "TransacaoData", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -849,14 +849,40 @@ Public Class frmConsignacao
 	'---------------------------------------------------------------------------------------------------
 	Private Sub Form_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
 		'
+		If e.KeyCode = Keys.PageDown Then
+			'
+			If tabPrincipal.SelectedTab.TabIndex = 0 Then
+				tabPrincipal.SelectedTab = tabPrincipal.TabPages.First(Function(x) x.TabIndex = tabPrincipal.TabPages.Count - 1)
+			Else
+				Dim actualIndex As Integer = tabPrincipal.SelectedTab.TabIndex
+				tabPrincipal.SelectedTab = tabPrincipal.TabPages.First(Function(x) x.TabIndex = actualIndex - 1)
+			End If
+			'
+		ElseIf e.KeyCode = Keys.PageUp Then
+			'
+			If tabPrincipal.SelectedTab.TabIndex = tabPrincipal.TabPages.Count - 1 Then
+				tabPrincipal.SelectedTab = tabPrincipal.TabPages.First(Function(x) x.TabIndex = 0)
+			Else
+				Dim actualIndex As Integer = tabPrincipal.SelectedTab.TabIndex
+				tabPrincipal.SelectedTab = tabPrincipal.TabPages.First(Function(x) x.TabIndex = actualIndex + 1)
+			End If
+			'
+		End If
+		'
 		If e.Alt AndAlso e.KeyCode = Keys.D1 Then
-			tabPrincipal.SelectedTab = vtab1
+			tabPrincipal.SelectedTab = vtabProdutos
 			tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
 		ElseIf e.Alt AndAlso e.KeyCode = Keys.D2 Then
-			tabPrincipal.SelectedTab = vtab2
+			tabPrincipal.SelectedTab = vtabFrete
 			tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
 		ElseIf e.Alt AndAlso e.KeyCode = Keys.D3 Then
-			tabPrincipal.SelectedTab = vtab3
+			tabPrincipal.SelectedTab = vtabCompra
+			tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
+		ElseIf e.Alt AndAlso e.KeyCode = Keys.D4 Then
+			tabPrincipal.SelectedTab = vtabDevolução
+			tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
+		ElseIf e.Alt AndAlso e.KeyCode = Keys.D5 Then
+			tabPrincipal.SelectedTab = vtabNotas
 			tabPrincipal_SelectedIndexChanged(New Object, New System.EventArgs)
 		End If
 		'
@@ -1695,7 +1721,7 @@ Public Class frmConsignacao
 						frmDialog.DialogIcon.Question) = vbNo Then
 			'
 			'--- Seleciona a TAB
-			tabPrincipal.SelectedTab = vtab2
+			tabPrincipal.SelectedTab = vtabFrete
 			'
 			'--- return
 			Return False

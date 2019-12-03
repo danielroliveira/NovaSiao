@@ -20,16 +20,20 @@ Partial Class frmConsignacao
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
 		Me.components = New System.ComponentModel.Container()
-		Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-		Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+		Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
 		Me.tabPrincipal = New VIBlend.WinForms.Controls.vTabControl()
-		Me.vtab1 = New VIBlend.WinForms.Controls.vTabPage()
+		Me.vtabProdutos = New VIBlend.WinForms.Controls.vTabPage()
 		Me.dgvItens = New System.Windows.Forms.DataGridView()
 		Me.clnIDTransacaoItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.clnRGProduto = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -43,13 +47,11 @@ Partial Class frmConsignacao
 		Me.clnST = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.clnMVA = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.clnIPI = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.vtab2 = New VIBlend.WinForms.Controls.vTabPage()
+		Me.vtabFrete = New VIBlend.WinForms.Controls.vTabPage()
 		Me.lblTotalProdutos = New System.Windows.Forms.Label()
 		Me.Label27 = New System.Windows.Forms.Label()
 		Me.btnTransportadoraAdd = New System.Windows.Forms.Button()
 		Me.Label20 = New System.Windows.Forms.Label()
-		Me.VButton2 = New VIBlend.WinForms.Controls.vButton()
-		Me.btnCompra = New VIBlend.WinForms.Controls.vButton()
 		Me.Label19 = New System.Windows.Forms.Label()
 		Me.Label5 = New System.Windows.Forms.Label()
 		Me.Label2 = New System.Windows.Forms.Label()
@@ -61,10 +63,6 @@ Partial Class frmConsignacao
 		Me.Label9 = New System.Windows.Forms.Label()
 		Me.Label8 = New System.Windows.Forms.Label()
 		Me.Label7 = New System.Windows.Forms.Label()
-		Me.dgvCompras = New System.Windows.Forms.DataGridView()
-		Me.clnCompraData = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.clnCompraValor = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.Label6 = New System.Windows.Forms.Label()
 		Me.ShapeContainer2 = New Microsoft.VisualBasic.PowerPacks.ShapeContainer()
 		Me.txtDescontos = New Controles.Text_Monetario()
 		Me.txtDespesas = New Controles.Text_Monetario()
@@ -74,7 +72,19 @@ Partial Class frmConsignacao
 		Me.txtFreteValor = New Controles.Text_Monetario()
 		Me.cmbIDTransportadora = New Controles.ComboBox_OnlyValues()
 		Me.cmbFreteTipo = New Controles.ComboBox_OnlyValues()
-		Me.vtab3 = New VIBlend.WinForms.Controls.vTabPage()
+		Me.vtabCompra = New VIBlend.WinForms.Controls.vTabPage()
+		Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+		Me.vtabDevolução = New VIBlend.WinForms.Controls.vTabPage()
+		Me.dgvDevolucao = New System.Windows.Forms.DataGridView()
+		Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.vtabNotas = New VIBlend.WinForms.Controls.vTabPage()
 		Me.pnlNota = New System.Windows.Forms.Panel()
 		Me.txtChaveAcesso = New System.Windows.Forms.TextBox()
 		Me.btnNotaCancel = New System.Windows.Forms.Button()
@@ -99,16 +109,7 @@ Partial Class frmConsignacao
 		Me.clnNotaNumero = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.clnEmissaoData = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.clnNotaValor = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.vtab4 = New VIBlend.WinForms.Controls.vTabPage()
-		Me.dgvDevolucao = New System.Windows.Forms.DataGridView()
-		Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-		Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.VButton2 = New VIBlend.WinForms.Controls.vButton()
 		Me.LineShape4 = New Microsoft.VisualBasic.PowerPacks.LineShape()
 		Me.LineShape3 = New Microsoft.VisualBasic.PowerPacks.LineShape()
 		Me.LineShape2 = New Microsoft.VisualBasic.PowerPacks.LineShape()
@@ -168,19 +169,58 @@ Partial Class frmConsignacao
 		Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.vtabAPagar = New VIBlend.WinForms.Controls.vTabPage()
+		Me.vtabFreteDevolucao = New VIBlend.WinForms.Controls.vTabPage()
+		Me.Label4 = New System.Windows.Forms.Label()
+		Me.Label6 = New System.Windows.Forms.Label()
+		Me.Label17 = New System.Windows.Forms.Label()
+		Me.lblTotalCobrado = New System.Windows.Forms.Label()
+		Me.Label26 = New System.Windows.Forms.Label()
+		Me.Label28 = New System.Windows.Forms.Label()
+		Me.lblCobrancaTipo = New System.Windows.Forms.Label()
+		Me.Button1 = New System.Windows.Forms.Button()
+		Me.TextBox1 = New System.Windows.Forms.TextBox()
+		Me.Label29 = New System.Windows.Forms.Label()
+		Me.Label30 = New System.Windows.Forms.Label()
+		Me.Label31 = New System.Windows.Forms.Label()
+		Me.Label32 = New System.Windows.Forms.Label()
+		Me.Label33 = New System.Windows.Forms.Label()
+		Me.Label34 = New System.Windows.Forms.Label()
+		Me.ShapeContainer4 = New Microsoft.VisualBasic.PowerPacks.ShapeContainer()
+		Me.Text_SoNumeros1 = New Controles.Text_SoNumeros()
+		Me.Text_Monetario1 = New Controles.Text_Monetario()
+		Me.ComboBox_OnlyValues1 = New Controles.ComboBox_OnlyValues()
+		Me.ComboBox_OnlyValues2 = New Controles.ComboBox_OnlyValues()
+		Me.DataGridViewTextBoxColumn40 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn39 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn36 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.dgvAPagar = New System.Windows.Forms.DataGridView()
+		Me.DataGridViewTextBoxColumn35 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn34 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn32 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn31 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn30 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.DataGridViewTextBoxColumn29 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+		Me.clnIDItem = New System.Windows.Forms.DataGridViewTextBoxColumn()
 		Me.Panel1.SuspendLayout()
 		Me.tabPrincipal.SuspendLayout()
-		Me.vtab1.SuspendLayout()
+		Me.vtabProdutos.SuspendLayout()
 		CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.vtab2.SuspendLayout()
-		CType(Me.dgvCompras, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.vtab3.SuspendLayout()
+		Me.vtabFrete.SuspendLayout()
+		Me.vtabCompra.SuspendLayout()
+		CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.vtabDevolução.SuspendLayout()
+		CType(Me.dgvDevolucao, System.ComponentModel.ISupportInitialize).BeginInit()
+		Me.vtabNotas.SuspendLayout()
 		Me.pnlNota.SuspendLayout()
 		CType(Me.dgvNotas, System.ComponentModel.ISupportInitialize).BeginInit()
-		Me.vtab4.SuspendLayout()
-		CType(Me.dgvDevolucao, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.cmsMenuAPagar.SuspendLayout()
 		Me.mnuAcao.SuspendLayout()
+		Me.vtabAPagar.SuspendLayout()
+		Me.vtabFreteDevolucao.SuspendLayout()
+		CType(Me.dgvAPagar, System.ComponentModel.ISupportInitialize).BeginInit()
 		Me.SuspendLayout()
 		'
 		'Panel1
@@ -220,10 +260,13 @@ Partial Class frmConsignacao
 		'
 		Me.tabPrincipal.AllowAnimations = True
 		Me.tabPrincipal.AllPagesHeight = 28
-		Me.tabPrincipal.Controls.Add(Me.vtab1)
-		Me.tabPrincipal.Controls.Add(Me.vtab2)
-		Me.tabPrincipal.Controls.Add(Me.vtab3)
-		Me.tabPrincipal.Controls.Add(Me.vtab4)
+		Me.tabPrincipal.Controls.Add(Me.vtabProdutos)
+		Me.tabPrincipal.Controls.Add(Me.vtabFrete)
+		Me.tabPrincipal.Controls.Add(Me.vtabCompra)
+		Me.tabPrincipal.Controls.Add(Me.vtabAPagar)
+		Me.tabPrincipal.Controls.Add(Me.vtabDevolução)
+		Me.tabPrincipal.Controls.Add(Me.vtabFreteDevolucao)
+		Me.tabPrincipal.Controls.Add(Me.vtabNotas)
 		Me.tabPrincipal.ForeColor = System.Drawing.Color.Black
 		Me.tabPrincipal.Location = New System.Drawing.Point(9, 106)
 		Me.tabPrincipal.Name = "tabPrincipal"
@@ -231,10 +274,13 @@ Partial Class frmConsignacao
 		Me.tabPrincipal.Size = New System.Drawing.Size(1180, 500)
 		Me.tabPrincipal.TabAlignment = VIBlend.WinForms.Controls.vTabPageAlignment.Top
 		Me.tabPrincipal.TabIndex = 2
-		Me.tabPrincipal.TabPages.Add(Me.vtab1)
-		Me.tabPrincipal.TabPages.Add(Me.vtab2)
-		Me.tabPrincipal.TabPages.Add(Me.vtab3)
-		Me.tabPrincipal.TabPages.Add(Me.vtab4)
+		Me.tabPrincipal.TabPages.Add(Me.vtabProdutos)
+		Me.tabPrincipal.TabPages.Add(Me.vtabFrete)
+		Me.tabPrincipal.TabPages.Add(Me.vtabCompra)
+		Me.tabPrincipal.TabPages.Add(Me.vtabAPagar)
+		Me.tabPrincipal.TabPages.Add(Me.vtabDevolução)
+		Me.tabPrincipal.TabPages.Add(Me.vtabFreteDevolucao)
+		Me.tabPrincipal.TabPages.Add(Me.vtabNotas)
 		Me.tabPrincipal.TabsAreaBackColor = System.Drawing.Color.OldLace
 		Me.tabPrincipal.TabsInitialOffset = 40
 		Me.tabPrincipal.TabsShape = VIBlend.WinForms.Controls.TabsShape.Chrome
@@ -243,43 +289,43 @@ Partial Class frmConsignacao
 		Me.tabPrincipal.UseTabsAreaBackColor = True
 		Me.tabPrincipal.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
 		'
-		'vtab1
+		'vtabProdutos
 		'
-		Me.vtab1.Controls.Add(Me.dgvItens)
-		Me.vtab1.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.vtab1.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab1.ForeColor = System.Drawing.Color.Black
-		Me.vtab1.Location = New System.Drawing.Point(0, 38)
-		Me.vtab1.Name = "vtab1"
-		Me.vtab1.Padding = New System.Windows.Forms.Padding(0)
-		Me.vtab1.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab1.Size = New System.Drawing.Size(1180, 462)
-		Me.vtab1.TabIndex = 3
-		Me.vtab1.Text = "Produtos Consignados"
-		Me.vtab1.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab1.TooltipText = "TabPage"
-		Me.vtab1.UseDefaultTextFont = False
-		Me.vtab1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
-		Me.vtab1.Visible = False
+		Me.vtabProdutos.Controls.Add(Me.dgvItens)
+		Me.vtabProdutos.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.vtabProdutos.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabProdutos.ForeColor = System.Drawing.Color.Black
+		Me.vtabProdutos.Location = New System.Drawing.Point(0, 38)
+		Me.vtabProdutos.Name = "vtabProdutos"
+		Me.vtabProdutos.Padding = New System.Windows.Forms.Padding(0)
+		Me.vtabProdutos.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabProdutos.Size = New System.Drawing.Size(1180, 462)
+		Me.vtabProdutos.TabIndex = 0
+		Me.vtabProdutos.Text = "Produtos Consignados"
+		Me.vtabProdutos.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabProdutos.TooltipText = "TabPage"
+		Me.vtabProdutos.UseDefaultTextFont = False
+		Me.vtabProdutos.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
+		Me.vtabProdutos.Visible = False
 		'
 		'dgvItens
 		'
 		Me.dgvItens.AllowUserToAddRows = False
 		Me.dgvItens.AllowUserToDeleteRows = False
-		DataGridViewCellStyle1.BackColor = System.Drawing.Color.Azure
-		Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle1
+		DataGridViewCellStyle14.BackColor = System.Drawing.Color.Azure
+		Me.dgvItens.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle14
 		Me.dgvItens.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
 		Me.dgvItens.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.dgvItens.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
 		Me.dgvItens.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-		DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-		DataGridViewCellStyle2.BackColor = System.Drawing.Color.LightSteelBlue
-		DataGridViewCellStyle2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		DataGridViewCellStyle2.ForeColor = System.Drawing.Color.Black
-		DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-		DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-		DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-		Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle2
+		DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle15.BackColor = System.Drawing.Color.LightSteelBlue
+		DataGridViewCellStyle15.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle15.ForeColor = System.Drawing.Color.Black
+		DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+		DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.dgvItens.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle15
 		Me.dgvItens.ColumnHeadersHeight = 25
 		Me.dgvItens.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDTransacaoItem, Me.clnRGProduto, Me.clnProduto, Me.clnQuantidade, Me.clnPreco, Me.clnSubTotal, Me.clnDesconto, Me.clnTotal, Me.clnICMS, Me.clnST, Me.clnMVA, Me.clnIPI})
 		Me.dgvItens.EnableHeadersVisualStyles = False
@@ -382,50 +428,46 @@ Partial Class frmConsignacao
 		Me.clnIPI.ReadOnly = True
 		Me.clnIPI.Width = 60
 		'
-		'vtab2
+		'vtabFrete
 		'
-		Me.vtab2.Controls.Add(Me.lblTotalProdutos)
-		Me.vtab2.Controls.Add(Me.Label27)
-		Me.vtab2.Controls.Add(Me.btnTransportadoraAdd)
-		Me.vtab2.Controls.Add(Me.Label20)
-		Me.vtab2.Controls.Add(Me.VButton2)
-		Me.vtab2.Controls.Add(Me.btnCompra)
-		Me.vtab2.Controls.Add(Me.Label19)
-		Me.vtab2.Controls.Add(Me.Label5)
-		Me.vtab2.Controls.Add(Me.Label2)
-		Me.vtab2.Controls.Add(Me.Label1)
-		Me.vtab2.Controls.Add(Me.txtObservacao)
-		Me.vtab2.Controls.Add(Me.Label12)
-		Me.vtab2.Controls.Add(Me.Label14)
-		Me.vtab2.Controls.Add(Me.Label10)
-		Me.vtab2.Controls.Add(Me.Label9)
-		Me.vtab2.Controls.Add(Me.Label8)
-		Me.vtab2.Controls.Add(Me.Label7)
-		Me.vtab2.Controls.Add(Me.dgvCompras)
-		Me.vtab2.Controls.Add(Me.Label6)
-		Me.vtab2.Controls.Add(Me.ShapeContainer2)
-		Me.vtab2.Controls.Add(Me.txtDescontos)
-		Me.vtab2.Controls.Add(Me.txtDespesas)
-		Me.vtab2.Controls.Add(Me.txtICMSValor)
-		Me.vtab2.Controls.Add(Me.txtFreteCobrado)
-		Me.vtab2.Controls.Add(Me.txtVolumes)
-		Me.vtab2.Controls.Add(Me.txtFreteValor)
-		Me.vtab2.Controls.Add(Me.cmbIDTransportadora)
-		Me.vtab2.Controls.Add(Me.cmbFreteTipo)
-		Me.vtab2.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.vtab2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab2.Location = New System.Drawing.Point(0, 38)
-		Me.vtab2.Name = "vtab2"
-		Me.vtab2.Padding = New System.Windows.Forms.Padding(0)
-		Me.vtab2.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab2.Size = New System.Drawing.Size(1180, 462)
-		Me.vtab2.TabIndex = 4
-		Me.vtab2.Text = "Frete e Compras"
-		Me.vtab2.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab2.TooltipText = "TabPage"
-		Me.vtab2.UseDefaultTextFont = False
-		Me.vtab2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
-		Me.vtab2.Visible = False
+		Me.vtabFrete.Controls.Add(Me.lblTotalProdutos)
+		Me.vtabFrete.Controls.Add(Me.Label27)
+		Me.vtabFrete.Controls.Add(Me.btnTransportadoraAdd)
+		Me.vtabFrete.Controls.Add(Me.Label20)
+		Me.vtabFrete.Controls.Add(Me.Label19)
+		Me.vtabFrete.Controls.Add(Me.Label5)
+		Me.vtabFrete.Controls.Add(Me.Label2)
+		Me.vtabFrete.Controls.Add(Me.Label1)
+		Me.vtabFrete.Controls.Add(Me.txtObservacao)
+		Me.vtabFrete.Controls.Add(Me.Label12)
+		Me.vtabFrete.Controls.Add(Me.Label14)
+		Me.vtabFrete.Controls.Add(Me.Label10)
+		Me.vtabFrete.Controls.Add(Me.Label9)
+		Me.vtabFrete.Controls.Add(Me.Label8)
+		Me.vtabFrete.Controls.Add(Me.Label7)
+		Me.vtabFrete.Controls.Add(Me.ShapeContainer2)
+		Me.vtabFrete.Controls.Add(Me.txtDescontos)
+		Me.vtabFrete.Controls.Add(Me.txtDespesas)
+		Me.vtabFrete.Controls.Add(Me.txtICMSValor)
+		Me.vtabFrete.Controls.Add(Me.txtFreteCobrado)
+		Me.vtabFrete.Controls.Add(Me.txtVolumes)
+		Me.vtabFrete.Controls.Add(Me.txtFreteValor)
+		Me.vtabFrete.Controls.Add(Me.cmbIDTransportadora)
+		Me.vtabFrete.Controls.Add(Me.cmbFreteTipo)
+		Me.vtabFrete.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.vtabFrete.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabFrete.Location = New System.Drawing.Point(0, 38)
+		Me.vtabFrete.Name = "vtabFrete"
+		Me.vtabFrete.Padding = New System.Windows.Forms.Padding(0)
+		Me.vtabFrete.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabFrete.Size = New System.Drawing.Size(1180, 462)
+		Me.vtabFrete.TabIndex = 1
+		Me.vtabFrete.Text = "Frete e Despesas"
+		Me.vtabFrete.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabFrete.TooltipText = "TabPage"
+		Me.vtabFrete.UseDefaultTextFont = False
+		Me.vtabFrete.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
+		Me.vtabFrete.Visible = False
 		'
 		'lblTotalProdutos
 		'
@@ -472,54 +514,6 @@ Partial Class frmConsignacao
 		Me.Label20.Size = New System.Drawing.Size(158, 26)
 		Me.Label20.TabIndex = 13
 		Me.Label20.Text = "Outras Despesas:"
-		'
-		'VButton2
-		'
-		Me.VButton2.AllowAnimations = True
-		Me.VButton2.BackColor = System.Drawing.Color.Transparent
-		Me.VButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-		Me.VButton2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.VButton2.HoverEffectsEnabled = True
-		Me.VButton2.Image = Global.NovaSiao.My.Resources.Resources.upload_button
-		Me.VButton2.ImageAbsolutePosition = New System.Drawing.Point(20, 5)
-		Me.VButton2.Location = New System.Drawing.Point(797, 266)
-		Me.VButton2.Name = "VButton2"
-		Me.VButton2.Opacity = 0!
-		Me.VButton2.RoundedCornersMask = CType(15, Byte)
-		Me.VButton2.RoundedCornersRadius = 5
-		Me.VButton2.Size = New System.Drawing.Size(195, 42)
-		Me.VButton2.TabIndex = 3
-		Me.VButton2.Text = "&Gerar Devolução"
-		Me.VButton2.TextAbsolutePosition = New System.Drawing.Point(45, 1)
-		Me.VButton2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-		Me.VButton2.UseAbsoluteImagePositioning = True
-		Me.VButton2.UseAbsoluteTextPositioning = True
-		Me.VButton2.UseVisualStyleBackColor = False
-		Me.VButton2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.BLUEBLEND
-		'
-		'btnCompra
-		'
-		Me.btnCompra.AllowAnimations = True
-		Me.btnCompra.BackColor = System.Drawing.Color.Transparent
-		Me.btnCompra.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-		Me.btnCompra.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.btnCompra.HoverEffectsEnabled = True
-		Me.btnCompra.Image = Global.NovaSiao.My.Resources.Resources.download_button
-		Me.btnCompra.ImageAbsolutePosition = New System.Drawing.Point(20, 5)
-		Me.btnCompra.Location = New System.Drawing.Point(596, 266)
-		Me.btnCompra.Name = "btnCompra"
-		Me.btnCompra.Opacity = 0!
-		Me.btnCompra.RoundedCornersMask = CType(15, Byte)
-		Me.btnCompra.RoundedCornersRadius = 5
-		Me.btnCompra.Size = New System.Drawing.Size(195, 42)
-		Me.btnCompra.TabIndex = 3
-		Me.btnCompra.Text = "&Adicionar Compra"
-		Me.btnCompra.TextAbsolutePosition = New System.Drawing.Point(45, 1)
-		Me.btnCompra.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-		Me.btnCompra.UseAbsoluteImagePositioning = True
-		Me.btnCompra.UseAbsoluteTextPositioning = True
-		Me.btnCompra.UseVisualStyleBackColor = False
-		Me.btnCompra.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.BLUEBLEND
 		'
 		'Label19
 		'
@@ -631,53 +625,6 @@ Partial Class frmConsignacao
 		Me.Label7.TabIndex = 11
 		Me.Label7.Text = "Tipo de Frete"
 		'
-		'dgvCompras
-		'
-		Me.dgvCompras.AllowUserToAddRows = False
-		Me.dgvCompras.AllowUserToDeleteRows = False
-		Me.dgvCompras.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
-		Me.dgvCompras.BorderStyle = System.Windows.Forms.BorderStyle.None
-		Me.dgvCompras.ColumnHeadersHeight = 30
-		Me.dgvCompras.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnCompraData, Me.clnCompraValor})
-		Me.dgvCompras.EnableHeadersVisualStyles = False
-		Me.dgvCompras.Location = New System.Drawing.Point(596, 56)
-		Me.dgvCompras.MultiSelect = False
-		Me.dgvCompras.Name = "dgvCompras"
-		Me.dgvCompras.ReadOnly = True
-		Me.dgvCompras.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-		Me.dgvCompras.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-		Me.dgvCompras.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-		Me.dgvCompras.Size = New System.Drawing.Size(550, 204)
-		Me.dgvCompras.TabIndex = 9
-		'
-		'clnCompraData
-		'
-		DataGridViewCellStyle3.Format = "C2"
-		DataGridViewCellStyle3.NullValue = "0"
-		Me.clnCompraData.DefaultCellStyle = DataGridViewCellStyle3
-		Me.clnCompraData.HeaderText = "Data"
-		Me.clnCompraData.Name = "clnCompraData"
-		Me.clnCompraData.ReadOnly = True
-		Me.clnCompraData.Width = 150
-		'
-		'clnCompraValor
-		'
-		Me.clnCompraValor.HeaderText = "Valor"
-		Me.clnCompraValor.Name = "clnCompraValor"
-		Me.clnCompraValor.ReadOnly = True
-		Me.clnCompraValor.Width = 150
-		'
-		'Label6
-		'
-		Me.Label6.AutoSize = True
-		Me.Label6.BackColor = System.Drawing.Color.Transparent
-		Me.Label6.Font = New System.Drawing.Font("Calibri", 15.75!)
-		Me.Label6.Location = New System.Drawing.Point(591, 15)
-		Me.Label6.Name = "Label6"
-		Me.Label6.Size = New System.Drawing.Size(287, 26)
-		Me.Label6.TabIndex = 1
-		Me.Label6.Text = "Compras | Produtos Adquiridos:"
-		'
 		'ShapeContainer2
 		'
 		Me.ShapeContainer2.Location = New System.Drawing.Point(4, 4)
@@ -763,25 +710,200 @@ Partial Class frmConsignacao
 		Me.cmbFreteTipo.Size = New System.Drawing.Size(149, 27)
 		Me.cmbFreteTipo.TabIndex = 4
 		'
-		'vtab3
+		'vtabCompra
 		'
-		Me.vtab3.Controls.Add(Me.pnlNota)
-		Me.vtab3.Controls.Add(Me.Label11)
-		Me.vtab3.Controls.Add(Me.dgvNotas)
-		Me.vtab3.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.vtab3.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab3.Location = New System.Drawing.Point(0, 38)
-		Me.vtab3.Name = "vtab3"
-		Me.vtab3.Padding = New System.Windows.Forms.Padding(0)
-		Me.vtab3.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab3.Size = New System.Drawing.Size(1180, 462)
-		Me.vtab3.TabIndex = 5
-		Me.vtab3.Text = "Notas Fiscais"
-		Me.vtab3.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab3.TooltipText = "TabPage"
-		Me.vtab3.UseDefaultTextFont = False
-		Me.vtab3.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
-		Me.vtab3.Visible = False
+		Me.vtabCompra.Controls.Add(Me.DataGridView1)
+		Me.vtabCompra.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.vtabCompra.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabCompra.Location = New System.Drawing.Point(0, 38)
+		Me.vtabCompra.Name = "vtabCompra"
+		Me.vtabCompra.Padding = New System.Windows.Forms.Padding(0)
+		Me.vtabCompra.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabCompra.Size = New System.Drawing.Size(1180, 462)
+		Me.vtabCompra.TabIndex = 2
+		Me.vtabCompra.Text = "Aquisições"
+		Me.vtabCompra.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabCompra.TooltipText = "TabPage"
+		Me.vtabCompra.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
+		Me.vtabCompra.Visible = False
+		'
+		'DataGridView1
+		'
+		Me.DataGridView1.AllowUserToAddRows = False
+		Me.DataGridView1.AllowUserToDeleteRows = False
+		DataGridViewCellStyle16.BackColor = System.Drawing.Color.Azure
+		Me.DataGridView1.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle16
+		Me.DataGridView1.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
+		Me.DataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.DataGridView1.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
+		Me.DataGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+		DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle17.BackColor = System.Drawing.Color.LightSteelBlue
+		DataGridViewCellStyle17.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle17.ForeColor = System.Drawing.Color.Black
+		DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+		DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.DataGridView1.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle17
+		Me.DataGridView1.ColumnHeadersHeight = 25
+		Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnIDItem, Me.DataGridViewTextBoxColumn29, Me.DataGridViewTextBoxColumn30, Me.DataGridViewTextBoxColumn31, Me.DataGridViewTextBoxColumn32, Me.DataGridViewTextBoxColumn34, Me.DataGridViewTextBoxColumn35})
+		DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window
+		DataGridViewCellStyle18.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle18.ForeColor = System.Drawing.Color.Black
+		DataGridViewCellStyle18.SelectionBackColor = System.Drawing.Color.SteelBlue
+		DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.ControlLightLight
+		DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+		Me.DataGridView1.DefaultCellStyle = DataGridViewCellStyle18
+		Me.DataGridView1.EnableHeadersVisualStyles = False
+		Me.DataGridView1.GridColor = System.Drawing.SystemColors.ActiveCaption
+		Me.DataGridView1.Location = New System.Drawing.Point(9, 9)
+		Me.DataGridView1.Margin = New System.Windows.Forms.Padding(10)
+		Me.DataGridView1.Name = "DataGridView1"
+		Me.DataGridView1.ReadOnly = True
+		DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control
+		DataGridViewCellStyle19.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText
+		DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.GradientActiveCaption
+		DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.ControlText
+		DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.DataGridView1.RowHeadersDefaultCellStyle = DataGridViewCellStyle19
+		Me.DataGridView1.RowHeadersWidth = 30
+		Me.DataGridView1.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+		Me.DataGridView1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+		Me.DataGridView1.Size = New System.Drawing.Size(825, 332)
+		Me.DataGridView1.TabIndex = 5
+		'
+		'vtabDevolução
+		'
+		Me.vtabDevolução.Controls.Add(Me.dgvDevolucao)
+		Me.vtabDevolução.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.vtabDevolução.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabDevolução.Location = New System.Drawing.Point(0, 38)
+		Me.vtabDevolução.Name = "vtabDevolução"
+		Me.vtabDevolução.Padding = New System.Windows.Forms.Padding(0)
+		Me.vtabDevolução.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold)
+		Me.vtabDevolução.Size = New System.Drawing.Size(1180, 462)
+		Me.vtabDevolução.TabIndex = 4
+		Me.vtabDevolução.Text = "Devolução"
+		Me.vtabDevolução.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabDevolução.TooltipText = "Devolução de Consignação"
+		Me.vtabDevolução.UseDefaultTextFont = False
+		Me.vtabDevolução.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
+		Me.vtabDevolução.Visible = False
+		'
+		'dgvDevolucao
+		'
+		Me.dgvDevolucao.AllowUserToAddRows = False
+		Me.dgvDevolucao.AllowUserToDeleteRows = False
+		DataGridViewCellStyle20.BackColor = System.Drawing.Color.Azure
+		Me.dgvDevolucao.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle20
+		Me.dgvDevolucao.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
+		Me.dgvDevolucao.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.dgvDevolucao.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
+		Me.dgvDevolucao.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
+		DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle21.BackColor = System.Drawing.Color.LightSteelBlue
+		DataGridViewCellStyle21.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle21.ForeColor = System.Drawing.Color.Black
+		DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+		DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.dgvDevolucao.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle21
+		Me.dgvDevolucao.ColumnHeadersHeight = 25
+		Me.dgvDevolucao.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn1, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5, Me.DataGridViewTextBoxColumn6, Me.DataGridViewTextBoxColumn7, Me.DataGridViewTextBoxColumn8})
+		Me.dgvDevolucao.EnableHeadersVisualStyles = False
+		Me.dgvDevolucao.GridColor = System.Drawing.SystemColors.ActiveCaption
+		Me.dgvDevolucao.Location = New System.Drawing.Point(9, 9)
+		Me.dgvDevolucao.Name = "dgvDevolucao"
+		Me.dgvDevolucao.ReadOnly = True
+		Me.dgvDevolucao.RowHeadersWidth = 30
+		Me.dgvDevolucao.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+		Me.dgvDevolucao.Size = New System.Drawing.Size(914, 444)
+		Me.dgvDevolucao.TabIndex = 1
+		'
+		'DataGridViewTextBoxColumn1
+		'
+		Me.DataGridViewTextBoxColumn1.Frozen = True
+		Me.DataGridViewTextBoxColumn1.HeaderText = "IDItem"
+		Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+		Me.DataGridViewTextBoxColumn1.ReadOnly = True
+		Me.DataGridViewTextBoxColumn1.Visible = False
+		'
+		'DataGridViewTextBoxColumn2
+		'
+		Me.DataGridViewTextBoxColumn2.Frozen = True
+		Me.DataGridViewTextBoxColumn2.HeaderText = "Reg."
+		Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+		Me.DataGridViewTextBoxColumn2.ReadOnly = True
+		Me.DataGridViewTextBoxColumn2.Width = 60
+		'
+		'DataGridViewTextBoxColumn3
+		'
+		Me.DataGridViewTextBoxColumn3.Frozen = True
+		Me.DataGridViewTextBoxColumn3.HeaderText = "Produto"
+		Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+		Me.DataGridViewTextBoxColumn3.ReadOnly = True
+		Me.DataGridViewTextBoxColumn3.Width = 375
+		'
+		'DataGridViewTextBoxColumn4
+		'
+		Me.DataGridViewTextBoxColumn4.Frozen = True
+		Me.DataGridViewTextBoxColumn4.HeaderText = "Qtde"
+		Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+		Me.DataGridViewTextBoxColumn4.ReadOnly = True
+		Me.DataGridViewTextBoxColumn4.Width = 60
+		'
+		'DataGridViewTextBoxColumn5
+		'
+		Me.DataGridViewTextBoxColumn5.Frozen = True
+		Me.DataGridViewTextBoxColumn5.HeaderText = "Preço"
+		Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+		Me.DataGridViewTextBoxColumn5.ReadOnly = True
+		Me.DataGridViewTextBoxColumn5.Width = 90
+		'
+		'DataGridViewTextBoxColumn6
+		'
+		Me.DataGridViewTextBoxColumn6.Frozen = True
+		Me.DataGridViewTextBoxColumn6.HeaderText = "SubTotal"
+		Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+		Me.DataGridViewTextBoxColumn6.ReadOnly = True
+		Me.DataGridViewTextBoxColumn6.Width = 90
+		'
+		'DataGridViewTextBoxColumn7
+		'
+		Me.DataGridViewTextBoxColumn7.HeaderText = "Desc."
+		Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+		Me.DataGridViewTextBoxColumn7.ReadOnly = True
+		Me.DataGridViewTextBoxColumn7.Width = 80
+		'
+		'DataGridViewTextBoxColumn8
+		'
+		Me.DataGridViewTextBoxColumn8.HeaderText = "Total"
+		Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+		Me.DataGridViewTextBoxColumn8.ReadOnly = True
+		Me.DataGridViewTextBoxColumn8.Width = 90
+		'
+		'vtabNotas
+		'
+		Me.vtabNotas.Controls.Add(Me.pnlNota)
+		Me.vtabNotas.Controls.Add(Me.Label11)
+		Me.vtabNotas.Controls.Add(Me.dgvNotas)
+		Me.vtabNotas.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.vtabNotas.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabNotas.Location = New System.Drawing.Point(0, 38)
+		Me.vtabNotas.Name = "vtabNotas"
+		Me.vtabNotas.Padding = New System.Windows.Forms.Padding(0)
+		Me.vtabNotas.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabNotas.Size = New System.Drawing.Size(1180, 462)
+		Me.vtabNotas.TabIndex = 6
+		Me.vtabNotas.Text = "Notas Fiscais"
+		Me.vtabNotas.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabNotas.TooltipText = "TabPage"
+		Me.vtabNotas.UseDefaultTextFont = False
+		Me.vtabNotas.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
+		Me.vtabNotas.Visible = False
 		'
 		'pnlNota
 		'
@@ -966,14 +1088,14 @@ Partial Class frmConsignacao
 		Me.dgvNotas.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
 		Me.dgvNotas.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.dgvNotas.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.Raised
-		DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-		DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ButtonFace
-		DataGridViewCellStyle4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-		DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-		DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-		DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-		Me.dgvNotas.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+		DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+		DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.ButtonFace
+		DataGridViewCellStyle22.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText
+		DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
+		DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+		DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+		Me.dgvNotas.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle22
 		Me.dgvNotas.ColumnHeadersHeight = 30
 		Me.dgvNotas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
 		Me.dgvNotas.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.clnChaveAcesso, Me.clnNotaTipo, Me.clnNotaSerie, Me.clnNotaNumero, Me.clnEmissaoData, Me.clnNotaValor})
@@ -982,8 +1104,8 @@ Partial Class frmConsignacao
 		Me.dgvNotas.Name = "dgvNotas"
 		Me.dgvNotas.ReadOnly = True
 		Me.dgvNotas.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-		DataGridViewCellStyle5.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.dgvNotas.RowsDefaultCellStyle = DataGridViewCellStyle5
+		DataGridViewCellStyle23.Font = New System.Drawing.Font("Calibri", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.dgvNotas.RowsDefaultCellStyle = DataGridViewCellStyle23
 		Me.dgvNotas.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
 		Me.dgvNotas.Size = New System.Drawing.Size(846, 312)
 		Me.dgvNotas.TabIndex = 3
@@ -1029,115 +1151,29 @@ Partial Class frmConsignacao
 		Me.clnNotaValor.ReadOnly = True
 		Me.clnNotaValor.Width = 80
 		'
-		'vtab4
+		'VButton2
 		'
-		Me.vtab4.Controls.Add(Me.dgvDevolucao)
-		Me.vtab4.Dock = System.Windows.Forms.DockStyle.Fill
-		Me.vtab4.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab4.Location = New System.Drawing.Point(0, 38)
-		Me.vtab4.Name = "vtab4"
-		Me.vtab4.Padding = New System.Windows.Forms.Padding(0)
-		Me.vtab4.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Bold)
-		Me.vtab4.Size = New System.Drawing.Size(1180, 462)
-		Me.vtab4.TabIndex = 6
-		Me.vtab4.Text = "Devolução"
-		Me.vtab4.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		Me.vtab4.TooltipText = "Devolução de Consignação"
-		Me.vtab4.UseDefaultTextFont = False
-		Me.vtab4.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
-		Me.vtab4.Visible = False
-		'
-		'dgvDevolucao
-		'
-		Me.dgvDevolucao.AllowUserToAddRows = False
-		Me.dgvDevolucao.AllowUserToDeleteRows = False
-		DataGridViewCellStyle6.BackColor = System.Drawing.Color.Azure
-		Me.dgvDevolucao.AlternatingRowsDefaultCellStyle = DataGridViewCellStyle6
-		Me.dgvDevolucao.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
-		Me.dgvDevolucao.BorderStyle = System.Windows.Forms.BorderStyle.None
-		Me.dgvDevolucao.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal
-		Me.dgvDevolucao.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.[Single]
-		DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-		DataGridViewCellStyle7.BackColor = System.Drawing.Color.LightSteelBlue
-		DataGridViewCellStyle7.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-		DataGridViewCellStyle7.ForeColor = System.Drawing.Color.Black
-		DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-		DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-		DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-		Me.dgvDevolucao.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
-		Me.dgvDevolucao.ColumnHeadersHeight = 25
-		Me.dgvDevolucao.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn1, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5, Me.DataGridViewTextBoxColumn6, Me.DataGridViewTextBoxColumn7, Me.DataGridViewTextBoxColumn8})
-		Me.dgvDevolucao.EnableHeadersVisualStyles = False
-		Me.dgvDevolucao.GridColor = System.Drawing.SystemColors.ActiveCaption
-		Me.dgvDevolucao.Location = New System.Drawing.Point(9, 9)
-		Me.dgvDevolucao.Name = "dgvDevolucao"
-		Me.dgvDevolucao.ReadOnly = True
-		Me.dgvDevolucao.RowHeadersWidth = 30
-		Me.dgvDevolucao.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-		Me.dgvDevolucao.Size = New System.Drawing.Size(1162, 444)
-		Me.dgvDevolucao.TabIndex = 1
-		'
-		'DataGridViewTextBoxColumn1
-		'
-		Me.DataGridViewTextBoxColumn1.Frozen = True
-		Me.DataGridViewTextBoxColumn1.HeaderText = "IDItem"
-		Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-		Me.DataGridViewTextBoxColumn1.ReadOnly = True
-		Me.DataGridViewTextBoxColumn1.Visible = False
-		'
-		'DataGridViewTextBoxColumn2
-		'
-		Me.DataGridViewTextBoxColumn2.Frozen = True
-		Me.DataGridViewTextBoxColumn2.HeaderText = "Reg."
-		Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-		Me.DataGridViewTextBoxColumn2.ReadOnly = True
-		Me.DataGridViewTextBoxColumn2.Width = 60
-		'
-		'DataGridViewTextBoxColumn3
-		'
-		Me.DataGridViewTextBoxColumn3.Frozen = True
-		Me.DataGridViewTextBoxColumn3.HeaderText = "Produto"
-		Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-		Me.DataGridViewTextBoxColumn3.ReadOnly = True
-		Me.DataGridViewTextBoxColumn3.Width = 375
-		'
-		'DataGridViewTextBoxColumn4
-		'
-		Me.DataGridViewTextBoxColumn4.Frozen = True
-		Me.DataGridViewTextBoxColumn4.HeaderText = "Qtde"
-		Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-		Me.DataGridViewTextBoxColumn4.ReadOnly = True
-		Me.DataGridViewTextBoxColumn4.Width = 60
-		'
-		'DataGridViewTextBoxColumn5
-		'
-		Me.DataGridViewTextBoxColumn5.Frozen = True
-		Me.DataGridViewTextBoxColumn5.HeaderText = "Preço"
-		Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-		Me.DataGridViewTextBoxColumn5.ReadOnly = True
-		Me.DataGridViewTextBoxColumn5.Width = 90
-		'
-		'DataGridViewTextBoxColumn6
-		'
-		Me.DataGridViewTextBoxColumn6.Frozen = True
-		Me.DataGridViewTextBoxColumn6.HeaderText = "SubTotal"
-		Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-		Me.DataGridViewTextBoxColumn6.ReadOnly = True
-		Me.DataGridViewTextBoxColumn6.Width = 90
-		'
-		'DataGridViewTextBoxColumn7
-		'
-		Me.DataGridViewTextBoxColumn7.HeaderText = "Desc."
-		Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
-		Me.DataGridViewTextBoxColumn7.ReadOnly = True
-		Me.DataGridViewTextBoxColumn7.Width = 80
-		'
-		'DataGridViewTextBoxColumn8
-		'
-		Me.DataGridViewTextBoxColumn8.HeaderText = "Total"
-		Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-		Me.DataGridViewTextBoxColumn8.ReadOnly = True
-		Me.DataGridViewTextBoxColumn8.Width = 90
+		Me.VButton2.AllowAnimations = True
+		Me.VButton2.BackColor = System.Drawing.Color.Transparent
+		Me.VButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+		Me.VButton2.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.VButton2.HoverEffectsEnabled = True
+		Me.VButton2.Image = Global.NovaSiao.My.Resources.Resources.upload_button
+		Me.VButton2.ImageAbsolutePosition = New System.Drawing.Point(20, 5)
+		Me.VButton2.Location = New System.Drawing.Point(678, 612)
+		Me.VButton2.Name = "VButton2"
+		Me.VButton2.Opacity = 0!
+		Me.VButton2.RoundedCornersMask = CType(15, Byte)
+		Me.VButton2.RoundedCornersRadius = 5
+		Me.VButton2.Size = New System.Drawing.Size(183, 42)
+		Me.VButton2.TabIndex = 3
+		Me.VButton2.Text = "&Gerar Devolução"
+		Me.VButton2.TextAbsolutePosition = New System.Drawing.Point(45, 1)
+		Me.VButton2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+		Me.VButton2.UseAbsoluteImagePositioning = True
+		Me.VButton2.UseAbsoluteTextPositioning = True
+		Me.VButton2.UseVisualStyleBackColor = False
+		Me.VButton2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.BLUEBLEND
 		'
 		'LineShape4
 		'
@@ -1593,9 +1629,9 @@ Partial Class frmConsignacao
 		'
 		'DataGridViewTextBoxColumn13
 		'
-		DataGridViewCellStyle8.Format = "C2"
-		DataGridViewCellStyle8.NullValue = "0"
-		Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle8
+		DataGridViewCellStyle24.Format = "C2"
+		DataGridViewCellStyle24.NullValue = "0"
+		Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle24
 		Me.DataGridViewTextBoxColumn13.HeaderText = "Data"
 		Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
 		Me.DataGridViewTextBoxColumn13.Width = 150
@@ -1695,6 +1731,375 @@ Partial Class frmConsignacao
 		Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
 		Me.DataGridViewTextBoxColumn28.Width = 90
 		'
+		'vtabAPagar
+		'
+		Me.vtabAPagar.Controls.Add(Me.Label4)
+		Me.vtabAPagar.Controls.Add(Me.Label6)
+		Me.vtabAPagar.Controls.Add(Me.Label17)
+		Me.vtabAPagar.Controls.Add(Me.dgvAPagar)
+		Me.vtabAPagar.Controls.Add(Me.lblTotalCobrado)
+		Me.vtabAPagar.Controls.Add(Me.Label26)
+		Me.vtabAPagar.Controls.Add(Me.Label28)
+		Me.vtabAPagar.Controls.Add(Me.lblCobrancaTipo)
+		Me.vtabAPagar.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.vtabAPagar.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabAPagar.Location = New System.Drawing.Point(0, 38)
+		Me.vtabAPagar.Name = "vtabAPagar"
+		Me.vtabAPagar.Padding = New System.Windows.Forms.Padding(0)
+		Me.vtabAPagar.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabAPagar.Size = New System.Drawing.Size(1180, 462)
+		Me.vtabAPagar.TabIndex = 3
+		Me.vtabAPagar.Text = "Pagamentos"
+		Me.vtabAPagar.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabAPagar.TooltipText = "TabPage"
+		Me.vtabAPagar.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
+		Me.vtabAPagar.Visible = False
+		'
+		'vtabFreteDevolucao
+		'
+		Me.vtabFreteDevolucao.Controls.Add(Me.Button1)
+		Me.vtabFreteDevolucao.Controls.Add(Me.TextBox1)
+		Me.vtabFreteDevolucao.Controls.Add(Me.Label29)
+		Me.vtabFreteDevolucao.Controls.Add(Me.Label30)
+		Me.vtabFreteDevolucao.Controls.Add(Me.Label31)
+		Me.vtabFreteDevolucao.Controls.Add(Me.Label32)
+		Me.vtabFreteDevolucao.Controls.Add(Me.Label33)
+		Me.vtabFreteDevolucao.Controls.Add(Me.Label34)
+		Me.vtabFreteDevolucao.Controls.Add(Me.Text_SoNumeros1)
+		Me.vtabFreteDevolucao.Controls.Add(Me.Text_Monetario1)
+		Me.vtabFreteDevolucao.Controls.Add(Me.ComboBox_OnlyValues1)
+		Me.vtabFreteDevolucao.Controls.Add(Me.ComboBox_OnlyValues2)
+		Me.vtabFreteDevolucao.Dock = System.Windows.Forms.DockStyle.Fill
+		Me.vtabFreteDevolucao.Font = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabFreteDevolucao.Location = New System.Drawing.Point(0, 38)
+		Me.vtabFreteDevolucao.Name = "vtabFreteDevolucao"
+		Me.vtabFreteDevolucao.Padding = New System.Windows.Forms.Padding(0)
+		Me.vtabFreteDevolucao.SelectedTextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabFreteDevolucao.Size = New System.Drawing.Size(1180, 462)
+		Me.vtabFreteDevolucao.TabIndex = 5
+		Me.vtabFreteDevolucao.Text = "Frete Saída"
+		Me.vtabFreteDevolucao.TextFont = New System.Drawing.Font("Calibri", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.vtabFreteDevolucao.TooltipText = "TabPage"
+		Me.vtabFreteDevolucao.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.RETROBLUE
+		Me.vtabFreteDevolucao.Visible = False
+		'
+		'Label4
+		'
+		Me.Label4.AutoSize = True
+		Me.Label4.BackColor = System.Drawing.Color.Transparent
+		Me.Label4.Location = New System.Drawing.Point(271, 270)
+		Me.Label4.Name = "Label4"
+		Me.Label4.Size = New System.Drawing.Size(126, 19)
+		Me.Label4.TabIndex = 32
+		Me.Label4.Text = "Tipo de Cobrança:"
+		'
+		'Label6
+		'
+		Me.Label6.BackColor = System.Drawing.Color.Transparent
+		Me.Label6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+		Me.Label6.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.Label6.Location = New System.Drawing.Point(403, 351)
+		Me.Label6.Margin = New System.Windows.Forms.Padding(0)
+		Me.Label6.Name = "Label6"
+		Me.Label6.Size = New System.Drawing.Size(151, 32)
+		Me.Label6.TabIndex = 30
+		Me.Label6.Text = "R$ 0,00"
+		Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'Label17
+		'
+		Me.Label17.AutoSize = True
+		Me.Label17.BackColor = System.Drawing.Color.Transparent
+		Me.Label17.Location = New System.Drawing.Point(263, 356)
+		Me.Label17.Name = "Label17"
+		Me.Label17.Size = New System.Drawing.Size(134, 19)
+		Me.Label17.TabIndex = 33
+		Me.Label17.Text = "Valor dos Produtos:"
+		'
+		'lblTotalCobrado
+		'
+		Me.lblTotalCobrado.BackColor = System.Drawing.Color.Transparent
+		Me.lblTotalCobrado.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+		Me.lblTotalCobrado.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.lblTotalCobrado.Location = New System.Drawing.Point(403, 309)
+		Me.lblTotalCobrado.Name = "lblTotalCobrado"
+		Me.lblTotalCobrado.Size = New System.Drawing.Size(151, 32)
+		Me.lblTotalCobrado.TabIndex = 31
+		Me.lblTotalCobrado.Text = "R$ 0,00"
+		Me.lblTotalCobrado.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+		'
+		'Label26
+		'
+		Me.Label26.AutoSize = True
+		Me.Label26.BackColor = System.Drawing.Color.Transparent
+		Me.Label26.Location = New System.Drawing.Point(294, 314)
+		Me.Label26.Name = "Label26"
+		Me.Label26.Size = New System.Drawing.Size(103, 19)
+		Me.Label26.TabIndex = 34
+		Me.Label26.Text = "Total Cobrado:"
+		'
+		'Label28
+		'
+		Me.Label28.AutoSize = True
+		Me.Label28.BackColor = System.Drawing.Color.Transparent
+		Me.Label28.Font = New System.Drawing.Font("Calibri", 15.75!)
+		Me.Label28.Location = New System.Drawing.Point(18, 15)
+		Me.Label28.Name = "Label28"
+		Me.Label28.Size = New System.Drawing.Size(264, 26)
+		Me.Label28.TabIndex = 27
+		Me.Label28.Text = "Desdobramento das Parcelas:"
+		'
+		'lblCobrancaTipo
+		'
+		Me.lblCobrancaTipo.BackColor = System.Drawing.Color.Transparent
+		Me.lblCobrancaTipo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+		Me.lblCobrancaTipo.Font = New System.Drawing.Font("Calibri", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.lblCobrancaTipo.Location = New System.Drawing.Point(403, 266)
+		Me.lblCobrancaTipo.Name = "lblCobrancaTipo"
+		Me.lblCobrancaTipo.Size = New System.Drawing.Size(151, 32)
+		Me.lblCobrancaTipo.TabIndex = 28
+		Me.lblCobrancaTipo.Text = "Tipo de Cobrança"
+		Me.lblCobrancaTipo.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+		'
+		'Button1
+		'
+		Me.Button1.FlatAppearance.BorderSize = 0
+		Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Popup
+		Me.Button1.Image = Global.NovaSiao.My.Resources.Resources.add
+		Me.Button1.Location = New System.Drawing.Point(444, 86)
+		Me.Button1.Name = "Button1"
+		Me.Button1.Size = New System.Drawing.Size(28, 27)
+		Me.Button1.TabIndex = 28
+		Me.Button1.TabStop = False
+		Me.Button1.UseVisualStyleBackColor = True
+		'
+		'TextBox1
+		'
+		Me.TextBox1.Location = New System.Drawing.Point(41, 215)
+		Me.TextBox1.Multiline = True
+		Me.TextBox1.Name = "TextBox1"
+		Me.TextBox1.Size = New System.Drawing.Size(431, 109)
+		Me.TextBox1.TabIndex = 21
+		'
+		'Label29
+		'
+		Me.Label29.AutoSize = True
+		Me.Label29.BackColor = System.Drawing.Color.Transparent
+		Me.Label29.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.Label29.Location = New System.Drawing.Point(21, 176)
+		Me.Label29.Name = "Label29"
+		Me.Label29.Size = New System.Drawing.Size(219, 26)
+		Me.Label29.TabIndex = 27
+		Me.Label29.Text = "Observações Devolução:"
+		'
+		'Label30
+		'
+		Me.Label30.AutoSize = True
+		Me.Label30.BackColor = System.Drawing.Color.Transparent
+		Me.Label30.Font = New System.Drawing.Font("Calibri", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.Label30.Location = New System.Drawing.Point(21, 16)
+		Me.Label30.Name = "Label30"
+		Me.Label30.Size = New System.Drawing.Size(156, 26)
+		Me.Label30.TabIndex = 26
+		Me.Label30.Text = "Frete Devolução:"
+		'
+		'Label31
+		'
+		Me.Label31.AutoSize = True
+		Me.Label31.BackColor = System.Drawing.Color.Transparent
+		Me.Label31.Location = New System.Drawing.Point(265, 123)
+		Me.Label31.Name = "Label31"
+		Me.Label31.Size = New System.Drawing.Size(64, 19)
+		Me.Label31.TabIndex = 22
+		Me.Label31.Text = "Volumes"
+		'
+		'Label32
+		'
+		Me.Label32.AutoSize = True
+		Me.Label32.BackColor = System.Drawing.Color.Transparent
+		Me.Label32.Location = New System.Drawing.Point(45, 123)
+		Me.Label32.Name = "Label32"
+		Me.Label32.Size = New System.Drawing.Size(99, 19)
+		Me.Label32.TabIndex = 23
+		Me.Label32.Text = "Valor do Frete"
+		'
+		'Label33
+		'
+		Me.Label33.AutoSize = True
+		Me.Label33.BackColor = System.Drawing.Color.Transparent
+		Me.Label33.Location = New System.Drawing.Point(37, 90)
+		Me.Label33.Name = "Label33"
+		Me.Label33.Size = New System.Drawing.Size(107, 19)
+		Me.Label33.TabIndex = 24
+		Me.Label33.Text = "Transportadora"
+		'
+		'Label34
+		'
+		Me.Label34.AutoSize = True
+		Me.Label34.BackColor = System.Drawing.Color.Transparent
+		Me.Label34.Location = New System.Drawing.Point(50, 57)
+		Me.Label34.Name = "Label34"
+		Me.Label34.Size = New System.Drawing.Size(94, 19)
+		Me.Label34.TabIndex = 25
+		Me.Label34.Text = "Tipo de Frete"
+		'
+		'ShapeContainer4
+		'
+		Me.ShapeContainer4.Location = New System.Drawing.Point(4, 4)
+		Me.ShapeContainer4.Margin = New System.Windows.Forms.Padding(0)
+		Me.ShapeContainer4.Name = "ShapeContainer2"
+		Me.ShapeContainer4.Size = New System.Drawing.Size(1172, 454)
+		Me.ShapeContainer4.TabIndex = 14
+		Me.ShapeContainer4.TabStop = False
+		'
+		'Text_SoNumeros1
+		'
+		Me.Text_SoNumeros1.Inteiro = True
+		Me.Text_SoNumeros1.Location = New System.Drawing.Point(335, 120)
+		Me.Text_SoNumeros1.Name = "Text_SoNumeros1"
+		Me.Text_SoNumeros1.Size = New System.Drawing.Size(49, 27)
+		Me.Text_SoNumeros1.TabIndex = 20
+		Me.Text_SoNumeros1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'Text_Monetario1
+		'
+		Me.Text_Monetario1.Location = New System.Drawing.Point(150, 120)
+		Me.Text_Monetario1.Name = "Text_Monetario1"
+		Me.Text_Monetario1.Size = New System.Drawing.Size(100, 27)
+		Me.Text_Monetario1.SomentePositivos = True
+		Me.Text_Monetario1.TabIndex = 19
+		Me.Text_Monetario1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+		'
+		'ComboBox_OnlyValues1
+		'
+		Me.ComboBox_OnlyValues1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+		Me.ComboBox_OnlyValues1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+		Me.ComboBox_OnlyValues1.FormattingEnabled = True
+		Me.ComboBox_OnlyValues1.Location = New System.Drawing.Point(150, 87)
+		Me.ComboBox_OnlyValues1.Name = "ComboBox_OnlyValues1"
+		Me.ComboBox_OnlyValues1.RestrictContentToListItems = True
+		Me.ComboBox_OnlyValues1.Size = New System.Drawing.Size(288, 27)
+		Me.ComboBox_OnlyValues1.TabIndex = 18
+		'
+		'ComboBox_OnlyValues2
+		'
+		Me.ComboBox_OnlyValues2.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+		Me.ComboBox_OnlyValues2.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+		Me.ComboBox_OnlyValues2.FormattingEnabled = True
+		Me.ComboBox_OnlyValues2.Location = New System.Drawing.Point(150, 54)
+		Me.ComboBox_OnlyValues2.Name = "ComboBox_OnlyValues2"
+		Me.ComboBox_OnlyValues2.RestrictContentToListItems = True
+		Me.ComboBox_OnlyValues2.Size = New System.Drawing.Size(149, 27)
+		Me.ComboBox_OnlyValues2.TabIndex = 17
+		'
+		'DataGridViewTextBoxColumn40
+		'
+		Me.DataGridViewTextBoxColumn40.HeaderText = "Valor"
+		Me.DataGridViewTextBoxColumn40.Name = "DataGridViewTextBoxColumn40"
+		Me.DataGridViewTextBoxColumn40.ReadOnly = True
+		'
+		'DataGridViewTextBoxColumn39
+		'
+		DataGridViewCellStyle13.Format = "C2"
+		DataGridViewCellStyle13.NullValue = "0"
+		Me.DataGridViewTextBoxColumn39.DefaultCellStyle = DataGridViewCellStyle13
+		Me.DataGridViewTextBoxColumn39.HeaderText = "Vencimento"
+		Me.DataGridViewTextBoxColumn39.Name = "DataGridViewTextBoxColumn39"
+		Me.DataGridViewTextBoxColumn39.ReadOnly = True
+		Me.DataGridViewTextBoxColumn39.Width = 110
+		'
+		'DataGridViewTextBoxColumn38
+		'
+		Me.DataGridViewTextBoxColumn38.HeaderText = "No. Reg.:"
+		Me.DataGridViewTextBoxColumn38.Name = "DataGridViewTextBoxColumn38"
+		Me.DataGridViewTextBoxColumn38.ReadOnly = True
+		'
+		'DataGridViewTextBoxColumn37
+		'
+		Me.DataGridViewTextBoxColumn37.HeaderText = "Forma"
+		Me.DataGridViewTextBoxColumn37.Name = "DataGridViewTextBoxColumn37"
+		Me.DataGridViewTextBoxColumn37.ReadOnly = True
+		Me.DataGridViewTextBoxColumn37.Width = 160
+		'
+		'DataGridViewTextBoxColumn36
+		'
+		Me.DataGridViewTextBoxColumn36.HeaderText = "IDAPagar"
+		Me.DataGridViewTextBoxColumn36.Name = "DataGridViewTextBoxColumn36"
+		Me.DataGridViewTextBoxColumn36.ReadOnly = True
+		Me.DataGridViewTextBoxColumn36.Visible = False
+		'
+		'dgvAPagar
+		'
+		Me.dgvAPagar.AllowUserToAddRows = False
+		Me.dgvAPagar.AllowUserToDeleteRows = False
+		Me.dgvAPagar.BackgroundColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(232, Byte), Integer), CType(CType(243, Byte), Integer))
+		Me.dgvAPagar.BorderStyle = System.Windows.Forms.BorderStyle.None
+		Me.dgvAPagar.ColumnHeadersHeight = 30
+		Me.dgvAPagar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DataGridViewTextBoxColumn36, Me.DataGridViewTextBoxColumn37, Me.DataGridViewTextBoxColumn38, Me.DataGridViewTextBoxColumn39, Me.DataGridViewTextBoxColumn40})
+		Me.dgvAPagar.EnableHeadersVisualStyles = False
+		Me.dgvAPagar.Location = New System.Drawing.Point(23, 51)
+		Me.dgvAPagar.MultiSelect = False
+		Me.dgvAPagar.Name = "dgvAPagar"
+		Me.dgvAPagar.ReadOnly = True
+		Me.dgvAPagar.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+		Me.dgvAPagar.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+		Me.dgvAPagar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+		Me.dgvAPagar.Size = New System.Drawing.Size(549, 204)
+		Me.dgvAPagar.TabIndex = 29
+		'
+		'DataGridViewTextBoxColumn35
+		'
+		Me.DataGridViewTextBoxColumn35.HeaderText = "Total"
+		Me.DataGridViewTextBoxColumn35.Name = "DataGridViewTextBoxColumn35"
+		Me.DataGridViewTextBoxColumn35.ReadOnly = True
+		'
+		'DataGridViewTextBoxColumn34
+		'
+		Me.DataGridViewTextBoxColumn34.HeaderText = "Desc."
+		Me.DataGridViewTextBoxColumn34.Name = "DataGridViewTextBoxColumn34"
+		Me.DataGridViewTextBoxColumn34.ReadOnly = True
+		Me.DataGridViewTextBoxColumn34.Width = 70
+		'
+		'DataGridViewTextBoxColumn32
+		'
+		Me.DataGridViewTextBoxColumn32.Frozen = True
+		Me.DataGridViewTextBoxColumn32.HeaderText = "Preço"
+		Me.DataGridViewTextBoxColumn32.Name = "DataGridViewTextBoxColumn32"
+		Me.DataGridViewTextBoxColumn32.ReadOnly = True
+		Me.DataGridViewTextBoxColumn32.Width = 90
+		'
+		'DataGridViewTextBoxColumn31
+		'
+		Me.DataGridViewTextBoxColumn31.Frozen = True
+		Me.DataGridViewTextBoxColumn31.HeaderText = "Qtde"
+		Me.DataGridViewTextBoxColumn31.Name = "DataGridViewTextBoxColumn31"
+		Me.DataGridViewTextBoxColumn31.ReadOnly = True
+		Me.DataGridViewTextBoxColumn31.Width = 60
+		'
+		'DataGridViewTextBoxColumn30
+		'
+		Me.DataGridViewTextBoxColumn30.Frozen = True
+		Me.DataGridViewTextBoxColumn30.HeaderText = "Produto"
+		Me.DataGridViewTextBoxColumn30.Name = "DataGridViewTextBoxColumn30"
+		Me.DataGridViewTextBoxColumn30.ReadOnly = True
+		Me.DataGridViewTextBoxColumn30.Width = 375
+		'
+		'DataGridViewTextBoxColumn29
+		'
+		Me.DataGridViewTextBoxColumn29.Frozen = True
+		Me.DataGridViewTextBoxColumn29.HeaderText = "Reg."
+		Me.DataGridViewTextBoxColumn29.Name = "DataGridViewTextBoxColumn29"
+		Me.DataGridViewTextBoxColumn29.ReadOnly = True
+		Me.DataGridViewTextBoxColumn29.Width = 60
+		'
+		'clnIDItem
+		'
+		Me.clnIDItem.Frozen = True
+		Me.clnIDItem.HeaderText = "IDItem"
+		Me.clnIDItem.Name = "clnIDItem"
+		Me.clnIDItem.ReadOnly = True
+		Me.clnIDItem.Visible = False
+		'
 		'frmConsignacao
 		'
 		Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 19.0!)
@@ -1702,6 +2107,7 @@ Partial Class frmConsignacao
 		Me.Controls.Add(Me.mnuAcao)
 		Me.Controls.Add(Me.btnFinalizar)
 		Me.Controls.Add(Me.Label13)
+		Me.Controls.Add(Me.VButton2)
 		Me.Controls.Add(Me.lblTotalGeral)
 		Me.Controls.Add(Me.lblCli)
 		Me.Controls.Add(Me.lblFornecedor)
@@ -1714,6 +2120,7 @@ Partial Class frmConsignacao
 		Me.Controls.SetChildIndex(Me.lblFornecedor, 0)
 		Me.Controls.SetChildIndex(Me.lblCli, 0)
 		Me.Controls.SetChildIndex(Me.lblTotalGeral, 0)
+		Me.Controls.SetChildIndex(Me.VButton2, 0)
 		Me.Controls.SetChildIndex(Me.Label13, 0)
 		Me.Controls.SetChildIndex(Me.btnFinalizar, 0)
 		Me.Controls.SetChildIndex(Me.mnuAcao, 0)
@@ -1721,30 +2128,36 @@ Partial Class frmConsignacao
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
 		Me.tabPrincipal.ResumeLayout(False)
-		Me.vtab1.ResumeLayout(False)
+		Me.vtabProdutos.ResumeLayout(False)
 		CType(Me.dgvItens, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.vtab2.ResumeLayout(False)
-		Me.vtab2.PerformLayout()
-		CType(Me.dgvCompras, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.vtab3.ResumeLayout(False)
-		Me.vtab3.PerformLayout()
+		Me.vtabFrete.ResumeLayout(False)
+		Me.vtabFrete.PerformLayout()
+		Me.vtabCompra.ResumeLayout(False)
+		CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.vtabDevolução.ResumeLayout(False)
+		CType(Me.dgvDevolucao, System.ComponentModel.ISupportInitialize).EndInit()
+		Me.vtabNotas.ResumeLayout(False)
+		Me.vtabNotas.PerformLayout()
 		Me.pnlNota.ResumeLayout(False)
 		Me.pnlNota.PerformLayout()
 		CType(Me.dgvNotas, System.ComponentModel.ISupportInitialize).EndInit()
-		Me.vtab4.ResumeLayout(False)
-		CType(Me.dgvDevolucao, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.cmsMenuAPagar.ResumeLayout(False)
 		Me.mnuAcao.ResumeLayout(False)
 		Me.mnuAcao.PerformLayout()
+		Me.vtabAPagar.ResumeLayout(False)
+		Me.vtabAPagar.PerformLayout()
+		Me.vtabFreteDevolucao.ResumeLayout(False)
+		Me.vtabFreteDevolucao.PerformLayout()
+		CType(Me.dgvAPagar, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.ResumeLayout(False)
 		Me.PerformLayout()
 
 	End Sub
 
 	Friend WithEvents tabPrincipal As VIBlend.WinForms.Controls.vTabControl
-    Friend WithEvents vtab1 As VIBlend.WinForms.Controls.vTabPage
+    Friend WithEvents vtabProdutos As VIBlend.WinForms.Controls.vTabPage
     Friend WithEvents dgvItens As DataGridView
-    Friend WithEvents vtab2 As VIBlend.WinForms.Controls.vTabPage
+    Friend WithEvents vtabFrete As VIBlend.WinForms.Controls.vTabPage
     Friend WithEvents txtVolumes As Controles.Text_SoNumeros
     Friend WithEvents txtFreteValor As Controles.Text_Monetario
     Friend WithEvents Label10 As Label
@@ -1753,7 +2166,7 @@ Partial Class frmConsignacao
     Friend WithEvents Label7 As Label
     Friend WithEvents cmbIDTransportadora As Controles.ComboBox_OnlyValues
     Friend WithEvents cmbFreteTipo As Controles.ComboBox_OnlyValues
-	Friend WithEvents vtab3 As VIBlend.WinForms.Controls.vTabPage
+	Friend WithEvents vtabNotas As VIBlend.WinForms.Controls.vTabPage
 	Friend WithEvents Label11 As Label
 	Friend WithEvents dgvNotas As DataGridView
 	Friend WithEvents lblCli As Label
@@ -1830,13 +2243,8 @@ Partial Class frmConsignacao
 	Friend WithEvents btnExcluir As ToolStripButton
 	Friend WithEvents ToolStripSeparator3 As ToolStripSeparator
 	Friend WithEvents btnTransportadoraAdd As Button
-	Friend WithEvents btnCompra As VIBlend.WinForms.Controls.vButton
 	Friend WithEvents VButton2 As VIBlend.WinForms.Controls.vButton
-	Friend WithEvents dgvCompras As DataGridView
-	Friend WithEvents clnCompraData As DataGridViewTextBoxColumn
-	Friend WithEvents clnCompraValor As DataGridViewTextBoxColumn
-	Friend WithEvents Label6 As Label
-	Friend WithEvents vtab4 As VIBlend.WinForms.Controls.vTabPage
+	Friend WithEvents vtabDevolução As VIBlend.WinForms.Controls.vTabPage
 	Friend WithEvents dgvDevolucao As DataGridView
 	Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
 	Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
@@ -1881,4 +2289,41 @@ Partial Class frmConsignacao
 	Friend WithEvents DataGridViewTextBoxColumn26 As DataGridViewTextBoxColumn
 	Friend WithEvents DataGridViewTextBoxColumn27 As DataGridViewTextBoxColumn
 	Friend WithEvents DataGridViewTextBoxColumn28 As DataGridViewTextBoxColumn
+	Friend WithEvents vtabCompra As VIBlend.WinForms.Controls.vTabPage
+	Friend WithEvents DataGridView1 As DataGridView
+	Friend WithEvents vtabAPagar As VIBlend.WinForms.Controls.vTabPage
+	Friend WithEvents Label4 As Label
+	Friend WithEvents Label6 As Label
+	Friend WithEvents Label17 As Label
+	Friend WithEvents lblTotalCobrado As Label
+	Friend WithEvents Label26 As Label
+	Friend WithEvents Label28 As Label
+	Friend WithEvents lblCobrancaTipo As Label
+	Friend WithEvents vtabFreteDevolucao As VIBlend.WinForms.Controls.vTabPage
+	Friend WithEvents Button1 As Button
+	Friend WithEvents TextBox1 As TextBox
+	Friend WithEvents Label29 As Label
+	Friend WithEvents Label30 As Label
+	Friend WithEvents Label31 As Label
+	Friend WithEvents Label32 As Label
+	Friend WithEvents Label33 As Label
+	Friend WithEvents Label34 As Label
+	Friend WithEvents Text_SoNumeros1 As Controles.Text_SoNumeros
+	Friend WithEvents Text_Monetario1 As Controles.Text_Monetario
+	Friend WithEvents ComboBox_OnlyValues1 As Controles.ComboBox_OnlyValues
+	Friend WithEvents ComboBox_OnlyValues2 As Controles.ComboBox_OnlyValues
+	Private WithEvents ShapeContainer4 As PowerPacks.ShapeContainer
+	Friend WithEvents clnIDItem As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn29 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn30 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn31 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn32 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn34 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn35 As DataGridViewTextBoxColumn
+	Friend WithEvents dgvAPagar As DataGridView
+	Friend WithEvents DataGridViewTextBoxColumn36 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn37 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn38 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn39 As DataGridViewTextBoxColumn
+	Friend WithEvents DataGridViewTextBoxColumn40 As DataGridViewTextBoxColumn
 End Class

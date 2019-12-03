@@ -22,6 +22,7 @@ Public Class clConsignacao : Implements IEditableObject
 		Dim _CFOP As Int16
 		Dim _TransacaoData As Date
 		Dim _IDConsignacaoOrigem As Integer?
+		Dim _IDDevolucao As Integer?
 		'
 		' TBLCONSIGNACAO =====================================================
 		Dim _FreteTipo As Byte ' 0="Sem Frete" | 1="Emitente" | 2="Destinatário" | 3=Reembolso | 4="A Cobrar"
@@ -123,6 +124,15 @@ Public Class clConsignacao : Implements IEditableObject
 		End Get
 		Set(value As Integer?)
 			CData._IDConsignacaoOrigem = value
+		End Set
+	End Property
+	'
+	Property IDDevolucao() As Integer?
+		Get
+			Return CData._IDDevolucao
+		End Get
+		Set(value As Integer?)
+			CData._IDDevolucao = value
 		End Set
 	End Property
 	'
@@ -389,13 +399,14 @@ Public Class clConsignacaoDevolucao : Implements IEditableObject
 	Structure ConsigStructure ' alguns usam FRIEND em vez de DIM
 		'
 		' TBLTRANSACAO =====================================================
-		Dim _IDConsignacaoDevolucao As Integer?
-		Dim _IDPessoaDestino As Integer
+		Dim _IDConsignacao As Integer?
+		Dim _IDDevolucao As Integer?
+		Dim _IDFornecedor As Integer
 		' Cadastro As String
 		' CNP As String
 		' UF As String
 		' Cidade As String
-		Dim _IDPessoaOrigem As Integer
+		Dim _IDFilial As Integer
 		' Dim _ApelidoFilial As String
 		Dim _IDOperacao As Byte
 		Dim _IDSituacao As Byte
@@ -429,10 +440,11 @@ Public Class clConsignacaoDevolucao : Implements IEditableObject
 #End Region
 	'
 #Region "IMPLEMENTS EVENTS"
-	Public Sub New()
+	Public Sub New(IDConsignacao As Integer)
 		CData = New ConsigStructure()
 		With CData
-			._IDConsignacaoDevolucao = Nothing
+			._IDConsignacao = IDConsignacao
+			._IDDevolucao = Nothing
 			._TransacaoData = DateTime.Today
 			._IDSituacao = 0
 			._FreteTipo = 0
@@ -469,7 +481,7 @@ Public Class clConsignacaoDevolucao : Implements IEditableObject
 	Public Event AoAlterar()
 	'
 	Public Overrides Function ToString() As String
-		Return IDConsignacaoDevolucao.ToString
+		Return IDDevolucao.ToString
 	End Function
 	'
 	Public ReadOnly Property RegistroAlterado As Boolean
@@ -486,24 +498,33 @@ Public Class clConsignacaoDevolucao : Implements IEditableObject
 	'--- TBLTRANSACAO
 	'===========================================================================================
 	'
-	Property IDConsignacaoDevolucao() As Nullable(Of Integer)
+	Property IDConsignacao() As Integer?
 		Get
-			Return CData._IDConsignacaoDevolucao
+			Return CData._IDConsignacao
 		End Get
-		Set(value As Nullable(Of Integer))
-			CData._IDConsignacaoDevolucao = value
+		Set(value As Integer?)
+			CData._IDConsignacao = value
 		End Set
 	End Property
 	'
-	Property IDPessoaDestino() As Integer
+	Property IDDevolucao() As Integer?
 		Get
-			Return CData._IDPessoaDestino
+			Return CData._IDDevolucao
+		End Get
+		Set(value As Integer?)
+			CData._IDDevolucao = value
+		End Set
+	End Property
+	'
+	Property IDFornecedor() As Integer
+		Get
+			Return CData._IDFornecedor
 		End Get
 		Set(value As Integer)
-			If Not IsNothing(CData._IDPessoaDestino) AndAlso value <> CData._IDPessoaDestino Then
+			If Not IsNothing(CData._IDFornecedor) AndAlso value <> CData._IDFornecedor Then
 				RaiseEvent AoAlterar()
 			End If
-			CData._IDPessoaDestino = value
+			CData._IDFornecedor = value
 		End Set
 	End Property
 	'
@@ -514,16 +535,16 @@ Public Class clConsignacaoDevolucao : Implements IEditableObject
 	Public Property Cidade
 	Public Property ApelidoFilial
 	'
-	'--- Propriedade IDPessoaOrigem
-	Public Property IDPessoaOrigem() As Integer?
+	'--- Propriedade _IDFilial
+	Public Property IDFilial() As Integer?
 		Get
-			Return CData._IDPessoaOrigem
+			Return CData._IDFilial
 		End Get
 		Set(ByVal value As Integer?)
-			If value <> CData._IDPessoaOrigem Then
+			If value <> CData._IDFilial Then
 				RaiseEvent AoAlterar()
 			End If
-			CData._IDPessoaOrigem = value
+			CData._IDFilial = value
 		End Set
 	End Property
 	'

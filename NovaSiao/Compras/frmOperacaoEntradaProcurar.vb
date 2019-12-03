@@ -9,179 +9,135 @@ Public Class frmOperacaoEntradaProcurar
     Private ImgLock As Image = My.Resources.lock
     Private _myMes As Date
     Private _Operacao As Byte
-    '
-    '
-#Region "PROPERTYS"
-    '
-    Private Property myMes() As DateTime
-        '
-        Get
-            Return _myMes
-        End Get
-        '
-        Set(ByVal value As DateTime)
-            If CDate(value.ToShortDateString) > CDate(Now.ToShortDateString) Then
-                value = Now.ToShortDateString
-                btnPeriodoPosterior.Enabled = False
-            Else
-                btnPeriodoPosterior.Enabled = True
-            End If
-            _myMes = value
-            lblPeriodo.Text = Format(_myMes, "MMMM | yyyy")
-        End Set
-        '
-    End Property
-    '
-    Private Property propOperacao As Byte
-        '
-        Get
-            Return _Operacao
-        End Get
-        '
-        Set(value As Byte)
-            '
-            _Operacao = value
-            txtProcura.Clear()
-            '
-            '--- obtem a nova listagem source e altera o DataGrid
-            GetList_AlteraListagem()
-            '
-            AlteraEtiquetas()
-            '
-        End Set
-        '
-    End Property
-    '
-#End Region '/ PROPERTYS
-    '
+	'
 #Region "EVENTO LOAD"
-    '
-    Private Sub frmOperacaoEntradaProcurar_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        '
-        '--- define a posicao do pnlMes
-        pnlMes.Location = New Point(636, 130)
-        '
-        PreencheComboOperacao()
-        myMes = ObterDefault("DataPadrao")
-        lblPeriodo.Text = Format(myMes, "MMMM | yyyy")
-        FormataListagem()
-        propOperacao = 2 '--- Operacao de Compra
-        '
-        AddHandler cmbOperacao.SelectedIndexChanged, AddressOf Handler_GetList
-        AddHandler dtMes.DateChanged, AddressOf dtMes_DateChanged
-        '
-    End Sub
-    '
-    Private Sub PreencheComboOperacao()
-        Dim db As New TransacaoBLL
-        Dim dtOp As New DataTable
-        '
-        Try
-            dtOp = db.Get_Operacao_DT(TransacaoItemBLL.EnumMovimento.ENTRADA)
-        Catch ex As Exception
-            MessageBox.Show(ex.Message)
-        End Try
-        '
-        With cmbOperacao
-            .DataSource = dtOp
-            .ValueMember = "IdOperacao"
-            .DisplayMember = "Operacao"
-        End With
-    End Sub
-    '
-    '--- OBTEM A NOVA LISTAGEM SOURCE E ALTERA O DATAGRID
-    Private Sub GetList_AlteraListagem()
-        '
-        Select Case _Operacao
-            Case 2 '--- OPERACAO DE COMPRA
-                GetList_Compra()
-                PreencheColunas_Compra()
-            Case 3 '--- OPERACAO DE SIMPLES ENTRADA
-                GetList_Simples()
-                PreencheColunas_Simples()
-            Case 5 '--- OPERACAO DE DEVOLUCAO DE VENDA
-                GetList_Devolucao()
-                PreencheColunas_Devolucao()
-            Case 7 '--- CONSIGNACAO DE ENTRADA
-                GetList_Consignacao()
-                PreencheColunas_Consignacao()
-        End Select
-        '
-    End Sub
-    '
-    Private Sub GetList_Compra()
-        '
-        Dim cBLL As New CompraBLL
-        '
-        '--- consulta o banco de dados
-        Try
-            '
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            '--- verifica o filtro das datas
-            If chkPeriodoTodos.Checked = True Then
-                SourceList = cBLL.GetCompraLista_Procura(Obter_FilialPadrao)
-            Else
-                Dim dtInicial As Date = Utilidades.FirstDayOfMonth(myMes)
-                Dim dtFinal As Date = Utilidades.LastDayOfMonth(myMes)
-                '
-                SourceList = cBLL.GetCompraLista_Procura(Obter_FilialPadrao, dtInicial, dtFinal)
-            End If
-            '
-            dgvListagem.DataSource = SourceList
-            '
-        Catch ex As Exception
-            MessageBox.Show("Em erro ao obter a lista de Operações de Compra..." & vbNewLine &
-            ex.Message, "Falha no Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-            '
-        End Try
-        '
-    End Sub
-    '
-    Private Sub GetList_Simples()
-        '
-        Dim sBLL As New SimplesMovimentacaoBLL
-        '
-        '--- consulta o banco de dados
-        Try
-            '
-            '--- Ampulheta ON
-            Cursor = Cursors.WaitCursor
-            '
-            '--- verifica o filtro das datas
-            If chkPeriodoTodos.Checked = True Then
-                SourceList = sBLL.GetSimplesEntradaLista_Procura(Obter_FilialPadrao)
-            Else
-                Dim dtInicial As Date = Utilidades.FirstDayOfMonth(myMes)
-                Dim dtFinal As Date = Utilidades.LastDayOfMonth(myMes)
-                '
-                SourceList = sBLL.GetSimplesEntradaLista_Procura(Obter_FilialPadrao, dtInicial, dtFinal)
-            End If
-            '
-            dgvListagem.DataSource = SourceList
-            '
-        Catch ex As Exception
-            MessageBox.Show("Em erro ao obter a lista de Operações de Simples Entradas..." & vbNewLine &
-            ex.Message, "Falha no Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        Finally
-            '
-            '--- Ampulheta OFF
-            Cursor = Cursors.Default
-            '
-        End Try
-        '
-    End Sub
-    '
-    Private Sub GetList_Devolucao()
-        SourceList = Nothing
-        dgvListagem.DataSource = Nothing
-    End Sub
-    '
-    Private Sub GetList_Consignacao()
+	'
+	Private Sub frmOperacaoEntradaProcurar_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+		'
+		'--- define a posicao do pnlMes
+		pnlMes.Location = New Point(636, 130)
+		'
+		PreencheComboOperacao()
+		myMes = ObterDefault("DataPadrao")
+		lblPeriodo.Text = Format(myMes, "MMMM | yyyy")
+		FormataListagem()
+		propOperacao = 2 '--- Operacao de Compra
+		'
+		AddHandler cmbOperacao.SelectedIndexChanged, AddressOf Handler_GetList
+		AddHandler dtMes.DateChanged, AddressOf dtMes_DateChanged
+		'
+	End Sub
+	'
+	Private Sub PreencheComboOperacao()
+		Dim db As New TransacaoBLL
+		Dim dtOp As New DataTable
+		'
+		Try
+			dtOp = db.Get_Operacao_DT(TransacaoItemBLL.EnumMovimento.ENTRADA)
+		Catch ex As Exception
+			MessageBox.Show(ex.Message)
+		End Try
+		'
+		With cmbOperacao
+			.DataSource = dtOp
+			.ValueMember = "IdOperacao"
+			.DisplayMember = "Operacao"
+		End With
+	End Sub
+	'
+	'--- OBTEM A NOVA LISTAGEM SOURCE E ALTERA O DATAGRID
+	Private Sub GetList_AlteraListagem()
+		'
+		Select Case _Operacao
+			Case 2 '--- OPERACAO DE COMPRA
+				GetList_Compra()
+				PreencheColunas_Compra()
+			Case 3 '--- OPERACAO DE SIMPLES ENTRADA
+				GetList_Simples()
+				PreencheColunas_Simples()
+			Case 5 '--- OPERACAO DE DEVOLUCAO DE VENDA
+				GetList_Devolucao()
+				PreencheColunas_Devolucao()
+			Case 7 '--- CONSIGNACAO DE ENTRADA
+				GetList_Consignacao()
+				PreencheColunas_Consignacao()
+		End Select
+		'
+	End Sub
+	'
+	Private Sub GetList_Compra()
+		'
+		Dim cBLL As New CompraBLL
+		'
+		'--- consulta o banco de dados
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			'--- verifica o filtro das datas
+			If chkPeriodoTodos.Checked = True Then
+				SourceList = cBLL.GetCompraLista_Procura(Obter_FilialPadrao)
+			Else
+				Dim dtInicial As Date = Utilidades.FirstDayOfMonth(myMes)
+				Dim dtFinal As Date = Utilidades.LastDayOfMonth(myMes)
+				'
+				SourceList = cBLL.GetCompraLista_Procura(Obter_FilialPadrao, dtInicial, dtFinal)
+			End If
+			'
+			dgvListagem.DataSource = SourceList
+			'
+		Catch ex As Exception
+			MessageBox.Show("Em erro ao obter a lista de Operações de Compra..." & vbNewLine &
+			ex.Message, "Falha no Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
+		'
+	End Sub
+	'
+	Private Sub GetList_Simples()
+		'
+		Dim sBLL As New SimplesMovimentacaoBLL
+		'
+		'--- consulta o banco de dados
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			'--- verifica o filtro das datas
+			If chkPeriodoTodos.Checked = True Then
+				SourceList = sBLL.GetSimplesEntradaLista_Procura(Obter_FilialPadrao)
+			Else
+				Dim dtInicial As Date = Utilidades.FirstDayOfMonth(myMes)
+				Dim dtFinal As Date = Utilidades.LastDayOfMonth(myMes)
+				'
+				SourceList = sBLL.GetSimplesEntradaLista_Procura(Obter_FilialPadrao, dtInicial, dtFinal)
+			End If
+			'
+			dgvListagem.DataSource = SourceList
+			'
+		Catch ex As Exception
+			MessageBox.Show("Em erro ao obter a lista de Operações de Simples Entradas..." & vbNewLine &
+			ex.Message, "Falha no Sistema", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
+		'
+	End Sub
+	'
+	Private Sub GetList_Devolucao()
+		SourceList = Nothing
+		dgvListagem.DataSource = Nothing
+	End Sub
+	'
+	Private Sub GetList_Consignacao()
 		'
 		Dim cBLL As New ConsignacaoBLL
 		'
@@ -213,12 +169,55 @@ Public Class frmOperacaoEntradaProcurar
 		End Try
 		'
 	End Sub
-    '
+	'
 #End Region
-    '
+	'
+#Region "PROPERTYS"
+	'
+	Private Property myMes() As DateTime
+		'
+		Get
+			Return _myMes
+		End Get
+		'
+		Set(ByVal value As DateTime)
+			If CDate(value.ToShortDateString) > CDate(Now.ToShortDateString) Then
+				value = Now.ToShortDateString
+				btnPeriodoPosterior.Enabled = False
+			Else
+				btnPeriodoPosterior.Enabled = True
+			End If
+			_myMes = value
+			lblPeriodo.Text = Format(_myMes, "MMMM | yyyy")
+		End Set
+		'
+	End Property
+	'
+	Private Property propOperacao As Byte
+		'
+		Get
+			Return _Operacao
+		End Get
+		'
+		Set(value As Byte)
+			'
+			_Operacao = value
+			txtProcura.Clear()
+			'
+			'--- obtem a nova listagem source e altera o DataGrid
+			GetList_AlteraListagem()
+			'
+			AlteraEtiquetas()
+			'
+		End Set
+		'
+	End Property
+	'
+#End Region '/ PROPERTYS
+	'
 #Region "LISTAGEM CONFIGURAÇÃO"
-    '
-    Private Sub FormataListagem()
+	'
+	Private Sub FormataListagem()
         '
         dgvListagem.AutoGenerateColumns = False
         '
@@ -434,7 +433,7 @@ Public Class frmOperacaoEntradaProcurar
 		'
 		' (2) COLUNA NOME
 		With clnCadastro
-			.DataPropertyName = "Cadastro"
+			.DataPropertyName = "Fornecedor"
 			.HeaderText = "Fornecedor"
 			.Width = 400
 			.Resizable = DataGridViewTriState.False
