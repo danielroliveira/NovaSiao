@@ -33,10 +33,6 @@ Partial Class frmConsignacaoCompraItem
 		Me.btnOK = New System.Windows.Forms.Button()
 		Me.Label5 = New System.Windows.Forms.Label()
 		Me.btnCancelar = New System.Windows.Forms.Button()
-		Me.lblEstoque = New System.Windows.Forms.Label()
-		Me.Label9 = New System.Windows.Forms.Label()
-		Me.lblReservado = New System.Windows.Forms.Label()
-		Me.Label11 = New System.Windows.Forms.Label()
 		Me.txtRGProduto = New System.Windows.Forms.TextBox()
 		Me.txtDesconto = New System.Windows.Forms.TextBox()
 		Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
@@ -195,44 +191,6 @@ Partial Class frmConsignacaoCompraItem
 		Me.btnCancelar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
 		Me.btnCancelar.UseVisualStyleBackColor = True
 		'
-		'lblEstoque
-		'
-		Me.lblEstoque.BackColor = System.Drawing.SystemColors.InactiveBorder
-		Me.lblEstoque.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-		Me.lblEstoque.Location = New System.Drawing.Point(363, 210)
-		Me.lblEstoque.Name = "lblEstoque"
-		Me.lblEstoque.Size = New System.Drawing.Size(77, 27)
-		Me.lblEstoque.TabIndex = 4
-		Me.lblEstoque.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-		'
-		'Label9
-		'
-		Me.Label9.AutoSize = True
-		Me.Label9.Location = New System.Drawing.Point(362, 188)
-		Me.Label9.Name = "Label9"
-		Me.Label9.Size = New System.Drawing.Size(65, 19)
-		Me.Label9.TabIndex = 7
-		Me.Label9.Text = "Estoque:"
-		'
-		'lblReservado
-		'
-		Me.lblReservado.BackColor = System.Drawing.SystemColors.InactiveBorder
-		Me.lblReservado.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-		Me.lblReservado.Location = New System.Drawing.Point(446, 210)
-		Me.lblReservado.Name = "lblReservado"
-		Me.lblReservado.Size = New System.Drawing.Size(77, 27)
-		Me.lblReservado.TabIndex = 4
-		Me.lblReservado.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-		'
-		'Label11
-		'
-		Me.Label11.AutoSize = True
-		Me.Label11.Location = New System.Drawing.Point(445, 187)
-		Me.Label11.Name = "Label11"
-		Me.Label11.Size = New System.Drawing.Size(81, 19)
-		Me.Label11.TabIndex = 7
-		Me.Label11.Text = "Reservado:"
-		'
 		'txtRGProduto
 		'
 		Me.txtRGProduto.Location = New System.Drawing.Point(21, 92)
@@ -280,16 +238,12 @@ Partial Class frmConsignacaoCompraItem
 		Me.Controls.Add(Me.btnOK)
 		Me.Controls.Add(Me.Label4)
 		Me.Controls.Add(Me.Label3)
-		Me.Controls.Add(Me.Label11)
-		Me.Controls.Add(Me.Label9)
 		Me.Controls.Add(Me.Label7)
 		Me.Controls.Add(Me.Label6)
 		Me.Controls.Add(Me.Label2)
 		Me.Controls.Add(Me.Label5)
 		Me.Controls.Add(Me.Label1)
 		Me.Controls.Add(Me.txtQuantidade)
-		Me.Controls.Add(Me.lblReservado)
-		Me.Controls.Add(Me.lblEstoque)
 		Me.Controls.Add(Me.lblTotal)
 		Me.Controls.Add(Me.lblSubTotal)
 		Me.Controls.Add(Me.lblPreco)
@@ -300,16 +254,12 @@ Partial Class frmConsignacaoCompraItem
 		Me.Controls.SetChildIndex(Me.lblPreco, 0)
 		Me.Controls.SetChildIndex(Me.lblSubTotal, 0)
 		Me.Controls.SetChildIndex(Me.lblTotal, 0)
-		Me.Controls.SetChildIndex(Me.lblEstoque, 0)
-		Me.Controls.SetChildIndex(Me.lblReservado, 0)
 		Me.Controls.SetChildIndex(Me.txtQuantidade, 0)
 		Me.Controls.SetChildIndex(Me.Label1, 0)
 		Me.Controls.SetChildIndex(Me.Label5, 0)
 		Me.Controls.SetChildIndex(Me.Label2, 0)
 		Me.Controls.SetChildIndex(Me.Label6, 0)
 		Me.Controls.SetChildIndex(Me.Label7, 0)
-		Me.Controls.SetChildIndex(Me.Label9, 0)
-		Me.Controls.SetChildIndex(Me.Label11, 0)
 		Me.Controls.SetChildIndex(Me.Label3, 0)
 		Me.Controls.SetChildIndex(Me.Label4, 0)
 		Me.Controls.SetChildIndex(Me.btnOK, 0)
@@ -339,12 +289,8 @@ Partial Class frmConsignacaoCompraItem
     Friend WithEvents btnOK As Button
     Friend WithEvents Label5 As Label
     Friend WithEvents btnCancelar As Button
-    Friend WithEvents lblEstoque As Label
-    Friend WithEvents Label9 As Label
-    Friend WithEvents lblReservado As Label
-    Friend WithEvents Label11 As Label
-    Friend WithEvents txtRGProduto As TextBox
-    Friend WithEvents txtDesconto As TextBox
+	Friend WithEvents txtRGProduto As TextBox
+	Friend WithEvents txtDesconto As TextBox
     Friend WithEvents StatusStrip1 As StatusStrip
     Friend WithEvents lblToolStripInfo As ToolStripStatusLabel
 End Class

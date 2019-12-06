@@ -21,9 +21,22 @@ Public Class frmCompra
     '--- TOTAIS
     Private _TotalGeral As Decimal
     Private _TotalProdutos As Decimal
-    '
+	'
 #Region "LOAD"
-    Private Property Sit As EnumFlagEstado
+	'
+	Public Sub New(myCompra As clCompra)
+		' This call is required by the designer.
+		InitializeComponent()
+		'
+		' Add any initialization after the InitializeComponent() call.
+		propCompra = myCompra
+		'
+		'--- hANDLER Menu Acao
+		MenuOpen_AdHandler()
+		'
+	End Sub
+	'
+	Private Property Sit As EnumFlagEstado
         Get
             Return _Sit
         End Get
@@ -184,24 +197,12 @@ Public Class frmCompra
             '
         End Get
     End Property
-    '
-    Public Sub New(myCompra As clCompra)
-        ' This call is required by the designer.
-        InitializeComponent()
-        '
-        ' Add any initialization after the InitializeComponent() call.
-        propCompra = myCompra
-        '
-        '--- hANDLER Menu Acao
-        MenuOpen_AdHandler()
-        '
-    End Sub
-    '
+	'
 #End Region
-    '
+	'
 #Region "DATABINDING"
-    '
-    Private Sub PreencheDataBinding()
+	'
+	Private Sub PreencheDataBinding()
         '
         txtFreteCobrado.DataBindings.Add("Text", bindCompra, "FreteCobrado", True, DataSourceUpdateMode.OnPropertyChanged)
         txtICMSValor.DataBindings.Add("Text", bindCompra, "ICMSValor", True, DataSourceUpdateMode.OnPropertyChanged)

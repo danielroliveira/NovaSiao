@@ -431,6 +431,7 @@ Public Class clConsignacaoDevolucao : Implements IEditableObject
 		Dim _IDFreteDespesa As Integer?
 		'
 	End Structure
+	'
 #End Region
 	'
 #Region "PRIVATE VARIABLES"
@@ -916,7 +917,7 @@ Public Class clConsignacaoCompraItem : Implements IEditableObject
 		End Set
 	End Property
 	'
-	Property IDConsignacaoCompra() As Integer?
+	Property IDConsignacao() As Integer?
 		Get
 			Return itemData._IDConsignacao
 		End Get

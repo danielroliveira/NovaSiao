@@ -11,7 +11,6 @@ Public Class frmConsignacaoCompraItem
 	Private BindItem As New BindingSource
 	Private _RGAlterado As Boolean = False '--> detecta alteracao do RGProduto
     Private QuantAnterior As Integer '--> backup da quantidade original
-    Private WithEvents BlinkTimer As New Timer
 	'
 #Region "NEW | PROPERTYS"
 	'
@@ -76,10 +75,8 @@ Public Class frmConsignacaoCompraItem
         txtDesconto.DataBindings.Add("Text", BindItem, "Desconto", True, DataSourceUpdateMode.OnPropertyChanged)
         txtQuantidade.DataBindings.Add("Text", BindItem, "Quantidade", True, DataSourceUpdateMode.OnPropertyChanged)
         lblProduto.DataBindings.Add("Text", BindItem, "Produto", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblEstoque.DataBindings.Add("Text", BindItem, "Estoque", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblReservado.DataBindings.Add("Text", BindItem, "Reservado", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblPreco.DataBindings.Add("Text", BindItem, "Preco", True, DataSourceUpdateMode.OnPropertyChanged)
-        lblSubTotal.DataBindings.Add("Text", BindItem, "SubTotal")
+		lblPreco.DataBindings.Add("Text", BindItem, "Preco", True, DataSourceUpdateMode.OnPropertyChanged)
+		lblSubTotal.DataBindings.Add("Text", BindItem, "SubTotal")
         lblTotal.DataBindings.Add("Text", BindItem, "Total")
         '
         ' FORMATA OS VALORES DO DATABINDING
@@ -89,8 +86,6 @@ Public Class frmConsignacaoCompraItem
         AddHandler txtDesconto.DataBindings("text").Format, AddressOf idFormatPerc
         AddHandler lblSubTotal.DataBindings("text").Format, AddressOf idFormatCUR
         AddHandler lblTotal.DataBindings("text").Format, AddressOf idFormatCUR
-        AddHandler lblEstoque.DataBindings("text").Format, AddressOf idFormatQ2
-        AddHandler lblReservado.DataBindings("text").Format, AddressOf idFormatQ2
         '
         '--- Detecta quando o IDProduto foi alterado
         AddHandler _clItem.AoAlterarRGProduto, AddressOf RGProdutoAlterado
@@ -101,18 +96,21 @@ Public Class frmConsignacaoCompraItem
     Private Sub RGProdutoAlterado()
         _RGAlterado = True
     End Sub
-    '
-    ' FORMATA OS BINDINGS
-    Private Sub idFormatRG(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
-        e.Value = Format(e.Value, "0000")
-    End Sub
-    Private Sub idFormatQ2(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
-        e.Value = Format(e.Value, "00")
-    End Sub
-    Private Sub idFormatCUR(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
-        e.Value = FormatCurrency(e.Value, 2)
-    End Sub
-    Private Sub idFormatPerc(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
+	'
+	' FORMATA OS BINDINGS
+	Private Sub idFormatRG(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
+		e.Value = Format(e.Value, "0000")
+	End Sub
+	'
+	Private Sub idFormatQ2(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
+		e.Value = Format(e.Value, "00")
+	End Sub
+	'
+	Private Sub idFormatCUR(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
+		e.Value = FormatCurrency(e.Value, 2)
+	End Sub
+	'
+	Private Sub idFormatPerc(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
         e.Value = Format(e.Value, "0.00")
     End Sub
     '
@@ -132,67 +130,51 @@ Public Class frmConsignacaoCompraItem
 	'
 	'--- OBTEM AS INFORMACOES DO PRODUTO APOS INSERIR RGPRODUTO
 	Private Function ObterProdutoPeloRG() As Boolean
-
-		Throw New NotImplementedException("Ainda não implementado")
 		'
-		'Try
-		'    '--- Ampulheta ON
-		'    Cursor = Cursors.WaitCursor
-		'    '
-		'    Dim ItemProduto As clTransacaoItem = itemBLL.TransacaoItem_Get_New(txtRGProduto.Text, _IDFilial)
-		'    '
-		'    If String.IsNullOrEmpty(ItemProduto.Produto) Then
-		'        MessageBox.Show("Registro de Produto não encontrado..." & vbNewLine &
-		'                        "Favor digitar um Registro válido.", "Reg. Inválido",
-		'                        MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-		'        '
-		'        BindItem.CancelEdit()
-		'        Return False
-		'        '
-		'    End If
-		'    '
-		'    '--- Preenche a classe clItem
-		'    With _clItem
-		'        .Produto = ItemProduto.Produto
-		'        .PVenda = ItemProduto.PVenda
-		'        .PCompra = ItemProduto.PCompra
-		'        .IDProduto = ItemProduto.IDProduto
-		'        .CodBarrasA = ItemProduto.CodBarrasA
-		'        .ProdutoAtivo = ItemProduto.ProdutoAtivo
-		'        .Estoque = ItemProduto.Estoque
-		'        .Reservado = ItemProduto.Reservado
-		'        .IDFilial = ItemProduto.IDFilial
-		'        .RGProduto = ItemProduto.RGProduto
-		'        '
-		'        '--- define o preco de VENDA OU DE COMPRA
-		'        If _precoOrigem = EnumPrecoOrigem.PRECO_VENDA Then
-		'            .Preco = ItemProduto.PVenda
-		'        ElseIf _precoOrigem = EnumPrecoOrigem.PRECO_COMPRA Then
-		'            .Preco = ItemProduto.PCompra
-		'            .Desconto = ItemProduto.DescontoCompra
-		'        End If
-		'        '
-		'    End With
-		'    '
-		'    '--- destaca o estoque caso zero ou negativo
-		'    If _clItem.Estoque <= 0 Then
-		'        BlinkTimer.Enabled = True
-		'    Else
-		'        lblEstoque.BackColor = SystemColors.InactiveBorder
-		'    End If
-		'    '
-		'    BindItem.ResetBindings(True)
-		'    Return True
-		'    '
-		'Catch ex As Exception
-		'    MessageBox.Show("Uma exceção ocorreu ao obter o produto no BD..." & vbNewLine &
-		'                    ex.Message, "Exceção",
-		'                    MessageBoxButtons.OK, MessageBoxIcon.Error)
-		'    Return False
-		'Finally
-		'    '--- Ampulheta OFF
-		'    Cursor = Cursors.Default
-		'End Try
+		Try
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim itemBLL As New TransacaoItemBLL
+			Dim ItemProduto As clTransacaoItem = itemBLL.TransacaoItem_Get_New(txtRGProduto.Text, Obter_FilialPadrao)
+			'
+			If String.IsNullOrEmpty(ItemProduto.Produto) Then
+				MessageBox.Show("Registro de Produto não encontrado..." & vbNewLine &
+								"Favor digitar um Registro válido.", "Reg. Inválido",
+								MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+				'
+				BindItem.CancelEdit()
+				Return False
+				'
+			End If
+			'
+			'--- Preenche a classe clItem
+			With _clItem
+				'
+				.Produto = ItemProduto.Produto
+				.PVenda = ItemProduto.PVenda
+				.PCompra = ItemProduto.PCompra
+				.IDProduto = ItemProduto.IDProduto
+				.CodBarrasA = ItemProduto.CodBarrasA
+				.ProdutoAtivo = ItemProduto.ProdutoAtivo
+				.RGProduto = ItemProduto.RGProduto
+				.Preco = ItemProduto.PCompra
+				.Desconto = ItemProduto.DescontoCompra
+				'
+			End With
+			'
+			BindItem.ResetBindings(True)
+			Return True
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao obter o produto no BD..." & vbNewLine &
+							ex.Message, "Exceção",
+							MessageBoxButtons.OK, MessageBoxIcon.Error)
+			Return False
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
 		'
 	End Function
 	'
@@ -367,31 +349,7 @@ Public Class frmConsignacaoCompraItem
         Dim pnl As Panel = _formOrigem.Controls("Panel1")
         pnl.BackColor = Color.SlateGray
     End Sub
-    '
-    '-------------------------------------------------------------------------------------------------
-    ' EFEITO VISUAL CONTROLE PISCANDO
-    '-------------------------------------------------------------------------------------------------
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles BlinkTimer.Tick
-        '
-        '--- permuta a cor
-        If lblEstoque.BackColor = Color.Gold Then
-            lblEstoque.BackColor = SystemColors.InactiveBorder
-        Else
-            lblEstoque.BackColor = Color.Gold
-        End If
-        '
-        '--- add contagem
-        If IsNothing(BlinkTimer.Tag) Then BlinkTimer.Tag = 0
-        BlinkTimer.Tag += 1
-        '
-        '--- verifica a contagem e desabilita o timer
-        If lblEstoque.BackColor = Color.Gold And BlinkTimer.Tag > 10 Then
-            BlinkTimer.Tag = 0
-            BlinkTimer.Enabled = False
-        End If
-        '
-    End Sub
-
+	'
 #End Region
-    '
+	'
 End Class

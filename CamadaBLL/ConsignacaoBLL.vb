@@ -508,8 +508,8 @@ Public Class ConsignacaoBLL
 			db.LimparParametros()
 			'
 			'-- PARAMETROS DA TBLTRANSACAO
-			db.AdicionarParametros("@IDPessoaDestino", devolucao.IDPessoaDestino)
-			db.AdicionarParametros("@IDPessoaOrigem", devolucao.IDPessoaOrigem)
+			db.AdicionarParametros("@IDPessoaDestino", devolucao.IDFornecedor)
+			db.AdicionarParametros("@IDPessoaOrigem", devolucao.IDFilial)
 			db.AdicionarParametros("@IDOperacao", devolucao.IDOperacao)
 			db.AdicionarParametros("@IDSituacao", devolucao.IDSituacao)
 			db.AdicionarParametros("@IDUser", devolucao.IDUser)
@@ -600,15 +600,15 @@ Public Class ConsignacaoBLL
 	'--------------------------------------------------------------------------------------------
 	Private Function ConvertDtRow_clConsignacaoDevolucao(r As DataRow) As clConsignacaoDevolucao
 		'
-		Return New clConsignacaoDevolucao With {
-			.IDConsignacaoDevolucao = IIf(IsDBNull(r("IDConsignacaoDevolucao")), Nothing, r("IDConsignacaoDevolucao")),
+		Return New clConsignacaoDevolucao(r("IDConsignacao")) With {
+			.IDDevolucao = IIf(IsDBNull(r("IDDevolucao")), Nothing, r("IDDevolucao")),
 			.IDConsignacaoOrigem = IIf(IsDBNull(r("IDConsignacaoOrigem")), Nothing, r("IDConsignacaoOrigem")),
-			.IDPessoaDestino = IIf(IsDBNull(r("IDPessoaDestino")), Nothing, r("IDPessoaDestino")),
+			.IDFornecedor = IIf(IsDBNull(r("IDFornecedor")), Nothing, r("IDFornecedor")),
 			.Cadastro = IIf(IsDBNull(r("Cadastro")), String.Empty, r("Cadastro")),
 			.CNP = IIf(IsDBNull(r("CNP")), String.Empty, r("CNP")),
 			.UF = IIf(IsDBNull(r("UF")), String.Empty, r("UF")),
 			.Cidade = IIf(IsDBNull(r("Cidade")), String.Empty, r("Cidade")),
-			.IDPessoaOrigem = IIf(IsDBNull(r("IDPessoaOrigem")), Nothing, r("IDPessoaOrigem")),
+			.IDFilial = IIf(IsDBNull(r("IDFilial")), Nothing, r("IDFilial")),
 			.ApelidoFilial = IIf(IsDBNull(r("ApelidoFilial")), String.Empty, r("ApelidoFilial")),
 			.IDOperacao = IIf(IsDBNull(r("IDOperacao")), Nothing, r("IDOperacao")),
 			.IDSituacao = IIf(IsDBNull(r("IDSituacao")), Nothing, r("IDSituacao")),
@@ -642,16 +642,16 @@ Public Class ConsignacaoBLL
 			Dim db As AcessoDados = If(dbTran, New AcessoDados)
 			'
 			db.LimparParametros()
-			db.AdicionarParametros("@IDConsignacaoCompra", item.IDConsignacaoCompra)
+			db.AdicionarParametros("@IDConsignacao", item.IDConsignacao)
 			db.AdicionarParametros("@IDProduto", item.IDProduto)
 			db.AdicionarParametros("@Quantidade", item.Quantidade)
 			db.AdicionarParametros("@Preco", item.Preco)
 			db.AdicionarParametros("@Desconto", item.Desconto)
 			'
 			Dim query As String = "INSERT INTO tblConsignacaoCompraItem " &
-								  "(IDConsignacaoCompra, IDProduto, Quantidade, Preco, Desconto) " &
+								  "(IDConsignacao, IDProduto, Quantidade, Preco, Desconto) " &
 								  "VALUES " &
-								  "(@IDConsignacaoCompra, @IDProduto, @Quantidade, @Preco, @Desconto)"
+								  "(@IDConsignacao, @IDProduto, @Quantidade, @Preco, @Desconto)"
 			'
 			Dim newID As Integer = db.ExecutarInsertGetID(query)
 			'
@@ -675,7 +675,7 @@ Public Class ConsignacaoBLL
 			'
 			db.LimparParametros()
 			db.AdicionarParametros("@IDItem", item.IDItem)
-			db.AdicionarParametros("@IDConsignacaoCompra", item.IDConsignacaoCompra)
+			db.AdicionarParametros("@IDConsignacao", item.IDConsignacao)
 			db.AdicionarParametros("@IDProduto", item.IDProduto)
 			db.AdicionarParametros("@Quantidade", item.Quantidade)
 			db.AdicionarParametros("@Preco", item.Preco)
@@ -712,7 +712,7 @@ Public Class ConsignacaoBLL
 			db.AdicionarParametros("@IDItem", item.IDItem)
 			'
 			Dim query As String = "DELETE tblConsignacaoCompraItem " &
-								  "WHERE IDItem = @Item"
+								  "WHERE IDItem = @IDItem"
 			'
 			db.ExecutarManipulacao(CommandType.Text, query)
 
@@ -727,17 +727,17 @@ Public Class ConsignacaoBLL
 	'==========================================================================================
 	' RETORNA UMA LISTA DE ITENS CONSIG COMPRA PELO IDCONSIG COMPRA
 	'==========================================================================================
-	Public Function GetConsigCompraItens_List(IDConsigCompra As Integer) As List(Of clConsignacaoCompraItem)
+	Public Function GetConsigCompraItens_List(IDConsignacao As Integer) As List(Of clConsignacaoCompraItem)
 		Dim objdb As New AcessoDados
 		'
 		'--- limpar os parâmetros
 		objdb.LimparParametros()
 		'
 		'--- adicionar os parâmetros
-		objdb.AdicionarParametros("@IDConsignacaoCompra", IDConsigCompra)
+		objdb.AdicionarParametros("@IDConsignacao", IDConsignacao)
 		'
 		'--- Create SELECT query
-		Dim myQuery As String = "SELECT * FROM qryConsignacaoCompraItem WHERE IDConsignacaoCompra = @IDConsignacaoCompra"
+		Dim myQuery As String = "SELECT * FROM qryConsignacaoCompraItem WHERE IDConsignacao = @IDConsignacao"
 		'
 		Try
 			'--- GET DATATABLE
@@ -766,7 +766,7 @@ Public Class ConsignacaoBLL
 			Dim itn As New clConsignacaoCompraItem()
 			'
 			'--- Itens da tblConsignacaoCompraItem
-			itn.IDConsignacaoCompra = IIf(IsDBNull(r("IDConsignacaoCompra")), Nothing, r("IDConsignacaoCompra"))
+			itn.IDConsignacao = IIf(IsDBNull(r("IDConsignacao")), Nothing, r("IDConsignacao"))
 			itn.Preco = IIf(IsDBNull(r("Preco")), Nothing, r("Preco"))
 			itn.IDItem = IIf(IsDBNull(r("IDItem")), Nothing, r("IDItem"))
 			itn.Quantidade = IIf(IsDBNull(r("Quantidade")), Nothing, r("Quantidade"))

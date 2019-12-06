@@ -254,40 +254,46 @@ Public Class frmTransportadoraProcurar
     Private Sub cmbAtivo_SelectedValueChanged(sender As Object, e As EventArgs) Handles cmbAtivo.SelectedValueChanged
         FiltrarListagem()
     End Sub
-    '
+	'
 #End Region
-    '
+	'
 #Region "MENU SUSPENSO"
-    ' CONTROLE DO MENU SUSPENSO
-    Private Sub dgvListagem_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvListagem.MouseDown
-        If e.Button = MouseButtons.Right Then
-            Dim c As Control = DirectCast(sender, Control)
-            Dim hit As DataGridView.HitTestInfo = dgvListagem.HitTest(e.X, e.Y)
-            dgvListagem.ClearSelection()
-            '
-            '---VERIFICAÇÕES NECESSÁRIAS
-            If Not hit.Type = DataGridViewHitTestType.Cell Then Exit Sub
-            '
-            ' seleciona o ROW
-            dgvListagem.Rows(hit.RowIndex).Cells(0).Selected = True
-            dgvListagem.Rows(hit.RowIndex).Selected = True
-            '
-            ' mostra o MENU ativar e desativar
-            If dgvListagem.Columns(hit.ColumnIndex).Name = "Ativo" Then
-                If dgvListagem.Rows(hit.RowIndex).Cells("transpAtivo").Value = True Then
-                    AtivarToolStripMenuItem.Enabled = False
-                    DesativarToolStripMenuItem.Enabled = True
-                Else
-                    AtivarToolStripMenuItem.Enabled = True
-                    DesativarToolStripMenuItem.Enabled = False
-                End If
-                ' revela menu
-                MenuListagem.Show(c.PointToScreen(e.Location))
-            End If
-        End If
-    End Sub
-    '
-    Private Sub AtivarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AtivarToolStripMenuItem.Click
+	' CONTROLE DO MENU SUSPENSO
+	Private Sub dgvListagem_MouseDown(sender As Object, e As MouseEventArgs) Handles dgvListagem.MouseDown
+		'
+		If e.Button = MouseButtons.Right Then
+
+			Dim c As Control = DirectCast(sender, Control)
+			Dim hit As DataGridView.HitTestInfo = dgvListagem.HitTest(e.X, e.Y)
+			dgvListagem.ClearSelection()
+			'
+			'---VERIFICAÇÕES NECESSÁRIAS
+			If Not hit.Type = DataGridViewHitTestType.Cell Then Exit Sub
+			'
+			' seleciona o ROW
+			dgvListagem.Rows(hit.RowIndex).Cells(0).Selected = True
+			dgvListagem.Rows(hit.RowIndex).Selected = True
+			'
+			' mostra o MENU ativar e desativar
+			If dgvListagem.Columns(hit.ColumnIndex).Name = "Ativo" Then
+				'
+				If dgvListagem.Rows(hit.RowIndex).Cells("transpAtivo").Value = True Then
+					AtivarToolStripMenuItem.Enabled = False
+					DesativarToolStripMenuItem.Enabled = True
+				Else
+					AtivarToolStripMenuItem.Enabled = True
+					DesativarToolStripMenuItem.Enabled = False
+				End If
+				'
+				' revela menu
+				MenuListagem.Show(c.PointToScreen(e.Location))
+			End If
+
+		End If
+		'
+	End Sub
+	'
+	Private Sub AtivarToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AtivarToolStripMenuItem.Click
         '--- verifica se existe alguma cell 
         If dgvListagem.SelectedRows.Count = 0 Then Exit Sub
         '
