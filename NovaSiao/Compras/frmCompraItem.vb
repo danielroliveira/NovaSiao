@@ -428,10 +428,10 @@ Public Class frmCompraItem
         '
         '--- VERIFICA ESTOQUE
         VerificaDescontoAlteracao()
-        '
-        '--- RETORNA O OBJETO PARA O FORMULARIO ORIGEM
-        _clItem.EndEdit()
-        DialogResult = DialogResult.OK
+		'
+		'--- RETORNA O OBJETO PARA O FORMULARIO ORIGEM
+		'_clItem.EndEdit()
+		DialogResult = DialogResult.OK
         '
     End Sub
     '

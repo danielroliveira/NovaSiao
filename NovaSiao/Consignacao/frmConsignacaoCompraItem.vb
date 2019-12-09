@@ -7,14 +7,14 @@ Public Class frmConsignacaoCompraItem
 	'Private itemBLL As New TransacaoItemBLL
 	Private _clItem As clConsignacaoCompraItem
 	Private _acao As EnumFlagAcao
-	Private _formOrigem As Form
+	Private _formOrigem As frmConsignacao
 	Private BindItem As New BindingSource
 	Private _RGAlterado As Boolean = False '--> detecta alteracao do RGProduto
     Private QuantAnterior As Integer '--> backup da quantidade original
 	'
 #Region "NEW | PROPERTYS"
 	'
-	Sub New(fOrigem As Form, Item As clConsignacaoCompraItem)
+	Sub New(fOrigem As frmConsignacao, Item As clConsignacaoCompraItem)
 
 		' This call is required by the designer.
 		InitializeComponent()
@@ -135,33 +135,48 @@ Public Class frmConsignacaoCompraItem
 			'--- Ampulheta ON
 			Cursor = Cursors.WaitCursor
 			'
-			Dim itemBLL As New TransacaoItemBLL
-			Dim ItemProduto As clTransacaoItem = itemBLL.TransacaoItem_Get_New(txtRGProduto.Text, Obter_FilialPadrao)
-			'
-			If String.IsNullOrEmpty(ItemProduto.Produto) Then
-				MessageBox.Show("Registro de Produto não encontrado..." & vbNewLine &
-								"Favor digitar um Registro válido.", "Reg. Inválido",
-								MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+			If _formOrigem._ItensConsigList.Exists(Function(x) x.RGProduto = txtRGProduto.Text) Then
 				'
+				Dim ItemProduto As clTransacaoItem = _formOrigem._ItensConsigList.Where(Function(x) x.RGProduto = txtRGProduto.Text)(0)
+				'
+				'--- Preenche a classe clItem
+				With _clItem
+					'
+					.Produto = ItemProduto.Produto
+					.PVenda = ItemProduto.PVenda
+					.PCompra = ItemProduto.PCompra
+					.IDProduto = ItemProduto.IDProduto
+					.CodBarrasA = ItemProduto.CodBarrasA
+					.ProdutoAtivo = ItemProduto.ProdutoAtivo
+					.RGProduto = ItemProduto.RGProduto
+					.Preco = ItemProduto.PCompra
+					.Desconto = ItemProduto.DescontoCompra
+					'
+				End With
+				'
+			Else
+				'
+				AbrirDialog("Não é possível realizar uma compra de consignação de um produto que não está na listagem de consignação..." &
+							vbNewLine & "Favor escolher somente produtos que estão na listagem.",
+							"Produto não recebido", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
 				BindItem.CancelEdit()
 				Return False
 				'
 			End If
+
+
+			''
+			'If String.IsNullOrEmpty(ItemProduto.Produto) Then
+			'	MessageBox.Show("Registro de Produto não encontrado..." & vbNewLine &
+			'					"Favor digitar um Registro válido.", "Reg. Inválido",
+			'					MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+			'	'
+			'	BindItem.CancelEdit()
+			'	Return False
+			'	'
+			'End If
 			'
-			'--- Preenche a classe clItem
-			With _clItem
-				'
-				.Produto = ItemProduto.Produto
-				.PVenda = ItemProduto.PVenda
-				.PCompra = ItemProduto.PCompra
-				.IDProduto = ItemProduto.IDProduto
-				.CodBarrasA = ItemProduto.CodBarrasA
-				.ProdutoAtivo = ItemProduto.ProdutoAtivo
-				.RGProduto = ItemProduto.RGProduto
-				.Preco = ItemProduto.PCompra
-				.Desconto = ItemProduto.DescontoCompra
-				'
-			End With
+
 			'
 			BindItem.ResetBindings(True)
 			Return True

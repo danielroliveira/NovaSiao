@@ -558,10 +558,12 @@ Public Class frmCompra
         Dim newItem As New clTransacaoItem
         '
         Dim fItem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_COMPRA, _IDFilial, newItem)
-        fItem.ShowDialog()
-        '
-        '--- Verifica a resposa do Dialog
-        If Not fItem.DialogResult = DialogResult.OK Then Exit Sub
+		fItem.ShowDialog()
+		'
+		newItem.EndEdit()
+		'
+		'--- Verifica a resposa do Dialog
+		If Not fItem.DialogResult = DialogResult.OK Then Exit Sub
         '
         Dim ItemBLL As New TransacaoItemBLL
         Dim myID As Long? = Nothing
@@ -613,11 +615,12 @@ Public Class frmCompra
             Cursor = Cursors.WaitCursor
             '
             Dim fitem As New frmCompraItem(Me, EnumPrecoOrigem.PRECO_COMPRA, _IDFilial, itmAtual)
-            '
-            fitem.ShowDialog()
-            '
-            '--- Verifica a resposa do Dialog
-            If Not fitem.DialogResult = DialogResult.OK Then Exit Sub
+			'
+			fitem.ShowDialog()
+			itmAtual.EndEdit()
+			'
+			'--- Verifica a resposa do Dialog
+			If Not fitem.DialogResult = DialogResult.OK Then Exit Sub
             '
         Catch ex As Exception
             MessageBox.Show("Uma exceção ocorreu ao Abrir Form de Item..." & vbNewLine &

@@ -10,7 +10,7 @@ Public Class frmConsignacao
 	Private _IDFilial As Integer
 	'
 	'--- LISTS
-	Private _ItensConsigList As New List(Of clTransacaoItem)
+	Public _ItensConsigList As New List(Of clTransacaoItem)
 	Private _ItensCompraList As New List(Of clConsignacaoCompraItem)
 	Private _ItensDevList As New List(Of clTransacaoItem)
 	Private _NotasList As New List(Of clNotaFiscal)
@@ -373,7 +373,7 @@ Public Class frmConsignacao
 	'--------------------------------------------------------------------------------------------------------
 #End Region
 	'
-#Region "CARREGA/INSERE ITENS CONSIGNACAO"
+#Region "LOAD | INSERT ITENS CONSIGNACAO"
 	'
 	'--- RETORNA TODOS OS ITENS DA CONSIGNACAO
 	Private Sub ObterItensConsignacao()
@@ -594,6 +594,17 @@ Public Class frmConsignacao
 		'--- Verifica se esta Bloqueado ou Finalizado
 		If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
 		'
+		'--- check if exists compra
+		If _ItensCompraList.Count > 0 Then
+			'
+			AbrirDialog("Essa devolução já possui produtos comprados, por isso não é possível inserir/editar produtos...",
+						"Produtos Comprados",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			Exit Sub
+			'
+		End If
+		'
 		'--- Abre o frmItem
 		Dim newItem As New clTransacaoItem
 		'
@@ -605,6 +616,8 @@ Public Class frmConsignacao
 			If Not fItem.DialogResult = DialogResult.OK Then Exit Sub
 			'
 		End Using
+		'
+		newItem.EndEdit()
 		'
 		'--- it doesn't permit duplicated products
 		If _ItensConsigList.Exists(Function(x) x.RGProduto = newItem.RGProduto) Then
@@ -659,9 +672,19 @@ Public Class frmConsignacao
 		'--- Verifica se esta Bloqueado ou Finalizado
 		If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
 		'
+		'--- check if exists compra
+		If _ItensCompraList.Count > 0 Then
+			'
+			AbrirDialog("Essa devolução já possui produtos comprados, por isso não é possível inserir/editar produtos...",
+						"Produtos Comprados",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			Exit Sub
+			'
+		End If
+		'
 		'--- Abre o frmItem
-		Dim itmAtual As clTransacaoItem
-		itmAtual = dgvItensConsignacao.SelectedRows(0).DataBoundItem
+		Dim itmAtual As clTransacaoItem = dgvItensConsignacao.SelectedRows(0).DataBoundItem
 		'
 		Try
 			'--- Ampulheta ON
@@ -683,6 +706,18 @@ Public Class frmConsignacao
 			'--- Ampulheta OFF
 			Cursor = Cursors.Default
 		End Try
+		'
+		'--- check if duplicate product
+		'--- it doesn't permit duplicated products
+		If _ItensConsigList.Exists(Function(x) x.RGProduto = itmAtual.RGProduto And x.IDTransacaoItem <> itmAtual.IDTransacaoItem) Then
+			AbrirDialog("Não é possível inserir um produto que já foi inserido na listagem..." &
+						vbNewLine & "Favor inserir produtos que não estão na listagem.",
+						"Produto já inserido", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+			itmAtual.CancelEdit()
+			Exit Sub
+		Else
+			itmAtual.EndEdit()
+		End If
 		'
 		Dim ItemBLL As New TransacaoItemBLL
 		Dim myID As Long? = Nothing
@@ -722,6 +757,17 @@ Public Class frmConsignacao
 		'
 		'--- Verifica se esta Bloqueado ou Finalizado
 		If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
+		'
+		'--- check if exists compra
+		If _ItensCompraList.Count > 0 Then
+			'
+			AbrirDialog("Essa devolução já possui produtos comprados, por isso não é possível inserir/editar produtos...",
+						"Produtos Comprados",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			Exit Sub
+			'
+		End If
 		'
 		'--- seleciona o item
 		Dim itmAtual As clTransacaoItem
@@ -934,8 +980,8 @@ Public Class frmConsignacao
 		'
 		'--- check if exists Consignacao
 		If _ItensConsigList.Count = 0 Then
-			AbrirDialog("Não é possível realizar uma compra de uma consignação que não há entradas de produtos..." &
-						vbNewLine & "Favor informar os produtos consignados",
+			AbrirDialog("Não é possível realizar compra em uma consignação que não há entradas de produtos..." &
+						vbNewLine & "Favor informar os produtos consignados.",
 						"Não há produtos", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
 			Exit Sub
 		End If
