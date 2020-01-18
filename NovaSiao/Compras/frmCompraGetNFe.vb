@@ -662,8 +662,8 @@ Public Class frmCompraGetNFe
 				.Cadastro = Utilidades.PrimeiraLetraMaiuscula(transp.transporta.xNome)
 				.CNPJ = Utilidades.CNPConvert(transp.transporta.Item)
 				.InscricaoEstadual = transp.transporta.IE
-				.Endereco = Utilidades.PrimeiraLetraMaiuscula(transp.transporta.xEnder)
-				.Cidade = Utilidades.PrimeiraLetraMaiuscula(transp.transporta.xMun)
+				.Endereco = Utilidades.PrimeiraLetraMaiuscula(If(transp.transporta.xEnder, ""))
+				.Cidade = Utilidades.PrimeiraLetraMaiuscula(If(transp.transporta.xMun, ""))
 				Dim enumUF As TUf = transp.transporta.UF
 				.UF = enumUF.ToString
 			End With
@@ -1952,6 +1952,12 @@ Public Class frmCompraGetNFe
 				.PCompra = FirstItem.vUnCom.Replace(".", ",")
 				}
 			'
+			'--- CHECK IF PRODUTO RGPRODUTO ALREADY EXISTS
+			'---------------------------------------------------------------------------------
+			If Not VerificaRGProduto(prodEncontrado.RGProduto) Then
+				Exit Sub
+			End If
+			'
 			'---TRY OPEN PRODUTO FORM
 			Using frmProd As New frmProduto(EnumFlagAcao.INSERIR, prodEncontrado, Me, RGProdAnteriorEscolhido)
 				'
@@ -1997,6 +2003,47 @@ Public Class frmCompraGetNFe
 		End Try
 		'
 	End Sub
+	'
+	'--- CHECK RGPRODUTO IN DB (VERIFY IS ALREADY INSERTED)
+	'----------------------------------------------------------------------------------
+	Private Function VerificaRGProduto(RGProduto As Integer) As Boolean
+		'
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			Dim prodBLL As New ProdutoBLL
+			Dim lista As New List(Of clProduto)
+			lista = prodBLL.GetProdutos_Where("RGProduto = " & RGProduto)
+			'
+			If lista.Count = 0 Then
+				Return True
+			Else
+				Dim ProdRG As clProduto = lista(0)
+				'
+				AbrirDialog("Já foi encontrado um Produto com esse mesmo número de Reg. Interno..." & vbNewLine &
+							ProdRG.Produto.ToUpper & vbNewLine &
+							"Favor anexar o produto existente ou alterar o registro interno do Produto.",
+							"Reg. Interno Duplicado", frmDialog.DialogType.OK, frmDialog.DialogIcon.Exclamation)
+				Return False
+				'
+			End If
+			'
+		Catch ex As Exception
+			'
+			MessageBox.Show("Uma exceção ocorreu ao Verificar o RGProduto do novo produto..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+			Return False
+			'
+		Finally
+			'
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+			'
+		End Try
+		'
+	End Function
 	'
 #End Region
 	'

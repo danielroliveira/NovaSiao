@@ -14,6 +14,7 @@ Public Class frmConsignacao
 	Private _ItensCompraList As New List(Of clConsignacaoCompraItem)
 	Private _ItensDevList As New List(Of clTransacaoItem)
 	Private _NotasList As New List(Of clNotaFiscal)
+	Private _APagarList As New List(Of clAPagar)
 	'
 	'--- BINDINGS
 	Private bindConsig As New BindingSource
@@ -21,18 +22,21 @@ Public Class frmConsignacao
 	Private bindCompra As New BindingSource
 	Private bindDevolucao As New BindingSource
 	Private bindNota As New BindingSource
+	Private bindAPagar As New BindingSource
 	'
 	'--- CONTROLES
-	Private _Sit As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
+	Private _SitConsig As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
+	Private _SitDevolucao As EnumFlagEstado '= 1:Registro Salvo; 2:Registro Alterado; 3:Novo registro
 	Private VerificaAlteracao As Boolean
 	'
 	'--- TOTAIS
-	Private _TotalGeral As Decimal
+	Private _TotalAPagar As Decimal
 	Private _TotalProdutosConsignacao As Decimal
 	Private _TotalProdutosCompra As Decimal
 	Private _TotalProdutosDevolucao As Decimal
+	Private _TotalCobrancas As Decimal
 	'
-#Region "LOAD"
+#Region "LOAD | NEW"
 	'
 	'--- SUB NEW
 	'----------------------------------------------------------------------------------
@@ -62,15 +66,15 @@ Public Class frmConsignacao
 		'
 	End Sub
 	'
-	Private Property Sit As EnumFlagEstado
+	Private Property SitConsig As EnumFlagEstado
 		'
 		Get
-			Return _Sit
+			Return _SitConsig
 		End Get
 		'
 		Set(value As EnumFlagEstado)
 			'
-			_Sit = value
+			_SitConsig = value
 			'
 			'--- array of controls that can readonly
 			Dim ReadOnlyControls As TextBox() = New TextBox() {
@@ -83,33 +87,63 @@ Public Class frmConsignacao
 				txtDescontos
 			}
 			'
-			Select Case _Sit
+			Select Case _SitConsig
+				'
 				Case EnumFlagEstado.RegistroSalvo '--- REGISTRO FINALIZADO | NÃO BLOQUEADO
-					lblSituacao.Text = "Finalizada"
-					btnFinalizar.Text = "&Fechar"
-					'
-					btnData.Enabled = True
+					btnConsignacaoData.Enabled = True
 					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
 					'
 				Case EnumFlagEstado.Alterado '--- REGISTRO FINALIZADO ALTERADO
-					lblSituacao.Text = "Alterada"
-					btnFinalizar.Text = "&Finalizar"
-					'
-					btnData.Enabled = True
+					btnConsignacaoData.Enabled = True
 					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
 					'
 				Case EnumFlagEstado.NovoRegistro '--- REGISTRO NÃO FINALIZADO
-					lblSituacao.Text = "Em Aberto"
-					btnFinalizar.Text = "&Finalizar"
-					'
-					btnData.Enabled = True
+					btnConsignacaoData.Enabled = True
 					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
 					'
 				Case EnumFlagEstado.RegistroBloqueado '--- REGISTRO BLOQUEADO PARA ALTERACOES
-					lblSituacao.Text = "Bloqueada"
-					btnFinalizar.Text = "&Fechar"
+					btnConsignacaoData.Enabled = False
+					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = True)
 					'
-					btnData.Enabled = False
+			End Select
+			'
+		End Set
+		'
+	End Property
+	'
+	Private Property SitDevolucao As EnumFlagEstado
+		'
+		Get
+			Return _SitDevolucao
+		End Get
+		'
+		Set(value As EnumFlagEstado)
+			'
+			_SitDevolucao = value
+			'
+			'--- array of controls that can readonly
+			Dim ReadOnlyControls As TextBox() = New TextBox() {
+				txtFreteValorDev,
+				txtObservacaoDev,
+				txtVolumesDev
+			}
+			'
+			Select Case _SitDevolucao
+				'
+				Case EnumFlagEstado.RegistroSalvo '--- REGISTRO FINALIZADO | NÃO BLOQUEADO
+					btnConsignacaoData.Enabled = True
+					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
+					'
+				Case EnumFlagEstado.Alterado '--- REGISTRO FINALIZADO ALTERADO
+					btnConsignacaoData.Enabled = True
+					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
+					'
+				Case EnumFlagEstado.NovoRegistro '--- REGISTRO NÃO FINALIZADO
+					btnConsignacaoData.Enabled = True
+					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
+					'
+				Case EnumFlagEstado.RegistroBloqueado '--- REGISTRO BLOQUEADO PARA ALTERACOES
+					btnConsignacaoData.Enabled = False
 					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = True)
 					'
 			End Select
@@ -125,34 +159,29 @@ Public Class frmConsignacao
 		End Get
 		'
 		Set(value As clConsignacao)
+			'
 			VerificaAlteracao = False '--- Inibe a verificacao dos campos IDPlano
 			_Consig = value
 			_IDFilial = _Consig.IDFilial
-			If _Devolucao Is Nothing Then _Devolucao = New clConsignacaoDevolucao(_Consig.IDConsignacao)
+			'
 
 			'
 			ObterItensConsignacao()
 			ObterItensCompra()
-			'obterAPagar()
-			obterNotas()
-
+			ObterAPagar()
+			ObterNotas()
+			'
+			ObterDevolucao()
+			'
+			If _Devolucao IsNot Nothing Then ObterItensDevolucao()
 			'
 			bindConsigList.DataSource = _ItensConsigList
 			bindNota.DataSource = _NotasList
 			bindCompra.DataSource = _ItensCompraList
-			'dgvItensConsignacao.DataSource = bindConsigList
 			'
 			bindConsig.DataSource = _Consig
 			bindDevolucao.DataSource = _Devolucao
 			PreencheDataBinding()
-
-			'If IsNothing(bindConsig.DataSource) Then
-			'Else
-			'	bindConsig.Clear()
-			'	bindConsig.DataSource = _Consig
-			'	bindConsig.ResetBindings(True)
-			'	'AddHandler _ClientePF.AoAlterar, AddressOf HandlerAoAlterar
-			'End If
 			'
 			'--- Preenche os Itens da Consignacao
 			PreencheItensConsignacao()
@@ -165,67 +194,139 @@ Public Class frmConsignacao
 			'--- Preenche Notas Fiscais
 			Preenche_Notas()
 			'
-			'--- Atualiza o estado da Situacao: EnumFlagEstado
-			Select Case _Consig.IDSituacao
-				Case 1 ' COMPRA INICIADA
-					Sit = EnumFlagEstado.NovoRegistro
-				Case 2 ' COMPRA FINALIZADA
-					Sit = EnumFlagEstado.RegistroSalvo
-				Case 3 ' COMPRA BLOQUEADA
-					Sit = EnumFlagEstado.RegistroBloqueado
-				Case Else
-			End Select
+			'--- Verifica Estado da Consignacao
+			VerificaEstadoConsignacao()
+			'
+			'--- End edit
+			_Consig.EndEdit()
 			'
 			'--- Habilita ou Desabilita os campos do Frete da Compra
-			Controla_cmbFrete()
+			Controla_cmbFreteConsig()
+			Controla_cmbFreteDev()
 			'
 			'--- Permite a verificacao dos campos IDPlano
 			VerificaAlteracao = True
 			'
 		End Set
+		'
 	End Property
 	'
-	Public ReadOnly Property TotalGeral() As Decimal
-		Get
-			'--- Declara variaveis do Total de produto e de adicionais da Compra
-			Dim TAdic As Double = 0
+	'--- Verifica Estado da Consignacao
+	'---> 1: entrada | 2: compra | 3: devolucao
+	Private Sub VerificaEstadoConsignacao()
+		'
+		If _Consig.IDSituacao = 1 AndAlso _Devolucao.IDSituacao = 0 Then
+			btnFinalizar.Text = "&Concluir Entrada"
+			lblSituacao.Text = "Entrada da Consignação"
+			SitConsig = EnumFlagEstado.NovoRegistro
+			SitDevolucao = EnumFlagEstado.RegistroBloqueado
 			'
-			TAdic = IIf(IsNothing(_Consig.FreteCobrado), 0, _Consig.FreteCobrado)
-			TAdic = TAdic + IIf(IsNothing(_Consig.ICMSValor), 0, _Consig.ICMSValor)
-			TAdic = TAdic + IIf(IsNothing(_Consig.Despesas), 0, _Consig.Despesas)
-			TAdic = TAdic - IIf(IsNothing(_Consig.Descontos), 0, _Consig.Descontos)
+		ElseIf _Consig.IDSituacao = 2 AndAlso _Devolucao.IDSituacao = 0 Then
+			btnFinalizar.Text = "&Concluir Compra"
+			lblSituacao.Text = "Compra da Consignação"
+			SitConsig = EnumFlagEstado.RegistroSalvo
+			SitDevolucao = EnumFlagEstado.RegistroBloqueado
 			'
-			'--- verifica se o valor Total de Adicionais é menor que zero
-			If TAdic < 0 Then TAdic = 0
+		ElseIf _Consig.IDSituacao = 2 AndAlso _Devolucao.IDSituacao = 1 Then
+			btnFinalizar.Text = "&Finalizar Consignação"
+			lblSituacao.Text = "Devolução da Consignação"
+			SitConsig = EnumFlagEstado.RegistroBloqueado
+			SitDevolucao = EnumFlagEstado.NovoRegistro
 			'
-			_TotalGeral = TotalProdutosConsignacao + TAdic
+		ElseIf _Consig.IDSituacao = 3 Then
+			btnFinalizar.Text = "&Consignação Boqueada"
+			lblSituacao.Text = "Consignação Bloqueada"
+			SitConsig = EnumFlagEstado.RegistroBloqueado
+			SitDevolucao = EnumFlagEstado.RegistroBloqueado
 			'
-			'--- atualiza o label
-			lblTotalGeral.Text = Format(_TotalGeral, "c")
-			'
-			'--- retorna
-			Return _TotalGeral
-			'
-		End Get
-	End Property
+		End If
+		'
+	End Sub
+	'
+#End Region
+	'
+#Region "TOTAIS E LABELS TOTAIS"
 	'
 	'--- TOTAL DOS PRODUTOS DA CONSIGNACAO
 	'----------------------------------------------------------------------------------
-	Public ReadOnly Property TotalProdutosConsignacao() As Decimal
-		Get
-			Dim TProd As Decimal = _ItensConsigList.Sum(Function(x) x.Total)
-			_TotalProdutosConsignacao = TProd
-			'
-			'--- atualiza o label
-			lblTotalProdutosComprados.Text = Format(TProd, "c")
-			'
-			'--- retorna
-			Return _TotalProdutosConsignacao
-			'
-		End Get
-	End Property
-	'    
-#End Region
+	Private Function TotalAPagar() As Decimal
+		'
+		'--- Declara variaveis do Total de produto e de adicionais da Compra
+		Dim TAdic As Double = 0
+		'
+		TAdic = IIf(IsNothing(_Consig.FreteCobrado), 0, _Consig.FreteCobrado)
+		TAdic = TAdic + IIf(IsNothing(_Consig.ICMSValor), 0, _Consig.ICMSValor)
+		TAdic = TAdic + IIf(IsNothing(_Consig.Despesas), 0, _Consig.Despesas)
+		TAdic = TAdic - IIf(IsNothing(_Consig.Descontos), 0, _Consig.Descontos)
+		'
+		_TotalAPagar = TotalProdutosCompra() + TAdic
+		'
+		'--- verifica se o valor Total Geral é menor que zero
+		If _TotalAPagar < 0 Then _TotalAPagar = 0
+		'
+		'--- atualiza o label
+		lblTotalAPagar.Text = Format(_TotalAPagar, "c")
+		'
+		'--- retorna
+		Return _TotalAPagar
+		'
+	End Function
+	'
+	Private Function TotalProdutosConsignacao() As Decimal
+		'
+		Dim TProd As Decimal = _ItensConsigList.Sum(Function(x) x.Total)
+		_TotalProdutosConsignacao = TProd
+		'
+		'--- atualiza o label
+		lblTotalProdutosConsig.Text = Format(TProd, "c")
+		lblTotalConsignacao.Text = Format(TProd, "c")
+		'
+		'--- retorna
+		Return _TotalProdutosConsignacao
+		'
+	End Function
+	'
+	Private Function TotalProdutosCompra() As Decimal
+		'
+		Dim TProd As Decimal = _ItensCompraList.Sum(Function(x) x.Total)
+		_TotalProdutosCompra = TProd
+		'
+		'--- atualiza o label
+		lblTotalProdutosComprados.Text = Format(TProd, "c")
+		lblTotalComprado.Text = Format(TProd, "c")
+		'
+		'--- retorna
+		Return _TotalProdutosCompra
+		'
+	End Function
+	'
+	Private Function TotalProdutosDevolucao() As Decimal
+		'
+		Dim TProd As Decimal = _ItensDevList.Sum(Function(x) x.Total)
+		_TotalProdutosDevolucao = TProd
+		'
+		'--- atualiza o label
+		lblTotalProdutosDev.Text = Format(TProd, "c")
+		'
+		'--- retorna
+		Return _TotalProdutosDevolucao
+		'
+	End Function
+	'
+	Private Function TotalCobrancas() As Decimal
+		'
+		Dim Total As Decimal = _APagarList.Sum(Function(x) x.APagarValor)
+		_TotalCobrancas = Total
+		'
+		'--- atualiza o label
+		lblTotalCobrado.Text = Format(Total, "c")
+		'
+		'--- retorna
+		Return _TotalCobrancas
+		'
+	End Function
+	'
+#End Region '/ TOTAIS E LABELS TOTAIS
 	'
 #Region "DATABINDING"
 	'
@@ -244,6 +345,11 @@ Public Class frmConsignacao
 		txtFreteValorConsig.DataBindings.Add("Text", bindConsig, "FreteValor", True, DataSourceUpdateMode.OnPropertyChanged)
 		txtObservacaoConsig.DataBindings.Add("Text", bindConsig, "Observacao", True, DataSourceUpdateMode.OnPropertyChanged)
 		'
+		'--- BIND DEVOLUCAO
+		txtVolumesDev.DataBindings.Add("Text", bindDevolucao, "Volumes", True, DataSourceUpdateMode.OnPropertyChanged)
+		txtFreteValorDev.DataBindings.Add("Text", bindDevolucao, "FreteValor", True, DataSourceUpdateMode.OnPropertyChanged)
+		txtObservacaoDev.DataBindings.Add("Text", bindDevolucao, "Observacao", True, DataSourceUpdateMode.OnPropertyChanged)
+		'
 		'dgvItens.DataBindings.Add("Tag", bindItem, "IDProduto", True, DataSourceUpdateMode.OnPropertyChanged)
 		'
 		' FORMATA OS VALORES DO DATABINDING
@@ -257,18 +363,25 @@ Public Class frmConsignacao
 		AddHandler lblConsignacaoData.DataBindings("text").Format, AddressOf FormatDT
 		'
 		' CARREGA OS COMBOBOX
-		CarregaCmbFreteTipo()
-		CarregaCmbTransportadora()
+		CarregaCmbFreteTipoConsig()
+		CarregaCmbTransportadoraConsig()
 		CarregaCmbNotaTipo()
 		'
 		' ADD HANDLER PARA DATABINGS
-		AddHandler _Consig.AoAlterar, AddressOf HandlerAoAlterar
+		AddHandler _Consig.AoAlterar, AddressOf HandlerAoAlterarConsig
+		AddHandler _Devolucao.AoAlterar, AddressOf HandlerAoAlterarDev
 		'
 	End Sub
 	'
-	Private Sub HandlerAoAlterar()
-		If _Consig.RegistroAlterado = True And Sit = EnumFlagEstado.RegistroSalvo Then
-			Sit = EnumFlagEstado.Alterado
+	Private Sub HandlerAoAlterarConsig()
+		If _Consig.RegistroAlterado = True And SitConsig = EnumFlagEstado.RegistroSalvo Then
+			SitConsig = EnumFlagEstado.Alterado
+		End If
+	End Sub
+	'
+	Private Sub HandlerAoAlterarDev()
+		If _Consig.RegistroAlterado = True And SitDevolucao = EnumFlagEstado.RegistroSalvo Then
+			SitDevolucao = EnumFlagEstado.Alterado
 		End If
 	End Sub
 	'
@@ -292,7 +405,7 @@ Public Class frmConsignacao
 	'    
 #Region "CARREGA OS COMBOBOX"
 	'
-	Private Sub CarregaCmbFreteTipo()
+	Private Sub CarregaCmbFreteTipoConsig()
 		'
 		Dim dtFTipo As New DataTable
 		'
@@ -313,7 +426,7 @@ Public Class frmConsignacao
 		End With
 		'
 		With cmbFreteTipoDev
-			.DataSource = dtFTipo
+			.DataSource = dtFTipo.Copy()
 			.ValueMember = "idFTipo"
 			.DisplayMember = "FTipo"
 			.DataBindings.Add("SelectedValue", bindDevolucao, "FreteTipo", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -321,7 +434,7 @@ Public Class frmConsignacao
 		'
 	End Sub
 	'
-	Private Sub CarregaCmbTransportadora()
+	Private Sub CarregaCmbTransportadoraConsig()
 		Dim tBLL As New TransportadoraBLL
 		'
 		Try
@@ -335,7 +448,7 @@ Public Class frmConsignacao
 			End With
 			'
 			With cmbIDTransportadoraDev
-				.DataSource = dt
+				.DataSource = dt.Copy()
 				.ValueMember = "IDTransportadora"
 				.DisplayMember = "Cadastro"
 				.DataBindings.Add("SelectedValue", bindDevolucao, "IDTransportadora", True, DataSourceUpdateMode.OnPropertyChanged)
@@ -385,8 +498,9 @@ Public Class frmConsignacao
 			Cursor = Cursors.WaitCursor
 			'
 			_ItensConsigList = tBLL.GetTransacaoItens_WithCustos_List(_Consig.IDConsignacao, _IDFilial)
+			'
 			'--- Atualiza o label TOTAL
-			Dim x = TotalGeral
+			TotalProdutosConsignacao()
 			'
 		Catch ex As Exception
 			MessageBox.Show("Uma exceção ocorreu ao obter Itens da Consignação:..." & vbNewLine &
@@ -589,7 +703,7 @@ Public Class frmConsignacao
 	'
 	'--- INSERIR NOVO ITEM NA LISTA DE PRODUTOS
 	'----------------------------------------------------------------------------------------------------
-	Private Sub Inserir_Item()
+	Private Sub Inserir_ItemConsig()
 		'
 		'--- Verifica se esta Bloqueado ou Finalizado
 		If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
@@ -658,13 +772,13 @@ Public Class frmConsignacao
 		bindConsig.MoveLast()
 		'
 		'--- Atualiza o label TOTAL
-		Dim a = TotalGeral
+		TotalProdutosConsignacao()
 		'
 	End Sub
 	'
 	'--- EDITAR ITEM DA LISTA DE PRODUTOS
 	'----------------------------------------------------------------------------------------------------
-	Private Sub Editar_Item()
+	Private Sub Editar_ItemConsig()
 		'
 		'--- Verifica se existe algum item selecionado
 		If dgvItensConsignacao.SelectedRows.Count = 0 Then Exit Sub
@@ -744,13 +858,13 @@ Public Class frmConsignacao
 		End Try
 		'
 		'--- Atualiza o label TOTAL
-		Dim a = TotalGeral
+		TotalProdutosConsignacao()
 		'
 	End Sub
 	'
 	'--- EXCLUIR ITEM DA LISTA DE PRODUTOS
 	'---------------------------------------------------------------------------------------------------
-	Private Sub Excluir_Item()
+	Private Sub Excluir_ItemConsig()
 		'
 		'--- Verifica se existe algum item selecionado
 		If dgvItensConsignacao.SelectedRows.Count = 0 Then Exit Sub
@@ -808,7 +922,7 @@ Public Class frmConsignacao
 		bindConsigList.RemoveAt(i)
 		'
 		'--- Atualiza o label TOTAL
-		Dim a = TotalGeral
+		TotalProdutosConsignacao()
 		'
 	End Sub
 	'
@@ -819,21 +933,21 @@ Public Class frmConsignacao
 		'
 		If e.KeyCode = Keys.Add Then
 			e.Handled = True
-			Inserir_Item()
+			Inserir_ItemConsig()
 
 		ElseIf e.KeyCode = Keys.Enter Then
 			e.Handled = True
-			Editar_Item()
+			Editar_ItemConsig()
 
 		ElseIf e.KeyCode = Keys.Delete Then
 			e.Handled = True
-			Excluir_Item()
+			Excluir_ItemConsig()
 		End If
 		'
 	End Sub
 	'
 	Private Sub dgvItens_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItensConsignacao.CellDoubleClick
-		Editar_Item()
+		Editar_ItemConsig()
 	End Sub
 	'
 #End Region
@@ -850,7 +964,7 @@ Public Class frmConsignacao
 			_ItensCompraList = cBLL.GetConsigCompraItens_List(_Consig.IDConsignacao)
 			'
 			'--- Atualiza o label TOTAL
-			Dim x = TotalGeral
+			TotalProdutosCompra()
 			'
 		Catch ex As Exception
 			MessageBox.Show("Uma exceção ocorreu ao obter Itens da Compra da Consignação:" & vbNewLine &
@@ -1055,7 +1169,7 @@ Public Class frmConsignacao
 		bindCompra.MoveLast()
 		'
 		'--- Atualiza o label TOTAL
-		Dim a = TotalGeral
+		TotalProdutosCompra()
 		'
 	End Sub
 	'
@@ -1116,7 +1230,7 @@ Public Class frmConsignacao
 		End Try
 		'
 		'--- Atualiza o label TOTAL
-		Dim a = TotalGeral
+		TotalProdutosCompra()
 		'
 	End Sub
 	'
@@ -1165,7 +1279,7 @@ Public Class frmConsignacao
 		bindCompra.RemoveAt(i)
 		'
 		'--- Atualiza o label TOTAL
-		Dim a = TotalGeral
+		TotalProdutosCompra()
 		'
 	End Sub
 	'
@@ -1191,7 +1305,7 @@ Public Class frmConsignacao
 	End Sub
 	'
 	Private Sub dgvItensComprados_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvItensComprados.CellDoubleClick
-		Editar_Item()
+		Editar_ItemCompra()
 	End Sub
 	'
 #End Region '/ LOAD INSERT ITENS - COMPRA
@@ -1204,12 +1318,11 @@ Public Class frmConsignacao
 		If Not CanCloseMessage() Then Exit Sub
 		'
 		'--- CHECK AND SAVE TOTAL
-		If _Consig.TotalConsignacao <> TotalGeral Then
+		If _Consig.TotalConsignacao <> TotalProdutosConsignacao() Then
 			'
 			Try
 				'--- Ampulheta ON
 				Cursor = Cursors.WaitCursor
-				'
 				SaveTotal()
 				'
 			Catch ex As Exception
@@ -1228,7 +1341,7 @@ Public Class frmConsignacao
 		'
 	End Sub
 	'    '
-	'    '--- ALTERAR A DATA DA COMPRA
+	'    '--- ALTERAR A DATA DA CONSIGNACAO
 	'    Private Sub lblCompraData_DoubleClick(sender As Object, e As EventArgs) _
 	'        Handles lblCompraData.DoubleClick, btnData.Click
 	'        '
@@ -1259,36 +1372,40 @@ Public Class frmConsignacao
 	'        End Try
 	'        '
 	'    End Sub
-	'    '
-	'    Private Sub btnTransportadoraAdd_Click(sender As Object, e As EventArgs) Handles btnTransportadoraAdd.Click
-	'        '
-	'        Dim fTransp As New frmTransportadora(New clTransportadora, Me)
-	'        '
-	'        Visible = False
-	'        fTransp.ShowDialog()
-	'        Visible = True
-	'        cmbIDTransportadora.Focus()
+	'
+	'
+	Private Sub btnTransportadoraAdd_Click(sender As Object, e As EventArgs) Handles btnTransportadoraAdd.Click,
+		btnTransportadoraAddDev.Click
+		'
+		Dim myCombo As ComboBox = If(sender = btnTransportadoraAdd, cmbIDTransportadoraConsig, cmbIDTransportadoraDev)
+		'
+		Dim fTransp As New frmTransportadora(New clTransportadora, Me)
+		'
+		Visible = False
+		fTransp.ShowDialog()
+		Visible = True
+		myCombo.Focus()
 
-	'        If fTransp.DialogResult = DialogResult.OK Then
-	'            '
-	'            '--- get new transportadora
-	'            Dim newTransp As clTransportadora = fTransp.propTransp
-	'            '
-	'            '--- insert new transportadora in combo
-	'            Dim dtTransp As DataTable = cmbIDTransportadora.DataSource
+		If fTransp.DialogResult = DialogResult.OK Then
+			'
+			'--- get new transportadora
+			Dim newTransp As clTransportadora = fTransp.propTransp
+			'
+			'--- insert new transportadora in combo
+			Dim dtTransp As DataTable = myCombo.DataSource
 
-	'            Dim row As DataRow = dtTransp.NewRow()
-	'            row("IDTransportadora") = newTransp.IDPessoa
-	'            row("Cadastro") = newTransp.Cadastro
-	'            dtTransp.Rows.Add(row)
-	'            '
-	'            '--- select new transportadora inserted
-	'            cmbIDTransportadora.SelectedValue = newTransp.IDPessoa
-	'            '
-	'        End If
-	'        '
-	'    End Sub
-	'    '
+			Dim row As DataRow = dtTransp.NewRow()
+			row("IDTransportadora") = newTransp.IDPessoa
+			row("Cadastro") = newTransp.Cadastro
+			dtTransp.Rows.Add(row)
+			'
+			'--- select new transportadora inserted
+			myCombo.SelectedValue = newTransp.IDPessoa
+			'
+		End If
+		'
+	End Sub
+	'
 #End Region
 	'    
 #Region "FORMATACAO E FLUXO"
@@ -1354,13 +1471,13 @@ Public Class frmConsignacao
 			dgvItensConsignacao.Focus()
 			'
 		ElseIf tabPrincipal.SelectedIndex = 1 Then
-			txtFreteCobrado.Focus()
+			cmbFreteTipoConsig.Focus()
 			'
 		ElseIf tabPrincipal.SelectedIndex = 2 Then
 			dgvItensComprados.Focus()
 			'
 		ElseIf tabPrincipal.SelectedIndex = 3 Then
-			dgvAPagar.Focus()
+			txtFreteCobrado.Focus()
 			'
 		ElseIf tabPrincipal.SelectedIndex = 4 Then
 			dgvDevolucao.Focus()
@@ -1377,11 +1494,18 @@ Public Class frmConsignacao
 	'
 	' HABILITA OU DESABILITA OS CONTROLES DO FRETE
 	'---------------------------------------------------------------------------------------------------
-	Private Sub cmbFreteTipo_SelectedIndexChanged(sender As Object, e As EventArgs)
-		Controla_cmbFrete()
+	Private Sub cmbFreteTipoConsig_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbFreteTipoConsig.SelectedIndexChanged,
+		cmbFreteTipoConsig.SelectedIndexChanged
+		'
+		If DirectCast(sender, Control).Name = "cmbFreteTipoConsig" Then
+			Controla_cmbFreteConsig()
+		Else
+			Controla_cmbFreteDev()
+		End If
+		'
 	End Sub
 	'
-	Public Sub Controla_cmbFrete()
+	Public Sub Controla_cmbFreteConsig()
 		'
 		If Not IsNumeric(cmbFreteTipoConsig.SelectedValue) Then Exit Sub
 		'
@@ -1405,21 +1529,75 @@ Public Class frmConsignacao
 			btnTransportadoraAdd.Enabled = False
 			txtFreteValorConsig.Enabled = False
 			txtVolumesConsig.Enabled = False
+			'
 		Else
+			'
 			cmbIDTransportadoraConsig.Enabled = True
 			btnTransportadoraAdd.Enabled = True
 			txtFreteValorConsig.Enabled = True
 			txtVolumesConsig.Enabled = True
+			'
 		End If
 		'
 	End Sub
 	'
+	Public Sub Controla_cmbFreteDev()
+		'
+		If Not IsNumeric(cmbFreteTipoDev.SelectedValue) Then Exit Sub
+		'
+		If _Devolucao.FreteTipo = 0 Then
+			'
+			'--- Nulifica os valores das propriedades do Frete
+			_Devolucao.IDTransportadora = Nothing
+			_Devolucao.FreteValor = Nothing
+			_Devolucao.Volumes = Nothing
+			'
+			'--- Atualiza os novos valores dos controles
+			If cmbIDTransportadoraDev.DataBindings.Count > 0 Then
+				'
+				cmbIDTransportadoraDev.DataBindings.Item("SelectedValue").ReadValue()
+				cmbIDTransportadoraDev.Text = String.Empty
+				txtFreteValorDev.DataBindings.Item("Text").ReadValue()
+				txtVolumesDev.DataBindings.Item("Text").ReadValue()
+				'
+			End If
+			'
+			'--- Desabilita os controles
+			cmbIDTransportadoraDev.Enabled = False
+			btnTransportadoraAddDev.Enabled = False
+			txtFreteValorDev.Enabled = False
+			txtVolumesDev.Enabled = False
+			'
+		Else
+			'
+			cmbIDTransportadoraDev.Enabled = True
+			btnTransportadoraAddDev.Enabled = True
+			txtFreteValorDev.Enabled = True
+			txtVolumesDev.Enabled = True
+			'
+		End If
+		'
+	End Sub
+
+
+
+	'
 	'--- SUBSTITUI A TECLA (ENTER) PELA (TAB)
-	Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) Handles txtDespesas.KeyDown, txtDescontos.KeyDown
+	Private Sub txtControl_KeyDown(sender As Object, e As KeyEventArgs) Handles txtDespesas.KeyDown,
+		txtDescontos.KeyDown, txtFreteCobrado.KeyDown, txtICMSValor.KeyDown,
+		txtObservacaoConsig.KeyDown, txtObservacaoDev.KeyDown,
+		txtFreteValorConsig.KeyDown, txtVolumesConsig.KeyDown,
+		cmbIDTransportadoraConsig.KeyDown, cmbFreteTipoConsig.KeyDown,
+		txtVolumesDev.KeyDown, txtFreteValorDev.KeyDown,
+		cmbIDTransportadoraDev.KeyDown, cmbFreteTipoDev.KeyDown
 		'
 		'--- Se for o campo observacao, verifica se esta preenchido com algum texto
 		'--- Se esta preenchido entao permite que o ENTER funcione como nova linha
-		If DirectCast(sender, TextBox).Name = "txtObservacao" AndAlso txtObservacaoConsig.Text.Trim.Length > 0 Then
+		If DirectCast(sender, TextBox).Name = "txtObservacaoConsig" AndAlso txtObservacaoConsig.Text.Trim.Length > 0 Then
+			Exit Sub
+		End If
+		'
+		If DirectCast(sender, TextBox).Name = "txtObservacaoDev" AndAlso txtObservacaoDev.Text.Trim.Length > 0 Then
 			Exit Sub
 		End If
 		'
@@ -1430,297 +1608,279 @@ Public Class frmConsignacao
 		'
 	End Sub
 	'
-	'--- CALCULA VALOR TOTAL QUANDO ALTERA OS VALORES ADICIONAIS DA NOTA
-	Private Sub txtControl_Validated(sender As Object, e As EventArgs)
-		'
-		Dim x = TotalGeral
-		'
-	End Sub
-	'
 #End Region
 	'	
 #Region "CONTROLE DO A PAGAR"
-	'	'============================================================================================================
-	'	' A RECEBER CONTROLES
-	'	'============================================================================================================
-	'	'
-	'	'--- RETORNA TODOS AS PARCELAS DE A RECEBER
-	'	Private Sub obterAPagar()
-	'		Dim pBLL As New APagarBLL
-	'		Try
-	'			_APagarList = pBLL.APagar_GET_PorOrigem(_Consig.IDCompra, clAPagar.Origem_APagar.Compra)
-	'			'--- Atualiza o label TOTAL
-	'			AtualizaTotalAPagar()
-	'		Catch ex As Exception
-	'			MessageBox.Show("Um execeção ocorreu ao obter o A Pagar da Compra:" & vbNewLine &
-	'							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
-	'		End Try
-	'		'
-	'	End Sub
-	'	'
-	'	'--- Preenche o DataGrid AReceber
-	'	Private Sub Preenche_APagar()
-	'		With dgvAPagar
-	'			'
-	'			'--- limpa as colunas do datagrid
-	'			.Columns.Clear()
-	'			.AutoGenerateColumns = False
-	'			'
-	'			' altera as propriedades importantes
-	'			.MultiSelect = False
-	'			.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-	'			.ColumnHeadersVisible = True
-	'			.AllowUserToResizeRows = False
-	'			.AllowUserToResizeColumns = False
-	'			.RowHeadersVisible = True
-	'			.RowHeadersWidth = 30
-	'			.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
-	'			.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
-	'			.StandardTab = True
-	'			'
-	'			'--- configura o DataSource
-	'			.DataSource = bindAPagar
-	'			If .Rows.Count > 0 Then .CurrentCell = .Rows(.Rows.Count).Cells(1)
-	'		End With
-	'		'
-	'		'--- formata as colunas do datagrid
-	'		FormataGrid_APagar()
-	'		'
-	'	End Sub
-	'	'
-	'	Private Sub FormataGrid_APagar()
-	'		'
-	'		Dim cellStyleCur As New DataGridViewCellStyle
-	'		cellStyleCur.Format = "c"
-	'		cellStyleCur.NullValue = Nothing
-	'		cellStyleCur.Alignment = DataGridViewContentAlignment.MiddleRight
-	'		'
-	'		' (1) COLUNA IDAPagar
-	'		dgvAPagar.Columns.Add("clnID", "ID")
-	'		With dgvAPagar.Columns("clnID")
-	'			.DataPropertyName = "IDAPagar"
-	'			.Width = 0
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = False
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'		End With
-	'		'
-	'		' (2) COLUNA FORMA
-	'		dgvAPagar.Columns.Add("clnCobrancaForma", "Forma de Cobrança")
-	'		With dgvAPagar.Columns("clnCobrancaForma")
-	'			.DataPropertyName = "CobrancaForma"
-	'			.Width = 160
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = True
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
-	'			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft
-	'			'.DefaultCellStyle.Font = New Font("Arial Narrow", 12)
-	'		End With
-	'		'
-	'		' (3) COLUNA IDENTIFICADOR
-	'		dgvAPagar.Columns.Add("clnIdentificador", "No. Reg.")
-	'		With dgvAPagar.Columns("clnIdentificador")
-	'			.DefaultCellStyle = cellStyleCur
-	'			.DataPropertyName = "Identificador"
-	'			.Width = 100
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = True
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'		End With
-	'		'
-	'		' (4) COLUNA VENCIMENTO
-	'		dgvAPagar.Columns.Add("clnVencimento", "Vencimento")
-	'		With dgvAPagar.Columns("clnVencimento")
-	'			.HeaderText = "Vencimento"
-	'			.DataPropertyName = "Vencimento"
-	'			.Width = 110
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = True
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-	'			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-	'		End With
-	'		'
-	'		' (5) COLUNA VALOR
-	'		dgvAPagar.Columns.Add("clnAPagarValor", "Valor")
-	'		With dgvAPagar.Columns("clnAPagarValor")
-	'			.DefaultCellStyle = cellStyleCur
-	'			.DataPropertyName = "APagarValor"
-	'			.Width = 100
-	'			.Resizable = DataGridViewTriState.False
-	'			.Visible = True
-	'			.ReadOnly = True
-	'			.SortMode = DataGridViewColumnSortMode.NotSortable
-	'			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-	'			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
-	'		End With
-	'		'
-	'	End Sub
-	'	'
-	'	Private Sub dgvAReceber_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvCompras.KeyDown
-	'		'
-	'		If e.KeyCode = Keys.Add Then
-	'			e.Handled = True
-	'			'
-	'			If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
-	'			'
-	'			If RegistroFinalizado() Then Exit Sub '--- Verifica se o registro nao esta finalizado
-	'			'
-	'			APagar_Adicionar()
-	'		ElseIf e.KeyCode = Keys.Enter Then
-	'			e.Handled = True
-	'			'
-	'			If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
-	'			'
-	'			If RegistroFinalizado() Then Exit Sub '--- Verifica se o registro nao esta finalizado
-	'			'
-	'			APagar_Editar()
-	'		ElseIf e.KeyCode = Keys.Delete Then
-	'			e.Handled = True
-	'			'
-	'			If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
-	'			'
-	'			If RegistroFinalizado() Then Exit Sub '--- Verifica se o registro nao esta finalizado
-	'			'
-	'			APagar_Excluir()
-	'		End If
-	'	End Sub
-	'	'
-	'	Private Sub APagar_Adicionar()
-	'		'--- Atualiza o Valor do Total Geral
-	'		Dim vl As Double = TotalGeral
-	'		Dim vlPag As Double = AtualizaTotalAPagar()
-	'		'
-	'		'--- Verifica se o valor dos itens é maior que zero
-	'		If CDbl(lblTotalProdutos.Text) = 0 Then
-	'			MessageBox.Show("Não é possivel adicionar Parcelas de A Pagar" & vbNewLine &
-	'							"Quando o valor da Compra ainda é igual a Zero..." & vbNewLine &
-	'							"Adicione produtos primeiro e depois tente novamente.", "Nova Parcela",
-	'							MessageBoxButtons.OK, MessageBoxIcon.Information)
-	'			Exit Sub
-	'		End If
-	'		'
-	'		'--- Verifica se o somatorio de APAGAR ainda é menor que o ValorTotalGeral
-	'		If Math.Abs(vl - vlPag) < 0.1 Then
-	'			MessageBox.Show("Não é possivel adicionar Parcelas de A Pagar" & vbNewLine &
-	'							"pois o valor cobrado já é igual ao valor do Total Geral" & vbNewLine &
-	'							"Você pode Alterar ou Excluir parcelas.", "Nova Parcela",
-	'							MessageBoxButtons.OK, MessageBoxIcon.Information)
-	'			Exit Sub
-	'		End If
-	'		'
-	'		'--- posiciona o form
-	'		Dim pos As Point = dgvAPagar.PointToScreen(Point.Empty)
-	'		pos = New Point(pos.X - 10, pos.Y)
-	'		'
-	'		'--- cria novo APagar
-	'		Dim clPag As New clAPagar
-	'		'
-	'		clPag.Origem = 1
-	'		clPag.IDOrigem = _Consig.IDCompra
-	'		clPag.IDPessoa = _Consig.IDPessoaOrigem
-	'		clPag.IDFilial = _Consig.IDPessoaDestino
-	'		clPag.APagarValor = vl - _APagarList.Sum(Function(x) x.APagarValor)
-	'		clPag.Vencimento = _Consig.TransacaoData
-	'		clPag.Situacao = 0
-	'		'
-	'		'--- verifica se houve outro APagar anterior para obter valores padrão
-	'		Dim pagCount As Integer = _APagarList.Count
-	'		'
-	'		If pagCount > 0 Then
-	'			clPag.IDCobrancaForma = _APagarList.ElementAt(pagCount - 1).IDCobrancaForma
-	'			clPag.CobrancaForma = _APagarList.ElementAt(pagCount - 1).CobrancaForma
-	'			clPag.RGBanco = _APagarList.ElementAt(pagCount - 1).RGBanco
-	'			clPag.Vencimento = _APagarList.ElementAt(pagCount - 1).Vencimento.AddMonths(1)
-	'		End If
-	'		'
-	'		'--- abre o form frmAPagar
-	'		Dim fPag As New frmAPagarItem(Me, clPag.APagarValor, _Consig.TransacaoData, clPag, EnumFlagAcao.INSERIR, pos)
-	'		fPag.ShowDialog()
-	'		'
-	'		If fPag.DialogResult = DialogResult.OK Then
-	'			'--- Insere o APAGAR na lista
-	'			_APagarList.Add(clPag)
-	'			bindAPagar.ResetBindings(False)
-	'			'--- Atualiza o DataGrid
-	'			dgvAPagar.DataSource = bindAPagar
-	'			bindAPagar.MoveLast()
-	'			'
-	'			'--- AtualizaTotalAPagar
-	'			AtualizaTotalAPagar()
-	'			'
-	'		End If
-	'	End Sub
-	'	'
-	'	Private Sub APagar_Editar()
-	'		'
-	'		'--- posiciona o form
-	'		Dim pos As Point = dgvAPagar.PointToScreen(Point.Empty)
-	'		pos = New Point(pos.X - 10, pos.Y)
-	'		'
-	'		'--- GET APagar do DataGrid
-	'		If dgvAPagar.SelectedRows.Count = 0 Then Exit Sub
-	'		'
-	'		Dim PagAtual As clAPagar = dgvAPagar.SelectedRows(0).DataBoundItem
-	'		Dim fPag As New frmAPagarItem(Me, TotalGeral, _Consig.TransacaoData, PagAtual, EnumFlagAcao.EDITAR, pos)
-	'		fPag.ShowDialog()
-	'		'
-	'		'--- AtualizaTotalAPagar
-	'		AtualizaTotalAPagar()
-	'	End Sub
-	'	'
-	'	Private Sub APagar_Excluir()
-	'		'--- verifica se existe alguma parcela selecionada
-	'		If dgvAPagar.SelectedRows.Count = 0 Then Exit Sub
-	'		'
-	'		'--- seleciona a parcela
-	'		Dim i As Integer = dgvAPagar.SelectedRows(0).Index
-	'		'
-	'		'--- pergunta ao usuário se deseja excluir o item
-	'		If AbrirDialog("Deseja realmente REMOVER essa parcela A Pagar?", "Excluir Parcela",
-	'				   frmDialog.DialogType.SIM_NAO,
-	'				   frmDialog.DialogIcon.Question,
-	'				   frmDialog.DialogDefaultButton.Second) = DialogResult.No Then
-	'			Exit Sub
-	'		End If
-	'		'
-	'		'--- envia o comando para excluir a parcela no BD
-	'		'
-	'		'--- Atualiza o ITEM da lista
-	'		_APagarList.RemoveAt(i)
-	'		bindAPagar.ResetBindings(False)
-	'		'--- Atualiza o DataGrid
-	'		dgvAPagar.DataSource = bindAPagar
-	'		'--- AtualizaTotalAPagar
-	'		AtualizaTotalAPagar()
-	'	End Sub
-	'	'
-	'	' ALTERA A COR DO DATAGRIDVIEW ARECEBER QUANDO GANHA OU PERDE O FOCO
-	'	'-----------------------------------------------------------------------------------------------------
-	'	Private Sub dgvAPagar_GotFocus(sender As Object, e As EventArgs) Handles dgvVendaNotas.GotFocus, dgvCompras.GotFocus
-	'		DirectCast(sender, DataGridView).BackgroundColor = Color.LightSteelBlue
-	'	End Sub
-	'	'
-	'	Private Sub dgvAPagar_LostFocus(sender As Object, e As EventArgs) Handles dgvVendaNotas.LostFocus, dgvCompras.LostFocus
-	'		Dim c As Color = Color.FromArgb(224, 232, 243)
-	'		DirectCast(sender, DataGridView).BackgroundColor = c
-	'	End Sub
-	'	'
-	'	Private Sub dgvAPagar_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCompras.CellDoubleClick
-	'		If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
-	'		'
-	'		APagar_Editar()
-	'		'
-	'	End Sub
-	'	'
-	'	'============================================================================================================
+	'
+	'============================================================================================================
+	' A PAGAR CONTROLES
+	'============================================================================================================
+	'
+	'--- RETORNA TODOS AS COBRANCAS DE APAGAR
+	Private Sub ObterAPagar()
+		'
+		Dim pBLL As New APagarBLL
+		'
+		Try
+			_APagarList = pBLL.APagar_GET_PorOrigem(_Consig.IDConsignacao, clAPagar.Origem_APagar.Compra)
+			'
+			'--- Atualiza o label TOTAL
+			TotalAPagar()
+			TotalCobrancas()
+			'
+		Catch ex As Exception
+			MessageBox.Show("Um execeção ocorreu ao obter o A Pagar da Compra:" & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		End Try
+		'
+	End Sub
+	'
+	'--- Preenche o DataGrid AReceber
+	Private Sub Preenche_APagar()
+		With dgvAPagar
+			'
+			'--- limpa as colunas do datagrid
+			.Columns.Clear()
+			.AutoGenerateColumns = False
+			'
+			' altera as propriedades importantes
+			.MultiSelect = False
+			.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+			.ColumnHeadersVisible = True
+			.AllowUserToResizeRows = False
+			.AllowUserToResizeColumns = False
+			.RowHeadersVisible = True
+			.RowHeadersWidth = 30
+			.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
+			.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
+			.StandardTab = True
+			'
+			'--- configura o DataSource
+			.DataSource = bindAPagar
+			If .Rows.Count > 0 Then .CurrentCell = .Rows(.Rows.Count).Cells(1)
+		End With
+		'
+		'--- formata as colunas do datagrid
+		FormataGrid_APagar()
+		'
+	End Sub
+	'
+	Private Sub FormataGrid_APagar()
+		'
+		Dim cellStyleCur As New DataGridViewCellStyle
+		cellStyleCur.Format = "c"
+		cellStyleCur.NullValue = Nothing
+		cellStyleCur.Alignment = DataGridViewContentAlignment.MiddleRight
+		'
+		' (0) COLUNA FORMA
+		With clnCobrancaForma
+			.DataPropertyName = "CobrancaForma"
+			.Width = 160
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft
+			'.DefaultCellStyle.Font = New Font("Arial Narrow", 12)
+		End With
+		'
+		' (1) COLUNA IDENTIFICADOR
+		With clnIdentificador
+			.DefaultCellStyle = cellStyleCur
+			.DataPropertyName = "Identificador"
+			.Width = 100
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		' (2) COLUNA VENCIMENTO
+		With clnVencimento
+			.HeaderText = "Vencimento"
+			.DataPropertyName = "Vencimento"
+			.Width = 110
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+		End With
+		'
+		' (3) COLUNA VALOR
+		With clnAPagarValor
+			.DefaultCellStyle = cellStyleCur
+			.DataPropertyName = "APagarValor"
+			.Width = 100
+			.Resizable = DataGridViewTriState.False
+			.Visible = True
+			.ReadOnly = True
+			.SortMode = DataGridViewColumnSortMode.NotSortable
+			.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+			.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleRight
+		End With
+		'
+		dgvAPagar.Columns.AddRange({clnCobrancaForma, clnIdentificador, clnVencimento, clnAPagarValor})
+		'
+	End Sub
+	'
+	Private Sub dgvAReceber_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvAPagar.KeyDown
+		'
+		If e.KeyCode = Keys.Add Then
+			e.Handled = True
+			'
+			If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
+			APagar_Adicionar()
+			'
+		ElseIf e.KeyCode = Keys.Enter Then
+			e.Handled = True
+			'
+			If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
+			APagar_Editar()
+			'
+		ElseIf e.KeyCode = Keys.Delete Then
+			e.Handled = True
+			'
+			If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
+			APagar_Excluir()
+			'
+		End If
+		'
+	End Sub
+	'
+	Private Sub APagar_Adicionar()
+		'
+		'--- Atualiza o Valor do Total Geral
+		Dim vl As Double = TotalAPagar()
+		Dim vlPag As Double = TotalCobrancas()
+		'
+		'--- Verifica se o valor dos itens COMPRADOS é maior que zero
+		If vl <= 0 Then
+			AbrirDialog("Não é possivel adicionar Parcelas de A Pagar" & vbNewLine &
+						"Quando o valor da Consignação ainda é igual a Zero..." & vbNewLine &
+						"Compre produtos primeiro para tentar novamente depois.",
+						"Nova Parcela",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			Exit Sub
+		End If
+		'
+		'--- Verifica se o somatorio de APAGAR ainda é menor que o ValorTotalGeral
+		If Math.Abs(vl - vlPag) < 0.1 Then
+			AbrirDialog("Não é possivel adicionar Parcelas de A Pagar" & vbNewLine &
+						"pois o valor cobrado já é igual ao valor do Total Geral" & vbNewLine &
+						"Você pode Alterar ou Excluir parcelas.",
+						"Nova Parcela",
+						frmDialog.DialogType.OK,
+						frmDialog.DialogIcon.Exclamation)
+			Exit Sub
+		End If
+		'
+		'--- posiciona o form
+		Dim pos As Point = dgvAPagar.PointToScreen(Point.Empty)
+		pos = New Point(pos.X - 10, pos.Y)
+		'
+		'--- cria novo APagar
+		Dim clPag As New clAPagar
+		'
+		clPag.Origem = 1
+		clPag.IDOrigem = _Consig.IDConsignacao
+		clPag.IDPessoa = _Consig.IDFornecedor
+		clPag.IDFilial = _Consig.IDFilial
+		clPag.APagarValor = vl - _APagarList.Sum(Function(x) x.APagarValor)
+		clPag.Vencimento = _Consig.TransacaoData
+		clPag.Situacao = 0
+		'
+		'--- verifica se houve outro APagar anterior para obter valores padrão
+		Dim pagCount As Integer = _APagarList.Count
+		'
+		If pagCount > 0 Then
+			clPag.IDCobrancaForma = _APagarList.ElementAt(pagCount - 1).IDCobrancaForma
+			clPag.CobrancaForma = _APagarList.ElementAt(pagCount - 1).CobrancaForma
+			clPag.RGBanco = _APagarList.ElementAt(pagCount - 1).RGBanco
+			clPag.Vencimento = _APagarList.ElementAt(pagCount - 1).Vencimento.AddMonths(1)
+		End If
+		'
+		'--- abre o form frmAPagar
+		Using fPag As New frmAPagarItem(Me, clPag.APagarValor, _Consig.TransacaoData, clPag, EnumFlagAcao.INSERIR, pos)
+			'
+			fPag.ShowDialog()
+			'
+			If fPag.DialogResult = DialogResult.OK Then
+				'
+				'--- Insere o APAGAR na lista
+				bindAPagar.Add(clPag)
+				bindAPagar.MoveLast()
+				'
+				'--- AtualizaTotalAPagar
+				TotalCobrancas()
+				'
+			End If
+			'
+		End Using
+		'
+	End Sub
+	'
+	Private Sub APagar_Editar()
+		'
+		'--- posiciona o form
+		Dim pos As Point = dgvAPagar.PointToScreen(Point.Empty)
+		pos = New Point(pos.X - 10, pos.Y)
+		'
+		'--- GET APagar do DataGrid
+		If dgvAPagar.SelectedRows.Count = 0 Then Exit Sub
+		'
+		Dim PagAtual As clAPagar = dgvAPagar.SelectedRows(0).DataBoundItem
+		'
+		Using fPag As New frmAPagarItem(Me, TotalAPagar, _Consig.TransacaoData, PagAtual, EnumFlagAcao.EDITAR, pos)
+			'
+			fPag.ShowDialog()
+			'
+			'--- AtualizaTotalAPagar
+			TotalCobrancas()
+			'
+		End Using
+		'
+	End Sub
+	'
+	Private Sub APagar_Excluir()
+		'
+		'--- verifica se existe alguma parcela selecionada
+		If dgvAPagar.SelectedRows.Count = 0 Then Exit Sub
+		'
+		'--- seleciona a parcela
+		Dim i As Integer = dgvAPagar.SelectedRows(0).Index
+		'
+		'--- pergunta ao usuário se deseja excluir o item
+		If AbrirDialog("Deseja realmente REMOVER essa parcela A Pagar?", "Excluir Parcela",
+				   frmDialog.DialogType.SIM_NAO,
+				   frmDialog.DialogIcon.Question,
+				   frmDialog.DialogDefaultButton.Second) = DialogResult.No Then
+			Exit Sub
+		End If
+		'
+		'--- envia o comando para excluir a parcela no BD
+		'
+		'--- Atualiza o ITEM da lista
+		bindAPagar.RemoveAt(i)
+		'
+		'--- AtualizaTotalAPagar
+		TotalCobrancas()
+		'
+	End Sub
+	'
+	Private Sub dgvAPagar_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvAPagar.CellDoubleClick
+		If RegistroBloqueado() Then Exit Sub '--- Verifica se o registro nao esta bloqueado
+		'
+		APagar_Editar()
+		'
+	End Sub
+	'
+	'============================================================================================================
 #End Region
 	'	
 #Region "FINALIZAR CONSIGNACAO"
@@ -1836,7 +1996,7 @@ Public Class frmConsignacao
 		'
 		Try
 			'
-			Dim obj As Object = cBLL.UpdateConsignacaoEntradaTotal(_Consig.IDConsignacao, TotalGeral)
+			Dim obj As Object = cBLL.UpdateConsignacaoEntradaTotal(_Consig.IDConsignacao, TotalProdutosConsignacao)
 			'
 			If Not IsNumeric(obj) Then
 				Throw New Exception(obj.ToString)
@@ -2134,42 +2294,59 @@ Public Class frmConsignacao
 #End Region
 	'	
 #Region "BLOQUEIO DE REGISTROS"
-	'	'
-	'	' PROIBE EDICAO NOS COMBOBOX QUANDO COMPRA BLOQUEADA
-	'	'-----------------------------------------------------------------------------------------------------
-	'	Private Sub ComboBox_SelectedValueChanged(sender As Object, e As EventArgs) _
-	'		Handles cmbFreteTipo.SelectedValueChanged,
-	'		cmbIDTransportadora.SelectedValueChanged
-	'		'
-	'		If Sit = EnumFlagEstado.RegistroBloqueado AndAlso VerificaAlteracao = True Then
-	'			Dim cmb As ComboBox = DirectCast(sender, ComboBox)
-	'			'
-	'			Select Case cmb.Name
-	'				Case "cmbCobrancaTipo"
-	'					VerificaAlteracao = False
-	'					VerificaAlteracao = True
-	'				Case "cmbFreteTipo"
-	'					VerificaAlteracao = False
-	'					cmbFreteTipo.SelectedValue = IIf(IsNothing(_Consig.FreteTipo), -1, _Consig.FreteTipo)
-	'					VerificaAlteracao = True
-	'				Case "cmbIDTransportadora"
-	'					VerificaAlteracao = False
-	'					cmbIDTransportadora.SelectedValue = IIf(IsNothing(_Consig.IDTransportadora), -1, _Consig.IDTransportadora)
-	'					VerificaAlteracao = True
-	'			End Select
-	'			'
-	'			'--- emite mensagem padrao
-	'			RegistroBloqueado()
-	'			'
-	'		End If
-	'		'
-	'	End Sub
-	'	'
+	'
+	' PROIBE EDICAO NOS COMBOBOX QUANDO COMPRA BLOQUEADA
+	'-----------------------------------------------------------------------------------------------------
+	Private Sub ComboBox_SelectedValueChanged(sender As Object, e As EventArgs) _
+		Handles cmbFreteTipoConsig.SelectedValueChanged,
+		cmbIDTransportadoraConsig.SelectedValueChanged,
+		cmbFreteTipoDev.SelectedValueChanged,
+		cmbIDTransportadoraDev.SelectedValueChanged
+		'
+		If SitConsig = EnumFlagEstado.RegistroBloqueado AndAlso VerificaAlteracao = True Then
+			'
+			Dim cmb As ComboBox = DirectCast(sender, ComboBox)
+			'
+			Select Case cmb.Name
+				'
+				Case "cmbCobrancaTipo"
+					VerificaAlteracao = False
+					VerificaAlteracao = True
+					'
+				Case "cmbFreteTipoConsig"
+					VerificaAlteracao = False
+					cmbFreteTipoConsig.SelectedValue = IIf(IsNothing(_Consig.FreteTipo), -1, _Consig.FreteTipo)
+					VerificaAlteracao = True
+					'
+				Case "cmbIDTransportadoraConsig"
+					VerificaAlteracao = False
+					cmbIDTransportadoraConsig.SelectedValue = IIf(IsNothing(_Consig.IDTransportadora), -1, _Consig.IDTransportadora)
+					VerificaAlteracao = True
+					'
+				Case "cmbFreteTipoDev"
+					VerificaAlteracao = False
+					cmbFreteTipoDev.SelectedValue = IIf(IsNothing(_Devolucao.FreteTipo), -1, _Devolucao.FreteTipo)
+					VerificaAlteracao = True
+					'
+				Case "cmbIDTransportadoraDev"
+					VerificaAlteracao = False
+					cmbIDTransportadoraDev.SelectedValue = IIf(IsNothing(_Devolucao.IDTransportadora), -1, _Devolucao.IDTransportadora)
+					VerificaAlteracao = True
+					'
+			End Select
+			'
+			'--- emite mensagem padrao
+			RegistroBloqueado()
+			'
+		End If
+		'
+	End Sub
+	'	
 	' FUNCAO QUE CONFERE REGISTRO BLOQUEADO E EMITE MENSAGEM PADRAO
 	'-----------------------------------------------------------------------------------------------------
 	Private Function RegistroBloqueado() As Boolean
 		'
-		If Sit = EnumFlagEstado.RegistroBloqueado Then
+		If SitConsig = EnumFlagEstado.RegistroBloqueado Then
 			MessageBox.Show("Esse registro de CONSIGNAÇÃO está BLOQUEADO para alterações..." & vbNewLine &
 							"Não é possível adicionar produtos ou alterar algum dado!",
 							"Registro Bloqueado", MessageBoxButtons.OK, MessageBoxIcon.Information)
@@ -2182,7 +2359,7 @@ Public Class frmConsignacao
 	'
 	Private Function CanCloseMessage() As Boolean
 		'
-		If Not (Sit = EnumFlagEstado.NovoRegistro Or Sit = EnumFlagEstado.Alterado) Then Return True
+		If Not (SitConsig = EnumFlagEstado.NovoRegistro Or SitConsig = EnumFlagEstado.Alterado) Then Return True
 		'
 		If AbrirDialog("Essa CONSIGNAÇÃO ainda não está CONCLUÍDA!" & vbNewLine & vbNewLine &
 						"Se você fechar agora o fomulário," & vbNewLine &
@@ -2209,7 +2386,7 @@ Public Class frmConsignacao
 	'
 #Region "NOTA FISCAL CONTROLE GRID"
 	'
-	Private Sub obterNotas()
+	Private Sub ObterNotas()
 		'
 		Dim nBLL As New NotaFiscalBLL
 		'
@@ -2841,5 +3018,89 @@ Public Class frmConsignacao
 	End Sub
 	'
 #End Region '/ DESIGN VISUAL
+	'
+#Region "LOAD | CREATE DEVOLUCAO"
+	'
+	Private Sub ObterDevolucao()
+		'
+		Try
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			If _Consig.IDDevolucao IsNot Nothing Then
+				_Devolucao = cBLL.GetDevolucao(_Consig.IDDevolucao)
+			Else
+				_Devolucao = Nothing
+			End If
+			'
+			'--- Atualiza o label TOTAL
+			TotalProdutosDevolucao()
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao Obter a Devolução da Consignação..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
+	Private Sub ObterItensDevolucao()
+		'
+		Try
+			'
+			Dim tBLL As New TransacaoItemBLL
+			'
+			'--- Ampulheta ON
+			Cursor = Cursors.WaitCursor
+			'
+			If _Consig.IDDevolucao IsNot Nothing Then
+				_ItensDevList = tBLL.GetTransacaoItens_List(_Consig.IDDevolucao, _IDFilial)
+			Else
+				_ItensDevList.Clear()
+			End If
+			'
+			'--- Atualiza o label TOTAL
+			TotalProdutosConsignacao()
+			'
+		Catch ex As Exception
+			MessageBox.Show("Uma exceção ocorreu ao Obter os itens da Devolução da Consignação..." & vbNewLine &
+							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
+		Finally
+			'--- Ampulheta OFF
+			Cursor = Cursors.Default
+		End Try
+		'
+	End Sub
+	'
+#End Region '/ LOAD | CREATE DEVOLUCAO
+	'
+
+
+
+
+
+	'
+	'
+	'--- ON VALIDATED FIELDS CHECK TOTAL GERAL
+	'----------------------------------------------------------------------------------
+	Private Sub txtFreteCobrado_Validated(sender As Object, e As EventArgs) Handles txtFreteCobrado.Validated,
+			txtDescontos.Validated, txtICMSValor.Validated, txtDespesas.Validated
+		'
+		TotalAPagar()
+		'
+	End Sub
+	'
+	'--- ON CHANGE TAB CHECK REGISTRO ALTERADO AND SAVE
+	'----------------------------------------------------------------------------------
+	Private Sub vtabAPagar_Leave(sender As Object, e As EventArgs) Handles vtabAPagar.Leave
+		'
+		If _Consig.RegistroAlterado Then
+			SalvaRegistroConsignacao()
+		End If
+		'
+	End Sub
 	'
 End Class

@@ -367,98 +367,25 @@ Public Class ConsignacaoBLL
 	End Function
 	'
 	'==========================================================================================
-	' INSERT CONSIGNACAO COMPRA
+	' GET DEVOLUCAO
 	'==========================================================================================
-	Public Function InsertConsignacaoCompra(IDConsignacao As Integer,
-											dbTran As Object) As clConsignacaoCompra
-		'
-		Dim db As AcessoDados
-		'
-		If IsNothing(dbTran) Then
-			db = New AcessoDados
-			db.BeginTransaction()
-		Else
-			db = dbTran
-		End If
+	Public Function GetDevolucao(IDTransacao As Integer) As clConsignacaoDevolucao
 		'
 		Try
-			Dim query As String = ""
 			'
-			'-- INSERIR NA TBLCONSIGNACAO COMPRA ==> CobrancaTipo: 0 = SemCobrança | 1 = A Vista | 2 = Parcelada
-			'-- ===================================================
-			db.LimparParametros()
-			db.AdicionarParametros("@IDConsignacao", IDConsignacao)
+			Dim db As New AcessoDados
 			'
-			query = "INSERT INTO tblConsignacaoCompra " &
-					"(IDConsignacao, Despesas, Descontos, TotalCompra, CobrancaTipo) " &
-					"VALUES " &
-					"(@IDConsignacao, 0, 0, 0, 0)"
+			db.AdicionarParametros("@IDTransacao", IDTransacao)
+			Dim myQuery As String = "SELECT * FROM qryConsignacaoDevolucao WHERE IDTransacao = @IDTransacao"
 			'
-			Dim newID As Integer = db.ExecutarInsertGetID(query)
+			Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, myQuery)
 			'
-			'-- COMMIT
-			'-- ===================================================
-			If IsNothing(dbTran) Then '--- TRANSACTION LOCAL
-				db.CommitTransaction()
-			End If
-			'
-			'-- GET NEW CONSIG COMPRA DT
-			'-- ===================================================
-			db.LimparParametros()
-			db.AdicionarParametros("@IDConsignacaoCompra", newID)
-			'
-			query = "SELECT * FROM tblConsignacaoCompra WHERE IDConsignacaoCompra = @IDConsignacaoCompra "
-			'
-			Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
-			'
-			If dt.Rows.Count = 0 Then Throw New Exception("Não houve retorno da Entrada, ou não foi inserida a entrada...")
-			'
-			If Not IsNumeric(dt.Rows(0).Item(0)) Then
-				Throw New Exception("Uma exceção ocorreu ao inserir nova entrada." & vbNewLine & dt.Rows(0).Item(0))
-			End If
-			'
-			'--- CONVERT DT IN CLASS AND RETURN
-			'-- ===================================================
-			Dim r As DataRow = dt.Rows(0)
-			'
-			Dim Compra As New clConsignacaoCompra(IDConsignacao) With {
-				.IDConsignacaoCompra = r("IDConsignacaoCompra"),
-				.IDConsignacao = r("IDConsignacao"),
-				.CobrancaTipo = r("CobrancaTipo"),
-				.Descontos = r("Descontos"),
-				.Despesas = r("Despesas"),
-				.TotalCompra = r("TotalCompra")
-			}
-			'
-			Return Compra
+			If dt.Rows.Count = 0 Then Return Nothing
+			Return ConvertDtRow_clConsignacaoDevolucao(dt.Rows(0))
 			'
 		Catch ex As Exception
-			'
-			If IsNothing(dbTran) Then '--- TRANSACTION LOCAL
-				db.RollBackTransaction()
-			End If
-			'
 			Throw ex
-			'
 		End Try
-		'
-	End Function
-	'
-	'==========================================================================================
-	' UPDATE CONSIGNACAO COMPRA
-	'==========================================================================================
-	Public Function UpdateConsignacaoCompra(CosigCompra As clConsignacaoCompra) As clConsignacaoCompra
-		'
-		Throw New NotImplementedException("Ainda não implementado")
-		'
-	End Function
-	'
-	'==========================================================================================
-	' DELETE CONSIGNACAO COMPRA
-	'==========================================================================================
-	Public Function DeleteConsignacaoCompra(IDConsignacaoCompra As Integer) As Boolean
-		'
-		Throw New NotImplementedException("Ainda não implementado")
 		'
 	End Function
 	'
@@ -601,6 +528,7 @@ Public Class ConsignacaoBLL
 	Private Function ConvertDtRow_clConsignacaoDevolucao(r As DataRow) As clConsignacaoDevolucao
 		'
 		Return New clConsignacaoDevolucao(r("IDConsignacao")) With {
+			.IDTransacao = IIf(IsDBNull(r("IDTransacao")), Nothing, r("IDTransacao")),
 			.IDDevolucao = IIf(IsDBNull(r("IDDevolucao")), Nothing, r("IDDevolucao")),
 			.IDConsignacaoOrigem = IIf(IsDBNull(r("IDConsignacaoOrigem")), Nothing, r("IDConsignacaoOrigem")),
 			.IDFornecedor = IIf(IsDBNull(r("IDFornecedor")), Nothing, r("IDFornecedor")),

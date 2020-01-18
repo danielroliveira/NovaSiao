@@ -1,5 +1,8 @@
 ﻿Imports System.ComponentModel
 '
+'==========================================================================================
+' CLASSE CONSIGNACAO
+'==========================================================================================
 Public Class clConsignacao : Implements IEditableObject
 	'
 #Region "ESTRUTURA DOS DADOS"
@@ -393,12 +396,20 @@ Public Class clConsignacao : Implements IEditableObject
 	'
 End Class
 '
+'
+'
+'
+'
+'==========================================================================================
+' CLASSE CONSIGNACAO DEVOLUCAO
+'==========================================================================================
 Public Class clConsignacaoDevolucao : Implements IEditableObject
 	'
 #Region "ESTRUTURA DOS DADOS"
 	Structure ConsigStructure ' alguns usam FRIEND em vez de DIM
 		'
 		' TBLTRANSACAO =====================================================
+		Dim _IDTransacao As Integer?
 		Dim _IDConsignacao As Integer?
 		Dim _IDDevolucao As Integer?
 		Dim _IDFornecedor As Integer
@@ -498,6 +509,15 @@ Public Class clConsignacaoDevolucao : Implements IEditableObject
 	'===========================================================================================
 	'--- TBLTRANSACAO
 	'===========================================================================================
+	'
+	Property IDTransacao() As Integer?
+		Get
+			Return CData._IDTransacao
+		End Get
+		Set(value As Integer?)
+			CData._IDTransacao = value
+		End Set
+	End Property
 	'
 	Property IDConsignacao() As Integer?
 		Get
@@ -775,48 +795,13 @@ Public Class clConsignacaoDevolucao : Implements IEditableObject
 	'
 End Class
 '
-Public Class clConsignacaoCompra
-	'
-	Sub New(IDConsignacao As Integer)
-		_IDConsignacao = IDConsignacao
-		IDConsignacaoCompra = Nothing
-		CobrancaTipo = 0
-		Despesas = 0
-		Descontos = 0
-		TotalCompra = 0
-	End Sub
-	'
-	Property IDConsignacaoCompra As Integer?
-	'
-	Property IDConsignacao As Integer
-	'
-	Property CobrancaTipo As Byte 'tinyint ==> 0 = SemCobrança | 1 = A Vista | 2 = Parcelada
-	'
-	Property Despesas As Decimal
-	'
-	Property Descontos As Decimal
-	'
-	Property TotalCompra As Decimal
-	'
-	Property IDSituacao As Byte
-	'
-	ReadOnly Property CobrancaTipoTexto As String
-		Get
-			Select Case CobrancaTipo
-				Case 0
-					Return "Sem Cobrança"
-				Case 1
-					Return "A Vista"
-				Case 2
-					Return "Parcelada"
-				Case Else
-					Return ""
-			End Select
-		End Get
-	End Property
-	'
-End Class
 '
+'
+'
+'
+'==========================================================================================
+' CLASSE CONSIGNACAO COMPRA ITEM
+'==========================================================================================
 Public Class clConsignacaoCompraItem : Implements IEditableObject
 	'
 #Region "ESTRUTURA DOS DADOS"

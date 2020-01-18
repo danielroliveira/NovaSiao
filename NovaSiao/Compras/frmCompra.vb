@@ -880,30 +880,36 @@ Public Class frmCompra
     Public Sub Controla_cmbFrete()
         '
         If Not IsNumeric(cmbFreteTipo.SelectedValue) Then Exit Sub
-        '
-        If _Compra.FreteTipo = 0 Then
-            '--- Nulifica os valores das propriedades do Frete
-            _Compra.IDTransportadora = Nothing
-            _Compra.FreteValor = Nothing
-            _Compra.Volumes = Nothing
-            '--- Atualiza os novos valores dos controles
-            If cmbIDTransportadora.DataBindings.Count > 0 Then
-                cmbIDTransportadora.DataBindings.Item("SelectedValue").ReadValue()
-                cmbIDTransportadora.Text = String.Empty
-                txtFreteValor.DataBindings.Item("Text").ReadValue()
-                txtVolumes.DataBindings.Item("Text").ReadValue()
-            End If
-            '--- Desabilita os controles
-            cmbIDTransportadora.Enabled = False
-            btnTransportadoraAdd.Enabled = False
-            txtFreteValor.Enabled = False
-            txtVolumes.Enabled = False
-        Else
-            cmbIDTransportadora.Enabled = True
+		'
+		If _Compra.FreteTipo = 0 Then
+			'
+			'--- Nulifica os valores das propriedades do Frete
+			_Compra.IDTransportadora = Nothing
+			_Compra.FreteValor = Nothing
+			_Compra.Volumes = Nothing
+			'
+			'--- Atualiza os novos valores dos controles
+			If cmbIDTransportadora.DataBindings.Count > 0 Then
+				cmbIDTransportadora.DataBindings.Item("SelectedValue").ReadValue()
+				cmbIDTransportadora.Text = String.Empty
+				txtFreteValor.DataBindings.Item("Text").ReadValue()
+				txtVolumes.DataBindings.Item("Text").ReadValue()
+			End If
+			'
+			'--- Desabilita os controles
+			cmbIDTransportadora.Enabled = False
+			btnTransportadoraAdd.Enabled = False
+			txtFreteValor.Enabled = False
+			txtVolumes.Enabled = False
+			'
+		Else
+			'
+			cmbIDTransportadora.Enabled = True
             btnTransportadoraAdd.Enabled = True
             txtFreteValor.Enabled = True
-            txtVolumes.Enabled = True
-        End If
+			txtVolumes.Enabled = True
+			'
+		End If
         '
     End Sub
     '
