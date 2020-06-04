@@ -74,36 +74,40 @@ Public Class frmConsignacao
 		'
 		Set(value As EnumFlagEstado)
 			'
-			_SitConsig = value
+			If _ItensCompraList.Count > 0 AndAlso value = 3 Then
+				_SitConsig = 1
+			Else
+				_SitConsig = value
+			End If
 			'
-			'--- array of controls that can readonly
-			Dim ReadOnlyControls As TextBox() = New TextBox() {
-				txtFreteValorConsig,
+			'--- list of controls that can readonly
+			Dim ReadOnlyControls As New List(Of TextBox)
+			ReadOnlyControls.AddRange(
+				{txtFreteValorConsig,
 				txtObservacaoConsig,
 				txtVolumesConsig,
 				txtFreteCobrado,
 				txtICMSValor,
 				txtDespesas,
-				txtDescontos
-			}
+				txtDescontos})
 			'
 			Select Case _SitConsig
 				'
 				Case EnumFlagEstado.RegistroSalvo '--- REGISTRO FINALIZADO | NÃO BLOQUEADO
 					btnConsignacaoData.Enabled = True
-					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
+					ReadOnlyControls.ForEach(AddressOf ReadOnlyFalse)
 					'
 				Case EnumFlagEstado.Alterado '--- REGISTRO FINALIZADO ALTERADO
 					btnConsignacaoData.Enabled = True
-					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
+					ReadOnlyControls.ForEach(AddressOf ReadOnlyFalse)
 					'
 				Case EnumFlagEstado.NovoRegistro '--- REGISTRO NÃO FINALIZADO
 					btnConsignacaoData.Enabled = True
-					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
+					ReadOnlyControls.ForEach(AddressOf ReadOnlyFalse)
 					'
 				Case EnumFlagEstado.RegistroBloqueado '--- REGISTRO BLOQUEADO PARA ALTERACOES
 					btnConsignacaoData.Enabled = False
-					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = True)
+					ReadOnlyControls.ForEach(AddressOf ReadOnlyTrue)
 					'
 			End Select
 			'
@@ -121,36 +125,45 @@ Public Class frmConsignacao
 			'
 			_SitDevolucao = value
 			'
-			'--- array of controls that can readonly
-			Dim ReadOnlyControls As TextBox() = New TextBox() {
-				txtFreteValorDev,
-				txtObservacaoDev,
-				txtVolumesDev
-			}
+			'--- list of controls that can readonly
+			Dim ReadOnlyControls As New List(Of TextBox)
+			ReadOnlyControls.AddRange({txtFreteValorDev, txtObservacaoDev, txtVolumesDev})
 			'
 			Select Case _SitDevolucao
 				'
 				Case EnumFlagEstado.RegistroSalvo '--- REGISTRO FINALIZADO | NÃO BLOQUEADO
-					btnConsignacaoData.Enabled = True
-					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
+					btnDevolucaoData.Enabled = True
+					ReadOnlyControls.ForEach(AddressOf ReadOnlyFalse)
 					'
 				Case EnumFlagEstado.Alterado '--- REGISTRO FINALIZADO ALTERADO
-					btnConsignacaoData.Enabled = True
-					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
+					btnDevolucaoData.Enabled = True
+					ReadOnlyControls.ForEach(AddressOf ReadOnlyFalse)
 					'
 				Case EnumFlagEstado.NovoRegistro '--- REGISTRO NÃO FINALIZADO
-					btnConsignacaoData.Enabled = True
-					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = False)
+					btnDevolucaoData.Enabled = True
+					ReadOnlyControls.ForEach(AddressOf ReadOnlyFalse)
 					'
 				Case EnumFlagEstado.RegistroBloqueado '--- REGISTRO BLOQUEADO PARA ALTERACOES
-					btnConsignacaoData.Enabled = False
-					Array.ForEach(ReadOnlyControls, Function(x) x.ReadOnly = True)
+					btnDevolucaoData.Enabled = False
+					ReadOnlyControls.ForEach(AddressOf ReadOnlyTrue)
 					'
 			End Select
 			'
 		End Set
 		'
 	End Property
+	'
+	Private Sub ReadOnlyTrue(txtBox As TextBox)
+		'
+		txtBox.ReadOnly = True
+		'
+	End Sub
+	'
+	Private Sub ReadOnlyFalse(txtBox As TextBox)
+		'
+		txtBox.ReadOnly = False
+		'
+	End Sub
 	'    
 	Property propConsig As clConsignacao
 		'
@@ -171,9 +184,9 @@ Public Class frmConsignacao
 			ObterAPagar()
 			ObterNotas()
 			'
+			'--- Get Devolucao
 			ObterDevolucao()
-			'
-			If _Devolucao IsNot Nothing Then ObterItensDevolucao()
+			If _Devolucao.IDDevolucao IsNot Nothing Then ObterItensDevolucao()
 			'
 			bindConsigList.DataSource = _ItensConsigList
 			bindNota.DataSource = _NotasList
@@ -212,8 +225,12 @@ Public Class frmConsignacao
 	End Property
 	'
 	'--- Verifica Estado da Consignacao
-	'---> 1: entrada | 2: compra | 3: devolucao
+	'---> 1: entrada | 2: compra | 3: devolucao | 4:Bloqueado
 	Private Sub VerificaEstadoConsignacao()
+		'
+		If SitConsig = EnumFlagEstado.NovoRegistro AndAlso _ItensCompraList.Count > 0 Then
+			_Consig.IDSituacao = 2
+		End If
 		'
 		If _Consig.IDSituacao = 1 AndAlso _Devolucao.IDSituacao = 0 Then
 			btnFinalizar.Text = "&Concluir Entrada"
@@ -227,13 +244,25 @@ Public Class frmConsignacao
 			SitConsig = EnumFlagEstado.RegistroSalvo
 			SitDevolucao = EnumFlagEstado.RegistroBloqueado
 			'
-		ElseIf _Consig.IDSituacao = 2 AndAlso _Devolucao.IDSituacao = 1 Then
+		ElseIf _Consig.IDSituacao = 3 AndAlso _Devolucao.IDSituacao = 0 Then
+			btnFinalizar.Text = "&Concluir Compra"
+			lblSituacao.Text = "Compra da Consignação"
+			SitConsig = EnumFlagEstado.RegistroBloqueado
+			SitDevolucao = EnumFlagEstado.RegistroBloqueado
+			'
+		ElseIf _Consig.IDSituacao = 3 AndAlso _Devolucao.IDSituacao = 1 Then
 			btnFinalizar.Text = "&Finalizar Consignação"
 			lblSituacao.Text = "Devolução da Consignação"
 			SitConsig = EnumFlagEstado.RegistroBloqueado
 			SitDevolucao = EnumFlagEstado.NovoRegistro
 			'
-		ElseIf _Consig.IDSituacao = 3 Then
+		ElseIf _Consig.IDSituacao = 3 AndAlso _Devolucao.IDSituacao = 2 Then
+			btnFinalizar.Text = "&Consignação Boqueada"
+			lblSituacao.Text = "Consignação Bloqueada"
+			SitConsig = EnumFlagEstado.RegistroBloqueado
+			SitDevolucao = EnumFlagEstado.RegistroBloqueado
+			'
+		ElseIf _Consig.IDSituacao = 3 AndAlso _Devolucao.IDSituacao = 3 Then
 			btnFinalizar.Text = "&Consignação Boqueada"
 			lblSituacao.Text = "Consignação Bloqueada"
 			SitConsig = EnumFlagEstado.RegistroBloqueado
@@ -1570,6 +1599,7 @@ Public Class frmConsignacao
 			'
 		Else
 			'
+			'--- habilita os controles
 			cmbIDTransportadoraDev.Enabled = True
 			btnTransportadoraAddDev.Enabled = True
 			txtFreteValorDev.Enabled = True
@@ -1593,12 +1623,16 @@ Public Class frmConsignacao
 		'
 		'--- Se for o campo observacao, verifica se esta preenchido com algum texto
 		'--- Se esta preenchido entao permite que o ENTER funcione como nova linha
-		If DirectCast(sender, TextBox).Name = "txtObservacaoConsig" AndAlso txtObservacaoConsig.Text.Trim.Length > 0 Then
-			Exit Sub
-		End If
-		'
-		If DirectCast(sender, TextBox).Name = "txtObservacaoDev" AndAlso txtObservacaoDev.Text.Trim.Length > 0 Then
-			Exit Sub
+		If sender.GetType Is GetType(TextBox) Then
+			'
+			If DirectCast(sender, TextBox).Name = "txtObservacaoConsig" AndAlso txtObservacaoConsig.Text.Trim.Length > 0 Then
+				Exit Sub
+			End If
+			'
+			If DirectCast(sender, TextBox).Name = "txtObservacaoDev" AndAlso txtObservacaoDev.Text.Trim.Length > 0 Then
+				Exit Sub
+			End If
+			'
 		End If
 		'
 		If e.KeyCode = Keys.Enter Then
@@ -2297,6 +2331,52 @@ Public Class frmConsignacao
 	'
 	' PROIBE EDICAO NOS COMBOBOX QUANDO COMPRA BLOQUEADA
 	'-----------------------------------------------------------------------------------------------------
+	Private Sub ComboBox_NotChange(sender As Object, e As EventArgs) _
+		Handles cmbFreteTipoConsig.SelectedValueChanged,
+		cmbIDTransportadoraConsig.SelectedValueChanged,
+		cmbFreteTipoDev.SelectedValueChanged,
+		cmbIDTransportadoraDev.SelectedValueChanged
+		'
+		If VerificaAlteracao = False Then Exit Sub
+		'
+		Dim cmb As ComboBox = DirectCast(sender, ComboBox)
+		'
+		If SitConsig = EnumFlagEstado.RegistroBloqueado Then
+			'
+			If cmb Is cmbFreteTipoConsig Then
+				VerificaAlteracao = False
+				cmbFreteTipoConsig.SelectedValue = IIf(IsNothing(_Consig.FreteTipo), -1, _Consig.FreteTipo)
+				VerificaAlteracao = True
+			ElseIf cmb Is cmbFreteTipoDev Then
+				VerificaAlteracao = False
+				cmbIDTransportadoraConsig.SelectedValue = IIf(IsNothing(_Consig.IDTransportadora), -1, _Consig.IDTransportadora)
+				VerificaAlteracao = True
+			End If
+			'
+			'--- emite mensagem padrao
+			RegistroBloqueado()
+			'
+		ElseIf SitDevolucao = EnumFlagEstado.RegistroBloqueado Then
+			'
+			If cmb Is cmbFreteTipoDev Then
+				VerificaAlteracao = False
+				cmbFreteTipoDev.SelectedValue = IIf(IsNothing(_Devolucao.FreteTipo), -1, _Devolucao.FreteTipo)
+				VerificaAlteracao = True
+			ElseIf cmb Is cmbIDTransportadoraDev Then
+				VerificaAlteracao = False
+				cmbIDTransportadoraDev.SelectedValue = IIf(IsNothing(_Devolucao.IDTransportadora), -1, _Devolucao.IDTransportadora)
+				VerificaAlteracao = True
+			End If
+			'
+			'--- emite mensagem padrao
+			RegistroBloqueado()
+			'
+		End If
+		'
+	End Sub
+	'
+	' PROIBE EDICAO NOS COMBOBOX QUANDO COMPRA BLOQUEADA
+	'-----------------------------------------------------------------------------------------------------
 	Private Sub ComboBox_SelectedValueChanged(sender As Object, e As EventArgs) _
 		Handles cmbFreteTipoConsig.SelectedValueChanged,
 		cmbIDTransportadoraConsig.SelectedValueChanged,
@@ -2308,10 +2388,6 @@ Public Class frmConsignacao
 			Dim cmb As ComboBox = DirectCast(sender, ComboBox)
 			'
 			Select Case cmb.Name
-				'
-				Case "cmbCobrancaTipo"
-					VerificaAlteracao = False
-					VerificaAlteracao = True
 					'
 				Case "cmbFreteTipoConsig"
 					VerificaAlteracao = False
@@ -3031,7 +3107,7 @@ Public Class frmConsignacao
 			If _Consig.IDDevolucao IsNot Nothing Then
 				_Devolucao = cBLL.GetDevolucao(_Consig.IDDevolucao)
 			Else
-				_Devolucao = Nothing
+				_Devolucao = New clConsignacaoDevolucao(_Consig.IDConsignacao)
 			End If
 			'
 			'--- Atualiza o label TOTAL
