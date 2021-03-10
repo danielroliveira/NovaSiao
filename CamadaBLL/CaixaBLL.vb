@@ -110,16 +110,72 @@ Public Class CaixaBLL
 	'============================================================================================
 	' GET PRIMEIRA E ULTIMA DATAS DOS MOVIMENTOS DE ENTRADA E SAIDA PELO IDCONTA
 	'============================================================================================
-	Public Function GetLastDados_IDConta(myIDConta As Byte) As DataTable
+	Public Function GetLastDados_IDConta(myIDConta As Byte) As clCaixaAnteriorInfo
 		Dim db As New AcessoDados
 		'
-		db.LimparParametros()
-		'
-		db.AdicionarParametros("@IDConta", myIDConta)
-		'
 		Try
-			Return db.ExecutarConsulta(CommandType.StoredProcedure, "uspCaixa_GetLastDados_IDConta")
+			Dim query As String = ""
+			Dim caixaInfo As New clCaixaAnteriorInfo
+
+			db.BeginTransaction()
+
+			'--- GET DATES OF CAIXA MOVS
+			'----------------------------------------------------------------------------------
+			db.LimparParametros()
+			db.AdicionarParametros("@IDConta", myIDConta)
+
+			query = "SELECT MIN(MovData) AS dtInicial, " &
+				"MAX(MovData) AS dtFinal " &
+				"FROM qryMovimentacao " &
+				"WHERE IDConta = @IDConta " &
+				"AND IDCaixa IS NULL"
+
+			Dim dt As DataTable = db.ExecutarConsulta(CommandType.Text, query)
+
+			If dt.Rows.Count > 0 Then
+				caixaInfo.MovsDataInicial = dt.Rows(0)("dtInicial")
+				caixaInfo.MovsDataFinal = dt.Rows(0)("dtFinal")
+			Else
+				caixaInfo.MovsDataInicial = Nothing
+				caixaInfo.MovsDataFinal = Nothing
+			End If
+
+			'
+			'--- GET LAST CAIXA INFO
+			'----------------------------------------------------------------------------------
+			db.LimparParametros()
+			db.AdicionarParametros("@IDConta", myIDConta)
+
+			query = "SELECT TOP 1 IDSituacao, " &
+				"SaldoFinal, " &
+				"IDCaixa AS LastIDCaixa, " &
+				"DataFinal, " &
+				"CaixaFinalDia " &
+				"FROM tblCaixa " &
+				"WHERE IDConta = @IDConta " &
+				"ORDER BY IDCaixa DESC"
+
+			dt = db.ExecutarConsulta(CommandType.Text, query)
+
+			If dt.Rows.Count > 0 Then
+				caixaInfo.CaixaIDSituacao = dt.Rows(0)("IDSituacao")
+				caixaInfo.CaixaSaldoFinal = dt.Rows(0)("SaldoFinal")
+				caixaInfo.LastIDCaixa = dt.Rows(0)("LastIDCaixa")
+				caixaInfo.CaixaDataFinal = dt.Rows(0)("DataFinal")
+				caixaInfo.BloqueiaDataFinal = dt.Rows(0)("CaixaFinalDia")
+			Else
+				caixaInfo.LastIDCaixa = Nothing
+				caixaInfo.CaixaIDSituacao = 2
+				caixaInfo.CaixaSaldoFinal = 0
+				caixaInfo.CaixaDataFinal = Nothing
+				caixaInfo.BloqueiaDataFinal = True
+			End If
+
+			db.CommitTransaction()
+			Return caixaInfo
+
 		Catch ex As Exception
+			db.CommitTransaction()
 			Throw ex
 		End Try
 		'
@@ -425,7 +481,7 @@ Public Class CaixaBLL
 
 			'-- VERIFY BLOQUEIODATA WITH @CAIXAFINALDIA
 			Dim bloqueioData As Date = _caixa.DataFinal
-			If _caixa.CaixaFinalDia = True Then bloqueioData.AddDays(1)
+			If _caixa.CaixaFinalDia = True Then bloqueioData = bloqueioData.AddDays(1)
 
 			db.LimparParametros()
 			db.AdicionarParametros("@BloqueioData", bloqueioData)

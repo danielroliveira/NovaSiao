@@ -6,11 +6,12 @@ Public Class frmVendaEntrada
 	Private _formOrigem As Form
 	Private _vlMaximo As Double
 	Private _Pag As clMovimentacao
-	Private _Acao As EnumFlagAcao
 	Private bindPag As New BindingSource
 	'
-	Private dtTipo As DataTable
-	Private lstForma As List(Of clMovForma)
+	Private listTipos As List(Of clMovTipo)
+	Private listFormas As List(Of clMovForma)
+
+
 	'
 #Region "NEW | BINDING | COMBOBOX"
 	'
@@ -20,7 +21,6 @@ Public Class frmVendaEntrada
 	Sub New(fOrigem As Form,
 			TranVlTotal As Double,
 			Pag As clMovimentacao,
-			Acao As EnumFlagAcao,
 			Optional Posicao As Point = Nothing)
 		'
 		' This call is required by the designer.
@@ -30,7 +30,6 @@ Public Class frmVendaEntrada
 		_formOrigem = fOrigem
 		_vlMaximo = TranVlTotal
 		_Pag = Pag
-		_Acao = Acao
 		'
 		'--- Preenche a lsita de Formas e Tipos
 		Dim TipoBLL As New MovimentacaoBLL
@@ -40,8 +39,8 @@ Public Class frmVendaEntrada
 			'--- Ampulheta ON
 			Cursor = Cursors.WaitCursor
 			'
-			lstForma = TipoBLL.MovForma_GET_List(Pag.IDFilial, True)
-			dtTipo = TipoBLL.MovTipo_GET_Dt(True)
+			listFormas = TipoBLL.MovForma_GET_List(Pag.IDFilial, True)
+			listTipos = TipoBLL.MovTipo_GET_List(True)
 			'
 		Catch ex As Exception
 			MessageBox.Show("Uma exceção ocorreu ao Evento..." & vbNewLine &
@@ -51,7 +50,8 @@ Public Class frmVendaEntrada
 			Cursor = Cursors.Default
 		End Try
 		'
-		PreencheListagem()
+		AutoCompleteFormas()
+
 		bindPag.DataSource = _Pag
 		PreencheDataBinding()
 		'
@@ -63,7 +63,7 @@ Public Class frmVendaEntrada
 			'
 		Else
 			'
-			Dim f = lstForma.Single(Function(x) x.IDMovForma = _Pag.IDMovForma)
+			Dim f = listFormas.Single(Function(x) x.IDMovForma = _Pag.IDMovForma)
 			txtFormaTipo.Text = f.MovTipo
 			_Pag.IDMovTipo = f.IDMovTipo
 			'
@@ -96,29 +96,43 @@ Public Class frmVendaEntrada
 	Private Sub FormatCUR(sender As Object, e As System.Windows.Forms.ConvertEventArgs)
 		e.Value = FormatCurrency(e.Value, 2)
 	End Sub
-	'
+
 #End Region '/ NEW | BINDING | COMBOBOX
 	'
 #Region "LISTAGEM"
 	'
 	'--- PREENCHE LISTAGEM
-	Private Sub PreencheListagem()
-		lstItens.DataSource = lstForma '.OrderBy(Function(x) x.MovForma).ToList
-		FormataListagem()
-		HabilitaPesquisa()
-	End Sub
-	'
-	'--- FORMATA LISTAGEM DE CLIENTE
-	Private Sub FormataListagem()
-		'
-		lstItens.MultiSelect = False
-		lstItens.HideSelection = False
-		'
+	Private Sub AutoCompleteFormas()
+
+		If IsNothing(_Pag.IDMovTipo) OrElse _Pag.IDMovTipo = 0 Then
+
+			If txtForma.Text.Length = 0 Then
+				lstItens.DataSource = listFormas
+			Else
+				lstItens.DataSource = listFormas.Where(Function(x) x.MovForma.ToUpper() Like "*" & txtForma.Text.ToUpper() & "*").ToList()
+			End If
+
+		Else
+
+			If txtForma.Text.Length = 0 Then
+				lstItens.DataSource = listFormas.Where(Function(x) x.IDMovTipo = _Pag.IDMovTipo).ToList()
+			Else
+				lstItens.DataSource = listFormas.Where(Function(x) x.IDMovTipo = _Pag.IDMovTipo And x.MovForma.ToUpper() Like "*" & txtForma.Text.ToUpper() & "*").ToList()
+			End If
+
+		End If
+
+
 		clnForma.ValueMember = "IDMovForma"
 		clnForma.DisplayMember = "MovForma"
-		'
+
 	End Sub
 	'
+	Private Sub txtForma_TextChanged(sender As Object, e As EventArgs) Handles txtForma.TextChanged
+		AutoCompleteFormas()
+	End Sub
+
+
 #End Region '/ LISTAGEM
 	'
 #Region "ATALHOS | FUNCOES UTILITARIAS"
@@ -127,48 +141,95 @@ Public Class frmVendaEntrada
 	' USAR TAB AO KEYPRESS ENTER
 	'------------------------------------------------------------------------------------------
 	Private Sub txt_KeyDown(sender As Object, e As KeyEventArgs) _
-		Handles txtValor.KeyDown, txtFormaTipo.KeyDown,
-		lstItens.KeyDown, txtPesquisa.KeyDown
+		Handles txtValor.KeyDown, txtFormaTipo.KeyDown, txtForma.KeyDown,
+		lstItens.KeyDown
 		'
+		Dim ctr As Control = DirectCast(sender, Control)
+
 		If e.KeyCode = Keys.Enter Then
+
 			e.SuppressKeyPress = True
 			SendKeys.Send("{Tab}")
+
+		ElseIf e.KeyCode = Keys.Add OrElse e.KeyCode = Keys.F4 Then
+			e.Handled = True
+
+			Select Case ctr.Name
+				Case txtFormaTipo.Name
+					SetFormaTipo()
+			End Select
+
+		ElseIf (e.KeyCode >= Keys.D0 AndAlso e.KeyCode <= Keys.D9) Or (e.KeyCode >= Keys.NumPad0 AndAlso e.KeyCode <= Keys.NumPad9) Then
+
+			'--- cria um array de controles que serao liberados ao KEYPRESS
+			Dim controlesLiberados As Control() = {txtFormaTipo, txtValor}
+
+			'--- cria um array de controles que serao liberados ao KEYPRESS
+			Dim controlesID As Control() = {txtFormaTipo}
+
+			If controlesLiberados.Contains(ctr) Then
+				e.Handled = False
+			ElseIf controlesID.Contains(ctr) Then
+
+				If Not String.IsNullOrEmpty(ctr.Text) AndAlso Not Integer.TryParse(ctr.Text, 0) Then
+					ctr.Text = String.Empty
+				End If
+
+				e.Handled = False
+			Else
+				e.Handled = True
+				e.SuppressKeyPress = True
+			End If
+
+		ElseIf e.Alt Then
+			e.Handled = False
+		Else
+			Dim controlesBloqueados As Control() = {txtFormaTipo}
+
+			If controlesBloqueados.Contains(ctr) Then
+				e.Handled = True
+				e.SuppressKeyPress = True
+			End If
+
 		End If
 		'
 	End Sub
 	'
-	'---------------------------------------------------------------------------------------
-	'--- EXECUTAR A FUNCAO DO BOTAO QUANDO PRESSIONA A TECLA (+) NO CONTROLE
-	'--- ACIONA ATALHO TECLA (+) E (DEL) | IMPEDE INSERIR TEXTO NOS CONTROLES
-	'---------------------------------------------------------------------------------------
-	Private Sub Control_KeyDown(sender As Object, e As KeyEventArgs) _
-		Handles txtFormaTipo.KeyDown, txtPesquisa.KeyDown
+	'==========================================================================================
+	' SET FORMA TIPO
+	'==========================================================================================
+	Private Sub btnSetFormaTipo_Click(sender As Object, e As EventArgs) Handles btnSetFormaTipo.Click
+		SetFormaTipo()
+	End Sub
+	'
+	Private Sub SetFormaTipo()
 		'
-		Dim ctr As Control = DirectCast(sender, Control)
+		If listTipos.Count = 0 Then
+			AbrirDialog("Não há Formas de Entradas cadastradas...", "Formas de Entrada",
+						frmDialog.DialogType.OK, frmDialog.DialogIcon.Information)
+			Exit Sub
+		End If
+
+		Dim dic As Dictionary(Of Integer, String) = listTipos.ToDictionary(Function(x) CType(x.IDMovTipo, Integer), Function(x) x.MovTipo)
+
+		Dim frm As New frmComboLista(dic, txtFormaTipo, _Pag.IDMovTipo)
+
+		'--- show form
+		frm.ShowDialog()
 		'
-		If e.KeyCode = Keys.Add Then
-			e.Handled = True
-			'
-			Select Case ctr.Name
-				Case "txtFormaTipo"
-					btnProcurarTipo_Click(New Object, New EventArgs)
-			End Select
-			'
-		ElseIf e.KeyCode = Keys.Delete Then
-			e.Handled = True
-			Select Case ctr.Name
-				Case "txtFormaTipo"
-					txtFormaTipo.Clear()
-					_Pag.IDMovTipo = Nothing
-					FiltrarListagem()
-				Case "txtPesquisa"
-					txtPesquisa.Clear()
-					FiltrarListagem()
-			End Select
-			'
+		'--- check return
+		If frm.DialogResult = DialogResult.OK Then
+			_Pag.IDMovTipo = CType(frm.propEscolha.Key, Short)
+			txtFormaTipo.Text = frm.propEscolha.Value
+			AutoCompleteFormas()
 		End If
 		'
+		'--- select
+		txtFormaTipo.Focus()
+		txtFormaTipo.SelectAll()
+
 	End Sub
+
 	'
 	'------------------------------------------------------------------------------------------
 	'--- QUANDO PRESSIONA A TECLA ESC FECHA O FORMULARIO
@@ -248,29 +309,26 @@ Public Class frmVendaEntrada
 	'------------------------------------------------------------------------------------------
 	Private Sub txtFormaTipo_KeyPress(sender As Object, e As KeyPressEventArgs) _
 		Handles txtFormaTipo.KeyPress
-		'
+
 		If Char.IsNumber(e.KeyChar) Then
 			e.Handled = True
 			'
-			Dim rCount As Integer = dtTipo.Rows.Count
-			Dim item As Integer = e.KeyChar.ToString
-			'
-			If item <= rCount And item > 0 Then
-				Dim Valor As Integer = dtTipo.Rows(e.KeyChar.ToString - 1)("IDMovTipo")
-				'
-				_Pag.IDMovTipo = Valor
-				txtFormaTipo.Text = dtTipo.Rows(e.KeyChar.ToString - 1)("MovTipo")
-				FiltrarListagem()
-				'
-				HabilitaPesquisa()
-				'
+
+			If listTipos.Count > 0 Then
+
+				Dim tipo As clMovTipo = listTipos.FirstOrDefault(Function(x) x.IDMovTipo = Integer.Parse(e.KeyChar.ToString()))
+
+				If IsNothing(tipo) Then Exit Sub
+
+				_Pag.IDMovTipo = tipo.IDMovTipo
+				txtFormaTipo.Text = tipo.MovTipo
+				AutoCompleteFormas()
+
 			End If
+
 		ElseIf Char.IsLetter(e.KeyChar) Then
 			e.Handled = True
-			txtPesquisa.Text = txtPesquisa.Text & e.KeyChar
-		ElseIf e.KeyChar = vbBack Then
-			e.Handled = True
-			txtPesquisa.Clear()
+
 		Else
 			e.Handled = True
 		End If
@@ -278,55 +336,6 @@ Public Class frmVendaEntrada
 	End Sub
 	'
 #End Region '/ ATALHOS | FUNCOES UTILITARIAS
-	'
-#Region "PESQUISA"
-	'
-	'------------------------------------------------------------------------------------------
-	' ALTERA A FORMA DE PAGAMENTO PELA ALTERACAO DO TIPO DE PAGAMENTO
-	'------------------------------------------------------------------------------------------
-	'
-	'--- FILTAR LISTAGEM PELO TIPO E PESQUISA TEXTO
-	Private Sub FiltrarListagem()
-		'
-		lstItens.DataSource = lstForma.FindAll(AddressOf FindProduto).OrderBy(Function(x) x.MovForma).ToList
-		'
-		If lstItens.Items.Count = 1 Then
-			lstItens.SelectedIndices(0) = 0
-			_Pag.IDMovForma = lstItens.SelectedItems(0).Value
-		End If
-		'
-	End Sub
-	'
-	Private Function FindProduto(ByVal f As clMovForma) As Boolean
-		'
-		If (f.MovForma.ToLower Like "*" & txtPesquisa.Text.ToLower & "*") AndAlso
-		   If(_Pag.IDMovTipo = 0, True, (_Pag.IDMovTipo = f.IDMovTipo)) Then
-			Return True
-		Else
-			Return False
-		End If
-		'
-	End Function
-	'
-	'--- TORNA VISIVEL O TXTPESQUISA PARA PROCURA
-	Private Sub HabilitaPesquisa()
-		'
-		If lstItens.Items.Count > 5 Then
-			txtPesquisa.Visible = True
-			lblPesquisa.Visible = True
-		Else
-			txtPesquisa.Clear()
-			txtPesquisa.Visible = False
-			lblPesquisa.Visible = False
-		End If
-		'
-	End Sub
-	'
-	Private Sub txtPesquisa_TextChanged(sender As Object, e As EventArgs) Handles txtPesquisa.TextChanged
-		FiltrarListagem()
-	End Sub
-	'
-#End Region '/ PESQUISA
 	'
 #Region "BUTONS ACTIONS"
 	'
@@ -369,7 +378,7 @@ Public Class frmVendaEntrada
 		'--- Devolve o credito para o formOrigem
 		_Pag.MovForma = lstItens.SelectedItems(0).Text
 		_Pag.IDMovForma = lstItens.SelectedItems(0).Value
-		_Pag.IDMeio = lstForma.First(Function(x) x.IDMovForma = _Pag.IDMovForma).IDMeio
+		_Pag.IDMeio = listFormas.First(Function(x) x.IDMovForma = _Pag.IDMovForma).IDMeio
 		_Pag.MovValor = txtValor.Text
 		'
 		bindPag.EndEdit()
@@ -382,28 +391,6 @@ Public Class frmVendaEntrada
 		'
 		bindPag.CancelEdit()
 		DialogResult = DialogResult.Cancel
-		'
-	End Sub
-	'
-	'--- BTN PROCURAR TIPO
-	Private Sub btnProcurarTipo_Click(sender As Object, e As EventArgs) Handles btnProcurarTipo.Click
-		'
-		'---abre o formTipos
-		Dim frmTipo As New frmMovTipoProcurar(Me)
-		frmTipo.ShowDialog()
-		'
-		'---verifica os valores
-		If frmTipo.DialogResult <> DialogResult.OK Then
-			txtFormaTipo.Focus()
-			Exit Sub
-		End If
-		'
-		'--- grava os novos valores
-		txtFormaTipo.Text = frmTipo.propMovTipo_Escolha
-		_Pag.IDMovTipo = frmTipo.propIdMovTipo_Escolha
-		FiltrarListagem()
-		txtFormaTipo.Focus()
-		txtFormaTipo.SelectAll()
 		'
 	End Sub
 	'
@@ -444,6 +431,12 @@ Public Class frmVendaEntrada
 				c.BackColor = Color.SlateGray
 			End If
 		Next
+	End Sub
+
+	Private Sub lstItens_SelectedIndexChanged(sender As Object, e As EventArgs) Handles lstItens.SelectedIndexChanged
+
+		If lstItens.SelectedItems.Count > 0 Then lblForma.Text = lstItens.SelectedItems(0).Text
+
 	End Sub
 	'
 #End Region '/ EFEITO VISUAL

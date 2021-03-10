@@ -372,6 +372,12 @@
     <Compile Include="FormsPrincipais\frmCNPInserir.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="FormsPrincipais\frmComboLista.Designer.vb">
+      <DependentUpon>frmComboLista.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FormsPrincipais\frmComboLista.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="FormsPrincipais\frmDataMesAno.designer.vb">
       <DependentUpon>frmDataMesAno.vb</DependentUpon>
     </Compile>
@@ -1105,6 +1111,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormsPrincipais\frmCNPInserir.resx">
       <DependentUpon>frmCNPInserir.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormsPrincipais\frmComboLista.resx">
+      <DependentUpon>frmComboLista.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormsPrincipais\frmDataMesAno.resx">
       <DependentUpon>frmDataMesAno.vb</DependentUpon>

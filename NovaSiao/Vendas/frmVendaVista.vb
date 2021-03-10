@@ -4,6 +4,7 @@ Imports CamadaDTO
 Public Class frmVendaVista
 	'
 	Private vndBLL As New VendaBLL
+	Private tBLL As New AcessoControlBLL
 	Private _Venda As clVenda
 	Private _Troca As clTroca
 	Private _ItensList As New List(Of clTransacaoItem)
@@ -1148,7 +1149,7 @@ Public Class frmVendaVista
 		Cursor = Cursors.WaitCursor
 		'
 		'--- abre o form frmPagamentos
-		Dim fPag As New frmVendaEntrada(Me, vlMax, clPag, EnumFlagAcao.INSERIR, pos)
+		Dim fPag As New frmVendaEntrada(Me, vlMax, clPag, pos)
 		fPag.ShowDialog()
 		'
 		'--- Ampulheta OFF
@@ -1184,7 +1185,7 @@ Public Class frmVendaVista
 		'
 		Dim PagAtual As clMovimentacao = dgvPagamentos.SelectedRows(0).DataBoundItem
 		'
-		Dim fPag As New frmVendaEntrada(Me, AtualizaTotalGeral(), PagAtual, EnumFlagAcao.EDITAR, pos)
+		Dim fPag As New frmVendaEntrada(Me, AtualizaTotalGeral(), PagAtual, pos)
 		fPag.ShowDialog()
 		'
 		'--- AtualizaTotalPago
@@ -1297,7 +1298,6 @@ Public Class frmVendaVista
 			End If
 			'
 			'--- CREATE NEW ACESSO WITH TRANSACTION
-			Dim tBLL As New AcessoControlBLL
 			'
 			Dim myDBTran As Object = tBLL.GetNewAcessoWithTransaction
 			'
@@ -1576,7 +1576,7 @@ Public Class frmVendaVista
 			clPag.IDFilial = _IDFilial
 			'
 			'--- abre o form frmPagamentos
-			Dim fPag As New frmVendaEntrada(Me, vlMax, clPag, EnumFlagAcao.INSERIR, pos)
+			Dim fPag As New frmVendaEntrada(Me, vlMax, clPag, pos)
 			fPag.ShowDialog()
 
 			'--- check result
@@ -1615,16 +1615,24 @@ Public Class frmVendaVista
 		'--- LIMPA TODOS OS PAGAMENTOS DA VENDA
 		'----------------------------------------------------------------
 		Dim movBLL As New MovimentacaoBLL
+		Dim myDBTran As Object = tBLL.GetNewAcessoWithTransaction
 		'
 		Try
 			'--- Ampulheta ON
 			Cursor = Cursors.WaitCursor
 			'
-			movBLL.MovimentacaoDeletePorOrigem(_Venda.IDVenda, EnumMovimentacaoOrigem.Venda)
-			'
-			For i = 0 To _MovEntradaList.Count - 1
-				If _MovEntradaList.Item(i).IDMovimentacao <> 0 Then _MovEntradaList.RemoveAt(i)
-			Next
+			'--- change Venda Situacao
+			_Venda.IDSituacao = 1
+			If Sit = EnumFlagEstado.RegistroSalvo Then Sit = EnumFlagEstado.Alterado
+
+			'--- save venda
+			vndBLL.AtualizaVenda_Procedure_ID(_Venda, myDBTran)
+
+			'--- delete movimentacao from origem
+			movBLL.MovimentacaoDeletePorOrigem(_Venda.IDVenda, EnumMovimentacaoOrigem.Venda, myDBTran)
+
+			'--- clear list
+			_MovEntradaList.Clear()
 			'
 			'--- Atualiza a listagem
 			bindEnt.ResetBindings(False)
@@ -1636,9 +1644,11 @@ Public Class frmVendaVista
 			AtualizaTotalPago()
 			'
 			'--- return
+			tBLL.CommitAcessoWithTransaction(myDBTran)
 			Return True
 			'
 		Catch ex As Exception
+			tBLL.RollbackAcessoWithTransaction(myDBTran)
 			MessageBox.Show("Uma exceção ocorreu ao Limpar as Movimentações de Entrada..." & vbNewLine &
 							ex.Message, "Exceção", MessageBoxButtons.OK, MessageBoxIcon.Error)
 			Return False

@@ -309,3 +309,10 @@ Public Class clMovForma : Implements IEditableObject
 #End Region
     '
 End Class
+
+Public Class clMovTipo
+    Property IDMovTipo As Short
+    Property MovTipo As String
+    Property Ativo As Boolean
+    Property IDMeio As Byte
+End Class

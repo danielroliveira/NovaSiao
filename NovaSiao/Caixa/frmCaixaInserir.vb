@@ -12,9 +12,7 @@ Public Class frmCaixaInserir
 	Private minDate As Date? = Nothing
 	Private maxDate As Date? = Nothing
 	Private dtFinalCaixa As Date? = Nothing
-	Private LastIDCaixa As Integer? = Nothing
-	Private LastSitCaixa As Byte? = Nothing
-	Private SaldoAnterior As Decimal
+	Private CaixaAnterior As clCaixaAnteriorInfo
 	'
 	Private _formOrigem As Form
 	'
@@ -185,9 +183,6 @@ Public Class frmCaixaInserir
 		If IsNothing(_IDConta) Then
 			propMinDate = Nothing
 			propMaxDate = Nothing
-			LastSitCaixa = Nothing
-			LastIDCaixa = Nothing
-			SaldoAnterior = 0
 			Return False
 		End If
 		'
@@ -195,14 +190,22 @@ Public Class frmCaixaInserir
 		'
 		Try
 			'--- GET datas inicial e Final
-			Dim dt As DataTable = db.GetLastDados_IDConta(_IDConta)
-			Dim r As DataRow = dt.Rows(0)
+			CaixaAnterior = db.GetLastDados_IDConta(_IDConta)
 			'
-			propMinDate = IIf(IsDBNull(r("dtInicial")), Nothing, r("dtInicial"))
-			propMaxDate = IIf(IsDBNull(r("dtFinal")), Nothing, r("dtFinal"))
-			LastSitCaixa = IIf(IsDBNull(r("IDSituacao")), Nothing, r("IDSituacao"))
-			LastIDCaixa = IIf(IsDBNull(r("LastIDCaixa")), Nothing, r("LastIDCaixa"))
-			SaldoAnterior = IIf(IsDBNull(r("SaldoFinal")), Nothing, r("SaldoFinal"))
+			If Not IsNothing(CaixaAnterior.MovsDataInicial) AndAlso Not IsNothing(CaixaAnterior.CaixaDataFinal) Then
+
+				'--- verifica bloqueio da data final no caixa anterior
+				Dim dtInicioMinima As Date = CaixaAnterior.CaixaDataFinal
+				If CaixaAnterior.BloqueiaDataFinal Then dtInicioMinima = dtInicioMinima.AddDays(1)
+
+				If CaixaAnterior.MovsDataInicial < dtInicioMinima Then
+					Throw New AppException("Houve uma movimentação realizada que é anterior à data final do último caixa...")
+				End If
+
+			End If
+
+			propMinDate = CaixaAnterior.MovsDataInicial
+			propMaxDate = CaixaAnterior.MovsDataFinal
 			'
 			Return True
 			'
@@ -220,7 +223,7 @@ Public Class frmCaixaInserir
 		'----------------------------------------------------------------------------------------
 		If IsNothing(_IDCaixa) Then
 			'
-			If LastSitCaixa = 1 Then '--- já existe um caixa emaberto nessa conta
+			If CaixaAnterior.CaixaIDSituacao = 1 Then '--- já existe um caixa emaberto nessa conta
 				'
 				If Not Me.CanFocus Then
 					_IDConta = Nothing
@@ -238,7 +241,7 @@ Public Class frmCaixaInserir
 					Dim cBLL As New CaixaBLL
 					Dim clC As New clCaixa
 					'
-					clC = cBLL.GetCaixa_PeloID(LastIDCaixa)
+					clC = cBLL.GetCaixa_PeloID(CaixaAnterior.LastIDCaixa)
 					'
 					Dim fCx As New frmCaixa(clC)
 					'
@@ -255,7 +258,7 @@ Public Class frmCaixaInserir
 			End If
 			'
 		Else
-			If LastIDCaixa <> _IDCaixa Then
+			If CaixaAnterior.LastIDCaixa <> _IDCaixa Then
 				Return False
 			Else
 				Return True
@@ -283,9 +286,9 @@ Public Class frmCaixaInserir
 							MessageBoxIcon.Exclamation)
 			Return False
 			'
-		Else
-			Return True
 		End If
+
+		Return True
 		'
 	End Function
 	'
@@ -349,6 +352,7 @@ Public Class frmCaixaInserir
 		newCaixa.DataInicial = minDate
 		newCaixa.DataFinal = maxDate
 		newCaixa.IDFuncionario = _IDFuncionario
+		newCaixa.SaldoAnterior = CaixaAnterior.CaixaSaldoFinal
 		'
 		Try
 			'

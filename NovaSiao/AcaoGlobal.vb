@@ -25,8 +25,8 @@ Public Class AcaoGlobal
 		'
 		'--- Pergunta ao Usuário se Deseja inserir nova venda
 		If AbrirDialog("Você deseja realmente inserir uma nova Venda à Prazo?",
-					   "Inserir Nova Venda", frmDialog.DialogType.OK,
-					   frmDialog.DialogIcon.Question) <> DialogResult.OK Then
+					   "Inserir Nova Venda", frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question) <> DialogResult.Yes Then
 			Return Nothing
 		End If
 		'
@@ -103,8 +103,8 @@ Public Class AcaoGlobal
 					   vbNewLine & vbNewLine &
 					   "Data da Venda: " & VendaData & vbNewLine &
 					   "Filial: " & FilialPadrao.ToUpper,
-					   "Inserir Nova Venda", frmDialog.DialogType.OK,
-					   frmDialog.DialogIcon.Question) <> DialogResult.OK Then Return Nothing
+					   "Inserir Nova Venda", frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question) <> DialogResult.Yes Then Return Nothing
 		'
 		'--- Insere um novo Registro de Venda
 		'---------------------------------------------------------------------------------------
@@ -307,8 +307,8 @@ Public Class AcaoGlobal
 		'
 		'--- Pergunta ao Usuário se Deseja inserir nova DEVOLUCAO
 		If AbrirDialog("Você deseja realmente criar uma NOVA DEVOLUÇÃO?",
-					   "Inserir Nova Devolução", frmDialog.DialogType.OK,
-					   frmDialog.DialogIcon.Question) <> DialogResult.OK Then
+					   "Inserir Nova Devolução", frmDialog.DialogType.SIM_NAO,
+					   frmDialog.DialogIcon.Question) <> DialogResult.Yes Then
 			Return Nothing
 		End If
 		'

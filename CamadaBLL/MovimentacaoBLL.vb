@@ -828,6 +828,51 @@ Public Class MovimentacaoBLL
 		End Try
 		'
 	End Function
+
+
+	'
+	'=========================================================================================
+	' TIPOS DE FORMAS DE MOVIMENTACAO
+	'=========================================================================================
+	' --- OBTER LISTA
+	Public Function MovTipo_GET_List(Optional Ativo As Boolean? = Nothing) As List(Of clMovTipo)
+		'
+		Try
+			'
+			Dim dtTipo As DataTable = MovTipo_GET_Dt(Ativo)
+
+			Dim list As New List(Of clMovTipo)
+
+			If dtTipo.Rows.Count > 0 Then
+
+				For Each row As DataRow In dtTipo.Rows
+
+					Dim tipo As New clMovTipo With {
+						.IDMovTipo = row("IDMovTipo"),
+						.MovTipo = row("MovTipo"),
+						.IDMeio = row("IDMeio"),
+						.Ativo = row("Ativo")
+					}
+
+					list.Add(tipo)
+
+				Next
+
+			End If
+
+			Return list
+			'
+		Catch ex As Exception
+			Throw ex
+		End Try
+		'
+	End Function
+
+
+
+
+
+
 	'
 	'=========================================================================================
 	' --- SALVAR REGISTRO DE TIPO DE MOVIMENTACAO

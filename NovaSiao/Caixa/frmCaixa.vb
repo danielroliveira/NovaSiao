@@ -1162,10 +1162,9 @@ Public Class frmCaixa
 			Cursor = Cursors.WaitCursor
 			'
 			'--- GET datas inicial e Final
-			Dim dt As DataTable = cxBLL.GetLastDados_IDConta(propCaixa.IDConta)
-			Dim r As DataRow = dt.Rows(0)
+			Dim ultimoCaixa As clCaixaAnteriorInfo = cxBLL.GetLastDados_IDConta(propCaixa.IDConta)
 			'
-			Dim LastIDCaixa As Integer = IIf(IsDBNull(r("LastIDCaixa")), Nothing, r("LastIDCaixa"))
+			Dim LastIDCaixa As Integer? = ultimoCaixa.LastIDCaixa
 			'
 			If Not IsNothing(LastIDCaixa) AndAlso LastIDCaixa <> propCaixa.IDCaixa Then
 				Return False

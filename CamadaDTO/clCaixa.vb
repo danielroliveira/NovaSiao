@@ -250,3 +250,13 @@ Public Class clCaixa : Implements IEditableObject
 #End Region
     '
 End Class
+
+Public Class clCaixaAnteriorInfo
+    Property MovsDataInicial As Date?
+    Property MovsDataFinal As Date?
+    Property CaixaSaldoFinal As Decimal
+    Property CaixaIDSituacao As Byte
+    Property LastIDCaixa As Integer?
+    Property BloqueiaDataFinal As Boolean
+    Property CaixaDataFinal As Date?
+End Class
